@@ -33,7 +33,7 @@ def simulate(s: Scenario) -> Result:
     )
     cooling_l = facility_energy * s.cooling.cooling_water_consumption_l_per_kwh_facility
     indirect_l = (facility_energy + auxiliary_kwh) * s.water.grid_water_l_per_kwh
-    additional_l = cooling_l + auxiliary_kwh * s.water.grid_water_l_per_kwh + indirect_l
+    additional_l = cooling_l + indirect_l
     net = freshwater_l - additional_l
 
     return Result(
