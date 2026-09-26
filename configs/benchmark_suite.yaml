@@ -1,0 +1,36 @@
+# Benchmark definitions. Scenario-only cases are not empirical measurements.
+benchmarks:
+  - id: BENCHMARK-01
+    name: literature_reproduction
+    purpose: reproduce a published MD or data-center case after parameter extraction
+  - id: BENCHMARK-02
+    name: low_temperature_waste_heat
+    purpose: test low-grade heat sensitivity
+    scenario_only: true
+  - id: BENCHMARK-03
+    name: high_temperature_waste_heat
+    purpose: test thermal-quality sensitivity
+    scenario_only: true
+  - id: BENCHMARK-04
+    name: high_salinity_feed
+    purpose: test vapor-pressure and activity effects
+    scenario_only: true
+  - id: BENCHMARK-05
+    name: high_cooling_burden
+    purpose: stress-test heat-sink constraints
+    scenario_only: true
+  - id: BENCHMARK-06
+    name: water_stressed_location
+    purpose: combine local water stress with site accounting
+  - id: BENCHMARK-07
+    name: low_water_stress_location
+    purpose: contrast geographic constraints
+  - id: BENCHMARK-08
+    name: high_ai_utilization
+    purpose: test workload-driven heat availability
+  - id: BENCHMARK-09
+    name: low_ai_utilization
+    purpose: test intermittent heat availability
+  - id: BENCHMARK-10
+    name: fully_integrated_system
+    purpose: couple workload, cooling, heat recovery, MD, pumping and water accounting
