@@ -99,3 +99,23 @@ sources:
       - "cooling, electricity sourcing and siting uncertainty"
     doi: "10.1016/j.jclepro.2025.146528"
     status: "method-reference"
+
+  - id: MD-WATERTAP-EQUATIONS
+    title: "WaterTAP Membrane Distillation (0D) technical reference"
+    year: 2026
+    role: A
+    used_for:
+      - "DCMD vapor-flux equation"
+      - "latent and conductive heat-transfer balance structure"
+    url: "https://idaesplus.readthedocs.io/projects/watertap/latest/technical_reference/unit_models/membrane_distillation_0D.html"
+    status: "method-reference"
+
+  - id: ITU-DATA-CENTER-WASTE-HEAT-2025
+    title: "ITU-T L.1328: Specification for waste heat reuse in telecommunication rooms and data centres"
+    year: 2025
+    role: A
+    used_for:
+      - "data-centre waste-heat quality and cooling-architecture scope"
+      - "liquid-cooling recovery boundary"
+    url: "https://www.itu.int/epublications/publication/itu-t-l-1328-2025-09-specification-for-waste-heat-reuse-in-telecommunication-rooms-and-data-centres"
+    status: "method-reference"
