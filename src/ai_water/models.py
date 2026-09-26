@@ -21,7 +21,9 @@ class HeatRecovery(BaseModel):
 
 class MembraneDistillation(BaseModel):
     membrane_area_m2: float = Field(gt=0)
-    membrane_permeance_kg_m2_h_bar: float = Field(gt=0)
+    membrane_permeance_kg_m2_h_bar: float | None = Field(default=None, gt=0)
+    # Legacy direct-flux input retained for regression tests and literature cases.
+    flux_kg_m2_h: float | None = Field(default=None, gt=0)
     thermal_energy_kwh_th_per_kg: float = Field(gt=0)
     feed_recovery_fraction: float = Field(ge=0, lt=1, default=0.2)
     feed_salinity_g_kg: float = Field(ge=0, default=0.0)
