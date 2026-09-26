@@ -1,0 +1,101 @@
+# Parameter provenance registry
+# Scenario-only values are explicitly labelled and are not empirical claims.
+parameters:
+  - parameter_id: THERM-001
+    symbol: eta_recoverable
+    definition: fraction of IT heat entering the recoverable heat pathway
+    unit: fraction
+    source_id: scenario_only
+    status: scenario_only
+    uncertainty: distribution_required
+  - parameter_id: THERM-002
+    symbol: eta_HX
+    definition: heat exchanger effectiveness
+    unit: fraction
+    source_id: scenario_only
+    status: scenario_only
+    uncertainty: distribution_required
+  - parameter_id: MD-001
+    symbol: C_m
+    definition: membrane vapor permeance in pressure-difference flux model
+    unit: kg m-2 h-1 bar-1
+    source_id: membrane_specific_literature
+    status: requires_extraction
+    uncertainty: membrane_and_temperature_specific
+  - parameter_id: MD-002
+    symbol: T_fi
+    definition: feed-side membrane interface temperature
+    unit: degC
+    source_id: model
+    status: derived
+    uncertainty: temperature_polarization
+  - parameter_id: MD-003
+    symbol: T_pi
+    definition: permeate-side membrane interface temperature
+    unit: degC
+    source_id: model
+    status: derived
+    uncertainty: temperature_polarization
+  - parameter_id: MD-004
+    symbol: a_w
+    definition: water activity of saline feed
+    unit: dimensionless
+    source_id: saline_feed_property_model
+    status: requires_implementation
+    uncertainty: salinity_and_temperature_dependent
+  - parameter_id: MD-005
+    symbol: R_singlepass
+    definition: single-pass liquid recovery
+    unit: fraction
+    source_id: case_specific
+    status: case_specific
+    uncertainty: high
+  - parameter_id: MD-006
+    symbol: SEC_th
+    definition: thermal energy supplied per kg distillate
+    unit: kWh_th kg-1
+    source_id: derived
+    status: derived
+    uncertainty: configuration_specific
+  - parameter_id: MD-007
+    symbol: SEC_elec
+    definition: electrical energy consumed per m3 distillate
+    unit: kWh_e m-3
+    source_id: derived
+    status: derived
+    uncertainty: hydraulic_configuration_specific
+  - parameter_id: COOL-001
+    symbol: SCR
+    definition: specific cooling requirement of MD
+    unit: kWh_th m-3
+    source_id: Malaguti_2026
+    status: literature_supported
+    uncertainty: configuration_dependent
+  - parameter_id: WATER-001
+    symbol: W_grid
+    definition: electricity-related water consumption factor
+    unit: L kWh-1
+    source_id: site_specific_grid_factor
+    status: requires_site_data
+    uncertainty: spatial_temporal
+  - parameter_id: WATER-002
+    symbol: WUE_site
+    definition: onsite data center water consumption per IT electricity
+    unit: L kWh-1
+    source_id: site_specific_or_literature
+    status: case_specific
+    uncertainty: climate_and_cooling_dependent
+  - parameter_id: WATER-003
+    symbol: WUE_source
+    definition: source-level water consumption including electricity effects
+    unit: L kWh-1
+    source_id: site_specific_or_literature
+    status: case_specific
+    uncertainty: grid_mix_dependent
+  - parameter_id: AI-001
+    symbol: E_IT
+    definition: IT electricity for an AI workload
+    unit: kWh
+    source_id: workload_measurement_or_literature
+    status: workload_specific
+    uncertainty: hardware_software_utilization_dependent
