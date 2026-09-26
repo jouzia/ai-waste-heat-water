@@ -76,7 +76,9 @@ def seawater_water_activity(
     pure = IAPWS95(T=temperature_k, P=pressure_mpa)
     # IAPWS/TEOS-10 exposes seawater water chemical potential as muw.
     import math
-    r_kj = 0.00831446261815324
+    # IAPWS returns chemical potentials on a mass-specific kJ/kg basis.
+    # Therefore use the specific gas constant of water, not the molar value.
+    r_kj = 0.46151805
     return math.exp((sw.muw - pure.g) / (r_kj * temperature_k))
 
 
