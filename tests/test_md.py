@@ -26,3 +26,24 @@ def test_outside_nist_range_is_rejected():
         pass
     else:
         raise AssertionError("expected unsupported temperature range")
+
+
+def test_iapws_seawater_activity_is_below_unity_and_salinity_reduces_it():
+    from ai_water.md import seawater_water_activity
+
+    fresh = seawater_water_activity(60, 0)
+    seawater = seawater_water_activity(60, 35)
+    assert 0 < seawater < 1
+    assert abs(fresh - 1.0) < 1e-8
+    assert seawater < fresh
+
+
+def test_iapws_seawater_activity_rejects_out_of_range_salinity():
+    from ai_water.md import seawater_water_activity
+
+    try:
+        seawater_water_activity(60, 121)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("expected IAPWS-08 salinity validation")
