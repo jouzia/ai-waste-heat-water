@@ -10,6 +10,14 @@ Under what combinations of AI workload intensity, thermal conditions, waste-heat
 
 Gross freshwater production is not treated as net water benefit. Cooling, pumping, auxiliary electricity, pretreatment, heat losses, and indirect water use are explicitly considered.
 
-## Status
+## Current implementation status
 
-Research framework initialization. Scientific conclusions will only be reported after model validation and uncertainty analysis.
+- Reproducible Python package skeleton established.
+- Transparent baseline water/energy accounting engine implemented.
+- Initial MD vapor-pressure transport primitive implemented using NIST water vapor-pressure data.
+- Automated tests cover baseline limiting cases and MD temperature behavior.
+- Source/provenance registry started.
+
+## Scientific status
+
+No scientific conclusion is claimed yet. The baseline model is not an industrial digital twin. Salinity effects, interface temperatures, detailed cooling, pumping, uncertainty distributions, geographic factors, and experimental validation remain required before quantitative deployment conclusions are reported.
