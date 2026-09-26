@@ -96,3 +96,29 @@ def test_cooling_burden_reaches_water_accounting():
     assert r.md_cooling_electricity_kwh == 0.4
     assert r.md_cooling_water_l == 1.6
     assert r.direct_cooling_consumption_l == 1.6
+
+
+def test_heat_limit_keeps_fixed_membrane_conduction():
+    s = Scenario(
+        workload=Workload(it_power_kw=1, duration_h=1, recoverable_heat_fraction=1),
+        cooling=Cooling(),
+        recovery=HeatRecovery(
+            recovery_efficiency=1,
+            heat_exchanger_effectiveness=1,
+            source_temperature_c=70,
+            cold_side_temperature_c=25,
+        ),
+        md=MembraneDistillation(
+            membrane_area_m2=1,
+            membrane_permeance_kg_m2_h_bar=1,
+            thermal_energy_kwh_th_per_kg=1,
+            latent_heat_kwh_th_per_kg=0.65,
+            membrane_thermal_conductivity_w_m_k=0.2,
+            membrane_thickness_m=100e-6,
+            feed_recovery_fraction=0.1,
+        ),
+    )
+    r = simulate(s)
+    assert r.heat_limited is True
+    assert r.md_conductive_heat_leak_kwh_th > 0
+    assert r.md_thermal_demand_kwh_th <= r.recoverable_heat_kwh_th
