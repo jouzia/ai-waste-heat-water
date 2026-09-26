@@ -69,3 +69,33 @@ sources:
     doi: "10.1016/j.desal.2026.120039"
     url: "https://doi.org/10.1016/j.desal.2026.120039"
     status: "method-reference"
+
+  - id: MD-TEMPERATURE-POLARIZATION-2026
+    title: "Temperature polarization in membrane distillation: Recent advances in diagnostic methods and mitigation strategies"
+    year: 2026
+    role: A
+    used_for:
+      - "temperature polarization model scope"
+      - "interface-temperature importance"
+    doi: "10.1016/j.desal.2026.120713"
+    status: "method-reference"
+
+  - id: DCMD-HEAT-MASS-TRANSFER-2025
+    title: "Heat-mass transfer and energy efficiency in direct contact membrane distillation: Effects of membrane properties, temperature, and salt concentration"
+    year: 2025
+    role: A
+    used_for:
+      - "DCMD salinity and temperature-polarization evidence"
+      - "membrane and operating-condition sensitivity"
+    doi: "10.1016/j.memsci.2025.124533"
+    status: "method-reference"
+
+  - id: AI-WATER-UNCERTAINTY-2025
+    title: "Sustainable AI infrastructure: A scenario-based forecast of water footprint under uncertainty"
+    year: 2025
+    role: A
+    used_for:
+      - "probabilistic AI water-footprint framework"
+      - "cooling, electricity sourcing and siting uncertainty"
+    doi: "10.1016/j.jclepro.2025.146528"
+    status: "method-reference"
