@@ -38,7 +38,8 @@ class MembraneDistillation(BaseModel):
     membrane_thickness_m: float | None = Field(default=None, gt=0)
     feed_recovery_fraction: float = Field(ge=0, lt=1, default=0.2)
     feed_salinity_g_kg: float = Field(ge=0, default=0.0)
-    water_activity: float = Field(gt=0, le=1, default=1.0)
+    water_activity: float | None = Field(default=None, gt=0, le=1)
+    use_iapws_seawater: bool = True
     temperature_polarization_coefficient: float = Field(gt=0, le=1, default=1.0)
     cold_interface_temperature_c: float | None = None
     feed_interface_temperature_c: float | None = None
