@@ -119,3 +119,14 @@ sources:
       - "liquid-cooling recovery boundary"
     url: "https://www.itu.int/epublications/publication/itu-t-l-1328-2025-09-specification-for-waste-heat-reuse-in-telecommunication-rooms-and-data-centres"
     status: "method-reference"
+
+  - id: IAPWS-R13-08-SEAWATER
+    title: "Release on the IAPWS Formulation 2008 for the Thermodynamic Properties of Seawater"
+    year: 2008
+    role: A
+    used_for:
+      - "standard-seawater thermodynamic properties"
+      - "water chemical potential and activity pathway"
+      - "salinity validity limits"
+    url: "https://iapws.org/technical-guidance/release/Seawater"
+    status: "implemented"
