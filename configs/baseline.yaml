@@ -1,0 +1,25 @@
+workload:
+  it_power_kw: 100.0
+  duration_h: 1.0
+  recoverable_heat_fraction: 0.8
+cooling:
+  facility_overhead_fraction: 0.3
+  cooling_water_consumption_l_per_kwh_facility: 0.0
+  cooling_heat_penalty_fraction: 0.0
+recovery:
+  recovery_efficiency: 0.5
+  heat_exchanger_effectiveness: 0.8
+  usable_heat_fraction: 1.0
+  source_temperature_c: 70.0
+  cold_side_temperature_c: 25.0
+md:
+  flux_kg_m2_h: 5.0
+  membrane_area_m2: 10.0
+  thermal_energy_kwh_th_per_kg: 0.08
+  feed_recovery_fraction: 0.2
+auxiliary:
+  pump_kwh_per_m3: 0.4
+  pretreatment_kwh_per_m3: 0.1
+  other_kwh_per_m3: 0.0
+water:
+  grid_water_l_per_kwh: 0.0
