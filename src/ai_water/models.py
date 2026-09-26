@@ -1,5 +1,5 @@
 """Core parameter and result models. SI units unless documented otherwise."""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field\n\n# Default factories avoid shared mutable model instances.
 
 class Workload(BaseModel):
     it_power_kw: float = Field(gt=0)
@@ -37,8 +37,8 @@ class Scenario(BaseModel):
     cooling: Cooling
     recovery: HeatRecovery
     md: MembraneDistillation
-    auxiliary: AuxiliaryLoads = AuxiliaryLoads()
-    water: WaterFactors = WaterFactors()
+    auxiliary: AuxiliaryLoads = Field(default_factory=AuxiliaryLoads)
+    water: WaterFactors = Field(default_factory=WaterFactors)
 
 class Result(BaseModel):
     it_energy_kwh: float
