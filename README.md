@@ -29,6 +29,17 @@ AI workload -> IT energy -> heat generation -> cooling architecture -> recoverab
 
 Lei et al. (2025) demonstrate that workload-level data-center water use is highly sensitive to server efficiency, grid water factors, utilization, cooling technology, infrastructure efficiency, climate, and refresh cycle. Malaguti et al. (2026) show that MD cooling demand can approach the heating burden in some configurations and that pumping can be material at low single-pass recovery. NIST SRD 69 provides the water vapor-pressure coefficients used by the current pure-water transport primitive. Herrera et al. (2025) provides a probabilistic framework for AI-infrastructure water-footprint uncertainty.
 
+## Model layers added
+
+- **MD thermal layer:** separates latent vaporization duty from membrane conductive heat leak when membrane properties are supplied.
+- **Hydraulic layer:** converts pressure drop, feed recovery, flow, and pump efficiency into electrical pumping demand; direct literature specific-energy inputs remain supported.
+- **Cooling burden:** MD cooling duty can now propagate into electrical demand and direct cooling-water consumption instead of remaining a diagnostic-only value.
+- **Interface temperatures:** measured/interface temperatures can override the reduced-order temperature-polarization estimate.
+- **Feed-flow accounting:** product water is separated from feed withdrawal and concentrate discharge; withdrawal is not treated as consumption.
+- **Continuous integration:** GitHub Actions runs the test suite and Ruff on pushes and pull requests.
+
+These additions do not supply unsupported membrane properties, water-activity correlations, grid-water factors, or site-specific cooling assumptions. Those remain explicit inputs awaiting source extraction.
+
 ## Scientific status
 
 **No positive water-benefit conclusion is claimed.** The current baseline is a screening/accounting model, not an industrial digital twin. Before quantitative deployment claims, the study must add saline-feed activity, membrane-interface temperature polarization, latent/conductive heat balance, cooling and heat-sink constraints, hydraulic losses, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
