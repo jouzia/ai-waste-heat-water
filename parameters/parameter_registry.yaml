@@ -40,8 +40,8 @@ parameters:
     symbol: a_w
     definition: water activity of saline feed
     unit: dimensionless
-    source_id: saline_feed_property_model
-    status: requires_implementation
+    source_id: IAPWS-R13-08-SEAWATER
+    status: implemented_for_standard_seawater
     uncertainty: salinity_and_temperature_dependent
   - parameter_id: MD-005
     symbol: R_singlepass
