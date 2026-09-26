@@ -61,7 +61,11 @@ def simulate(s: Scenario) -> Result:
             membrane_thickness_m=s.md.membrane_thickness_m,
             duration_h=s.workload.duration_h,
         )
-        effective_duty_per_kg = thermal.hot_side_duty_kwh_th / potential_water_kg if potential_water_kg else s.md.latent_heat_kwh_th_per_kg
+        effective_duty_per_kg = (
+            thermal.latent_duty_kwh_th / potential_water_kg
+            if potential_water_kg
+            else s.md.latent_heat_kwh_th_per_kg
+        )
         potential_demand = thermal.hot_side_duty_kwh_th
         conductive_leak = thermal.conductive_heat_leak_kwh_th
         latent_demand = thermal.latent_duty_kwh_th
@@ -69,8 +73,16 @@ def simulate(s: Scenario) -> Result:
     actual_water_kg = potential_water_kg
     heat_limited = False
     if potential_demand > recoverable:
-        actual_water_kg = recoverable / effective_duty_per_kg
         heat_limited = True
+        if s.md.latent_heat_kwh_th_per_kg is None:
+            actual_water_kg = recoverable / effective_duty_per_kg
+        else:
+            available_for_vaporization = max(0.0, recoverable - conductive_leak)
+            actual_water_kg = (
+                available_for_vaporization / effective_duty_per_kg
+                if effective_duty_per_kg > 0
+                else 0.0
+            )
 
     freshwater_l = max(0.0, actual_water_kg)
 
