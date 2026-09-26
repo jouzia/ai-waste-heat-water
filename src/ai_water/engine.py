@@ -1,6 +1,6 @@
 """Deterministic reduced-order coupled system model."""
 from .hydraulics import pumping_from_pressure_drop
-from .md import flux_kg_m2_h, interface_temperatures
+from .md import flux_kg_m2_h, interface_temperatures, seawater_water_activity
 from .md_thermal import account_for_membrane_heat
 from .models import Result, Scenario
 
@@ -35,11 +35,20 @@ def simulate(s: Scenario) -> Result:
             )
             hot_i = s.md.feed_interface_temperature_c or derived_hot
             cold_i = s.md.cold_interface_temperature_c or derived_cold
+        if s.md.water_activity is not None:
+            activity = s.md.water_activity
+        elif s.md.use_iapws_seawater and s.md.feed_salinity_g_kg > 0:
+            activity = seawater_water_activity(
+                hot_i,
+                s.md.feed_salinity_g_kg,
+            )
+        else:
+            activity = 1.0
         md_flux = flux_kg_m2_h(
             hot_i,
             cold_i,
             s.md.membrane_permeance_kg_m2_h_bar,
-            s.md.water_activity,
+            activity,
         )
 
     potential_water_kg = md_flux * s.md.membrane_area_m2 * s.workload.duration_h
