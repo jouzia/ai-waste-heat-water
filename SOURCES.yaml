@@ -1,1 +1,71 @@
+schema_version: "1.0"
 
+source_roles:
+  A: equation_or_method
+  B: parameter_or_dataset
+  C: validation_or_reproduction
+  D: related_work
+
+sources:
+  - id: NIST-WATER-ANTOINE-SRD69
+    title: "NIST Chemistry WebBook: Water, Antoine Equation Parameters"
+    year: 2026
+    role: B
+    used_for:
+      - "pure-water saturation pressure coefficients"
+    url: "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Type=ANTOINE"
+    status: "implemented"
+
+  - id: MD-TRANSPORT-REVIEW-2023
+    title: "Review and Analysis of Heat Transfer in Spacer-Filled Channels of Membrane Distillation Systems"
+    year: 2023
+    role: A
+    used_for:
+      - "vapor-pressure-difference formulation"
+      - "heat-transfer and polarization model scope"
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10608446/"
+    status: "method-reference"
+
+  - id: MD-LOW-GRADE-WASTE-HEAT-2022
+    title: "Design Parameters of a Direct Contact Membrane Distillation and a Case Study of Its Applicability to Low-Grade Waste Energy"
+    year: 2022
+    role: A
+    used_for:
+      - "DCMD mass-flux formulation"
+      - "temperature and concentration limitations"
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9782244/"
+    status: "method-reference"
+
+  - id: DATA-CENTER-WATER-2025
+    title: "The water use of data center workloads: A review and assessment of key determinants"
+    year: 2025
+    role: A
+    used_for:
+      - "workload-level water accounting scope"
+      - "site and workload determinant framework"
+    doi: "10.1016/j.resconrec.2025.108310"
+    url: "https://doi.org/10.1016/j.resconrec.2025.108310"
+    status: "method-reference"
+
+  - id: AI-WATER-2025-V5
+    title: "Making AI Less 'Thirsty': Uncovering and Addressing the Secret Water Footprint of AI Models"
+    year: 2025
+    role: A
+    used_for:
+      - "AI water withdrawal/consumption distinction"
+      - "spatial-temporal water-efficiency framing"
+    arxiv: "2304.03271"
+    url: "https://arxiv.org/abs/2304.03271"
+    status: "method-reference"
+
+  - id: MD-COOLING-PUMPING-2026
+    title: "Waste heat won't make membrane distillation cool: Thermodynamic analysis of cooling and pumping burdens"
+    year: 2026
+    role: A
+    used_for:
+      - "cooling-burden system boundary"
+      - "pumping-burden analysis"
+      - "heat-only viability guardrail"
+    doi: "10.1016/j.desal.2026.120039"
+    url: "https://doi.org/10.1016/j.desal.2026.120039"
+    status: "method-reference"
