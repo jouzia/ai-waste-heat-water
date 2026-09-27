@@ -19,7 +19,7 @@ Gross freshwater production is not treated as net water benefit. The system boun
 - Parameter provenance registry added; unsupported literature numbers remain excluded from empirical claims.
 - Reproducible benchmark-suite definitions added.
 - Coupled system-model scope documented.
-- Automated tests cover baseline limiting cases and MD temperature behavior.
+- Automated tests cover baseline limiting cases, MD temperature behavior, single-pass salinity concentration, and explicit water-accounting sign conventions.
 
 ## Evidence-led architecture
 
@@ -35,14 +35,14 @@ Lei et al. (2025) demonstrate that workload-level data-center water use is highl
 - **Hydraulic layer:** converts pressure drop, feed recovery, flow, and pump efficiency into electrical pumping demand; direct literature specific-energy inputs remain supported.
 - **Cooling burden:** MD cooling duty can now propagate into electrical demand and direct cooling-water consumption instead of remaining a diagnostic-only value.
 - **Interface temperatures:** measured/interface temperatures can override the reduced-order temperature-polarization estimate.
-- **Feed-flow accounting:** product water is separated from feed withdrawal and concentrate discharge; withdrawal is not treated as consumption.
+- **Salinity/thermodynamics:** standard-seawater cases now use IAPWS-08 water activity with an explicit single-pass concentration layer; concentrate salinity is reported.
 - **Continuous integration:** GitHub Actions runs the test suite and Ruff on pushes and pull requests.
 
-These additions do not supply unsupported membrane properties, water-activity correlations, grid-water factors, or site-specific cooling assumptions. Those remain explicit inputs awaiting source extraction.
+These additions do not supply unsupported membrane properties, grid-water factors, or site-specific cooling assumptions. Membrane-specific transport parameters, channel heat-transfer coefficients, and geographic water factors remain explicit inputs awaiting source extraction.
 
 ## Scientific status
 
-**No positive water-benefit conclusion is claimed.** The current baseline is a screening/accounting model, not an industrial digital twin. Before quantitative deployment claims, the study must add saline-feed activity, membrane-interface temperature polarization, latent/conductive heat balance, cooling and heat-sink constraints, hydraulic losses, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
+**No positive water-benefit conclusion is claimed.** The current baseline is a screening/accounting model, not an industrial digital twin. Before quantitative deployment claims, the study must add a channel-resolved/reduced-order heat-transfer model, concentration-polarization treatment, cooling and heat-sink constraints, source-matched membrane parameters, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
 
 ## Reproducibility policy
 
