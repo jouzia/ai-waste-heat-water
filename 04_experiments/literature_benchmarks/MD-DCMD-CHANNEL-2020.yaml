@@ -1,0 +1,42 @@
+# Literature reproduction benchmark: Keshavarzzadeh et al. (2020)
+
+source_id: MD-DCMD-CHANNEL-2020
+status: parameterized_source_case
+claim_status: "No output reproduction claim until model-to-source comparison is completed."
+
+module:
+  type: flat_sheet_dcMD
+  length_m: 5.0
+  width_m: 0.5
+  channel_depth_m: 0.005
+  membrane_area_m2: 2.5
+
+inlet:
+  feed_temperature_c: 70.0
+  permeate_temperature_c: 25.0
+  feed_flow_l_min: 10.0
+  permeate_flow_l_min: 10.0
+  feed_mass_flow_kg_h_approx: 600.0
+  permeate_mass_flow_kg_h_approx: 600.0
+  feed_salinity_g_kg: 35.0
+
+membrane:
+  validation_case_material: PTFE
+  validation_case_void_fraction: 0.80
+  validation_case_thickness_um: 60.0
+  validation_case_nominal_pore_size_mm: 0.2
+
+model_requirements:
+  - "Source-matched thermophysical properties"
+  - "Source-matched membrane mass-transfer formulation"
+  - "Source-matched heat-transfer correlation"
+  - "Counter-current module orientation as applicable to the validation case"
+  - "Reported experimental comparison metric"
+  - "Exact table/figure/equation references recorded before comparison"
+
+reproduction_outputs:
+  - average_flux_kg_m2_h
+  - thermal_efficiency
+  - outlet_feed_temperature_c
+  - outlet_permeate_temperature_c
+  - source_vs_model_error_percent
