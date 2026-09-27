@@ -1,6 +1,11 @@
 """Deterministic reduced-order coupled system model."""
 from .hydraulics import pumping_from_pressure_drop
-from .md import flux_kg_m2_h, interface_temperatures, seawater_water_activity
+from .md import (
+    flux_kg_m2_h,
+    interface_temperatures,
+    mean_single_pass_salinity_g_kg,
+    seawater_water_activity,
+)
 from .md_thermal import account_for_membrane_heat
 from .models import Result, Scenario
 
@@ -35,12 +40,21 @@ def simulate(s: Scenario) -> Result:
             )
             hot_i = s.md.feed_interface_temperature_c or derived_hot
             cold_i = s.md.cold_interface_temperature_c or derived_cold
+
+        # For a single-pass feed, salt is retained while water is removed.
+        # Use a water-removal-weighted bulk salinity for the lumped flux model.
+        # This captures recovery-driven concentration without pretending to
+        # resolve the separate concentration-polarization boundary layer.
+        effective_salinity = mean_single_pass_salinity_g_kg(
+            s.md.feed_salinity_g_kg,
+            s.md.feed_recovery_fraction,
+        )
         if s.md.water_activity is not None:
             activity = s.md.water_activity
-        elif s.md.use_iapws_seawater and s.md.feed_salinity_g_kg > 0:
+        elif s.md.use_iapws_seawater and effective_salinity > 0:
             activity = seawater_water_activity(
                 hot_i,
-                s.md.feed_salinity_g_kg,
+                effective_salinity,
             )
         else:
             activity = 1.0
@@ -57,9 +71,7 @@ def simulate(s: Scenario) -> Result:
         effective_duty_per_kg = s.md.thermal_energy_kwh_th_per_kg
         potential_demand = potential_water_kg * effective_duty_per_kg
         conductive_leak = 0.0
-        latent_demand = (
-            potential_water_kg * s.md.thermal_energy_kwh_th_per_kg
-        )
+        latent_demand = potential_water_kg * s.md.thermal_energy_kwh_th_per_kg
     else:
         thermal = account_for_membrane_heat(
             water_kg=potential_water_kg,
@@ -138,7 +150,8 @@ def simulate(s: Scenario) -> Result:
 
     auxiliary_kwh = (
         pumping_electricity
-        + freshwater_l / 1000.0
+        + freshwater_l
+        / 1000.0
         * (s.auxiliary.pretreatment_kwh_per_m3 + s.auxiliary.other_kwh_per_m3)
         + md_cooling_electricity
     )
@@ -148,6 +161,14 @@ def simulate(s: Scenario) -> Result:
     )
     indirect_l = (facility_energy + auxiliary_kwh) * s.water.grid_water_l_per_kwh
     additional_l = cooling_l + indirect_l
+
+    concentrate_salinity = (
+        s.md.feed_salinity_g_kg
+        / (1.0 - s.md.feed_recovery_fraction)
+        if s.md.feed_salinity_g_kg > 0
+        else 0.0
+    )
+    net_consumption_change = additional_l - freshwater_l
 
     return Result(
         it_energy_kwh=it_energy,
@@ -163,11 +184,13 @@ def simulate(s: Scenario) -> Result:
         freshwater_produced_l=freshwater_l,
         feed_water_withdrawal_l=feed_water_l,
         concentrate_discharge_l=concentrate_l,
+        concentrate_salinity_g_kg=concentrate_salinity,
         direct_cooling_consumption_l=cooling_l,
         pumping_electricity_kwh=pumping_electricity,
         auxiliary_electricity_kwh=auxiliary_kwh,
         indirect_water_consumption_l=indirect_l,
         additional_water_consumption_l=additional_l,
-        net_freshwater_benefit_l=freshwater_l - additional_l,
+        net_consumption_change_l=net_consumption_change,
+        net_freshwater_benefit_l=-net_consumption_change,
         heat_limited=heat_limited,
     )
