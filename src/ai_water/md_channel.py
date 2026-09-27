@@ -15,6 +15,7 @@ outside this layer.
 
 from dataclasses import dataclass
 
+from .channel_transport import concentration_polarization_coefficient, interface_salinity_g_kg
 from .md import seawater_water_activity, vapor_pressure_driving_force_bar
 
 
@@ -35,6 +36,7 @@ class ChannelConfig:
     duration_h: float = 1.0
     cells: int = 20
     water_activity_override: float | None = None
+    salt_mass_transfer_coefficient_m_s: float | None = None
 
 
 @dataclass(frozen=True)
@@ -45,6 +47,8 @@ class ChannelCellResult:
     feed_interface_temperature_c: float
     permeate_interface_temperature_c: float
     feed_salinity_g_kg: float
+    interface_salinity_g_kg: float
+    concentration_polarization_coefficient: float
     flux_kg_m2_h: float
     product_water_kg: float
     feed_heat_kw: float
@@ -172,6 +176,43 @@ def simulate_dcmd_channel(
             permeance=config.membrane_permeance_kg_m2_h_bar,
             water_activity=activity,
         )
+        if config.salt_mass_transfer_coefficient_m_s is not None and feed_salinity > 0:
+            previous_flux = flux
+            for _ in range(30):
+                cpc = concentration_polarization_coefficient(
+                    flux_kg_m2_s=flux / 3600.0,
+                    mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
+                    solvent_density_kg_m3=1000.0,
+                )
+                interface_salinity = interface_salinity_g_kg(feed_salinity, cpc)
+                activity = (
+                    seawater_water_activity(tfm, interface_salinity)
+                    if config.water_activity_override is None
+                    else config.water_activity_override
+                )
+                tfm, tpm, flux = _cell_interfaces(
+                    feed_bulk_c=feed_temperature,
+                    permeate_bulk_c=permeate_temperature,
+                    feed_h=config.feed_heat_transfer_coefficient_w_m2_k,
+                    permeate_h=config.permeate_heat_transfer_coefficient_w_m2_k,
+                    membrane_k=config.membrane_thermal_conductivity_w_m_k,
+                    membrane_thickness_m=config.membrane_thickness_m,
+                    latent_heat_kwh_per_kg=config.latent_heat_kwh_th_per_kg,
+                    permeance=config.membrane_permeance_kg_m2_h_bar,
+                    water_activity=activity,
+                )
+                if abs(flux - previous_flux) < 1e-8:
+                    break
+                previous_flux = flux
+            cpc = concentration_polarization_coefficient(
+                flux_kg_m2_s=flux / 3600.0,
+                mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
+                solvent_density_kg_m3=1000.0,
+            )
+            interface_salinity = interface_salinity_g_kg(feed_salinity, cpc)
+        else:
+            cpc = 1.0
+            interface_salinity = feed_salinity
 
         product_rate = flux * cell_area
         product_kg = product_rate * config.duration_h
@@ -200,6 +241,8 @@ def simulate_dcmd_channel(
                 feed_interface_temperature_c=tfm,
                 permeate_interface_temperature_c=tpm,
                 feed_salinity_g_kg=feed_salinity,
+                interface_salinity_g_kg=interface_salinity,
+                concentration_polarization_coefficient=cpc,
                 flux_kg_m2_h=flux,
                 product_water_kg=product_kg,
                 feed_heat_kw=q_feed_w / 1000.0,
