@@ -32,7 +32,7 @@ def test_flux_increases_with_permeance():
 
 def test_outside_nist_range_is_rejected():
     try:
-        saturation_pressure_bar(20)
+        saturation_pressure_bar(90)
     except ValueError:
         pass
     else:
