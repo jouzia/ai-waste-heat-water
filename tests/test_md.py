@@ -73,3 +73,11 @@ def test_iapws_seawater_activity_rejects_out_of_range_salinity():
         pass
     else:
         raise AssertionError("expected IAPWS-08 salinity validation")
+
+def test_iapws_seawater_thermophysical_properties_are_positive():
+    from ai_water.md import seawater_thermophysical_properties
+
+    props = seawater_thermophysical_properties(60, 35)
+    assert props["density_kg_m3"] > 0
+    assert props["heat_capacity_j_kg_k"] > 0
+    assert props["thermal_conductivity_w_m_k"] > 0
