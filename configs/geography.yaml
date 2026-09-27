@@ -1,0 +1,29 @@
+version: "1.0"
+
+water_stress:
+  primary_source: WRI-AQUEDUCT-4.0
+  source_url: "https://datasets.wri.org/datasets/aqueduct-global-maps-40-data"
+  baseline_required: true
+  future_years: [2030, 2050, 2080]
+  future_scenarios:
+    - SSP3_RCP7.0
+    - SSP1_RCP2.6
+    - SSP5_RCP8.5
+
+electricity_water:
+  required: true
+  unit: "L/kWh"
+  note: "Site/grid-specific operational factor; do not use as a universal constant."
+
+site_fields:
+  - site_id
+  - latitude
+  - longitude
+  - basin_id
+  - country
+  - region
+  - aqueduct_version
+  - retrieval_date
+  - baseline_water_stress
+  - electricity_water_l_per_kwh
+  - electricity_water_source_id
