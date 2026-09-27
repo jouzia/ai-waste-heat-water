@@ -172,6 +172,15 @@ sources:
     url: "https://datasets.wri.org/datasets/aqueduct-global-maps-40-data"
     status: "external-dataset-required"
 
+  - id: IAPWS-G10-15-SEAWATER-THERMAL-CONDUCTIVITY
+    title: "IAPWS Guideline on the Thermal Conductivity of Seawater"
+    year: 2015
+    role: A
+    used_for:
+      - "seawater thermal conductivity"
+    url: "https://iapws.org/technical-guidance/release/Seawater-ThCond"
+    status: "implemented_via_iapws_package"
+
   - id: IAPWS-R13-08-SEAWATER
     title: "Release on the IAPWS Formulation 2008 for the Thermodynamic Properties of Seawater"
     year: 2008
