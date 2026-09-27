@@ -16,4 +16,4 @@ experiment_fields:
 primary_response:
   name: Delta_W_net
   unit: L
-  definition: "additional operational water consumption minus recovered freshwater"
+  definition: "additional operational water consumption minus avoided freshwater consumption"
