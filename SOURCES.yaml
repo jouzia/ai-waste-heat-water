@@ -16,6 +16,16 @@ sources:
     url: "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Type=ANTOINE"
     status: "implemented"
 
+  - id: MD-DCMD-CHANNEL-2020
+    title: "Design and bio-inspired optimization of direct contact membrane distillation for desalination based on constructal law"
+    year: 2020
+    role: A
+    used_for:
+      - "finite-volume DCMD energy-balance structure"
+      - "axial feed/permeate mass and energy balances"
+      - "feed/permeate convective heat-transfer formulation"
+    url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7545101/"
+    status: "method-reference"
   - id: MD-TRANSPORT-REVIEW-2023
     title: "Review and Analysis of Heat Transfer in Spacer-Filled Channels of Membrane Distillation Systems"
     year: 2023
