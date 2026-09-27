@@ -1,0 +1,12 @@
+version: "1.0"
+experiment_id: "MC-DEMO-001"
+random_seed: 20260927
+sample_size: 10000
+# Example scenario ranges only; replace with source/measurement-backed uncertainty before publication.
+distributions:
+  workload.it_power_kw: {name: uniform, parameters: [50.0, 200.0]}
+  workload.recoverable_heat_fraction: {name: uniform, parameters: [0.2, 0.9]}
+  recovery.recovery_efficiency: {name: uniform, parameters: [0.3, 0.8]}
+  recovery.heat_exchanger_effectiveness: {name: uniform, parameters: [0.5, 0.95]}
+  md.temperature_polarization_coefficient: {name: uniform, parameters: [0.6, 1.0]}
+  water.grid_water_l_per_kwh: {name: uniform, parameters: [0.0, 2.0]}
