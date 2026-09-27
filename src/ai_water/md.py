@@ -4,14 +4,17 @@ The model separates bulk temperatures from membrane-interface temperatures.
 For the primary seawater pathway, IAPWS-08 provides thermodynamic seawater
 properties; the pure-water Antoine path remains available as a documented
 screening/legacy path.
+
+Salinity handling distinguishes inlet feed salinity from the salinity of a
+single-pass feed that becomes progressively concentrated as water is removed.
+The latter is a lumped approximation; it is not a substitute for a
+channel-resolved concentration-polarization model.
 """
 try:
     from iapws import IAPWS95
-    from iapws._iapws import _Kw
     from iapws.iapws08 import SeaWater
 except ImportError:  # pragma: no cover - dependency is declared in pyproject
     IAPWS95 = None
-    _Kw = None
     SeaWater = None
 
 _ANTOINE = (
@@ -51,6 +54,49 @@ def water_vapor_pressure_bar(temperature_c: float, water_activity: float = 1.0) 
     return water_activity * saturation_pressure_bar(temperature_c)
 
 
+def concentrate_salinity_g_kg(
+    feed_salinity_g_kg: float,
+    recovery_fraction: float,
+) -> float:
+    """Return ideal single-pass concentrate salinity with complete salt retention.
+
+    This is a mass-balance result for a nonvolatile solute:
+        S_out = S_in / (1 - R)
+
+    It intentionally does not model precipitation, density changes, leakage,
+    multistage recycle, or concentration polarization.
+    """
+    if feed_salinity_g_kg < 0:
+        raise ValueError("feed salinity cannot be negative")
+    if not 0 <= recovery_fraction < 1:
+        raise ValueError("recovery fraction must be in [0,1)")
+    return feed_salinity_g_kg / (1.0 - recovery_fraction)
+
+
+def mean_single_pass_salinity_g_kg(
+    feed_salinity_g_kg: float,
+    recovery_fraction: float,
+) -> float:
+    """Return water-removal-weighted bulk salinity for a lumped single-pass model.
+
+    With ideal salt retention, instantaneous bulk salinity follows
+    S(x)=S0/x as the remaining water fraction x falls from 1 to 1-R.
+    Averaging over the withdrawn water gives:
+        S_mean = S0 * [-ln(1-R)] / R.
+
+    For R -> 0 the limiting value is S0. This is a bulk-feed approximation,
+    not a concentration-polarization correction.
+    """
+    if feed_salinity_g_kg < 0:
+        raise ValueError("feed salinity cannot be negative")
+    if not 0 <= recovery_fraction < 1:
+        raise ValueError("recovery fraction must be in [0,1)")
+    if recovery_fraction == 0:
+        return feed_salinity_g_kg
+    import math
+    return feed_salinity_g_kg * (-math.log1p(-recovery_fraction)) / recovery_fraction
+
+
 def seawater_water_activity(
     temperature_c: float,
     salinity_g_kg: float,
@@ -74,10 +120,9 @@ def seawater_water_activity(
     temperature_k = temperature_c + 273.15
     sw = SeaWater(T=temperature_k, P=pressure_mpa, S=salinity_g_kg / 1000.0)
     pure = IAPWS95(T=temperature_k, P=pressure_mpa)
-    # IAPWS/TEOS-10 exposes seawater water chemical potential as muw.
-    import math
     # IAPWS returns chemical potentials on a mass-specific kJ/kg basis.
     # Therefore use the specific gas constant of water, not the molar value.
+    import math
     r_kj = 0.46151805
     return math.exp((sw.muw - pure.g) / (r_kj * temperature_k))
 
