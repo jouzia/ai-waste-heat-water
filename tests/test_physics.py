@@ -17,6 +17,7 @@ from ai_water.md import (
     vapor_pressure_driving_force_bar,
 )
 from ai_water.md_thermal import account_for_membrane_heat
+from ai_water.md_channel import ChannelConfig, simulate_dcmd_channel
 
 
 def test_saturation_pressure_increases_with_temperature():
@@ -124,12 +125,10 @@ def test_heat_limit_keeps_fixed_membrane_conduction():
     r = simulate(s)
     assert r.heat_limited is True
     assert r.md_conductive_heat_leak_kwh_th > 0
-    assert r.heat_limited is True
     assert r.md_thermal_demand_kwh_th > r.recoverable_heat_kwh_th
     assert r.freshwater_produced_l == 0.0
     assert r.concentrate_salinity_g_kg == 0.0
 
-from ai_water.md_channel import ChannelConfig, simulate_dcmd_channel
 
 
 def test_one_dimensional_dcmd_channel_resolves_interface_temperatures_and_axial_cooling():
@@ -231,6 +230,7 @@ def test_channel_correlations_and_polarization_are_physical():
     assert h > 0 and k_m > 0 and cpc >= 1
     assert interface_salinity_g_kg(35, cpc) >= 35
     assert 0.0 < tpc_from_interfaces(60, 25, 55, 30) <= 1.0
+
 
 def test_one_dimensional_channel_can_apply_concentration_polarization():
     result = simulate_dcmd_channel(
