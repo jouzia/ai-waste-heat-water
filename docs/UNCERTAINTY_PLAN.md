@@ -2,10 +2,9 @@
 
 The primary response is net freshwater consumption change:
 
-Delta_W = W_additional_consumption - W_recovered
+Delta_W = W_additional_consumption - W_avoided
 
-Negative values indicate an offsetting net-consumption effect; positive values
-indicate additional consumption.
+Negative values indicate lower modeled consumption than the declared counterfactual; positive values indicate additional consumption. Recovered distillate is not automatically treated as avoided consumption. Unless displacement is demonstrated, W_avoided is zero.
 
 ## Analyses
 
