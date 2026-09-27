@@ -26,6 +26,38 @@ sources:
       - "feed/permeate convective heat-transfer formulation"
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7545101/"
     status: "method-reference"
+  - id: MD-POLARIZATION-REVIEW-2021
+    title: "Temperature and concentration polarization in membrane distillation: a technical review"
+    year: 2021
+    role: B
+    used_for:
+      - "TPC and CPC definitions"
+      - "polarization model applicability context"
+    doi: "10.5004/dwt.2021.27398"
+    url: "https://doi.org/10.5004/dwt.2021.27398"
+    status: "method-reference"
+
+  - id: MD-CPC-2019-EXPERIMENT
+    title: "Impact of Operating Conditions on Measured and Predicted Concentration Polarization in Membrane Distillation"
+    year: 2019
+    role: A
+    used_for:
+      - "experimental caution on conventional CPC correlations"
+      - "concentration-polarization validation context"
+    doi: "10.1021/acs.est.9b04182"
+    url: "https://doi.org/10.1021/acs.est.9b04182"
+    status: "validation-reference"
+
+  - id: MD-CPC-2020-DCMD
+    title: "Highly Saline Water Desalination Using Direct Contact Membrane Distillation: Experimental and Simulation Study"
+    year: 2020
+    role: A
+    used_for:
+      - "CPC exponential boundary-layer model"
+      - "Sherwood-based mass-transfer coefficient"
+    url: "https://www.mdpi.com/2073-4441/12/6/1575"
+    status: "method-reference"
+
   - id: MD-TRANSPORT-REVIEW-2023
     title: "Review and Analysis of Heat Transfer in Spacer-Filled Channels of Membrane Distillation Systems"
     year: 2023
