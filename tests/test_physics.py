@@ -1,3 +1,4 @@
+import pytest
 from ai_water.engine import simulate
 from ai_water.hydraulics import pumping_from_pressure_drop
 from ai_water.models import (
@@ -96,8 +97,8 @@ def test_cooling_burden_reaches_water_accounting():
     assert r.md_cooling_electricity_kwh == 0.4
     assert r.md_cooling_water_l == 1.6
     assert r.direct_cooling_consumption_l == 1.6
-    assert r.net_consumption_change_l == 0.6
-    assert r.net_freshwater_benefit_l == -0.6
+    assert r.net_consumption_change_l == pytest.approx(0.6)
+    assert r.net_freshwater_benefit_l == pytest.approx(-0.6)
 
 
 def test_heat_limit_keeps_fixed_membrane_conduction():
@@ -123,7 +124,9 @@ def test_heat_limit_keeps_fixed_membrane_conduction():
     r = simulate(s)
     assert r.heat_limited is True
     assert r.md_conductive_heat_leak_kwh_th > 0
-    assert r.md_thermal_demand_kwh_th <= r.recoverable_heat_kwh_th
+    assert r.heat_limited is True
+    assert r.md_thermal_demand_kwh_th > r.recoverable_heat_kwh_th
+    assert r.freshwater_produced_l == 0.0
     assert r.concentrate_salinity_g_kg == 0.0
 
 from ai_water.md_channel import ChannelConfig, simulate_dcmd_channel
