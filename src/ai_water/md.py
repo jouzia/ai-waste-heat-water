@@ -18,6 +18,7 @@ except ImportError:  # pragma: no cover - dependency is declared in pyproject
     SeaWater = None
 
 _ANTOINE = (
+    (273.0, 303.0, 5.40221, 1838.675, -31.737),
     (304.0, 333.0, 5.20389, 1733.926, -39.485),
     (334.0, 363.0, 5.0768, 1659.793, -45.854),
 )
@@ -28,7 +29,7 @@ def saturation_pressure_bar(temperature_c: float) -> float:
     for lower, upper, a, b, c in _ANTOINE:
         if lower <= temperature_k <= upper:
             return 10.0 ** (a - b / (temperature_k + c))
-    raise ValueError("temperature outside implemented NIST Antoine ranges: 304-363 K")
+    raise ValueError("temperature outside implemented NIST Antoine ranges: 273-363 K")
 
 
 def interface_temperatures(
@@ -118,6 +119,8 @@ def seawater_water_activity(
         raise ValueError("IAPWS-08 pressure must be in (0,100] MPa")
 
     temperature_k = temperature_c + 273.15
+    if salinity_g_kg == 0:
+        return 1.0
     sw = SeaWater(T=temperature_k, P=pressure_mpa, S=salinity_g_kg / 1000.0)
     pure = IAPWS95(T=temperature_k, P=pressure_mpa)
     # IAPWS returns chemical potentials on a mass-specific kJ/kg basis.
