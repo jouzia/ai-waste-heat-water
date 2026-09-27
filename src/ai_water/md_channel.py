@@ -37,6 +37,7 @@ class ChannelConfig:
     cells: int = 20
     water_activity_override: float | None = None
     salt_mass_transfer_coefficient_m_s: float | None = None
+    solvent_density_kg_m3: float | None = None
 
 
 @dataclass(frozen=True)
@@ -141,6 +142,11 @@ def simulate_dcmd_channel(
         raise ValueError("heat-transfer coefficients must be positive")
     if config.feed_mass_flow_kg_h <= 0 or config.permeate_mass_flow_kg_h <= 0:
         raise ValueError("channel mass-flow rates must be positive")
+    if config.salt_mass_transfer_coefficient_m_s is not None:
+        if config.salt_mass_transfer_coefficient_m_s <= 0:
+            raise ValueError("salt mass-transfer coefficient must be positive")
+        if config.solvent_density_kg_m3 is None or config.solvent_density_kg_m3 <= 0:
+            raise ValueError("solvent density is required when CP is enabled")
     if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_k <= 0:
         raise ValueError("heat capacities must be positive")
     if not 0 <= config.feed_salinity_g_kg <= 120:
@@ -182,7 +188,7 @@ def simulate_dcmd_channel(
                 cpc = concentration_polarization_coefficient(
                     flux_kg_m2_s=flux / 3600.0,
                     mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
-                    solvent_density_kg_m3=1000.0,
+                    solvent_density_kg_m3=config.solvent_density_kg_m3,
                 )
                 interface_salinity = interface_salinity_g_kg(feed_salinity, cpc)
                 activity = (
