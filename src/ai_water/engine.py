@@ -1,11 +1,6 @@
 """Deterministic reduced-order coupled system model."""
 from .hydraulics import pumping_from_pressure_drop
-from .md import (
-    flux_kg_m2_h,
-    interface_temperatures,
-    mean_single_pass_salinity_g_kg,
-    seawater_water_activity,
-)
+from .md import flux_kg_m2_h, interface_temperatures, mean_single_pass_salinity_g_kg, seawater_water_activity
 from .md_thermal import account_for_membrane_heat
 from .models import Result, Scenario
 
@@ -14,10 +9,8 @@ def simulate(s: Scenario) -> Result:
     it_energy = s.workload.it_power_kw * s.workload.duration_h
     heat_generated = it_energy
     raw_recoverable = (
-        heat_generated
-        * s.workload.recoverable_heat_fraction
-        * s.recovery.recovery_efficiency
-        * s.recovery.heat_exchanger_effectiveness
+        heat_generated * s.workload.recoverable_heat_fraction
+        * s.recovery.recovery_efficiency * s.recovery.heat_exchanger_effectiveness
         * s.recovery.usable_heat_fraction
     )
     recoverable = raw_recoverable * (1.0 - s.cooling.cooling_heat_penalty_fraction)
@@ -34,35 +27,23 @@ def simulate(s: Scenario) -> Result:
             cold_i = s.md.cold_interface_temperature_c
         if s.md.feed_interface_temperature_c is None or s.md.cold_interface_temperature_c is None:
             derived_hot, derived_cold = interface_temperatures(
-                s.recovery.source_temperature_c,
-                s.recovery.cold_side_temperature_c,
+                s.recovery.source_temperature_c, s.recovery.cold_side_temperature_c,
                 s.md.temperature_polarization_coefficient,
             )
             hot_i = s.md.feed_interface_temperature_c or derived_hot
             cold_i = s.md.cold_interface_temperature_c or derived_cold
 
-        # For a single-pass feed, salt is retained while water is removed.
-        # Use a water-removal-weighted bulk salinity for the lumped flux model.
-        # This captures recovery-driven concentration without pretending to
-        # resolve the separate concentration-polarization boundary layer.
         effective_salinity = mean_single_pass_salinity_g_kg(
-            s.md.feed_salinity_g_kg,
-            s.md.feed_recovery_fraction,
+            s.md.feed_salinity_g_kg, s.md.feed_recovery_fraction
         )
         if s.md.water_activity is not None:
             activity = s.md.water_activity
         elif s.md.use_iapws_seawater and effective_salinity > 0:
-            activity = seawater_water_activity(
-                hot_i,
-                effective_salinity,
-            )
+            activity = seawater_water_activity(hot_i, effective_salinity)
         else:
             activity = 1.0
         md_flux = flux_kg_m2_h(
-            hot_i,
-            cold_i,
-            s.md.membrane_permeance_kg_m2_h_bar,
-            activity,
+            hot_i, cold_i, s.md.membrane_permeance_kg_m2_h_bar, activity
         )
 
     potential_water_kg = md_flux * s.md.membrane_area_m2 * s.workload.duration_h
@@ -71,7 +52,6 @@ def simulate(s: Scenario) -> Result:
         effective_duty_per_kg = s.md.thermal_energy_kwh_th_per_kg
         potential_demand = potential_water_kg * effective_duty_per_kg
         conductive_leak = 0.0
-        latent_demand = potential_water_kg * s.md.thermal_energy_kwh_th_per_kg
     else:
         thermal = account_for_membrane_heat(
             water_kg=potential_water_kg,
@@ -84,12 +64,10 @@ def simulate(s: Scenario) -> Result:
         )
         effective_duty_per_kg = (
             thermal.latent_duty_kwh_th / potential_water_kg
-            if potential_water_kg
-            else s.md.latent_heat_kwh_th_per_kg
+            if potential_water_kg else s.md.latent_heat_kwh_th_per_kg
         )
         potential_demand = thermal.hot_side_duty_kwh_th
         conductive_leak = thermal.conductive_heat_leak_kwh_th
-        latent_demand = thermal.latent_duty_kwh_th
 
     actual_water_kg = potential_water_kg
     heat_limited = False
@@ -101,8 +79,7 @@ def simulate(s: Scenario) -> Result:
             available_for_vaporization = max(0.0, recoverable - conductive_leak)
             actual_water_kg = (
                 available_for_vaporization / effective_duty_per_kg
-                if effective_duty_per_kg > 0
-                else 0.0
+                if effective_duty_per_kg > 0 else 0.0
             )
 
     freshwater_l = max(0.0, actual_water_kg)
@@ -126,20 +103,16 @@ def simulate(s: Scenario) -> Result:
         md_conductive = thermal_actual.conductive_heat_leak_kwh_th
 
     md_cooling = md_demand * s.cooling.md_cooling_to_heating_ratio
-    md_cooling_electricity = (
-        md_cooling * s.cooling.md_cooling_electricity_kwh_per_kwh_th
-    )
+    md_cooling_electricity = md_cooling * s.cooling.md_cooling_electricity_kwh_per_kwh_th
     md_cooling_water = md_cooling * s.cooling.md_cooling_water_l_per_kwh_th
 
     if s.md.pressure_drop_bar is not None:
         if s.md.pump_efficiency is None:
             raise ValueError("pump_efficiency is required when pressure_drop_bar is supplied")
         pumping = pumping_from_pressure_drop(
-            distillate_l=freshwater_l,
-            duration_h=s.workload.duration_h,
+            distillate_l=freshwater_l, duration_h=s.workload.duration_h,
             recovery_fraction=s.md.feed_recovery_fraction,
-            pressure_drop_bar=s.md.pressure_drop_bar,
-            pump_efficiency=s.md.pump_efficiency,
+            pressure_drop_bar=s.md.pressure_drop_bar, pump_efficiency=s.md.pump_efficiency,
         )
         pumping_electricity = pumping.electrical_power_kw * s.workload.duration_h
     else:
@@ -149,9 +122,7 @@ def simulate(s: Scenario) -> Result:
     concentrate_l = max(0.0, feed_water_l - freshwater_l)
 
     auxiliary_kwh = (
-        pumping_electricity
-        + freshwater_l
-        / 1000.0
+        pumping_electricity + freshwater_l / 1000.0
         * (s.auxiliary.pretreatment_kwh_per_m3 + s.auxiliary.other_kwh_per_m3)
         + md_cooling_electricity
     )
@@ -159,37 +130,40 @@ def simulate(s: Scenario) -> Result:
         facility_energy * s.cooling.cooling_water_consumption_l_per_kwh_facility
         + md_cooling_water
     )
-    indirect_l = (facility_energy + auxiliary_kwh) * s.water.grid_water_l_per_kwh
+
+    # Baseline IT/facility electricity belongs to the counterfactual too.
+    # Only intervention-specific electricity enters indirect water accounting.
+    incremental_electricity_kwh = (
+        s.cooling.incremental_facility_electricity_kwh + auxiliary_kwh
+    )
+    indirect_l = incremental_electricity_kwh * s.water.grid_water_l_per_kwh
     additional_l = cooling_l + indirect_l
 
+    # Produced distillate becomes avoided consumption only when the declared
+    # counterfactual demonstrates that it displaces freshwater consumption.
+    avoided_l = s.water.avoided_freshwater_consumption_l
+    net_consumption_change = additional_l - avoided_l
+
     concentrate_salinity = (
-        s.md.feed_salinity_g_kg
-        / (1.0 - s.md.feed_recovery_fraction)
-        if s.md.feed_salinity_g_kg > 0
-        else 0.0
+        s.md.feed_salinity_g_kg / (1.0 - s.md.feed_recovery_fraction)
+        if s.md.feed_salinity_g_kg > 0 else 0.0
     )
-    net_consumption_change = additional_l - freshwater_l
 
     return Result(
-        it_energy_kwh=it_energy,
-        facility_energy_kwh=facility_energy,
-        heat_generated_kwh_th=heat_generated,
-        recoverable_heat_kwh_th=recoverable,
-        md_thermal_demand_kwh_th=md_demand,
-        md_latent_demand_kwh_th=md_latent,
-        md_conductive_heat_leak_kwh_th=md_conductive,
-        md_cooling_demand_kwh_th=md_cooling,
+        it_energy_kwh=it_energy, facility_energy_kwh=facility_energy,
+        heat_generated_kwh_th=heat_generated, recoverable_heat_kwh_th=recoverable,
+        md_thermal_demand_kwh_th=md_demand, md_latent_demand_kwh_th=md_latent,
+        md_conductive_heat_leak_kwh_th=md_conductive, md_cooling_demand_kwh_th=md_cooling,
         md_cooling_electricity_kwh=md_cooling_electricity,
-        md_cooling_water_l=md_cooling_water,
-        freshwater_produced_l=freshwater_l,
-        feed_water_withdrawal_l=feed_water_l,
-        concentrate_discharge_l=concentrate_l,
+        md_cooling_water_l=md_cooling_water, freshwater_produced_l=freshwater_l,
+        feed_water_withdrawal_l=feed_water_l, concentrate_discharge_l=concentrate_l,
         concentrate_salinity_g_kg=concentrate_salinity,
         direct_cooling_consumption_l=cooling_l,
         pumping_electricity_kwh=pumping_electricity,
         auxiliary_electricity_kwh=auxiliary_kwh,
         indirect_water_consumption_l=indirect_l,
         additional_water_consumption_l=additional_l,
+        avoided_freshwater_consumption_l=avoided_l,
         net_consumption_change_l=net_consumption_change,
         net_freshwater_benefit_l=-net_consumption_change,
         heat_limited=heat_limited,
