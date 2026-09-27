@@ -50,6 +50,20 @@ parameters:
     source_id: case_specific
     status: case_specific
     uncertainty: high
+  - parameter_id: MD-008
+    symbol: S_feed
+    definition: inlet feed salinity
+    unit: g kg-1
+    source_id: case_specific_or_standard_seawater
+    status: input
+    uncertainty: composition_specific
+  - parameter_id: MD-009
+    symbol: S_out
+    definition: ideal single-pass concentrate salinity under complete salt retention
+    unit: g kg-1
+    source_id: model
+    status: derived
+    uncertainty: model_form
   - parameter_id: MD-006
     symbol: SEC_th
     definition: thermal energy supplied per kg distillate
