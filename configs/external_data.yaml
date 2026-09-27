@@ -1,0 +1,45 @@
+version: "1.0"
+
+provenance:
+  required_fields:
+    - source_id
+    - provider
+    - dataset
+    - version
+    - retrieval_date
+    - official_url
+    - license
+    - variable
+    - unit
+    - spatial_resolution
+    - temporal_resolution
+    - transformation
+    - uncertainty
+    - experiment_id
+
+sources:
+  WRI-AQUEDUCT-4.0:
+    provider: "World Resources Institute"
+    dataset: "Aqueduct 4.0 Current and Future Global Maps Data"
+    role: "basin-level water-risk screening"
+    license: "CC BY 4.0"
+    official_url: "https://datasets.wri.org/datasets/aqueduct-global-maps-40-data"
+
+  NASA-POWER-MERRA2:
+    provider: "NASA POWER / GMAO"
+    dataset: "POWER meteorological parameters based on MERRA-2"
+    role: "climate forcing for cooling and heat-sink scenarios"
+    official_url: "https://power.larc.nasa.gov/docs/methodology/meteorology/"
+
+  INDIA-OGD:
+    provider: "Government of India Open Government Data Platform"
+    dataset: "Dataset-specific; record exact catalog identifier"
+    role: "India-specific government observations/context"
+    license: "Government Open Data License - India"
+    official_url: "https://data.gov.in/"
+
+  INDIA-WRIS:
+    provider: "India-WRIS / responsible Government agencies"
+    dataset: "Dataset/report-specific; record exact identifier"
+    role: "Indian hydrological context"
+    official_url: "https://indiawris.gov.in/"
