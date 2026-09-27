@@ -125,3 +125,56 @@ def test_heat_limit_keeps_fixed_membrane_conduction():
     assert r.md_conductive_heat_leak_kwh_th > 0
     assert r.md_thermal_demand_kwh_th <= r.recoverable_heat_kwh_th
     assert r.concentrate_salinity_g_kg == 0.0
+
+from ai_water.md_channel import ChannelConfig, simulate_dcmd_channel
+
+
+def test_one_dimensional_dcmd_channel_resolves_interface_temperatures_and_axial_cooling():
+    result = simulate_dcmd_channel(
+        config=ChannelConfig(
+            membrane_area_m2=10,
+            membrane_permeance_kg_m2_h_bar=1.0,
+            latent_heat_kwh_th_per_kg=0.65,
+            membrane_thermal_conductivity_w_m_k=0.05,
+            membrane_thickness_m=100e-6,
+            feed_heat_transfer_coefficient_w_m2_k=1000,
+            permeate_heat_transfer_coefficient_w_m2_k=1000,
+            feed_mass_flow_kg_h=10_000,
+            permeate_mass_flow_kg_h=10_000,
+            feed_salinity_g_kg=0,
+            duration_h=1,
+            cells=10,
+        ),
+        feed_in_temperature_c=60,
+        permeate_in_temperature_c=25,
+    )
+    assert len(result.cells) == 10
+    assert result.freshwater_produced_kg > 0
+    assert result.feed_out_temperature_c < 60
+    assert result.permeate_out_temperature_c > 25
+    assert result.conductive_heat_leak_kwh_th > 0
+    assert all(c.feed_interface_temperature_c < c.feed_bulk_temperature_c for c in result.cells)
+    assert all(c.permeate_interface_temperature_c > c.permeate_bulk_temperature_c for c in result.cells)
+
+
+def test_one_dimensional_channel_concentrates_saline_feed():
+    result = simulate_dcmd_channel(
+        config=ChannelConfig(
+            membrane_area_m2=2,
+            membrane_permeance_kg_m2_h_bar=0.5,
+            latent_heat_kwh_th_per_kg=0.65,
+            membrane_thermal_conductivity_w_m_k=0.05,
+            membrane_thickness_m=100e-6,
+            feed_heat_transfer_coefficient_w_m2_k=1000,
+            permeate_heat_transfer_coefficient_w_m2_k=1000,
+            feed_mass_flow_kg_h=1000,
+            permeate_mass_flow_kg_h=1000,
+            feed_salinity_g_kg=35,
+            duration_h=1,
+            cells=5,
+        ),
+        feed_in_temperature_c=60,
+        permeate_in_temperature_c=25,
+    )
+    assert result.freshwater_produced_kg > 0
+    assert result.concentrate_salinity_g_kg > 35
