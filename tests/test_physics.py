@@ -178,3 +178,53 @@ def test_one_dimensional_channel_concentrates_saline_feed():
     )
     assert result.freshwater_produced_kg > 0
     assert result.concentrate_salinity_g_kg > 35
+from ai_water.channel_transport import (
+    ChannelProperties,
+    concentration_polarization_coefficient,
+    dimensionless_numbers,
+    graetz_leveque_nusselt,
+    graetz_leveque_sherwood,
+    heat_transfer_coefficient,
+    interface_salinity_g_kg,
+    mass_transfer_coefficient,
+    tpc_from_interfaces,
+    watertap_nusselt,
+)
+
+
+def test_channel_correlations_and_polarization_are_physical():
+    props = ChannelProperties(
+        density_kg_m3=1000,
+        viscosity_pa_s=0.001,
+        thermal_conductivity_w_m_k=0.6,
+        heat_capacity_j_kg_k=4180,
+        diffusivity_m2_s=1.5e-9,
+    )
+    re, pr, sc = dimensionless_numbers(
+        velocity_m_s=0.2,
+        hydraulic_diameter_m=0.002,
+        properties=props,
+    )
+    nu = graetz_leveque_nusselt(re, pr, 0.002, 1.0)
+    sh = graetz_leveque_sherwood(re, sc, 0.002, 1.0)
+    assert re > 0 and pr > 0 and sc > 0
+    assert nu > 0 and sh > 0
+    assert watertap_nusselt(re, pr) > 0
+    h = heat_transfer_coefficient(
+        nusselt=nu,
+        thermal_conductivity_w_m_k=0.6,
+        hydraulic_diameter_m=0.002,
+    )
+    k_m = mass_transfer_coefficient(
+        sherwood=sh,
+        diffusivity_m2_s=1.5e-9,
+        hydraulic_diameter_m=0.002,
+    )
+    cpc = concentration_polarization_coefficient(
+        flux_kg_m2_s=1e-4,
+        mass_transfer_coefficient_m_s=k_m,
+        solvent_density_kg_m3=1000,
+    )
+    assert h > 0 and k_m > 0 and cpc >= 1
+    assert interface_salinity_g_kg(35, cpc) >= 35
+    assert 0.0 < tpc_from_interfaces(60, 25, 55, 30) <= 1.0
