@@ -191,3 +191,40 @@ sources:
       - "salinity validity limits"
     url: "https://iapws.org/technical-guidance/release/Seawater"
     status: "implemented"
+
+  - id: NASA-POWER-MERRA2
+    title: "NASA POWER meteorological data methodology"
+    year: 2026
+    role: B
+    used_for:
+      - "climate forcing for cooling and heat-sink scenarios"
+      - "near-surface temperature, humidity and wind inputs where physically required"
+    url: "https://power.larc.nasa.gov/docs/methodology/meteorology/"
+    status: "external-dataset-protocol-registered"
+
+  - id: NASA-POWER-HOURLY-API
+    title: "NASA POWER Hourly API"
+    year: 2026
+    role: B
+    used_for:
+      - "analysis-ready hourly climate time series"
+    url: "https://power.larc.nasa.gov/docs/services/api/temporal/hourly/"
+    status: "external-dataset-protocol-registered"
+
+  - id: INDIA-OGD
+    title: "Open Government Data Platform India"
+    year: 2026
+    role: B
+    used_for:
+      - "India-specific government observations and contextual datasets"
+    url: "https://data.gov.in/"
+    status: "dataset-specific-selection-required"
+
+  - id: INDIA-WRIS
+    title: "India Water Resources Information System"
+    year: 2026
+    role: B
+    used_for:
+      - "Indian basin and hydrological context"
+    url: "https://indiawris.gov.in/"
+    status: "dataset-specific-selection-required"
