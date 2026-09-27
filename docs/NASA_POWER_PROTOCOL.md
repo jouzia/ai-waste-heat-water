@@ -4,7 +4,7 @@
 
 NASA POWER is used as a climate-forcing layer for cooling and heat-sink scenario analysis, not as a substitute for on-site instrumentation.
 
-NASA documents that its meteorological parameters are based on GMAO MERRA-2 assimilation products. MERRA-2 provides hourly global estimates on a 0.5 degree x 0.625 degree grid; POWER exposes analysis-ready temporal products including hourly and daily data.
+NASA documents that its meteorological parameters are based on GMAO MERRA-2 assimilation products. MERRA-2 provides hourly global estimates on a 0.5 degree x 0.625 degree grid; POWER exposes analysis-ready temporal products including hourly and daily data. This resolution is treated as climate forcing rather than site-scale observation.
 
 ## Variables
 
