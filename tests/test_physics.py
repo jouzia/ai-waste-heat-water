@@ -248,6 +248,7 @@ def test_one_dimensional_channel_can_apply_concentration_polarization():
             duration_h=1,
             cells=5,
             salt_mass_transfer_coefficient_m_s=1e-4,
+            solvent_density_kg_m3=1020,
         ),
         feed_in_temperature_c=60,
         permeate_in_temperature_c=25,
