@@ -80,10 +80,17 @@ class Result(BaseModel):
     freshwater_produced_l: float
     feed_water_withdrawal_l: float
     concentrate_discharge_l: float
+    concentrate_salinity_g_kg: float
     direct_cooling_consumption_l: float
     pumping_electricity_kwh: float
     auxiliary_electricity_kwh: float
     indirect_water_consumption_l: float
     additional_water_consumption_l: float
+    # Positive means additional water consumption exceeds recovered freshwater;
+    # negative means recovered freshwater exceeds the modeled additional burden.
+    net_consumption_change_l: float
+    # Legacy field retained for compatibility. It is the algebraic inverse of
+    # net_consumption_change_l and should not be interpreted as avoided
+    # freshwater consumption without an explicit counterfactual.
     net_freshwater_benefit_l: float
     heat_limited: bool
