@@ -31,14 +31,14 @@ Lei et al. (2025) demonstrate that workload-level data-center water use is highl
 
 ## Model layers added
 
-- **MD thermal layer:** separates latent vaporization duty from membrane conductive heat leak when membrane properties are supplied.
+- **MD thermal layer:** separates latent vaporization duty from membrane conductive heat leak when membrane properties are supplied.\n- **1-D DCMD channel layer:** resolves axial feed/permeate temperature and flow changes and solves feed/permeate interface temperatures from coupled convection, membrane conduction, and latent heat.
 - **Hydraulic layer:** converts pressure drop, feed recovery, flow, and pump efficiency into electrical pumping demand; direct literature specific-energy inputs remain supported.
 - **Cooling burden:** MD cooling duty can now propagate into electrical demand and direct cooling-water consumption instead of remaining a diagnostic-only value.
 - **Interface temperatures:** measured/interface temperatures can override the reduced-order temperature-polarization estimate.
 - **Salinity/thermodynamics:** standard-seawater cases now use IAPWS-08 water activity with an explicit single-pass concentration layer; concentrate salinity is reported.
 - **Continuous integration:** GitHub Actions runs the test suite and Ruff on pushes and pull requests.
 
-These additions do not supply unsupported membrane properties, grid-water factors, or site-specific cooling assumptions. Membrane-specific transport parameters, channel heat-transfer coefficients, and geographic water factors remain explicit inputs awaiting source extraction.
+These additions do not supply unsupported membrane properties, heat-transfer coefficients, grid-water factors, or site-specific cooling assumptions. Membrane-specific transport parameters, channel heat-transfer coefficients, and geographic water factors remain explicit inputs awaiting source extraction.
 
 ## Scientific status
 
