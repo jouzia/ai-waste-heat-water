@@ -46,6 +46,10 @@ These additions do not supply unsupported membrane properties, heat-transfer coe
 
 **No positive water-benefit conclusion is claimed.** The current baseline is a screening/accounting model, not an industrial digital twin. Before quantitative deployment claims, the study must validate the new channel transport correlations and concentration-polarization layer against source-matched experiments, then add cooling and heat-sink constraints, source-matched membrane parameters, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
 
+## External data and legal reproducibility
+
+The geographic evidence layer uses official scientific and government sources under their applicable reuse terms. WRI Aqueduct 4.0 is used for basin-level water-risk screening; NASA POWER/MERRA-2 is used for climate forcing; India OGD and India-WRIS are reserved for dataset-specific Indian hydrological evidence. Exact source version, retrieval date, license, transformation, and uncertainty are recorded. See `docs/DATA_PROVENANCE.md`, `docs/EXTERNAL_DATA_LEGAL.md`, and `docs/NASA_POWER_PROTOCOL.md`.
+
 ## Reproducibility policy
 
 Every externally sourced parameter must carry a source identifier, definition, unit, applicability range, transformation, uncertainty treatment, and validation status. Scenario-only values remain visibly labelled. Negative or non-beneficial outcomes are preserved rather than filtered from the results.
