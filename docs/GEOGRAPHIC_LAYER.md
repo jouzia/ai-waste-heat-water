@@ -15,6 +15,12 @@ Source:
 - https://datasets.wri.org/datasets/aqueduct-global-maps-40-data
 - https://www.wri.org/data/aqueduct-global-maps-40-data
 
+## Legal and provenance rule
+
+WRI states that Aqueduct 4.0 may be shared, reproduced, and adapted with attribution under CC BY 4.0. Public outputs using the dataset must preserve attribution and the dataset version/retrieval date. If WRI registration is required for adaptation/sharing, complete that registration through the official WRI process rather than through research tooling. See `docs/EXTERNAL_DATA_LEGAL.md`.
+
+Required attribution: `Source: WRI Aqueduct, accessed on [insert date]. Licensed under Creative Commons Attribution International 4.0.`
+
 ## Required fields
 
 Each modeled site should record:
