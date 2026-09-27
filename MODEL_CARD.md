@@ -20,9 +20,9 @@ The single-pass concentration layer assumes complete salt retention and uses wat
 
 ## Known limitations
 
-- Current interface-temperature treatment is reduced-order unless measured interface temperatures are supplied.
-- The model does not yet resolve channel-level mass/energy balances.
-- Concentration polarization is not explicitly resolved.
+- The 1-D channel model resolves interface temperatures from explicit convective coefficients; the legacy symmetric TPC path remains available for screening and reproduction.
+- The 1-D channel model resolves axial bulk temperature/mass changes, but does not resolve 2-D/3-D spacer-scale flow, local mixing, scaling, or full concentration-polarization fields.
+- Concentration polarization is available as a selectable reduced-order boundary-layer model, but is not yet validated as a universal correlation.
 - Cooling is parameterized rather than solved from a detailed heat-sink model.
 - Electricity-water factors are external site parameters.
 - Embodied water and full life-cycle impacts are outside the current operational boundary.
