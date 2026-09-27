@@ -16,9 +16,9 @@ This is not a claim that all generated heat is usable. Temperature, duration, ex
 
 ## Membrane distillation
 
-The reduced-order transport primitive uses J = C_m [p_sat(T_fi, a_w) - p_sat(T_pi)]. Pure-water saturation pressure is based on NIST SRD 69. The primary saline pathway uses IAPWS-08 standard seawater thermodynamics. For single-pass recovery R, ideal salt retention gives S_out = S_in / (1-R), while the engine uses a water-removal-weighted bulk salinity for the lumped activity calculation. This does not resolve concentration polarization.
+The reduced-order transport primitive uses J = C_m [p_sat(T_fi, a_w) - p_sat(T_pi)]. The 1-D DCMD layer solves the interface temperatures from q_f = q_m = q_p rather than prescribing a symmetric TPC. Pure-water saturation pressure is based on NIST SRD 69. The primary saline pathway uses IAPWS-08 standard seawater thermodynamics. For single-pass recovery R, ideal salt retention gives S_out = S_in / (1-R), while the engine uses a water-removal-weighted bulk salinity for the lumped activity calculation. This does not resolve concentration polarization.
 
-The thermal model must distinguish hot-side supply, latent heat, conductive membrane heat leak, sensible heating/cooling, cold-side rejection, heat recovery, and pumping electricity.
+The thermal model must distinguish hot-side supply, latent heat, conductive membrane heat leak, sensible heating/cooling, cold-side rejection, heat recovery, and pumping electricity. The new 1-D DCMD layer resolves the feed and permeate bulk-temperature evolution and the two membrane-interface temperatures cell by cell using explicit convective heat-transfer coefficients.
 
 ## Cooling boundary
 
