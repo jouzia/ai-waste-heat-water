@@ -32,6 +32,10 @@ Every external parameter or dataset used in a published run must record:
 
 Large upstream datasets remain external. The repository stores metadata, retrieval manifests, extraction scripts, checksums, and small derived tables required for reproducibility. Raw files remain subject to the provider's applicable terms.
 
+## Source selection hierarchy
+
+For quantitative model inputs, prefer in order: (1) measurement or source-matched experiment, (2) official observational dataset, (3) validated physical model/reanalysis, (4) peer-reviewed parameter estimate, (5) explicitly labeled scenario assumption. A lower tier must never silently replace a higher tier.
+
 ## Geographic evidence chain
 
 site coordinate -> climate forcing -> hydrological context -> basin water-risk screening -> operational water model
