@@ -10,6 +10,7 @@ class Workload(BaseModel):
 
 class Cooling(BaseModel):
     facility_overhead_fraction: float = Field(ge=0, default=0.0)
+    incremental_facility_electricity_kwh: float = Field(ge=0, default=0.0)
     cooling_water_consumption_l_per_kwh_facility: float = Field(ge=0, default=0.0)
     cooling_heat_penalty_fraction: float = Field(ge=0, le=1, default=0.0)
     md_cooling_to_heating_ratio: float = Field(ge=0, default=0.0)
@@ -28,10 +29,7 @@ class HeatRecovery(BaseModel):
 class MembraneDistillation(BaseModel):
     membrane_area_m2: float = Field(gt=0)
     membrane_permeance_kg_m2_h_bar: float | None = Field(default=None, gt=0)
-    # Legacy direct-flux input retained for regression tests and literature cases.
     flux_kg_m2_h: float | None = Field(default=None, gt=0)
-    # Legacy/effective thermal duty. When latent_heat is supplied, the engine
-    # resolves hot-side duty from latent + conductive membrane heat leak.
     thermal_energy_kwh_th_per_kg: float = Field(gt=0)
     latent_heat_kwh_th_per_kg: float | None = Field(default=None, gt=0)
     membrane_thermal_conductivity_w_m_k: float | None = Field(default=None, ge=0)
@@ -55,6 +53,7 @@ class AuxiliaryLoads(BaseModel):
 
 class WaterFactors(BaseModel):
     grid_water_l_per_kwh: float = Field(ge=0, default=0.0)
+    avoided_freshwater_consumption_l: float = Field(ge=0, default=0.0)
 
 
 class Scenario(BaseModel):
@@ -86,11 +85,7 @@ class Result(BaseModel):
     auxiliary_electricity_kwh: float
     indirect_water_consumption_l: float
     additional_water_consumption_l: float
-    # Positive means additional water consumption exceeds recovered freshwater;
-    # negative means recovered freshwater exceeds the modeled additional burden.
+    avoided_freshwater_consumption_l: float
     net_consumption_change_l: float
-    # Legacy field retained for compatibility. It is the algebraic inverse of
-    # net_consumption_change_l and should not be interpreted as avoided
-    # freshwater consumption without an explicit counterfactual.
     net_freshwater_benefit_l: float
     heat_limited: bool
