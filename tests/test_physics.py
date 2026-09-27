@@ -228,3 +228,27 @@ def test_channel_correlations_and_polarization_are_physical():
     assert h > 0 and k_m > 0 and cpc >= 1
     assert interface_salinity_g_kg(35, cpc) >= 35
     assert 0.0 < tpc_from_interfaces(60, 25, 55, 30) <= 1.0
+
+def test_one_dimensional_channel_can_apply_concentration_polarization():
+    result = simulate_dcmd_channel(
+        config=ChannelConfig(
+            membrane_area_m2=2,
+            membrane_permeance_kg_m2_h_bar=0.5,
+            latent_heat_kwh_th_per_kg=0.65,
+            membrane_thermal_conductivity_w_m_k=0.05,
+            membrane_thickness_m=100e-6,
+            feed_heat_transfer_coefficient_w_m2_k=1000,
+            permeate_heat_transfer_coefficient_w_m2_k=1000,
+            feed_mass_flow_kg_h=1000,
+            permeate_mass_flow_kg_h=1000,
+            feed_salinity_g_kg=35,
+            duration_h=1,
+            cells=5,
+            salt_mass_transfer_coefficient_m_s=1e-4,
+        ),
+        feed_in_temperature_c=60,
+        permeate_in_temperature_c=25,
+    )
+    assert result.freshwater_produced_kg > 0
+    assert all(c.concentration_polarization_coefficient >= 1 for c in result.cells)
+    assert all(c.interface_salinity_g_kg >= c.feed_salinity_g_kg for c in result.cells)
