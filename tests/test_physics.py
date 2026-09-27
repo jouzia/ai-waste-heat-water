@@ -96,6 +96,8 @@ def test_cooling_burden_reaches_water_accounting():
     assert r.md_cooling_electricity_kwh == 0.4
     assert r.md_cooling_water_l == 1.6
     assert r.direct_cooling_consumption_l == 1.6
+    assert r.net_consumption_change_l == -0.8
+    assert r.net_freshwater_benefit_l == 0.8
 
 
 def test_heat_limit_keeps_fixed_membrane_conduction():
@@ -122,3 +124,4 @@ def test_heat_limit_keeps_fixed_membrane_conduction():
     assert r.heat_limited is True
     assert r.md_conductive_heat_leak_kwh_th > 0
     assert r.md_thermal_demand_kwh_th <= r.recoverable_heat_kwh_th
+    assert r.concentrate_salinity_g_kg == 0.0
