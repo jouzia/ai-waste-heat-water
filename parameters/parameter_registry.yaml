@@ -78,6 +78,34 @@ parameters:
     source_id: derived
     status: derived
     uncertainty: hydraulic_configuration_specific
+  - parameter_id: MD-010
+    symbol: h_f
+    definition: feed-side convective heat-transfer coefficient
+    unit: W m-2 K-1
+    source_id: channel_specific_literature_or_correlation
+    status: requires_extraction
+    uncertainty: configuration_specific
+  - parameter_id: MD-011
+    symbol: h_p
+    definition: permeate-side convective heat-transfer coefficient
+    unit: W m-2 K-1
+    source_id: channel_specific_literature_or_correlation
+    status: requires_extraction
+    uncertainty: configuration_specific
+  - parameter_id: MD-012
+    symbol: m_dot_f
+    definition: feed-channel mass flow rate
+    unit: kg h-1
+    source_id: case_specific_or_measurement
+    status: case_specific
+    uncertainty: flow_and_geometry_dependent
+  - parameter_id: MD-013
+    symbol: m_dot_p
+    definition: permeate-channel mass flow rate
+    unit: kg h-1
+    source_id: case_specific_or_measurement
+    status: case_specific
+    uncertainty: flow_and_geometry_dependent
   - parameter_id: COOL-001
     symbol: SCR
     definition: specific cooling requirement of MD
