@@ -100,6 +100,27 @@ sources:
     url: "https://arxiv.org/abs/2304.03271"
     status: "method-reference"
 
+  - id: MD-PILOT-VALIDATION-2026
+    title: "Pilot-scale membrane distillation modeling: Validation, comparison, and consensus"
+    year: 2026
+    role: A
+    used_for:
+      - "cross-system MD model validation methodology"
+      - "pilot-scale validation benchmark design"
+    doi: "10.1016/j.desal.2025.119674"
+    url: "https://doi.org/10.1016/j.desal.2025.119674"
+    status: "validation-reference"
+
+  - id: MD-DCMD-VALIDATION-2026
+    title: "Sustainable water recovery from steel industry wastewater via direct contact membrane distillation"
+    year: 2026
+    role: A
+    used_for:
+      - "DCMD experimental validation benchmark"
+      - "flux and outlet-temperature validation methodology"
+    url: "https://link.springer.com/article/10.1007/s43832-026-00418-y"
+    status: "candidate-validation-source"
+
   - id: MD-COOLING-PUMPING-2026
     title: "Waste heat won't make membrane distillation cool: Thermodynamic analysis of cooling and pumping burdens"
     year: 2026
