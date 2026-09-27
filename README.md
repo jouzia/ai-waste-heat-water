@@ -33,6 +33,7 @@ Lei et al. (2025) demonstrate that workload-level data-center water use is highl
 
 - **MD thermal layer:** separates latent vaporization duty from membrane conductive heat leak when membrane properties are supplied.
 - **1-D DCMD channel layer:** resolves axial feed/permeate temperature and flow changes and solves feed/permeate interface temperatures from coupled convection, membrane conduction, and latent heat.
+- **Concentration polarization:** selectable exponential boundary-layer CPC model now couples feed-side mass transfer to membrane-interface salinity and IAPWS activity.
 - **Hydraulic layer:** converts pressure drop, feed recovery, flow, and pump efficiency into electrical pumping demand; direct literature specific-energy inputs remain supported.
 - **Cooling burden:** MD cooling duty can now propagate into electrical demand and direct cooling-water consumption instead of remaining a diagnostic-only value.
 - **Interface temperatures:** measured/interface temperatures can override the reduced-order temperature-polarization estimate.
@@ -43,7 +44,7 @@ These additions do not supply unsupported membrane properties, heat-transfer coe
 
 ## Scientific status
 
-**No positive water-benefit conclusion is claimed.** The current baseline is a screening/accounting model, not an industrial digital twin. Before quantitative deployment claims, the study must add a channel-resolved/reduced-order heat-transfer model, concentration-polarization treatment, cooling and heat-sink constraints, source-matched membrane parameters, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
+**No positive water-benefit conclusion is claimed.** The current baseline is a screening/accounting model, not an industrial digital twin. Before quantitative deployment claims, the study must validate the new channel transport correlations and concentration-polarization layer against source-matched experiments, then add cooling and heat-sink constraints, source-matched membrane parameters, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
 
 ## Reproducibility policy
 
