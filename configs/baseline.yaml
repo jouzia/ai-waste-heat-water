@@ -4,6 +4,7 @@ workload:
   recoverable_heat_fraction: 0.8
 cooling:
   facility_overhead_fraction: 0.3
+  incremental_facility_electricity_kwh: 0.0
   cooling_water_consumption_l_per_kwh_facility: 0.0
   cooling_heat_penalty_fraction: 0.0
 recovery:
@@ -23,3 +24,4 @@ auxiliary:
   other_kwh_per_m3: 0.0
 water:
   grid_water_l_per_kwh: 0.0
+  avoided_freshwater_consumption_l: 0.0
