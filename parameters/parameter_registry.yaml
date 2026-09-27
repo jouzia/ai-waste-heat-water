@@ -106,6 +106,34 @@ parameters:
     source_id: case_specific_or_measurement
     status: case_specific
     uncertainty: flow_and_geometry_dependent
+  - parameter_id: MD-014
+    symbol: k_s
+    definition: feed-side salt mass-transfer coefficient
+    unit: m s-1
+    source_id: channel_specific_correlation
+    status: derived_or_extracted
+    uncertainty: configuration_specific
+  - parameter_id: MD-015
+    symbol: CPC
+    definition: concentration polarization coefficient, C_interface/C_bulk
+    unit: dimensionless
+    source_id: MD-CPC-2020-DCMD
+    status: derived
+    uncertainty: model_form
+  - parameter_id: MD-016
+    symbol: h_f
+    definition: feed-side heat-transfer coefficient
+    unit: W m-2 K-1
+    source_id: channel_specific_correlation
+    status: derived_or_extracted
+    uncertainty: configuration_specific
+  - parameter_id: MD-017
+    symbol: h_p
+    definition: permeate-side heat-transfer coefficient
+    unit: W m-2 K-1
+    source_id: channel_specific_correlation
+    status: derived_or_extracted
+    uncertainty: configuration_specific
   - parameter_id: COOL-001
     symbol: SCR
     definition: specific cooling requirement of MD
