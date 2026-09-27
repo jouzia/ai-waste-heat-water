@@ -19,7 +19,7 @@ def test_energy_to_heat_is_explicit_and_recoverable():
 
 def test_heat_limiting_reduces_production():
     s = scenario()
-    s.recovery.recovery_efficiency = 0.01
+    s.recovery.recovery_efficiency = 0.005
     r = simulate(s)
     assert r.heat_limited is True
     assert r.freshwater_produced_l == 1.0
