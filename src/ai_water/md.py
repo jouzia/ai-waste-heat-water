@@ -130,6 +130,38 @@ def seawater_water_activity(
     return math.exp((sw.muw - pure.g) / (r_kj * temperature_k))
 
 
+
+def seawater_thermophysical_properties(
+    temperature_c: float,
+    salinity_g_kg: float,
+    pressure_mpa: float = 0.101325,
+) -> dict[str, float]:
+    """Return IAPWS-08 density, heat capacity, and thermal conductivity.
+
+    Dynamic viscosity and salt diffusivity are intentionally not inferred here:
+    those quantities require a separate source-backed correlation for the
+    declared salinity/temperature regime.
+    """
+    if SeaWater is None:
+        raise ImportError("iapws is required for seawater properties")
+    if not 261 <= temperature_c + 273.15 <= 353:
+        raise ValueError("IAPWS-08 temperature range is 261-353 K")
+    if not 0 <= salinity_g_kg <= 120:
+        raise ValueError("IAPWS-08 salinity range is 0-120 g/kg")
+    if pressure_mpa <= 0 or pressure_mpa > 100:
+        raise ValueError("IAPWS-08 pressure must be in (0,100] MPa")
+    state = SeaWater(
+        T=temperature_c + 273.15,
+        P=pressure_mpa,
+        S=salinity_g_kg / 1000.0,
+    )
+    return {
+        "density_kg_m3": float(state.rho),
+        "heat_capacity_j_kg_k": float(state.cp * 1000.0),
+        "thermal_conductivity_w_m_k": float(state.k),
+    }
+
+
 def vapor_pressure_driving_force_bar(
     hot_c: float,
     cold_c: float,
