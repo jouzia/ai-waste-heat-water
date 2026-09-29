@@ -4,8 +4,9 @@ These utilities intentionally contain no default empirical distributions. A
 published analysis must supply source-linked distribution parameters externally.
 """
 
-import numpy as np
 from dataclasses import dataclass
+
+import numpy as np
 
 
 @dataclass(frozen=True)
