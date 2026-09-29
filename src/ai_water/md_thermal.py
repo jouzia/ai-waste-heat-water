@@ -12,6 +12,7 @@ are not supplied, the caller must not silently invent them.
 """
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class MDThermalResult:
     latent_duty_kwh_th: float
