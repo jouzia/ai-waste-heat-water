@@ -1,38 +1,52 @@
 # Literature reproduction benchmark: Keshavarzzadeh et al. (2020)
-
 source_id: MD-DCMD-CHANNEL-2020
-status: parameterized_source_case
-claim_status: "No output reproduction claim until model-to-source comparison is completed."
+status: eligible_source_case_incomplete
+claim_status: "No numerical reproduction claim until source operating conditions and observed flux data are independently reconstructed."
+
+source:
+  citation: "Keshavarzzadeh, A. H. (2020), Scientific Reports 10, 16790"
+  doi: "10.1038/s41598-020-73964-7"
+  access: "open_access_cc_by_4"
+  validation_basis: "Experimental data reported by Martinez-Diez and Vazquez-Gonzalez"
+  source_sections:
+    - "Modeling"
+    - "Validation"
+    - "Figure 3"
+  source_equations:
+    transport: [1, 2, 3, 4, 5, 6, 7, 8]
+    balances: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+    membrane_conduction: [19, 20, 21, 22]
+    heat_transfer: [23, 24, 25, 26]
+    thermal_efficiency: [27]
 
 module:
-  type: flat_sheet_dcMD
-  length_m: 5.0
-  width_m: 0.5
-  channel_depth_m: 0.005
-  membrane_area_m2: 2.5
+  type: flat_sheet_dcmd
+  flow_arrangement: counter_current
+  validation_module_description: "9 feed channels and 9 permeate channels"
 
-inlet:
+confirmed_validation_inputs:
+  recirculation_rates_cm3_s: [7.0, 11.0]
+  feed_sodium_chloride_concentration_mol_l: [0.0, 0.55, 1.15, 1.67]
+  membrane:
+    material: PTFE
+    void_fraction: 0.80
+    thickness_um: 60.0
+    nominal_pore_size: "0.2 mm as printed in the source text; verify against original experimental reference before treating as micrometre-scale pore size"
+
+unresolved_source_inputs:
+  - "Exact channel length/width/depth for the validation module"
+  - "Exact inlet feed and permeate temperatures for every plotted validation point"
+  - "Exact membrane transport parameters required by the source equations"
+  - "Experimental flux values from Figure 3"
+  - "Exact source thermophysical-property correlations"
+  - "Original Martinez-Diez and Vazquez-Gonzalez experimental metadata"
+
+provisional_values_do_not_use_for_validation:
+  note: "These values may be used for software smoke tests only and must never be labelled as source conditions."
   feed_temperature_c: 70.0
   permeate_temperature_c: 25.0
   feed_flow_l_min: 10.0
   permeate_flow_l_min: 10.0
-  feed_mass_flow_kg_h_approx: 600.0
-  permeate_mass_flow_kg_h_approx: 600.0
-  feed_salinity_g_kg: 35.0
-
-membrane:
-  validation_case_material: PTFE
-  validation_case_void_fraction: 0.80
-  validation_case_thickness_um: 60.0
-  validation_case_nominal_pore_size_mm: 0.2
-
-model_requirements:
-  - "Source-matched thermophysical properties"
-  - "Source-matched membrane mass-transfer formulation"
-  - "Source-matched heat-transfer correlation"
-  - "Counter-current module orientation as applicable to the validation case"
-  - "Reported experimental comparison metric"
-  - "Exact table/figure/equation references recorded before comparison"
 
 reproduction_outputs:
   - average_flux_kg_m2_h
@@ -40,3 +54,9 @@ reproduction_outputs:
   - outlet_feed_temperature_c
   - outlet_permeate_temperature_c
   - source_vs_model_error_percent
+
+acceptance_rule:
+  - "No parameter fitting before an unfitted source-condition run."
+  - "Any fitted parameter is development-only."
+  - "Independent source cases remain held out for validation."
+  - "Observed-vs-predicted values and exact source locations must be archived."
