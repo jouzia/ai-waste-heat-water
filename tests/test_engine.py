@@ -18,7 +18,7 @@ def scenario():
             thermal_energy_kwh_th_per_kg=1,
         ),
         auxiliary=AuxiliaryLoads(),
-        water=WaterFactors(),
+        water=WaterFactors(avoided_freshwater_consumption_l=1.0),
     )
 
 
