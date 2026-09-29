@@ -1,5 +1,13 @@
 from ai_water.engine import simulate
-from ai_water.models import AuxiliaryLoads, Cooling, HeatRecovery, MembraneDistillation, Scenario, WaterFactors, Workload
+from ai_water.models import (
+    AuxiliaryLoads,
+    Cooling,
+    HeatRecovery,
+    MembraneDistillation,
+    Scenario,
+    WaterFactors,
+    Workload,
+)
 
 
 def scenario():
