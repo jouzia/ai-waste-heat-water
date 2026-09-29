@@ -1,5 +1,6 @@
 """Deterministic experiment runner."""
 import numpy as np
+
 from .engine import simulate
 from .models import Scenario
 
