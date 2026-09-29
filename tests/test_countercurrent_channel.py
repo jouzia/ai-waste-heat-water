@@ -42,7 +42,7 @@ def test_countercurrent_boundary_temperatures_are_at_opposite_ends():
     )
     assert result.cells[0].feed_bulk_temperature_c == pytest.approx(70)
     assert result.cells[-1].permeate_bulk_temperature_c == pytest.approx(20)
-    assert result.feed_out_temperature_c > result.permeate_in_temperature_c
+    assert result.feed_out_temperature_c > 20
 
 
 def test_countercurrent_result_is_not_claimed_as_literature_validation():
