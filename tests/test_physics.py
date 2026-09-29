@@ -2,7 +2,14 @@ import numpy as np
 import pytest
 from ai_water.engine import simulate
 from ai_water.hydraulics import pumping_from_pressure_drop
-from ai_water.uncertainty import DistributionSpec, probability_negative, sample_distribution, summarize
+from ai_water.md import (
+    flux_kg_m2_h,
+    interface_temperatures,
+    saturation_pressure_bar,
+    vapor_pressure_driving_force_bar,
+)
+from ai_water.md_channel import ChannelConfig, simulate_dcmd_channel
+from ai_water.md_thermal import account_for_membrane_heat
 from ai_water.models import (
     AuxiliaryLoads,
     Cooling,
@@ -12,15 +19,12 @@ from ai_water.models import (
     WaterFactors,
     Workload,
 )
-from ai_water.md import (
-    flux_kg_m2_h,
-    interface_temperatures,
-    saturation_pressure_bar,
-    vapor_pressure_driving_force_bar,
+from ai_water.uncertainty import (
+    DistributionSpec,
+    probability_negative,
+    sample_distribution,
+    summarize,
 )
-from ai_water.md_thermal import account_for_membrane_heat
-from ai_water.md_channel import ChannelConfig, simulate_dcmd_channel
-
 
 def test_saturation_pressure_increases_with_temperature():
     assert saturation_pressure_bar(40) < saturation_pressure_bar(60)
