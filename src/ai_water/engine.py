@@ -71,7 +71,6 @@ def simulate(s: Scenario) -> Result:
         effective_duty_per_kg = s.md.thermal_energy_kwh_th_per_kg
         potential_demand = potential_water_kg * effective_duty_per_kg
         conductive_leak = 0.0
-        latent_demand = potential_water_kg * s.md.thermal_energy_kwh_th_per_kg
     else:
         thermal = account_for_membrane_heat(
             water_kg=potential_water_kg,
