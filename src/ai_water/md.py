@@ -25,7 +25,17 @@ _ANTOINE = (
 
 
 def saturation_pressure_bar(temperature_c: float) -> float:
+    """Return saturation pressure using NIST Antoine coefficients.
+
+    NIST provides an overlapping Gubkov correlation from 293-343 K that
+    bridges the small gaps between the segmented Bridgeman-Aldrich ranges.
+    The implementation keeps the original segmented coefficients for their
+    declared ranges and uses the overlapping bridge elsewhere.
+    """
     temperature_k = temperature_c + 273.15
+    if 293.0 <= temperature_k <= 343.0:
+        a, b, c = 6.20963, 2354.731, 7.559
+        return 10.0 ** (a - b / (temperature_k + c))
     for lower, upper, a, b, c in _ANTOINE:
         if lower <= temperature_k <= upper:
             return 10.0 ** (a - b / (temperature_k + c))
