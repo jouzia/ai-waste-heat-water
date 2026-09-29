@@ -6,9 +6,9 @@ permeate-backward energy sweeps. It is intentionally separate so the
 existing co-current implementation remains backward compatible.
 """
 
-from .md_channel import ChannelCellResult, ChannelConfig, ChannelResult, _cell_interfaces
 from .channel_transport import concentration_polarization_coefficient, interface_salinity_g_kg
 from .md import seawater_water_activity
+from .md_channel import ChannelCellResult, ChannelConfig, ChannelResult, _cell_interfaces
 
 
 def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_temperature_c: float, permeate_in_temperature_c: float, max_iterations: int = 500, tolerance_c: float = 1e-7) -> ChannelResult:
@@ -110,7 +110,6 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             tf = feed_profile[i]
             tp = permeate_profile[i + 1]
             tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, _ = feed_results[i]
-            q_permeate_kwh = q_w / 1000.0 * config.duration_h
             permeate_profile[i] = tp + (q_w * config.duration_h * 3.6) / (permeate_mass * config.permeate_cp_kj_kg_k)
             permeate_mass += flux * area
 
