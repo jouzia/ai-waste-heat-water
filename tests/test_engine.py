@@ -34,12 +34,27 @@ def test_heat_limiting_reduces_production():
     s.recovery.recovery_efficiency = 0.005
     result = simulate(s)
     assert result.heat_limited is True
-    # 0.5 kWh_th is available and the configured effective duty is
-    # 1 kWh_th per kg, so production is limited to 0.5 kg = 0.5 L.
     assert result.freshwater_produced_l == 0.5
 
 
-def test_net_consumption_sign_is_explicit():
+def test_distillate_is_not_automatically_avoided_consumption():
     result = simulate(scenario())
-    assert result.net_consumption_change_l == -1.0
-    assert result.net_freshwater_benefit_l == 1.0
+    assert result.freshwater_produced_l == 1.0
+    assert result.avoided_freshwater_consumption_l == 0.0
+    assert result.net_consumption_change_l == 0.0
+    assert result.net_freshwater_benefit_l == 0.0
+
+
+def test_declared_counterfactual_drives_net_water_response():
+    s = scenario()
+    s.water.avoided_freshwater_consumption_l = 0.8
+    result = simulate(s)
+    assert result.net_consumption_change_l == -0.8
+    assert result.net_freshwater_benefit_l == 0.8
+
+
+def test_baseline_facility_electricity_is_not_incremental_water_burden():
+    s = scenario()
+    s.water.grid_water_l_per_kwh = 1.0
+    result = simulate(s)
+    assert result.indirect_water_consumption_l == 0.0
