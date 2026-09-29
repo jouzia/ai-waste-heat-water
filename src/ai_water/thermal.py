@@ -1,6 +1,7 @@
 """First-order system thermal balance primitives."""
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class ThermalBalance:
     it_heat_kwh_th: float
