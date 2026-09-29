@@ -89,7 +89,6 @@ def simulate(s: Scenario) -> Result:
         )
         potential_demand = thermal.hot_side_duty_kwh_th
         conductive_leak = thermal.conductive_heat_leak_kwh_th
-        latent_demand = thermal.latent_duty_kwh_th
 
     actual_water_kg = potential_water_kg
     heat_limited = False
@@ -169,8 +168,6 @@ def simulate(s: Scenario) -> Result:
         if s.md.feed_salinity_g_kg > 0
         else 0.0
     )
-    net_consumption_change = additional_l - freshwater_l
-
     return Result(
         it_energy_kwh=it_energy,
         facility_energy_kwh=facility_energy,
