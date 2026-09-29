@@ -1,0 +1,53 @@
+version: "1.0"
+
+purpose: "Immutable registry of literature cases considered for quantitative membrane-distillation validation."
+
+status_definitions:
+  candidate: "Source identified; quantitative reconstruction not yet completed."
+  eligible: "Required boundary conditions are available for reconstruction."
+  parameterized: "Machine-readable case extracted; no model comparison completed."
+  validated_development: "Compared during model development or fitting; not held-out evidence."
+  validated_held_out: "Compared without fitting parameters to that case."
+  excluded: "Insufficient information or incompatible system boundary."
+  qualitative_only: "Useful scientific evidence but not reproducible quantitatively."
+
+cases:
+  - source_id: MD-DCMD-CHANNEL-2020
+    citation: "Keshavarzzadeh et al. (2020), Scientific Reports"
+    doi_or_stable_identifier: "source registry entry MD-DCMD-CHANNEL-2020"
+    configuration: "flat-sheet DCMD"
+    extraction_status: parameterized
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-CHANNEL-2020.yaml"
+    claim_status: "No predictive accuracy claim until source-matched comparison is completed."
+
+  - source_id: MD-PILOT-VALIDATION-2026
+    citation: "Bindels et al. (2026), Desalination 620, 119674"
+    doi_or_stable_identifier: "10.1016/j.desal.2025.119674"
+    configuration: "pilot-scale AGMD and V-AGMD"
+    extraction_status: candidate
+    validation_status: qualitative_only
+    benchmark_file: null
+    exclusion_reason_if_any: "Authors state that the aggregated experimental data cannot be shared."
+    claim_status: "Methodological evidence only until independent datapoints are legally and reproducibly available."
+
+  - source_id: MD-DCMD-VALIDATION-2026
+    citation: "Sulaiman et al. (2026), Discover Water"
+    doi_or_stable_identifier: "10.1007/s43832-026-00418-y"
+    configuration: "hollow-fiber DCMD"
+    extraction_status: candidate
+    validation_status: candidate
+    benchmark_file: null
+    claim_status: "Potential independent validation source; exact experimental conditions must be extracted before quantitative use."
+
+validation_split_policy:
+  development: "Cases used to select or fit model parameters."
+  held_out: "Cases locked before final model selection and never used for fitting."
+  rule: "A case cannot be both fitted and reported as independent validation."
+
+reproduction_rule:
+  - "Preserve source operating conditions and system configuration."
+  - "Do not replace missing values with undocumented defaults."
+  - "Record every transformation and unit conversion."
+  - "If a critical boundary condition is unavailable, downgrade to qualitative_only or excluded."
+  - "Report failures and incompatible cases."
