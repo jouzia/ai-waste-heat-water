@@ -14,7 +14,8 @@ status_definitions:
 cases:
   - source_id: MD-DCMD-CHANNEL-2020
     citation: "Keshavarzzadeh et al. (2020), Scientific Reports"
-    doi_or_stable_identifier: "source registry entry MD-DCMD-CHANNEL-2020"
+    doi_or_stable_identifier: "10.1038/s41598-020-73964-7"
+    upstream_experimental_source: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273, DOI 10.1016/S0376-7388(98)00349-4"
     configuration: "flat-sheet DCMD"
     extraction_status: parameterized
     validation_status: candidate
