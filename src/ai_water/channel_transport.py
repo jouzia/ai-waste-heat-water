@@ -6,8 +6,8 @@ downstream development can materially affect polarization. Each correlation
 must therefore be reported with its source and applicability range.
 """
 
-from dataclasses import dataclass
 import math
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
