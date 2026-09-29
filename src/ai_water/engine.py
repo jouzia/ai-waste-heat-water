@@ -159,8 +159,9 @@ def simulate(s: Scenario) -> Result:
         facility_energy * s.cooling.cooling_water_consumption_l_per_kwh_facility
         + md_cooling_water
     )
-    indirect_l = (facility_energy + auxiliary_kwh) * s.water.grid_water_l_per_kwh
+    indirect_l = (s.cooling.incremental_facility_electricity_kwh + auxiliary_kwh) * s.water.grid_water_l_per_kwh
     additional_l = cooling_l + indirect_l
+    avoided_l = s.water.avoided_freshwater_consumption_l
 
     concentrate_salinity = (
         s.md.feed_salinity_g_kg
@@ -190,7 +191,8 @@ def simulate(s: Scenario) -> Result:
         auxiliary_electricity_kwh=auxiliary_kwh,
         indirect_water_consumption_l=indirect_l,
         additional_water_consumption_l=additional_l,
-        net_consumption_change_l=net_consumption_change,
-        net_freshwater_benefit_l=-net_consumption_change,
+        avoided_freshwater_consumption_l=avoided_l,
+        net_consumption_change_l=additional_l - avoided_l,
+        net_freshwater_benefit_l=-(additional_l - avoided_l),
         heat_limited=heat_limited,
     )
