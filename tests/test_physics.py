@@ -27,6 +27,7 @@ from ai_water.uncertainty import (
     summarize,
 )
 
+
 def test_saturation_pressure_increases_with_temperature():
     assert saturation_pressure_bar(40) < saturation_pressure_bar(60)
 
