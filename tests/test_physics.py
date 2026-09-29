@@ -92,7 +92,7 @@ def test_cooling_burden_reaches_water_accounting():
             thermal_energy_kwh_th_per_kg=1,
         ),
         auxiliary=AuxiliaryLoads(),
-        water=WaterFactors(),
+        water=WaterFactors(avoided_freshwater_consumption_l=1.0),
     )
     r = simulate(s)
     assert r.md_cooling_demand_kwh_th == 0.8
