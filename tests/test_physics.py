@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from ai_water.uncertainty import DistributionSpec, probability_negative, sample_distribution, summarize
 from ai_water.engine import simulate
 from ai_water.hydraulics import pumping_from_pressure_drop
 from ai_water.models import (
@@ -258,7 +259,6 @@ def test_one_dimensional_channel_can_apply_concentration_polarization():
     assert all(c.concentration_polarization_coefficient >= 1 for c in result.cells)
     assert all(c.interface_salinity_g_kg >= c.feed_salinity_g_kg for c in result.cells)
 
-from ai_water.uncertainty import DistributionSpec, probability_negative, sample_distribution, summarize
 
 
 def test_uncertainty_sampling_is_reproducible_and_preserves_sign_probability():
