@@ -96,8 +96,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             product_rate = flux * area
             q_w = config.feed_heat_transfer_coefficient_w_m2_k * (tf - tfm) * area
             product_kg = product_rate * config.duration_h
-            feed_cp = config.feed_cp_kj_kg_k * 1000.0
-            feed_profile[i + 1] = tf - (q_w / 1000.0 * config.duration_h) * 1000.0 / (feed_mass * feed_cp) * 3600.0
+            feed_profile[i + 1] = tf - (q_w * config.duration_h * 3.6) / (feed_mass * config.feed_cp_kj_kg_k)
             # Equivalent direct energy form above; retain an explicit mass balance.
             feed_mass -= product_rate
             if feed_mass <= 0:
@@ -112,7 +111,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             tp = permeate_profile[i + 1]
             tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, _ = feed_results[i]
             q_permeate_kwh = q_w / 1000.0 * config.duration_h
-            permeate_profile[i] = tp + q_permeate_kwh * 1000.0 / (permeate_mass * config.permeate_cp_kj_kg_k) * 3600.0
+            permeate_profile[i] = tp + (q_w * config.duration_h * 3.6) / (permeate_mass * config.permeate_cp_kj_kg_k)
             permeate_mass += flux * area
 
         product = sum(x[3] for x in feed_results)
