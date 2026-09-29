@@ -1,5 +1,6 @@
 """Break-even and Pareto analysis primitives."""
 from __future__ import annotations
+
 import numpy as np
 
 
