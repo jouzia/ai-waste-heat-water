@@ -51,7 +51,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
         feed_results = []
         for i in range(n):
             tf = feed_profile[i]
-            tp = permeate_profile[i]
+            tp = 0.5 * (permeate_profile[i] + permeate_profile[i + 1])
             salinity = salt_mass / feed_mass * 1000.0
             activity = (
                 config.water_activity_override
@@ -133,7 +133,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
         cells.append(ChannelCellResult(
             cell=i + 1,
             feed_bulk_temperature_c=feed_profile[i],
-            permeate_bulk_temperature_c=permeate_profile[i],
+            permeate_bulk_temperature_c=permeate_profile[i + 1],
             feed_interface_temperature_c=tfm,
             permeate_interface_temperature_c=tpm,
             feed_salinity_g_kg=salinity,
