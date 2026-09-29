@@ -2,6 +2,7 @@
 from __future__ import annotations
 import numpy as np
 
+
 def break_even_linear(x: np.ndarray, y: np.ndarray) -> float | None:
     x=np.asarray(x,dtype=float); y=np.asarray(y,dtype=float)
     if x.size != y.size or x.size < 2: raise ValueError("x and y must have equal length >= 2")
