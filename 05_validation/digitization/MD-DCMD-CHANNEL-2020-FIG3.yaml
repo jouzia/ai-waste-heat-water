@@ -1,0 +1,41 @@
+source_id: MD-DCMD-CHANNEL-2020
+figure: "Figure 3"
+status: pending_digitization
+license: "CC BY 4.0 for the Keshavarzzadeh article; experimental observations trace to Martínez-Díez and Vázquez-González (1999)"
+panels:
+  - id: "3a"
+    recirculation_rate_cm3_s: 7.0
+    series:
+      - salinity_mol_l: 0.0
+        observation_type: experimental_markers
+      - salinity_mol_l: 0.55
+        observation_type: experimental_markers
+      - salinity_mol_l: 1.15
+        observation_type: experimental_markers
+      - salinity_mol_l: 1.67
+        observation_type: experimental_markers
+  - id: "3b"
+    recirculation_rate_cm3_s: 11.0
+    series:
+      - salinity_mol_l: 0.0
+        observation_type: experimental_markers
+      - salinity_mol_l: 0.55
+        observation_type: experimental_markers
+      - salinity_mol_l: 1.15
+        observation_type: experimental_markers
+      - salinity_mol_l: 1.67
+        observation_type: experimental_markers
+x_axis:
+  variable: average_feed_bulk_temperature_c
+  definition: "average of feed inlet and outlet bulk temperature"
+y_axis:
+  variable: water_mass_flux_kg_m2_h
+extraction_rules:
+  - "extract markers only"
+  - "do not extract continuous model curves as observations"
+  - "calibrate both axes using at least three known tick positions"
+  - "archive raw pixel coordinates"
+  - "repeat a subset independently"
+  - "estimate digitization uncertainty"
+  - "do not round extracted observations before analysis"
+observations: []
