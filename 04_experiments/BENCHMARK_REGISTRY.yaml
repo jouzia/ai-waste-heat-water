@@ -22,6 +22,16 @@ cases:
     benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-CHANNEL-2020.yaml"
     claim_status: "No predictive accuracy claim until source-matched comparison is completed."
 
+  - source_id: MD-DCMD-SUMMERS-2012
+    citation: "Summers, Arafat & Lienhard V (2012), Desalination 290, 54-66"
+    doi_or_stable_identifier: "10.1016/j.desal.2012.01.004"
+    configuration: "flat-sheet DCMD"
+    extraction_status: parameterized_secondary_report
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-SUMMERS-2012.yaml"
+    provenance_chain: "Secondary reproduction table of Martínez-Díez experiments; original experimental source must remain the primary provenance target."
+    claim_status: "Useful numerical cross-check; not independent of the Martínez-Díez experimental lineage."
+
   - source_id: MD-PILOT-VALIDATION-2026
     citation: "Bindels et al. (2026), Desalination 620, 119674"
     doi_or_stable_identifier: "10.1016/j.desal.2025.119674"
