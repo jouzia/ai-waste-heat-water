@@ -102,4 +102,4 @@ def test_source_countercurrent_permeate_mass_decreases_in_feed_coordinate():
         < result.cells[i].permeate_mass_flow_kg_s
         for i in range(len(result.cells) - 1)
     )
-    assert result.permeate_outlet_mass_flow_kg_s > result.permeate_mass_flow_kg_s if hasattr(result, "permeate_mass_flow_kg_s") else result.permeate_outlet_mass_flow_kg_s > result.permeate_outlet_mass_flow_kg_s
+    assert result.cells[0].permeate_mass_flow_kg_s > result.cells[-1].permeate_mass_flow_kg_s
