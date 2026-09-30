@@ -38,3 +38,6 @@ The runner loads `configs/demo.yaml`, executes the same coupled `simulate()` eng
 The runner intentionally does **not** convert gross distillate into avoided freshwater consumption. That displacement must be supplied as an explicit counterfactual input.
 
 This entry point is a reproducibility convenience and presentation layer; it does not upgrade the benchmark or validation status.
+
+
+CI note: the channel solver regression is covered by the existing physics test suite.
