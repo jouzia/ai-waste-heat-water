@@ -158,7 +158,7 @@ def simulate_dcmd_channel(
 
     cell_area = config.membrane_area_m2 / config.cells
 
-    def march(permeate_temperatures: list[float] | None = None):
+    def march(permeate_temperatures: list[float] | None = None, permeate_mass_flows: list[float] | None = None):
         feed_temperature = feed_in_temperature_c
         permeate_temperature = (
             permeate_in_temperature_c if permeate_temperatures is None else permeate_temperatures[0]
@@ -171,6 +171,8 @@ def simulate_dcmd_channel(
         for index in range(config.cells):
             if permeate_temperatures is not None:
                 permeate_temperature = permeate_temperatures[index]
+            if permeate_mass_flows is not None:
+                permeate_mass_flow = permeate_mass_flows[index]
             feed_salinity = salt_mass_flow / feed_mass_flow * 1000.0
             activity = (
                 config.water_activity_override
@@ -267,22 +269,28 @@ def simulate_dcmd_channel(
         # Counter-current operation is a two-point boundary-value problem.
         # Solve it by fixed-point iteration on the permeate bulk-temperature profile.
         profile = [permeate_in_temperature_c] * config.cells
+        mass_profile = [config.permeate_mass_flow_kg_h] * config.cells
         for _ in range(200):
-            feed_out, _, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile)
-            candidate = [permeate_in_temperature_c] * config.cells
+            feed_out, _, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile, mass_profile)
+            candidate_t = [permeate_in_temperature_c] * config.cells
+            candidate_m = [config.permeate_mass_flow_kg_h] * config.cells
             for i in range(config.cells - 1, -1, -1):
-                candidate[i] = (
-                    permeate_in_temperature_c
-                    if i == config.cells - 1
-                    else cells[i + 1].permeate_bulk_temperature_c
-                )
-            error = max(abs(a - b) for a, b in zip(profile, candidate))
-            profile = [0.5 * a + 0.5 * b for a, b in zip(profile, candidate)]
-            if error < 1e-7:
+                if i == config.cells - 1:
+                    candidate_t[i] = permeate_in_temperature_c
+                    candidate_m[i] = config.permeate_mass_flow_kg_h
+                else:
+                    downstream = cells[i + 1]
+                    candidate_t[i] = downstream.permeate_bulk_temperature_c
+                    candidate_m[i] = mass_profile[i + 1] + downstream.product_water_kg / config.duration_h
+            error_t = max(abs(a - b) for a, b in zip(profile, candidate_t))
+            error_m = max(abs(a - b) for a, b in zip(mass_profile, candidate_m))
+            profile = [0.5 * a + 0.5 * b for a, b in zip(profile, candidate_t)]
+            mass_profile = [0.5 * a + 0.5 * b for a, b in zip(mass_profile, candidate_m)]
+            if error_t < 1e-7 and error_m < 1e-8:
                 break
         else:
             raise RuntimeError("counter-current temperature coupling did not converge")
-        feed_out, permeate_out, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile)
+        feed_out, permeate_out, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile, mass_profile)
 
     product_total = sum(c.product_water_kg for c in cells)
     latent_total = sum(c.membrane_latent_heat_kw for c in cells) * config.duration_h
