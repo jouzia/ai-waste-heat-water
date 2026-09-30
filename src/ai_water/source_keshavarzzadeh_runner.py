@@ -11,8 +11,8 @@ Primary-source observations must be extracted and compared only after the
 operating conditions and property assumptions are frozen.
 """
 
-from dataclasses import dataclass
 import math
+from dataclasses import dataclass
 
 from .channel_transport import (
     keshavarzzadeh_dimensionless_position,
@@ -21,8 +21,8 @@ from .channel_transport import (
 from .source_keshavarzzadeh import (
     source_membrane_conductivity_w_m_k,
     source_membrane_flux_coefficient,
-    source_water_activity_from_molar_nacl,
     source_saturation_pressure_pa,
+    source_water_activity_from_molar_nacl,
 )
 
 
