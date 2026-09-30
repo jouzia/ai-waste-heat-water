@@ -1,0 +1,66 @@
+# Source validation case matrix: Keshavarzzadeh et al. (2020)
+
+source_id: MD-DCMD-CHANNEL-2020
+source_doi: 10.1038/s41598-020-73964-7
+validation_target: "Figure 3 source-reproduction structure; experimental markers remain unverified until primary-source extraction."
+flow_rates_cm3_s: [7, 11]
+feed_salinity_mol_l: [0.0, 0.55, 1.15, 1.67]
+case_count: 8
+
+geometry:
+  configuration: counter_current_flat_sheet_dc
+  upstream_experimental_module: "Martinez-Diez & Vazquez-Gonzalez (1999)"
+  membrane_material: PTFE
+  porosity: 0.80
+  thickness_um: 60
+  nominal_pore_diameter_um: 0.20
+  channel_length_mm: 55
+  channel_width_mm: 7
+  channel_depth_mm: 0.45
+  effective_area_m2: 0.00337
+
+boundary_conditions:
+  feed_inlet_temperature_c: null
+  permeate_inlet_temperature_c: null
+  temperature_difference_c: null
+  note: "Do not populate from repository defaults. Primary-source extraction is required. Secondary literature reports approximately 10 C bulk temperature difference for related Martinez-Diez experiments, but this is not substituted for the primary boundary conditions."
+
+cases:
+  - id: K2020-F07-S000
+    flow_cm3_s: 7
+    salinity_mol_l: 0.0
+    status: blocked_pending_primary_boundary_extraction
+  - id: K2020-F07-S055
+    flow_cm3_s: 7
+    salinity_mol_l: 0.55
+    status: blocked_pending_primary_boundary_extraction
+  - id: K2020-F07-S115
+    flow_cm3_s: 7
+    salinity_mol_l: 1.15
+    status: blocked_pending_primary_boundary_extraction
+  - id: K2020-F07-S167
+    flow_cm3_s: 7
+    salinity_mol_l: 1.67
+    status: blocked_pending_primary_boundary_extraction
+  - id: K2020-F11-S000
+    flow_cm3_s: 11
+    salinity_mol_l: 0.0
+    status: blocked_pending_primary_boundary_extraction
+  - id: K2020-F11-S055
+    flow_cm3_s: 11
+    salinity_mol_l: 0.55
+    status: blocked_pending_primary_boundary_extraction
+  - id: K2020-F11-S115
+    flow_cm3_s: 11
+    salinity_mol_l: 1.15
+    status: blocked_pending_primary_boundary_extraction
+  - id: K2020-F11-S167
+    flow_cm3_s: 11
+    salinity_mol_l: 1.67
+    status: blocked_pending_primary_boundary_extraction
+
+provenance_rules:
+  - "Keshavarzzadeh Figure 3 states that symbols are experimental data, but its caption cites reference 25; reference 25 is not the Martinez-Diez 1999 paper."
+  - "Treat the Figure 3 markers as a development benchmark until the primary-source crosswalk is completed."
+  - "No fitting against Figure 3 markers before an unfitted source-model run."
+  - "Archive source locator, pixel coordinates, axis calibration and repeat extraction for every digitized point."
