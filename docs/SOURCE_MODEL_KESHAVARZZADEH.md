@@ -60,3 +60,10 @@ A source author's claim of agreement is not used as validation of this repositor
 ## Unit-consistency audit (2026-09-30)
 
 The source equation for water activity uses a dimensionless salt mole-fraction variable X in the wider MD literature. The implementation must therefore convert NaCl molarity to mole fraction before applying `gamma_w = 1 - 0.5X - 10X^2`; passing values such as 1.67 M directly as X would be dimensionally invalid. This conversion is tracked as an explicit source-reproduction assumption and must be sensitivity-tested.
+
+
+## Figure 3 provenance audit
+
+A bibliographic cross-check found an important source-trace issue: the 2020 article's Figure 3 caption attributes the experimental symbols to reference 25, while reference 25 in that article is a Geothermics ground-source heat-exchanger paper. The Martínez-Díez & Vázquez-González (1999) MD paper is reference 37. Therefore the Figure 3 markers are currently treated as observations reproduced by Keshavarzzadeh (2020), not as independently verified primary-source observations.
+
+This does not invalidate the figure as a development benchmark, but it blocks a publication-level claim that the plotted observations have been directly reconstructed from the cited 1999 primary experiment. The next validation gate is an explicit marker-by-marker crosswalk against the primary source.
