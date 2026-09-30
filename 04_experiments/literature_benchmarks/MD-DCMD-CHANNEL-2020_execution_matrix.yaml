@@ -1,0 +1,73 @@
+# Source-condition execution matrix: Keshavarzzadeh et al. (2020) Figure 3
+#
+# This matrix enumerates all eight published validation combinations.
+# It deliberately does NOT invent inlet temperatures or experimental fluxes.
+# Those remain blocked until the primary-source/figure crosswalk is complete.
+
+source_id: MD-DCMD-CHANNEL-2020
+status: execution_matrix_ready_temperature_boundary_conditions_pending
+flow_direction: counter_current
+module:
+  channels_each_side: 9
+  channel_length_m: 0.055
+  channel_width_m: 0.007
+  channel_height_m: 0.00045
+  effective_membrane_area_m2: 0.00337
+membrane:
+  material: PTFE
+  thickness_m: 0.00006
+  porosity: 0.80
+  nominal_pore_size_m_primary: 0.0000002
+  tortuosity_rule: "1/porosity"
+validation_axes:
+  x: "average feed bulk temperature, arithmetic mean of feed inlet and outlet"
+  y: "water mass flux, source figure scale J_m x 10^3 kg m^-2 s^-1"
+  y_conversion_to_kg_m2_h: 3.6
+published_flow_rates_cm3_s: [7.0, 11.0]
+published_feed_salinity_mol_l: [0.0, 0.55, 1.15, 1.67]
+
+cases:
+  - id: F07-S000
+    flow_cm3_s: 7.0
+    flow_m3_s: 0.000007
+    feed_salinity_mol_l: 0.0
+  - id: F07-S055
+    flow_cm3_s: 7.0
+    flow_m3_s: 0.000007
+    feed_salinity_mol_l: 0.55
+  - id: F07-S115
+    flow_cm3_s: 7.0
+    flow_m3_s: 0.000007
+    feed_salinity_mol_l: 1.15
+  - id: F07-S167
+    flow_cm3_s: 7.0
+    flow_m3_s: 0.000007
+    feed_salinity_mol_l: 1.67
+  - id: F11-S000
+    flow_cm3_s: 11.0
+    flow_m3_s: 0.000011
+    feed_salinity_mol_l: 0.0
+  - id: F11-S055
+    flow_cm3_s: 11.0
+    flow_m3_s: 0.000011
+    feed_salinity_mol_l: 0.55
+  - id: F11-S115
+    flow_cm3_s: 11.0
+    flow_m3_s: 0.000011
+    feed_salinity_mol_l: 1.15
+  - id: F11-S167
+    flow_cm3_s: 11.0
+    flow_m3_s: 0.000011
+    feed_salinity_mol_l: 1.67
+
+required_before_quantitative_execution:
+  - exact feed inlet temperature for each observation
+  - exact permeate inlet temperature for each observation
+  - primary-source observation locator or archived Figure 3 pixel coordinates
+  - independent digitization repeat for the predefined subset
+  - frozen unfitted property/model configuration
+
+prohibited:
+  - using Table 1 design-case temperatures as Figure 3 validation temperatures
+  - treating the paper's plotted model curves as observations
+  - fitting a membrane coefficient to the Figure 3 markers before the first unfitted run
