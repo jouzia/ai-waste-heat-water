@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Run the presentation-safe Research 2 demo."""
 import json
 
