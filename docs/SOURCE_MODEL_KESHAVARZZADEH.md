@@ -19,29 +19,38 @@ The source formulation includes:
 - membrane conductive heat transfer from Eq. (22);
 - developing-flow Nusselt correlation from Eqs. (23)-(26).
 
-These equations are implemented in `source_keshavarzzadeh.py` and the source-specific heat-transfer functions in `channel_transport.py`.
+These equations are implemented in source_keshavarzzadeh.py and the source-specific heat-transfer functions in channel_transport.py.
 
 ## Important separation
 
 The source model is not the same thing as the project's preferred modern thermodynamic model.
 
-For validation, the source formulation must first be run as written, with source-compatible geometry, operating conditions, properties, and temperature conventions. Only afterward may it be compared with alternative model forms.
+For validation, the source formulation must first be run with source-compatible geometry, operating conditions, properties, and temperature conventions. Source-text discrepancies are preserved rather than silently corrected.
 
 No parameter is fitted to Figure 3 observations at this stage.
 
-## Primary experimental provenance
+## Primary experimental provenance and discrepancy resolution
 
-The 2020 paper identifies Martínez-Díez & Vázquez-González (1999) as the experimental source. The primary experiment is recorded separately in the benchmark YAML. Its reported module uses a counter-current flat-sheet configuration with nine feed and nine permeate channels.
+The 2020 paper identifies Martínez-Díez & Vázquez-González (1999) as the experimental source. The primary experiment reports:
+- Gelman Instrument TF200 PTFE;
+- 80% void fraction;
+- 60 µm membrane thickness;
+- 0.2 µm nominal pore size;
+- nine feed and nine permeate channels;
+- each channel 55.0 mm long, 7.0 mm wide, and 0.45 mm high;
+- effective transport membrane area 33.7×10^-4 m².
+
+The 2020 validation text prints the nominal pore size as 0.2 mm, whereas the primary 1999 experimental source reports 0.2 µm. This is treated as a documented source-text discrepancy. The primary experimental value is used for provenance and validation inputs; the 2020 printed value is not silently rewritten in the evidence ledger.
 
 ## Current validation state
 
-Status: **source formulation locked; numerical reproduction pending**.
+Status: **primary geometry reconciled; source formulation locked; numerical reproduction pending**.
 
 Still required before numerical validation:
 1. calibrated extraction of experimental markers from Figure 3;
 2. raw pixel-coordinate archive;
 3. digitization repeatability estimate;
-4. exact source-condition reconstruction;
+4. exact inlet temperature conditions for plotted points;
 5. unfitted model run;
 6. observed-vs-predicted error metrics;
 7. sensitivity to source-compatible transport/property choices.
