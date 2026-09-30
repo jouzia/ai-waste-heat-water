@@ -106,3 +106,8 @@ The final manuscript must state:
 - random seeds for stochastic analyses.
 
 A successful validation result is not required for publication. Systematic model failure is itself a result and must be reported with diagnosis and limitations.
+
+
+## CI confirmation gate
+
+This branch is used to confirm that the current repository state passes the repository's automated software checks before a demonstration-facing mode is enabled. A green CI result is a software-quality gate only; it is not physical validation.
