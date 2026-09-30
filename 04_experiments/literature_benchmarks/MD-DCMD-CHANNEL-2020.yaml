@@ -8,6 +8,7 @@ source:
   doi: "10.1038/s41598-020-73964-7"
   access: "open_access_cc_by_4"
   validation_basis: "Experimental data reported by Martinez-Diez and Vazquez-Gonzalez"
+  figure_3_image_url: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-020-73964-7/MediaObjects/41598_2020_73964_Fig3_HTML.png"
   source_sections:
     - "Modeling"
     - "Validation"
@@ -32,9 +33,25 @@ confirmed_validation_inputs:
     void_fraction: 0.80
     thickness_um: 60.0
     nominal_pore_size: "0.2 mm as printed in the source text; verify against original experimental reference before treating as micrometre-scale pore size"
+  plotted_x_definition: "Average of inlet and outlet feed bulk temperature, T_b1"
+  plotted_series: "Experimental markers only; model curves are excluded from observed-data extraction"
+
+paper_model_case_table_1:
+  purpose: "Reproduce the paper's separate model input case; not the Figure 3 experimental validation dataset."
+  length_m: 5.0
+  width_m: 0.5
+  channel_depth_mm: 5.0
+  membrane_thickness_um: 200.0
+  porosity: 0.7
+  pore_size_um: 0.45
+  feed_inlet_temperature_c: 70.0
+  permeate_inlet_temperature_c: 25.0
+  feed_inlet_flow_l_min: 10.0
+  permeate_inlet_flow_l_min: 10.0
+  feed_inlet_salinity_ppm: 35000
 
 unresolved_source_inputs:
-  - "Exact channel length/width/depth for the validation module"
+  - "Exact channel geometry for the Martínez-Díez validation module"
   - "Exact inlet feed and permeate temperatures for every plotted validation point"
   - "Exact membrane transport parameters required by the source equations"
   - "Experimental flux values from Figure 3"
