@@ -8,6 +8,23 @@ source:
   doi: "10.1038/s41598-020-73964-7"
   access: "open_access_cc_by_4"
   validation_basis: "Experimental data reported by Martinez-Diez and Vazquez-Gonzalez"
+  primary_experimental_source:
+    citation: "Martínez-Díez, L. & Vázquez-González, M. I. (1999), J. Membrane Science 156, 265-273"
+    doi: "10.1016/S0376-7388(98)00349-4"
+    membrane: "Gelman Instrument TF200 PTFE"
+    void_fraction: 0.80
+    thickness_um: 60.0
+    nominal_pore_size_um: 0.2
+    channels: 9
+    channel_length_mm: 55.0
+    channel_width_mm: 7.0
+    channel_height_mm: 0.45
+    effective_membrane_area_m2: 0.00337
+    measurement_condition:
+      temperature_stability_c: 0.1
+      flow_and_concentration_oscillation_percent: 1.0
+      replicate_statement: "Flux values are averages of at least three experiments."
+    provenance_note: "Primary-source geometry and measurement-quality information now verified; individual Figure 3 observations still require calibrated digitization."
   figure_3_image_url: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-020-73964-7/MediaObjects/41598_2020_73964_Fig3_HTML.png"
   source_sections:
     - "Modeling"
