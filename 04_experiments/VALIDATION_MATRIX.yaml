@@ -15,13 +15,22 @@ cases:
       membrane_material: PTFE
       membrane_void_fraction: 0.80
       membrane_thickness_um: 60.0
-      nominal_pore_size_as_printed: "0.2 mm"
-      note: "The pore-size unit is preserved exactly as printed until the upstream experimental source is checked."
-    model_status: "counter-current solver implemented; source-condition reconstruction incomplete"
+      primary_pore_size_um: 0.2
+      module_geometry:
+        channels_each_side: 9
+        channel_length_mm: 55.0
+        channel_width_mm: 7.0
+        channel_height_mm: 0.45
+        effective_membrane_area_m2: 0.00337
+      source_text_discrepancy:
+        keshavarzzadeh_2020: "0.2 mm nominal pore size"
+        martinez_diez_1999: "0.2 um nominal pore size"
+        resolution: "Primary 1999 specification is retained for experimental provenance; the 2020 printed unit is preserved as a documented discrepancy."
+    model_status: "counter-current solver implemented; primary module geometry reconciled; source-condition reconstruction and marker extraction incomplete"
     quantitative_claim: false
     next_required:
-      - "Recover exact module geometry from the upstream experimental source."
       - "Extract experimental flux observations from Figure 3 with a documented digitization procedure."
+      - "Recover exact inlet temperature conditions associated with each plotted point."
       - "Reconstruct source membrane transport and heat-transfer correlations."
       - "Run unfitted source-condition comparisons."
       - "Reserve at least one source condition as held-out validation."
