@@ -283,3 +283,30 @@ def test_uncertainty_sampling_is_reproducible_and_preserves_sign_probability():
     assert probability_negative(values) == 0.25
     summary = summarize(values)
     assert summary["p05"] <= summary["median"] <= summary["p95"]
+
+
+def test_counter_current_channel_uses_opposite_stream_boundary_direction():
+    result = simulate_dcmd_channel(
+        config=ChannelConfig(
+            membrane_area_m2=2,
+            membrane_permeance_kg_m2_h_bar=0.5,
+            latent_heat_kwh_th_per_kg=0.65,
+            membrane_thermal_conductivity_w_m_k=0.05,
+            membrane_thickness_m=100e-6,
+            feed_heat_transfer_coefficient_w_m2_k=1000,
+            permeate_heat_transfer_coefficient_w_m2_k=1000,
+            feed_mass_flow_kg_h=1000,
+            permeate_mass_flow_kg_h=1000,
+            feed_salinity_g_kg=0,
+            duration_h=1,
+            cells=8,
+            flow_arrangement="counter_current",
+        ),
+        feed_in_temperature_c=60,
+        permeate_in_temperature_c=25,
+    )
+    assert len(result.cells) == 8
+    assert result.freshwater_produced_kg > 0
+    assert result.feed_out_temperature_c < 60
+    assert result.permeate_out_temperature_c > 25
+    assert result.cells[-1].permeate_bulk_temperature_c > result.cells[0].permeate_bulk_temperature_c
