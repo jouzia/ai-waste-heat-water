@@ -208,6 +208,18 @@ def _liquid_enthalpy_j_kg(temperature_c: float) -> float:
     return _water_cp_j_kg_k(temperature_c) * temperature_c
 
 
+def _temperature_from_liquid_enthalpy_j_kg(enthalpy_j_kg: float) -> float:
+    """Invert the explicit liquid enthalpy closure used by this runner."""
+    if enthalpy_j_kg < 0:
+        raise ValueError("liquid enthalpy must be non-negative")
+    # h(T) = [4180 + 0.3(T-20)]T = 0.3 T^2 + 4174 T.
+    discriminant = 4174.0**2 + 1.2 * enthalpy_j_kg
+    temperature_c = (-4174.0 + math.sqrt(discriminant)) / 0.6
+    if not -20 <= temperature_c <= 150:
+        raise ValueError("enthalpy outside supported liquid-temperature closure")
+    return temperature_c
+
+
 def _latent_heat_j_kg(temperature_c: float) -> float:
     """Engineering latent-heat closure over the DCMD temperature range."""
     if not 0 <= temperature_c <= 100:
@@ -390,16 +402,16 @@ def _integrate(
         mf_new = max(mf - dm, 1e-12)
         hf_new = hf_b - qf * area / max(mf, 1e-12)
 
-        # Permeate: Eq. 12 and Eq. 16.  The stream flows opposite to +z,
-        # hence its mass flow increases and its bulk enthalpy decreases as
-        # the feed-direction coordinate advances.
-        mp_new = mp + dm
+        # Permeate: Eq. 12 and Eq. 16.  With z defined in the feed-flow
+        # direction, the counter-current permeate mass flow decreases as z
+        # advances: m_p(z) = m_p(z+dz) + J dA.
+        mp_new = max(mp - dm, 1e-12)
         hp_new = (mp * hp_b - qp * area) / max(mp_new, 1e-12)
 
-        # The source equations use liquid enthalpy; this isolated closure is
-        # inverted explicitly so it can later be replaced by a property package.
-        tf_new = hf_new / 4180.0
-        tp_new = hp_new / 4180.0
+        # The source equations use liquid enthalpy; invert the explicit
+        # property closure rather than dividing by a constant cp.
+        tf_new = _temperature_from_liquid_enthalpy_j_kg(hf_new)
+        tp_new = _temperature_from_liquid_enthalpy_j_kg(hp_new)
         tfb, tpb, mf, mp = tf_new, tp_new, mf_new, mp_new
 
         cells.append(
