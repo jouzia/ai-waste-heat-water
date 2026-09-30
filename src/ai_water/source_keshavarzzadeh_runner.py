@@ -73,6 +73,7 @@ class SourceRunnerResult:
     total_distillate_kg_s: float
     converged: bool
     permeate_inlet_temperature_c: float
+    shooting_residual_k: float = 0.0
 
 
 def source_vapor_pressure_pa(
@@ -423,6 +424,7 @@ def _integrate(
         total_distillate_kg_s=sum(c.flux_kg_m2_s * area for c in cells),
         converged=True,
         permeate_inlet_temperature_c=permeate_outlet_guess_c,
+        shooting_residual_k=tpb - permeate_inlet_temperature_c,
     )
     return result, tpb
 
@@ -489,4 +491,5 @@ def run_source_countercurrent(
         total_distillate_kg_s=best.total_distillate_kg_s,
         converged=False,
         permeate_inlet_temperature_c=best.permeate_inlet_temperature_c,
+        shooting_residual_k=best.shooting_residual_k,
     )
