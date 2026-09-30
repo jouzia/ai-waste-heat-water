@@ -56,3 +56,7 @@ Still required before numerical validation:
 7. sensitivity to source-compatible transport/property choices.
 
 A source author's claim of agreement is not used as validation of this repository implementation.
+
+## Unit-consistency audit (2026-09-30)
+
+The source equation for water activity uses a dimensionless salt mole-fraction variable X in the wider MD literature. The implementation must therefore convert NaCl molarity to mole fraction before applying `gamma_w = 1 - 0.5X - 10X^2`; passing values such as 1.67 M directly as X would be dimensionally invalid. This conversion is tracked as an explicit source-reproduction assumption and must be sensitivity-tested.
