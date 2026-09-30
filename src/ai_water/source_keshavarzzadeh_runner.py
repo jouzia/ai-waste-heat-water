@@ -344,21 +344,22 @@ def _integrate(
     *,
     feed_inlet_temperature_c: float,
     permeate_outlet_guess_c: float,
+    permeate_outlet_mass_guess_kg_s: float,
     feed_mass_flow_kg_s: float,
-    permeate_mass_flow_kg_s: float,
     feed_salinity_mol_l: float,
     config: SourceRunnerConfig,
-) -> tuple[SourceRunnerResult, float]:
-    """Integrate from feed inlet toward feed outlet.
+) -> tuple[SourceRunnerResult, float, float]:
+    """Integrate in the feed-flow direction using source Eqs. 9-12.
 
-    The permeate stream is counter-current, so its mass-flow magnitude decreases
-    with increasing feed-flow coordinate. The shooting variable is the unknown
-    permeate temperature at the feed inlet end.
+    At z=0 the permeate stream has its unknown outlet conditions.  Because the
+    permeate flows from z=L to z=0, its mass flow increases and its bulk
+    enthalpy decreases as z increases.  The specified permeate inlet
+    temperature and mass flow at z=L are enforced by the outer shooting solve.
     """
     dx = config.channel_length_m / config.cells
     area = source_cell_area(config)
     mf = feed_mass_flow_kg_s
-    mp = permeate_mass_flow_kg_s
+    mp = permeate_outlet_mass_guess_kg_s
     tfb = feed_inlet_temperature_c
     tpb = permeate_outlet_guess_c
     cells: list[SourceCellResult] = []
@@ -374,6 +375,7 @@ def _integrate(
             config=config,
             axial_position_m=z,
         )
+
         hfg_f = _latent_heat_j_kg(tfm)
         hfg_p = _latent_heat_j_kg(tpm)
         hf_m = _liquid_enthalpy_j_kg(tfm)
@@ -382,19 +384,24 @@ def _integrate(
         hp_b = _liquid_enthalpy_j_kg(tpb)
         qf = j * (hfg_f + hf_m - hf_b) + qm
         qp = j * (hfg_p + hp_m - hp_b) + qm
-
         dm = max(0.0, j * area)
-        mf_new = max(mf - dm, 1e-12)
-        mp_new = max(mp - dm, 1e-12)
-        hf_new = hf_b - qf * area / max(mf, 1e-12)
-        hp_new = hp_b - qp * area / max(mp, 1e-12)
 
-        # Invert the monotone liquid enthalpy closure.
+        # Feed: Eq. 11 and Eq. 15.
+        mf_new = max(mf - dm, 1e-12)
+        hf_new = hf_b - qf * area / max(mf, 1e-12)
+
+        # Permeate: Eq. 12 and Eq. 16.  The stream flows opposite to +z,
+        # hence its mass flow increases and its bulk enthalpy decreases as
+        # the feed-direction coordinate advances.
+        mp_new = mp + dm
+        hp_new = (mp * hp_b - qp * area) / max(mp_new, 1e-12)
+
+        # The source equations use liquid enthalpy; this isolated closure is
+        # inverted explicitly so it can later be replaced by a property package.
         tf_new = hf_new / 4180.0
         tp_new = hp_new / 4180.0
-        tfb = tf_new
-        tpb = tp_new
-        mf, mp = mf_new, mp_new
+        tfb, tpb, mf, mp = tf_new, tp_new, mf_new, mp_new
+
         cells.append(
             SourceCellResult(
                 axial_position_m=z,
@@ -415,18 +422,18 @@ def _integrate(
     result = SourceRunnerResult(
         cells=tuple(cells),
         feed_outlet_temperature_c=tfb,
-        # tpb is the temperature at the feed-inlet end; this is the physical
-        # permeate outlet for the counter-current arrangement.
-        permeate_outlet_temperature_c=permeate_outlet_guess_c,
+        # At z=L this is the physical permeate inlet temperature that is
+        # compared against the specified boundary condition.
+        permeate_outlet_temperature_c=tpb,
         feed_outlet_mass_flow_kg_s=mf,
         permeate_outlet_mass_flow_kg_s=mp,
         total_flux_kg_m2_s_m2=sum(c.flux_kg_m2_s * area for c in cells),
         total_distillate_kg_s=sum(c.flux_kg_m2_s * area for c in cells),
         converged=True,
         permeate_inlet_temperature_c=permeate_outlet_guess_c,
-        shooting_residual_k=tpb - permeate_inlet_temperature_c,
+        shooting_residual_k=0.0,
     )
-    return result, tpb
+    return result, tpb, mp
 
 
 def run_source_countercurrent(
@@ -438,10 +445,12 @@ def run_source_countercurrent(
     feed_salinity_mol_l: float,
     config: SourceRunnerConfig,
 ) -> SourceRunnerResult:
-    """Run the source-form counter-current model with a temperature shooting solve.
+    """Run the source-form counter-current model with two-variable shooting.
 
-    The specified permeate inlet is at the feed outlet side. The unknown
-    permeate outlet temperature at the feed inlet side is solved by bisection.
+    The specified permeate inlet is at the feed outlet side.  The unknown
+    permeate outlet temperature and mass flow at the feed inlet side are solved
+    simultaneously so that the integrated state satisfies both permeate
+    boundary conditions at z=L.
     """
     validate_source_config(config)
     if feed_inlet_temperature_c <= permeate_inlet_temperature_c:
@@ -454,42 +463,70 @@ def run_source_countercurrent(
     rho_f = _water_density_kg_m3(feed_inlet_temperature_c)
     rho_p = _water_density_kg_m3(permeate_inlet_temperature_c)
     mf0 = rho_f * feed_flow_m3_s
-    mp0 = rho_p * permeate_flow_m3_s
+    mp_target = rho_p * permeate_flow_m3_s
 
-    low = permeate_inlet_temperature_c
-    high = feed_inlet_temperature_c - 1e-6
+    # Start from a physically bounded temperature and a mass-flow estimate
+    # equal to the specified inlet plus one pass of the current estimate.
+    temp_guess = 0.5 * (feed_inlet_temperature_c + permeate_inlet_temperature_c)
+    mass_guess = mp_target
     best: SourceRunnerResult | None = None
 
     for _ in range(config.shooting_iterations):
-        guess = 0.5 * (low + high)
-        result, _permeate_feed_end = _integrate(
+        result, temp_end, mass_end = _integrate(
             feed_inlet_temperature_c=feed_inlet_temperature_c,
-            permeate_outlet_guess_c=guess,
+            permeate_outlet_guess_c=temp_guess,
+            permeate_outlet_mass_guess_kg_s=mass_guess,
             feed_mass_flow_kg_s=mf0,
-            permeate_mass_flow_kg_s=mp0,
             feed_salinity_mol_l=feed_salinity_mol_l,
             config=config,
         )
-        residual = result.permeate_outlet_temperature_c - permeate_inlet_temperature_c
+        temp_residual = temp_end - permeate_inlet_temperature_c
+        mass_residual = mass_end - mp_target
         best = result
-        if abs(residual) <= config.shooting_tolerance_k:
-            return result
-        if residual > 0:
-            high = guess
-        else:
-            low = guess
+
+        if abs(temp_residual) <= config.shooting_tolerance_k and abs(mass_residual) <= max(
+            1e-12, mp_target * 1e-8
+        ):
+            return SourceRunnerResult(
+                cells=result.cells,
+                feed_outlet_temperature_c=result.feed_outlet_temperature_c,
+                permeate_outlet_temperature_c=temp_guess,
+                feed_outlet_mass_flow_kg_s=result.feed_outlet_mass_flow_kg_s,
+                permeate_outlet_mass_flow_kg_s=mass_end,
+                total_flux_kg_m2_s_m2=result.total_flux_kg_m2_s_m2,
+                total_distillate_kg_s=result.total_distillate_kg_s,
+                converged=True,
+                permeate_inlet_temperature_c=permeate_inlet_temperature_c,
+                shooting_residual_k=temp_residual,
+            )
+
+        # Fixed-point updates: the inlet-side permeate mass must equal the
+        # target inlet plus the integrated vapor transfer; the outlet
+        # temperature is relaxed toward the value required to hit the
+        # specified inlet boundary.
+        transfer = result.total_distillate_kg_s
+        mass_target = mp_target + transfer
+        mass_guess = 0.5 * mass_guess + 0.5 * mass_target
+        temp_guess = max(
+            permeate_inlet_temperature_c + 1e-4,
+            min(
+                feed_inlet_temperature_c - 1e-4,
+                temp_guess - 0.5 * temp_residual,
+            ),
+        )
 
     if best is None:
         raise RuntimeError("source counter-current shooting produced no solution")
     return SourceRunnerResult(
         cells=best.cells,
         feed_outlet_temperature_c=best.feed_outlet_temperature_c,
-        permeate_outlet_temperature_c=best.permeate_outlet_temperature_c,
+        permeate_outlet_temperature_c=temp_guess,
         feed_outlet_mass_flow_kg_s=best.feed_outlet_mass_flow_kg_s,
         permeate_outlet_mass_flow_kg_s=best.permeate_outlet_mass_flow_kg_s,
         total_flux_kg_m2_s_m2=best.total_flux_kg_m2_s_m2,
         total_distillate_kg_s=best.total_distillate_kg_s,
         converged=False,
-        permeate_inlet_temperature_c=best.permeate_inlet_temperature_c,
+        permeate_inlet_temperature_c=permeate_inlet_temperature_c,
         shooting_residual_k=best.shooting_residual_k,
     )
+\n
