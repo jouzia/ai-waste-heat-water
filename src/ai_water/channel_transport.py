@@ -212,3 +212,61 @@ def keshavarzzadeh_dimensionless_position(
     return (
         axial_position_m / math.sqrt(cross_section_area_m2)
     ) / (reynolds_sqrt_area * prandtl)
+
+
+def keshavarzzadeh_f_re_sqrt_area(aspect_ratio: float) -> float:
+    """Eq. (25) from Keshavarzzadeh et al. (2020)."""
+    if not 0 < aspect_ratio <= 1:
+        raise ValueError("aspect ratio must be in (0, 1]")
+    eps = aspect_ratio
+    denominator = math.sqrt(eps) * (1.0 + eps) * (
+        1.0 - (192.0 * eps / math.pi**5) * math.tanh(math.pi / (2.0 * eps))
+    )
+    return 12.0 / denominator
+
+
+def keshavarzzadeh_pr_factor(prandtl: float) -> float:
+    """Eq. (26): uniform-wall-heat-flux Prandtl correction."""
+    if prandtl <= 0:
+        raise ValueError("Prandtl number must be positive")
+    return 0.886 / (1.0 + (1.909 * prandtl ** (1.0 / 6.0)) ** (9.0 / 2.0)) ** (2.0 / 9.0)
+
+
+def keshavarzzadeh_nusselt(
+    *,
+    reynolds_sqrt_area: float,
+    prandtl: float,
+    z_star: float,
+    aspect_ratio: float,
+    gamma: float = -0.3,
+) -> float:
+    """Eq. (23), retained separately for source-model reproduction."""
+    if reynolds_sqrt_area <= 0 or prandtl <= 0 or z_star <= 0:
+        raise ValueError("Re_sqrtA, Pr, and z* must be positive")
+    if not 0 < aspect_ratio <= 1:
+        raise ValueError("aspect ratio must be in (0,1]")
+    f_pr = keshavarzzadeh_pr_factor(prandtl)
+    m = 2.27 + 1.65 * prandtl ** (1.0 / 3.0)
+    developing = 0.501 * (reynolds_sqrt_area / z_star) ** (1.0 / 3.0)
+    fully_developed = 3.86 * reynolds_sqrt_area / (
+        8.0 * math.sqrt(math.pi) * aspect_ratio ** gamma
+    )
+    blended_transport = (developing**5 + fully_developed**5) ** (m / 5.0)
+    return ((f_pr / math.sqrt(z_star)) ** m + blended_transport) ** (1.0 / m)
+
+
+def keshavarzzadeh_dimensionless_position(
+    *,
+    axial_position_m: float,
+    cross_section_area_m2: float,
+    reynolds_sqrt_area: float,
+    prandtl: float,
+) -> float:
+    """Dimensionless axial position z* used by the source correlation."""
+    if axial_position_m <= 0 or cross_section_area_m2 <= 0:
+        raise ValueError("axial position and area must be positive")
+    if reynolds_sqrt_area <= 0 or prandtl <= 0:
+        raise ValueError("Re_sqrtA and Pr must be positive")
+    return (axial_position_m / math.sqrt(cross_section_area_m2)) / (
+        reynolds_sqrt_area * prandtl
+    )
