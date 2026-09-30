@@ -87,7 +87,7 @@ def source_vapor_pressure_pa(
     return activity * source_saturation_pressure_pa(temperature_c)
 
 
-def source_pure_vapor_pressure_pa(*, temperature_c: float) -> float:
+def source_pure_vapor_pressure_pa(temperature_c: float) -> float:
     """Source Eq. 5: pure-water saturation pressure."""
     return source_saturation_pressure_pa(temperature_c)
 
@@ -111,7 +111,7 @@ def source_membrane_flux_kg_m2_s(
         thickness_m=config.membrane_thickness_m,
         porosity=config.porosity,
         tortuosity=config.tortuosity,
-        pressure_pa=config.pressure_pa,
+        atmospheric_pressure_pa=config.pressure_pa,
     )
     dp_pa = (
         source_vapor_pressure_pa(
