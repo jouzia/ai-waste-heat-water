@@ -74,3 +74,32 @@ def test_source_countercurrent_runner_conserves_total_water_transfer():
     assert result.total_distillate_kg_s > 0
     assert result.feed_outlet_mass_flow_kg_s < 1000.0 * 7e-6
     assert result.permeate_inlet_temperature_c == 30.0
+
+
+def test_source_countercurrent_permeate_mass_decreases_in_feed_coordinate():
+    from ai_water.source_keshavarzzadeh_runner import run_source_countercurrent
+
+    cfg = SourceRunnerConfig(
+        membrane_thickness_m=60e-6,
+        pore_radius_m=0.1e-6,
+        porosity=0.8,
+        tortuosity=1.25,
+        channel_area_m2=3.15e-6,
+        membrane_area_m2=0.00337,
+        cells=8,
+    )
+    result = run_source_countercurrent(
+        feed_inlet_temperature_c=60.0,
+        permeate_inlet_temperature_c=30.0,
+        feed_flow_m3_s=7e-6,
+        permeate_flow_m3_s=7e-6,
+        feed_salinity_mol_l=0.55,
+        config=cfg,
+    )
+    assert len(result.cells) == cfg.cells
+    assert all(
+        result.cells[i + 1].permeate_mass_flow_kg_s
+        < result.cells[i].permeate_mass_flow_kg_s
+        for i in range(len(result.cells) - 1)
+    )
+    assert result.permeate_outlet_mass_flow_kg_s > result.permeate_mass_flow_kg_s if hasattr(result, "permeate_mass_flow_kg_s") else result.permeate_outlet_mass_flow_kg_s > result.permeate_outlet_mass_flow_kg_s
