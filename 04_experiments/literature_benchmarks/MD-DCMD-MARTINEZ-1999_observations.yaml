@@ -1,0 +1,45 @@
+benchmark_id: MD-DCMD-MARTINEZ-1999
+status: extraction_template_only
+purpose: >
+  Machine-readable ledger for primary-source experimental observations.
+  No numerical observations are populated until verified against the primary paper.
+source:
+  citation: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273"
+  doi: "10.1016/S0376-7388(98)00349-4"
+  provenance_level: primary
+  extraction_method: primary_text_or_table_then_figure_digitization_if_needed
+  digitization_required: true
+  independent_recheck_required: true
+experimental_controls:
+  temperature_stability_c: 0.1
+  recirculation_stability_fraction: 0.01
+observations: []
+observation_schema:
+  id: "unique observation identifier"
+  feed_concentration_m: "NaCl mol/L"
+  feed_flow_rate_kg_s: "source-reported recirculation mass flow if available"
+  permeate_flow_rate_kg_s: "source-reported permeate-side flow if available"
+  feed_inlet_temperature_c: "source value; null if only average is available"
+  feed_outlet_temperature_c: "source value; null if unavailable"
+  permeate_inlet_temperature_c: "source value; null if unavailable"
+  permeate_outlet_temperature_c: "source value; null if unavailable"
+  average_feed_temperature_c: "source value or explicitly derived from source values"
+  average_permeate_temperature_c: "source value or explicitly derived from source values"
+  flux_kg_m2_h: "observed water mass flux"
+  flux_uncertainty_kg_m2_h: "measurement uncertainty if reported; otherwise digitization uncertainty only"
+  extraction_source: "table|text|figure"
+  source_locator: "page/table/figure identifier"
+  digitization:
+    raw_pixel_coordinates_archived: false
+    axis_calibration_points: []
+    repeat_extraction: false
+    digitization_uncertainty_kg_m2_h: null
+  transformations: []
+validation_rules:
+  - "Do not enter values inferred from the Keshavarzzadeh 2020 model curve."
+  - "Do not fit model parameters to populate missing experimental values."
+  - "Do not replace unavailable boundary conditions with repository defaults."
+  - "Every populated value must have a source locator."
+  - "Derived temperatures or flow quantities must record the exact derivation."
+  - "A figure-derived point must preserve raw pixel coordinates and calibration metadata."
+  - "Independent re-extraction must be performed for a predefined subset before final validation."
