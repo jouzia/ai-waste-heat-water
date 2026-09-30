@@ -414,7 +414,9 @@ def _integrate(
     result = SourceRunnerResult(
         cells=tuple(cells),
         feed_outlet_temperature_c=tfb,
-        permeate_outlet_temperature_c=tpb,
+        # tpb is the temperature at the feed-inlet end; this is the physical
+        # permeate outlet for the counter-current arrangement.
+        permeate_outlet_temperature_c=permeate_outlet_guess_c,
         feed_outlet_mass_flow_kg_s=mf,
         permeate_outlet_mass_flow_kg_s=mp,
         total_flux_kg_m2_s_m2=sum(c.flux_kg_m2_s * area for c in cells),
@@ -458,7 +460,7 @@ def run_source_countercurrent(
 
     for _ in range(config.shooting_iterations):
         guess = 0.5 * (low + high)
-        result, permeate_feed_end = _integrate(
+        result, _permeate_feed_end = _integrate(
             feed_inlet_temperature_c=feed_inlet_temperature_c,
             permeate_outlet_guess_c=guess,
             feed_mass_flow_kg_s=mf0,
