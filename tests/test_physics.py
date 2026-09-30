@@ -311,7 +311,9 @@ def test_counter_current_channel_uses_opposite_stream_boundary_direction():
     assert result.feed_out_temperature_c < 60
     assert result.permeate_out_temperature_c > 25
     assert result.permeate_out_mass_kg_h > 1000
-    assert result.cells[-1].permeate_bulk_temperature_c > result.cells[0].permeate_bulk_temperature_c
+    # In counter-current flow, the permeate enters at the feed outlet side,
+    # so its bulk temperature decreases when indexed in the feed-flow direction.
+    assert result.cells[0].permeate_bulk_temperature_c > result.cells[-1].permeate_bulk_temperature_c
 
 
 def test_heat_exergy_reflects_source_temperature_quality():
