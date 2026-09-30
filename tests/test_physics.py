@@ -3,6 +3,7 @@ import pytest
 
 from ai_water.engine import simulate
 from ai_water.hydraulics import pumping_from_pressure_drop
+from ai_water.thermal import exergy_efficiency, heat_exergy_kwh
 from ai_water.md import (
     flux_kg_m2_h,
     interface_temperatures,
@@ -310,3 +311,20 @@ def test_counter_current_channel_uses_opposite_stream_boundary_direction():
     assert result.feed_out_temperature_c < 60
     assert result.permeate_out_temperature_c > 25
     assert result.cells[-1].permeate_bulk_temperature_c > result.cells[0].permeate_bulk_temperature_c
+
+
+def test_heat_exergy_reflects_source_temperature_quality():
+    low = heat_exergy_kwh(heat_kwh_th=100, source_temperature_c=50, ambient_temperature_c=25)
+    high = heat_exergy_kwh(heat_kwh_th=100, source_temperature_c=90, ambient_temperature_c=25)
+    assert high > low > 0
+    assert heat_exergy_kwh(heat_kwh_th=100, source_temperature_c=25, ambient_temperature_c=25) == 0
+
+
+def test_exergy_efficiency_is_bounded():
+    value = exergy_efficiency(
+        useful_heat_kwh_th=50,
+        source_heat_kwh_th=100,
+        source_temperature_c=80,
+        ambient_temperature_c=25,
+    )
+    assert 0 < value <= 1
