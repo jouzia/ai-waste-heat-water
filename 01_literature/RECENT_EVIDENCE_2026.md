@@ -1,0 +1,141 @@
+# Recent literature evidence relevant to Research 2
+
+Updated: 2026-09-30
+
+This file records papers that materially affect the research design. It is a literature-screening record, not a claim that every cited study is an independent validation dataset.
+
+## 1. Data-center waste heat + desalination
+
+### Yang, Konstantinou & Hou (2026)
+**Enabling grid-interactive data center-desalination coordination through thermo-electric coupling-based waste heat utilization**  
+Applied Energy 408, 127428. DOI: 10.1016/j.apenergy.2026.127428.
+
+Relevance:
+- Directly couples data-center workload-driven waste heat to desalination.
+- Uses a high-fidelity thermo-electric model and two-stage stochastic planning/operation optimization.
+- Uses reverse osmosis rather than membrane distillation.
+- Case study is based on Jubail Industrial City, Saudi Arabia.
+- Important competitor to this project's system-level framing.
+
+Implication for Research 2:
+- Our novelty cannot be stated as merely "connecting data-center waste heat with desalination."
+- Our differentiator must remain the **net freshwater-consumption accounting + MD physics + cooling burden + uncertainty + water-stress feasibility envelope**, validated against experimental MD data.
+
+Source: https://doi.org/10.1016/j.apenergy.2026.127428
+
+## 2. Data-center cooling + freshwater co-production
+
+### Chen et al. (2026)
+**A dual-purpose seawater evaporation system for data center cooling and freshwater production: design and performance analysis**  
+Applied Thermal Engineering 287, 129458.
+
+Relevance:
+- Directly addresses simultaneous data-center cooling and freshwater production.
+- Uses seawater evaporation and multi-effect distillation rather than DCMD.
+- Reports system-level thermodynamic, energy, cost and emissions analysis.
+
+Implication:
+- The paper occupies the same broad data-center/water nexus but a different desalination architecture.
+- Research 2 should explicitly position MD as a membrane-based thermal pathway and compare against alternative thermal pathways where useful.
+- It reinforces the need to model cooling and water production jointly rather than treating cooling as an external penalty.
+
+## 3. Cooling burden in membrane distillation
+
+### Malaguti et al. (2026)
+**Waste heat won't make membrane distillation cool: Thermodynamic analysis of cooling and pumping burdens**  
+Desalination 628, 120039. DOI: 10.1016/j.desal.2026.120039.
+
+Relevance:
+- Reports cooling demand can reach 80–100% of heating demand in some MD configurations.
+- Highlights cooling availability as a feasibility constraint.
+- Quantifies pumping penalties and argues that free heat alone does not guarantee viability.
+
+Implication:
+- This strongly supports keeping cooling as a first-class subsystem in Research 2.
+- The model must not report gross thermal-driven distillate without accounting for cold-side requirements, pumping and auxiliary electricity.
+
+## 4. Waste-heat-driven MD experimental validation
+
+### Al-Jariry et al. (2026)
+**Analysis of high flux membranes for desalination in waste-heat driven vacuum membrane distillation plants: Experimental validation and techno-economic analysis**  
+Desalination 620, 119627. DOI: 10.1016/j.desal.2025.119627.
+
+Relevance:
+- Experimental water-flux data were collected for multiple membrane materials, including ceramics.
+- A one-dimensional model was validated against experimental flux data.
+- Includes a waste-heat source at 90 °C and plant-level analysis.
+- Data availability is stated as available on request.
+
+Implication:
+- Candidate quantitative validation source for a **waste-heat-driven MD subsystem**.
+- Exact experimental boundary conditions must be extracted before inclusion in the held-out validation set.
+- Do not use the reported fitted parameters as validation evidence for this repository.
+
+## 5. Cross-system pilot MD model validation
+
+### Bindels et al. (2026)
+**Pilot-scale membrane distillation modeling: Validation, comparison, and consensus**  
+Desalination 620, 119674. DOI: 10.1016/j.desal.2025.119674.
+
+Relevance:
+- Four pilot-scale AGMD models were compared using 2,716 experimental datapoints.
+- The study covers broad salinity, module, membrane and spacer conditions.
+- Model consensus uses empirical heat-transfer correlations, resistance-in-series membrane thermal conductivity, ePTFE support-layer treatment and air-gap distillate effects.
+- Authors state the aggregated experimental data cannot be shared.
+
+Implication:
+- Strong methodological evidence for model-form uncertainty.
+- Useful for correlation/model-structure comparison.
+- Not suitable as a directly reproducible numerical held-out dataset unless legally available observations can be independently obtained.
+
+## 6. Recent AI water-footprint context
+
+### Barnett-Itzhaki et al. (2026)
+**The water footprint of artificial intelligence: Emerging solutions and governance imperatives**  
+Water Research 299, 125866. DOI: 10.1016/j.watres.2026.125866.
+
+Relevance:
+- Reviews operational and indirect water dimensions of AI infrastructure.
+- Emphasizes cooling water, electricity-related water and water-stress context.
+- Discusses waste-heat recovery among possible technical interventions.
+
+Implication:
+- Supports the research motivation and broader water-footprint framing.
+- Does not replace facility-specific measurements or the present project's physical MD validation.
+
+## 7. Data-center waste-heat recovery / exergy context
+
+### Data centers waste heat recovery technologies: Review and evaluation (2025)
+Applied Energy 384, 125489. DOI: 10.1016/j.apenergy.2025.125489.
+
+Relevance:
+- Reviews data-center waste-heat streams and recovery technologies.
+- Uses exergy-based evaluation, reinforcing the distinction between heat quantity and heat quality.
+
+Implication:
+- Supports the exergy layer already implemented in Research 2.
+- Research 2 should retain source-temperature/exergy reporting instead of treating all kWh-th as equivalent.
+
+## 8. Primary MD foundation
+
+### Martínez-Díez & Vázquez-González (1999)
+**Temperature and concentration polarization in membrane distillation of aqueous salt solutions**  
+Journal of Membrane Science 156(2), 265–273. DOI: 10.1016/S0376-7388(98)00349-4.
+
+Relevance:
+- Primary experimental provenance for flat-sheet PTFE DCMD.
+- Studies water and NaCl feeds and evaluates temperature and concentration polarization.
+
+Implication:
+- Remains a primary validation target.
+- Experimental observations must be extracted from the primary source before model calibration.
+
+## 9. Literature-positioning rule
+
+The existence of 2025–2026 papers directly coupling data centers and desalination means the manuscript must **not** claim that this research is the first to propose data-center waste-heat desalination.
+
+The defensible contribution is narrower:
+
+> A source-traceable, uncertainty-aware framework for determining when data-center waste heat coupled to membrane distillation produces a positive net freshwater-consumption benefit after accounting for thermal quality, cooling, hydraulic/auxiliary burdens, electricity-related water, counterfactual displacement and geographic water stress.
+
+This contribution remains subject to quantitative validation and comparison against the recent literature above.
