@@ -1,7 +1,9 @@
 source_id: MD-DCMD-CHANNEL-2020
 figure: "Figure 3"
-status: pending_digitization
+status: source_image_accessible_primary_geometry_verified_pending_marker_extraction
 license: "CC BY 4.0 for the Keshavarzzadeh article; experimental observations trace to Martínez-Díez and Vázquez-González (1999)"
+source_image_url: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-020-73964-7/MediaObjects/41598_2020_73964_Fig3_HTML.png"
+image_source_note: "Full-size Figure 3 image was accessed from the Springer Nature media endpoint on 2026-09-30. No experimental observations are entered from visual inspection alone until calibrated extraction and repeatability checks are archived."
 panels:
   - id: "3a"
     recirculation_rate_cm3_s: 7.0
@@ -26,16 +28,19 @@ panels:
       - salinity_mol_l: 1.67
         observation_type: experimental_markers
 x_axis:
-  variable: average_feed_bulk_temperature_c
-  definition: "average of feed inlet and outlet bulk temperature"
+  variable: average_feed_bulk_temperature_k
+  definition: "average of feed inlet and outlet bulk temperature; source Figure 3 reports K"
 y_axis:
   variable: water_mass_flux_kg_m2_h
+  source_display_scaling: "figure y-axis is J_m × 10^3 kg/m²/s; convert to kg/m²/h only after extraction using ×3.6"
 extraction_rules:
   - "extract markers only"
   - "do not extract continuous model curves as observations"
   - "calibrate both axes using at least three known tick positions"
   - "archive raw pixel coordinates"
+  - "record panel and marker identity for every observation"
   - "repeat a subset independently"
-  - "estimate digitization uncertainty"
+  - "estimate digitization uncertainty from repeated extraction and pixel resolution"
   - "do not round extracted observations before analysis"
+  - "do not fit a curve to the digitized observations before the first unfitted model run"
 observations: []
