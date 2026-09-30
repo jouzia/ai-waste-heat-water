@@ -17,10 +17,11 @@ cases:
     doi_or_stable_identifier: "10.1038/s41598-020-73964-7"
     upstream_experimental_source: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273, DOI 10.1016/S0376-7388(98)00349-4"
     configuration: "flat-sheet DCMD"
-    extraction_status: parameterized
+    extraction_status: source_formulation_reconciled_execution_matrix_ready
     validation_status: candidate
     benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-CHANNEL-2020.yaml"
-    claim_status: "No predictive accuracy claim until source-matched comparison is completed."
+    execution_matrix: "04_experiments/literature_benchmarks/MD-DCMD-CHANNEL-2020_execution_matrix.yaml"
+    claim_status: "Source equations and counter-current runner implemented; no predictive accuracy claim until primary observations and exact boundary conditions are crosswalked and compared unfitted."
 
   - source_id: MD-DCMD-SUMMERS-2012
     citation: "Summers, Arafat & Lienhard V (2012), Desalination 290, 54-66"
