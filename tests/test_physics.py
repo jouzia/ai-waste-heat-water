@@ -310,6 +310,7 @@ def test_counter_current_channel_uses_opposite_stream_boundary_direction():
     assert result.freshwater_produced_kg > 0
     assert result.feed_out_temperature_c < 60
     assert result.permeate_out_temperature_c > 25
+    assert result.permeate_out_mass_kg_h > 1000
     assert result.cells[-1].permeate_bulk_temperature_c > result.cells[0].permeate_bulk_temperature_c
 
 
