@@ -49,3 +49,28 @@ def test_source_membrane_conductivity_is_positive():
 def test_source_cell_area_matches_total_area():
     c = config()
     assert source_cell_area(c) == pytest.approx(0.00337 / 20)
+
+
+def test_source_countercurrent_runner_conserves_total_water_transfer():
+    from ai_water.source_keshavarzzadeh_runner import run_source_countercurrent
+
+    cfg = SourceRunnerConfig(
+        membrane_thickness_m=60e-6,
+        pore_radius_m=0.1e-6,
+        porosity=0.8,
+        tortuosity=1.25,
+        channel_area_m2=3.15e-6,
+        membrane_area_m2=0.00337,
+        cells=8,
+    )
+    result = run_source_countercurrent(
+        feed_inlet_temperature_c=60.0,
+        permeate_inlet_temperature_c=30.0,
+        feed_flow_m3_s=7e-6,
+        permeate_flow_m3_s=7e-6,
+        feed_salinity_mol_l=0.55,
+        config=cfg,
+    )
+    assert result.total_distillate_kg_s > 0
+    assert result.feed_outlet_mass_flow_kg_s < 1000.0 * 7e-6
+    assert result.permeate_inlet_temperature_c == 30.0
