@@ -295,3 +295,18 @@ def simulate_dcmd_channel(
     product_total = sum(c.product_water_kg for c in cells)
     latent_total = sum(c.membrane_latent_heat_kw for c in cells) * config.duration_h
     conductive_total = sum(c.membrane_conductive_heat_kw for c in cells) * config.duration_h
+    hot_side_total = sum(c.feed_heat_kw for c in cells) * config.duration_h
+    concentrate_salinity = salt_mass_flow / feed_mass * 1000.0
+
+    return ChannelResult(
+        cells=tuple(cells),
+        feed_out_temperature_c=feed_out,
+        permeate_out_temperature_c=permeate_out,
+        feed_out_mass_kg_h=feed_mass,
+        permeate_out_mass_kg_h=permeate_mass,
+        concentrate_salinity_g_kg=concentrate_salinity,
+        freshwater_produced_kg=product_total,
+        hot_side_thermal_demand_kwh_th=hot_side_total,
+        conductive_heat_leak_kwh_th=conductive_total,
+        latent_duty_kwh_th=latent_total,
+    )
