@@ -1,0 +1,45 @@
+# Secondary numerical cross-check: Summers et al. (2012)
+
+source_id: MD-DCMD-SUMMERS-2012
+status: candidate_secondary_report
+claim_status: "Cross-check only until the original Martinez-Diez experimental source is reconstructed."
+
+source:
+  citation: "Summers, E. K., Arafat, H. A., & Lienhard V, J. H. (2012), Desalination 290, 54-66"
+  doi: "10.1016/j.desal.2012.01.004"
+  provenance: "Secondary report of experimental results attributed to Martinez-Diez"
+  source_note: "The reported operating point uses average feed temperature 45 C and average permeate temperature 35 C."
+
+module:
+  type: flat_sheet_dcmd
+  length_mm: 55.0
+  channel_width_mm: 7.0
+  channel_depth_mm: 0.4
+  membrane:
+    material: "Gelman Inst. TF200 PTFE"
+    membrane_distillation_coefficient_kg_m2_pa_s: 2.2e-6
+
+observations:
+  - run: 1
+    mass_flow_kg_s: 0.00165
+    experimental_flux_kg_m2_h: 10.08
+    reported_model_flux_kg_m2_h: 16.28
+  - run: 2
+    mass_flow_kg_s: 0.00121
+    experimental_flux_kg_m2_h: 9.36
+    reported_model_flux_kg_m2_h: 16.05
+  - run: 3
+    mass_flow_kg_s: 0.000772
+    experimental_flux_kg_m2_h: 8.64
+    reported_model_flux_kg_m2_h: 15.79
+
+reproduction_requirements:
+  - "Convert membrane distillation coefficient to the model permeance unit without rounding."
+  - "Reconstruct heat-transfer coefficients from the reported geometry and chosen correlation."
+  - "Do not use the reported model flux as a calibration target."
+  - "Report correlation choice and applicability range."
+  - "Preserve the secondary-source status and trace to the original experiment."
+
+acceptance_rule:
+  - "Do not classify as held-out validation solely because the values are numerically available in a secondary paper."
+  - "Original experimental provenance must be checked before publication-level validation claims."
