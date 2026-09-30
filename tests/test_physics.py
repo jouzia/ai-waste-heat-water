@@ -1,9 +1,20 @@
 import numpy as np
 import pytest
 
+from ai_water.channel_transport import (
+    ChannelProperties,
+    concentration_polarization_coefficient,
+    dimensionless_numbers,
+    graetz_leveque_nusselt,
+    graetz_leveque_sherwood,
+    heat_transfer_coefficient,
+    interface_salinity_g_kg,
+    mass_transfer_coefficient,
+    tpc_from_interfaces,
+    watertap_nusselt,
+)
 from ai_water.engine import simulate
 from ai_water.hydraulics import pumping_from_pressure_drop
-from ai_water.thermal import exergy_efficiency, heat_exergy_kwh
 from ai_water.md import (
     flux_kg_m2_h,
     interface_temperatures,
@@ -21,6 +32,7 @@ from ai_water.models import (
     WaterFactors,
     Workload,
 )
+from ai_water.thermal import exergy_efficiency, heat_exergy_kwh
 from ai_water.uncertainty import (
     DistributionSpec,
     probability_negative,
@@ -139,7 +151,6 @@ def test_heat_limit_keeps_fixed_membrane_conduction():
     assert r.concentrate_salinity_g_kg == 0.0
 
 
-
 def test_one_dimensional_dcmd_channel_resolves_interface_temperatures_and_axial_cooling():
     result = simulate_dcmd_channel(
         config=ChannelConfig(
@@ -189,18 +200,6 @@ def test_one_dimensional_channel_concentrates_saline_feed():
     )
     assert result.freshwater_produced_kg > 0
     assert result.concentrate_salinity_g_kg > 35
-from ai_water.channel_transport import (
-    ChannelProperties,
-    concentration_polarization_coefficient,
-    dimensionless_numbers,
-    graetz_leveque_nusselt,
-    graetz_leveque_sherwood,
-    heat_transfer_coefficient,
-    interface_salinity_g_kg,
-    mass_transfer_coefficient,
-    tpc_from_interfaces,
-    watertap_nusselt,
-)
 
 
 def test_channel_correlations_and_polarization_are_physical():
@@ -265,7 +264,6 @@ def test_one_dimensional_channel_can_apply_concentration_polarization():
     assert result.freshwater_produced_kg > 0
     assert all(c.concentration_polarization_coefficient >= 1 for c in result.cells)
     assert all(c.interface_salinity_g_kg >= c.feed_salinity_g_kg for c in result.cells)
-
 
 
 def test_uncertainty_sampling_is_reproducible_and_preserves_sign_probability():
