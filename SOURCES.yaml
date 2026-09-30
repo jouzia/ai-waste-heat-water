@@ -16,6 +16,18 @@ sources:
     url: "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Type=ANTOINE"
     status: "implemented"
 
+  - id: MD-DCMD-PRIMARY-1999
+    title: "Temperature and concentration polarization in membrane distillation of aqueous salt solutions"
+    year: 1999
+    role: C
+    used_for:
+      - "primary experimental geometry and membrane specification"
+      - "experimental measurement stability and replication information"
+      - "primary provenance for Keshavarzzadeh Figure 3 validation data"
+    doi: "10.1016/S0376-7388(98)00349-4"
+    url: "https://doi.org/10.1016/S0376-7388(98)00349-4"
+    status: "primary-validation-source"
+
   - id: MD-DCMD-CHANNEL-2020
     title: "Design and bio-inspired optimization of direct contact membrane distillation for desalination based on constructal law"
     year: 2020
