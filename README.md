@@ -46,7 +46,7 @@ These additions do not supply unsupported membrane properties, heat-transfer coe
 
 **No positive water-benefit conclusion is claimed.** The current baseline is a screening/accounting model, not an industrial digital twin. Before quantitative deployment claims, the study must validate the new channel transport correlations and concentration-polarization layer against source-matched experiments. The first literature case is a flat-sheet counter-current DCMD benchmark, for which the source confirms two recirculation rates and four NaCl concentrations; the benchmark remains unvalidated until the experimental observations and complete boundary conditions are reconstructed.
 
-Before quantitative deployment claims, the study must validate, then add cooling and heat-sink constraints, source-matched membrane parameters, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
+The next stages are cooling and heat-sink constraints, source-matched membrane parameters, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
 
 ## External data and legal reproducibility
 
