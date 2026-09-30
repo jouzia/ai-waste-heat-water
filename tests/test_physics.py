@@ -35,13 +35,13 @@ from ai_water.models import (
     WaterFactors,
     Workload,
 )
-from ai_water.thermal import exergy_efficiency, heat_exergy_kwh
 from ai_water.source_keshavarzzadeh import (
     source_membrane_conductivity_w_m_k,
     source_membrane_flux_coefficient,
     source_saturation_pressure_pa,
     source_water_activity_from_molar_nacl,
 )
+from ai_water.thermal import exergy_efficiency, heat_exergy_kwh
 from ai_water.uncertainty import (
     DistributionSpec,
     probability_negative,
