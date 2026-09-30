@@ -12,6 +12,9 @@ from ai_water.channel_transport import (
     mass_transfer_coefficient,
     tpc_from_interfaces,
     watertap_nusselt,
+    keshavarzzadeh_dimensionless_position,
+    keshavarzzadeh_f_re_sqrt_area,
+    keshavarzzadeh_nusselt,
 )
 from ai_water.engine import simulate
 from ai_water.hydraulics import pumping_from_pressure_drop
@@ -329,3 +332,26 @@ def test_exergy_efficiency_is_bounded():
         ambient_temperature_c=25,
     )
     assert 0 < value <= 1
+
+
+def test_keshavarzzadeh_source_correlation_is_finite_and_positive():
+    area_m2 = 0.007 * 0.00045
+    re_sqrt_a = 120.0
+    pr = 5.0
+    z_star = keshavarzzadeh_dimensionless_position(
+        axial_position_m=0.0275,
+        cross_section_area_m2=area_m2,
+        reynolds_sqrt_area=re_sqrt_a,
+        prandtl=pr,
+    )
+    aspect_ratio = 0.00045 / 0.007
+    f_re = keshavarzzadeh_f_re_sqrt_area(aspect_ratio)
+    nu = keshavarzzadeh_nusselt(
+        reynolds_sqrt_area=re_sqrt_a,
+        prandtl=pr,
+        z_star=z_star,
+        aspect_ratio=aspect_ratio,
+    )
+    assert z_star > 0
+    assert f_re > 0
+    assert nu > 0
