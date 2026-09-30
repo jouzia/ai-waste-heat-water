@@ -10,6 +10,10 @@ Under what combinations of AI workload intensity, thermal conditions, waste-heat
 
 Gross freshwater production is not treated as net water benefit. The system boundary explicitly separates IT heat, recoverable heat, MD thermal duty, cooling duty, pumping, auxiliary electricity, direct cooling water, electricity-related water, withdrawal, consumption, and recovered freshwater.
 
+## Reproducible demo
+
+The presentation-safe demo can be run with `python scripts/run_demo.py`. It emits a JSON accounting ledger that keeps gross distillate, additional water consumption, declared avoided consumption, and net consumption change separate. Demo values are illustrative and are not validation results.
+
 ## Current implementation
 
 - Reproducible Python package skeleton established.
