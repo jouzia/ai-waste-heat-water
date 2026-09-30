@@ -30,3 +30,27 @@ A literature statement that a published model agrees with an experiment is not v
 ## Source note
 
 The primary paper explicitly states that the measured flux results cover different temperatures, recirculation rates and solution concentrations, and that experimental conditions were maintained tightly. These constraints should be preserved rather than replaced by convenient defaults.
+
+
+## Extraction ledger requirement
+
+The machine-readable observation template is:
+`04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_observations.yaml`
+
+The ledger intentionally starts empty. A populated row is admissible only when its source locator, boundary conditions, unit transformation, and extraction method are recorded. Figure-derived observations require archived pixel coordinates, axis calibration points, and an independent repeat extraction. Missing experimental boundary conditions remain blocking rather than being filled with repository defaults.
+
+## Validation sequence
+
+```text
+Primary source
+    -> observation extraction
+    -> provenance/unit audit
+    -> independent extraction check
+    -> frozen unfitted model
+    -> first comparison
+    -> development/held-out split
+    -> calibration only on development cases
+    -> final held-out evaluation
+```
+
+This sequence prevents the common failure mode of treating a published model-to-data agreement as evidence that a new implementation is validated.
