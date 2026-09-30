@@ -1,0 +1,55 @@
+version: "1.0"
+
+purpose: "Publication-facing validation ledger. This file records evidence status without converting incomplete source extraction into validation claims."
+
+cases:
+  - source_id: MD-DCMD-CHANNEL-2020
+    role: development_benchmark
+    source: "Keshavarzzadeh et al. (2020), Scientific Reports 10, 16790"
+    doi: "10.1038/s41598-020-73964-7"
+    upstream_experiment: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273"
+    configuration: "flat-sheet counter-current DCMD"
+    source_facts:
+      recirculation_rates_cm3_s: [7.0, 11.0]
+      nacl_concentrations_mol_l: [0.0, 0.55, 1.15, 1.67]
+      membrane_material: PTFE
+      membrane_void_fraction: 0.80
+      membrane_thickness_um: 60.0
+      nominal_pore_size_as_printed: "0.2 mm"
+      note: "The pore-size unit is preserved exactly as printed until the upstream experimental source is checked."
+    model_status: "counter-current solver implemented; source-condition reconstruction incomplete"
+    quantitative_claim: false
+    next_required:
+      - "Recover exact module geometry from the upstream experimental source."
+      - "Extract experimental flux observations from Figure 3 with a documented digitization procedure."
+      - "Reconstruct source membrane transport and heat-transfer correlations."
+      - "Run unfitted source-condition comparisons."
+      - "Reserve at least one source condition as held-out validation."
+
+  - source_id: MD-DCMD-VALIDATION-2026
+    role: independent_validation_candidate
+    source: "Sulaiman et al. (2026), Discover Water"
+    doi: "10.1007/s43832-026-00418-y"
+    configuration: "hollow-fiber polypropylene DCMD"
+    source_facts:
+      experimental_flux_range_kg_m2_h: [1.4, 4.8]
+      feed_temperature_range_c: [40.0, 60.0]
+      salt_rejection_percent: ">99.9"
+      maximum_reported_recovery_percent: 93.0
+      independent_literature_datasets_reported_by_source: 14
+    model_status: "candidate; configuration differs from flat-sheet development case"
+    quantitative_claim: false
+    legal_status: "article is CC BY-NC-ND 4.0; do not redistribute adapted tables or figures without checking permissions"
+    next_required:
+      - "Extract only source-authorized machine-readable values."
+      - "Determine whether the supplied supplementary material provides complete boundary conditions."
+      - "Implement hollow-fiber geometry only if required parameters are source-backed."
+      - "Keep this case independent from any parameter-fitting stage."
+
+  - source_id: MD-PILOT-VALIDATION-2026
+    role: external_methodological_evidence
+    source: "Bindels et al. (2026), Desalination 620, 119674"
+    configuration: "pilot-scale AGMD/V-AGMD"
+    model_status: "qualitative_only"
+    quantitative_claim: false
+    reason: "Source reports that aggregated experimental data cannot be shared."
