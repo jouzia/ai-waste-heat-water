@@ -1,0 +1,31 @@
+source_id: MD-DCMD-MARTINEZ-1999
+citation: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273"
+doi: "10.1016/S0376-7388(98)00349-4"
+configuration: flat_sheet_dcmd
+status: primary_provenance_established_quantitative_extraction_pending
+membrane:
+  material: TF200_PTFE
+  manufacturer: Gelman_Instrument
+  void_fraction: 0.80
+  thickness_um: 60
+  nominal_pore_size_um: 0.2
+module:
+  feed_channels: 9
+  permeate_channels: 9
+  length_mm: 55.0
+  width_mm: 7.0
+  channel_height_mm: 0.45
+  effective_area_m2: 0.00337
+feed_concentrations_m: [0.0, 0.55, 1.15, 1.67]
+experimental_controls:
+  temperatures: "Bulk inlet/outlet temperatures maintained within +/-0.1 C"
+  recirculation_rate_stability: "Oscillations below 1 percent"
+validation_policy:
+  use_only_observed_markers: true
+  parameter_fitting_before_first_run: false
+  missing_conditions_become_blocking: true
+  digitization_uncertainty_required: true
+  primary_source_crosswalk_required: true
+notes:
+  - "The 1999 paper is the primary experimental provenance for the module geometry and experimental program."
+  - "Numerical flux datapoints and exact run-by-run boundary conditions still require extraction from the primary source."
