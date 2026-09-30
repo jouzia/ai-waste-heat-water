@@ -7,12 +7,42 @@ form without silently replacing it with newer correlations.
 import math
 
 
-def source_water_activity_from_molar_nacl(x: float) -> float:
-    """Eq. (6)-(7) multiplier gamma_w(1-X) used by the source."""
+def source_water_activity_from_mole_fraction(x: float) -> float:
+    """Eq. (6)-(7) water-activity multiplier for salt mole fraction X."""
     if not 0 <= x < 1:
-        raise ValueError("molar solute fraction must be in [0,1)")
+        raise ValueError("salt mole fraction must be in [0,1)")
     gamma_w = 1.0 - 0.5 * x - 10.0 * x**2
     return gamma_w * (1.0 - x)
+
+
+def source_mole_fraction_from_molarity(
+    nacl_molarity_mol_l: float,
+    *,
+    water_molarity_mol_l: float = 55.51,
+) -> float:
+    """Convert NaCl molarity to the mole fraction used by the source equation.
+
+    This is an explicit conversion assumption for source reproduction, not a
+    claim about the full non-ideal composition of concentrated brine.
+    """
+    if nacl_molarity_mol_l < 0:
+        raise ValueError("NaCl molarity must be non-negative")
+    if water_molarity_mol_l <= 0:
+        raise ValueError("water molarity must be positive")
+    return nacl_molarity_mol_l / (nacl_molarity_mol_l + water_molarity_mol_l)
+
+
+def source_water_activity_from_molar_nacl(
+    nacl_molarity_mol_l: float,
+    *,
+    water_molarity_mol_l: float = 55.51,
+) -> float:
+    """Eq. (6)-(7) multiplier from an NaCl molarity input."""
+    x = source_mole_fraction_from_molarity(
+        nacl_molarity_mol_l,
+        water_molarity_mol_l=water_molarity_mol_l,
+    )
+    return source_water_activity_from_mole_fraction(x)
 
 
 def source_saturation_pressure_pa(temperature_c: float) -> float:
