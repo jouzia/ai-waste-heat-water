@@ -36,6 +36,12 @@ from ai_water.models import (
     Workload,
 )
 from ai_water.thermal import exergy_efficiency, heat_exergy_kwh
+from ai_water.source_keshavarzzadeh import (
+    source_membrane_conductivity_w_m_k,
+    source_membrane_flux_coefficient,
+    source_saturation_pressure_pa,
+    source_water_activity_from_molar_nacl,
+)
 from ai_water.uncertainty import (
     DistributionSpec,
     probability_negative,
@@ -355,3 +361,23 @@ def test_keshavarzzadeh_source_correlation_is_finite_and_positive():
     assert z_star > 0
     assert f_re > 0
     assert nu > 0
+
+
+def test_keshavarzzadeh_source_equations_are_finite_and_physical():
+    activity = source_water_activity_from_molar_nacl(0.05)
+    pressure = source_saturation_pressure_pa(60.0)
+    coefficient = source_membrane_flux_coefficient(
+        temperature_k=333.15,
+        pore_radius_m=0.1e-6,
+        thickness_m=60e-6,
+        porosity=0.8,
+        tortuosity=1.25,
+    )
+    conductivity = source_membrane_conductivity_w_m_k(
+        temperature_k=333.15,
+        porosity=0.8,
+    )
+    assert 0 < activity < 1
+    assert pressure > 0
+    assert coefficient > 0
+    assert conductivity > 0
