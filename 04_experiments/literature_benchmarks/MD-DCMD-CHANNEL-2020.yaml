@@ -1,7 +1,7 @@
 # Literature reproduction benchmark: Keshavarzzadeh et al. (2020)
 source_id: MD-DCMD-CHANNEL-2020
-status: eligible_source_case_incomplete
-claim_status: "No numerical reproduction claim until source operating conditions and observed flux data are independently reconstructed."
+status: source_geometry_reconciled_pending_digitization
+claim_status: "No numerical reproduction claim until Figure 3 observations and source operating conditions are independently reconstructed."
 
 source:
   citation: "Keshavarzzadeh, A. H. (2020), Scientific Reports 10, 16790"
@@ -24,7 +24,7 @@ source:
       temperature_stability_c: 0.1
       flow_and_concentration_oscillation_percent: 1.0
       replicate_statement: "Flux values are averages of at least three experiments."
-    provenance_note: "Primary-source geometry and measurement-quality information now verified; individual Figure 3 observations still require calibrated digitization."
+    provenance_note: "Primary-source module geometry, membrane specification, and measurement-quality information verified from the 1999 experimental paper."
   figure_3_image_url: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-020-73964-7/MediaObjects/41598_2020_73964_Fig3_HTML.png"
   source_sections:
     - "Modeling"
@@ -49,7 +49,17 @@ confirmed_validation_inputs:
     material: PTFE
     void_fraction: 0.80
     thickness_um: 60.0
-    nominal_pore_size: "0.2 mm as printed in the source text; verify against original experimental reference before treating as micrometre-scale pore size"
+    nominal_pore_size_um_primary_source: 0.2
+    pore_size_reconciliation:
+      keshavarzzadeh_2020_printed_value: "0.2 mm"
+      martinez_diez_1999_primary_value: "0.2 um"
+      validation_rule: "Use 0.2 um for primary experimental provenance; preserve the 2020 printed '0.2 mm' as a source-text discrepancy rather than silently rewriting it."
+  module_geometry_primary_source:
+    channels_each_side: 9
+    channel_length_mm: 55.0
+    channel_width_mm: 7.0
+    channel_height_mm: 0.45
+    effective_membrane_area_m2: 0.00337
   plotted_x_definition: "Average of inlet and outlet feed bulk temperature, T_b1"
   plotted_series: "Experimental markers only; model curves are excluded from observed-data extraction"
 
@@ -68,12 +78,11 @@ paper_model_case_table_1:
   feed_inlet_salinity_ppm: 35000
 
 unresolved_source_inputs:
-  - "Exact channel geometry for the Martínez-Díez validation module"
   - "Exact inlet feed and permeate temperatures for every plotted validation point"
-  - "Exact membrane transport parameters required by the source equations"
+  - "Exact source membrane transport parameters beyond the primary TF200 specification"
   - "Experimental flux values from Figure 3"
-  - "Exact source thermophysical-property correlations"
-  - "Original Martinez-Diez and Vazquez-Gonzalez experimental metadata"
+  - "Exact source thermophysical-property correlations and implementation conventions"
+  - "Any source-specific treatment of density, enthalpy, latent heat, and concentration units"
 
 provisional_values_do_not_use_for_validation:
   note: "These values may be used for software smoke tests only and must never be labelled as source conditions."
