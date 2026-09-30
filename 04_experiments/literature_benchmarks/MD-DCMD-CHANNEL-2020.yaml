@@ -1,7 +1,7 @@
 # Literature reproduction benchmark: Keshavarzzadeh et al. (2020)
 source_id: MD-DCMD-CHANNEL-2020
-status: source_geometry_reconciled_pending_digitization
-claim_status: "No numerical reproduction claim until Figure 3 observations and source operating conditions are independently reconstructed."
+status: provenance_reconciled_pending_primary_figure_crosswalk
+claim_status: "No numerical reproduction claim until Figure 3 observations, source operating conditions, and the experimental-source crosswalk are independently reconstructed."
 
 source:
   citation: "Keshavarzzadeh, A. H. (2020), Scientific Reports 10, 16790"
@@ -103,3 +103,10 @@ acceptance_rule:
   - "Any fitted parameter is development-only."
   - "Independent source cases remain held out for validation."
   - "Observed-vs-predicted values and exact source locations must be archived."
+
+
+provenance_audit_2026_09_30:
+  finding: "Keshavarzzadeh (2020) states that Figure 3 experimental symbols come from reference 25, but reference 25 in the article bibliography is a Geothermics ground-source heat-exchanger paper, not the Martínez-Díez and Vázquez-González (1999) MD experiment."
+  implication: "Treat the Figure 3 markers as data reproduced in the 2020 paper, not yet as independently verified primary-source observations."
+  required_action: "Crosswalk the plotted marker set against the actual primary experimental paper before quantitative validation."
+  rule: "Do not use the 2020 author's 'excellent agreement' statement as evidence that this repository implementation is validated."
