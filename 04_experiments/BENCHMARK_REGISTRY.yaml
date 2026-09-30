@@ -51,6 +51,17 @@ cases:
     benchmark_file: null
     claim_status: "Potential independent validation source; exact experimental conditions must be extracted before quantitative use."
 
+
+  - source_id: MD-DCMD-MARTINEZ-1999
+    citation: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273"
+    doi_or_stable_identifier: "10.1016/S0376-7388(98)00349-4"
+    configuration: "flat-sheet DCMD"
+    extraction_status: primary_provenance_established_quantitative_extraction_pending
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999.yaml"
+    observation_ledger: "04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_observations.yaml"
+    claim_status: "Primary experimental provenance established; no validation accuracy claim until source-matched unfitted comparison is completed."
+
 validation_split_policy:
   development: "Cases used to select or fit model parameters."
   held_out: "Cases locked before final model selection and never used for fitting."
