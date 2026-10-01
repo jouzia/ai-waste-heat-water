@@ -28,6 +28,20 @@ sources:
     url: "https://doi.org/10.1016/S0376-7388(98)00349-4"
     status: "primary-validation-source"
 
+
+  - id: MD-OEDI-VILLA-2018
+    title: "Membrane Specifications for Multi-Configuration Membrane Distillation Model"
+    authors: "Villa, Vanneste, Cath, Turchi, and Akar"
+    year: 2018
+    role: C
+    used_for:
+      - "candidate independent experimental validation of DCMD heat/mass transfer"
+      - "cross-configuration model comparison"
+    doi: "10.15121/1452747"
+    url: "https://gdr.openei.org/submissions/1016"
+    license_status: "Public record displays a Creative Commons indicator; exact licence variant must be verified before redistribution of adapted data."
+    status: "open-validation-dataset-registered-extraction-pending"
+
   - id: MD-DCMD-CHANNEL-2020
     title: "Design and bio-inspired optimization of direct contact membrane distillation for desalination based on constructal law"
     year: 2020
