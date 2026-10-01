@@ -59,6 +59,14 @@ def run_monte_carlo(
         for path, spec in distributions.items()
     }
     base_data = base_scenario.model_dump()
+    # Validate parameter paths before sampling so a misspelled path cannot be
+    # silently counted as a failed Monte Carlo draw.
+    for path in distributions:
+        probe = {
+            key: (value.copy() if isinstance(value, dict) else value)
+            for key, value in base_data.items()
+        }
+        _set_nested_value(probe, path, 0.0)
     records: list[dict[str, float]] = []
     failures = 0
 
