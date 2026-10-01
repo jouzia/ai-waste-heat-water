@@ -4,7 +4,6 @@ source_id: MD-OEDI-VILLA-2018
 citation: "Villa, D., Vanneste, J., Cath, T., Turchi, C., & Akar, S. (2018). Membrane Specifications for Multi-Configuration Membrane Distillation Model. Geothermal Data Repository, National Renewable Energy Laboratory."
 doi: "10.15121/1452747"
 source_url: "https://gdr.openei.org/submissions/1016"
-landing_page_alternative: "https://data.openei.org/submissions/7175"
 status: candidate_open_dataset_extraction_pending
 access: publicly_accessible
 license_status: "Repository search record displays a Creative Commons license indicator, but the exact CC variant must be verified from the dataset's licence metadata before redistribution of adapted data."
