@@ -1,0 +1,45 @@
+# Observation ledger for Villa et al. (2018), GDR/NREL dataset
+source_id: MD-OEDI-VILLA-2018
+source_doi: "10.15121/1452747"
+status: empty_template_extraction_pending
+observations: []
+
+required_fields:
+  - observation_id
+  - workbook_filename
+  - worksheet_name
+  - worksheet_cell_or_row_range
+  - configuration
+  - membrane_manufacturer_and_model
+  - membrane_material
+  - membrane_area_m2
+  - membrane_thickness_m
+  - pore_size_m
+  - porosity
+  - channel_geometry
+  - feed_salinity_g_l
+  - feed_inlet_temperature_c
+  - feed_outlet_temperature_c
+  - permeate_inlet_temperature_c
+  - permeate_outlet_temperature_c
+  - feed_flow_rate_value
+  - feed_flow_rate_unit
+  - permeate_flow_rate_value
+  - permeate_flow_rate_unit
+  - observed_flux_value
+  - observed_flux_unit
+  - measurement_uncertainty
+  - extraction_type
+  - unit_transformations
+  - source_file_checksum
+
+rules:
+  - "Keep the original workbook unchanged and record its SHA-256 checksum."
+  - "Record retrieval date and exact licence metadata before extracting."
+  - "Use only measured observations; theoretical/model-calculated columns are excluded."
+  - "Every extracted value must have a worksheet and cell/row locator."
+  - "Preserve raw values and units; put converted values in separate fields."
+  - "If a measurement uncertainty is not reported, record unknown rather than zero."
+  - "Do not infer missing boundary conditions from another membrane/configuration."
+  - "Freeze development and held-out configurations before parameter fitting."
+  - "The exact Creative Commons licence variant must be verified before derived data are redistributed."
