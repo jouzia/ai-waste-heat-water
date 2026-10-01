@@ -1,6 +1,5 @@
 import pytest
 
-from ai_water.monte_carlo import run_monte_carlo
 from ai_water.models import (
     AuxiliaryLoads,
     Cooling,
@@ -10,6 +9,7 @@ from ai_water.models import (
     WaterFactors,
     Workload,
 )
+from ai_water.monte_carlo import run_monte_carlo
 from ai_water.uncertainty import DistributionSpec
 
 
