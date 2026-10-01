@@ -1,4 +1,4 @@
-# Source-validation gate status — 2026-09-30
+# Source-validation gate status — updated 2026-10-01
 
 ## Keshavarzzadeh et al. (2020)
 
@@ -12,8 +12,11 @@ The published model is a one-dimensional counter-current flat-sheet DCMD model. 
 - Source Keshavarzzadeh axial counter-current runner: implemented.
 - Counter-current permeate mass direction: corrected to follow source Eq. 12.
 - Liquid enthalpy inversion: explicit and isolated from the source equations.
-- Eight-case execution matrix: registered.
-- CI: green on the current execution-matrix commit (run 209); pytest and Ruff completed successfully.
+- Eight-case source-condition execution matrix: registered, with missing Figure 3 boundary conditions explicitly blocking quantitative execution.
+- Eight-case **software smoke matrix**: added for two flow rates and four salinities using explicitly provisional 60/30 °C boundary temperatures; these are not source conditions and are not experimental validation.
+- Counter-current feed/permeate mass conservation and interface-gradient smoke checks: tested.
+- Incremental cooling-water accounting: corrected so baseline data-center cooling is not double-counted as intervention burden.
+- CI: green on commit 1c16b974562ba7546cbc7cec294381df5cba14b0 (run 226); pytest and Ruff completed successfully.
 - Experimental validation accuracy: **not claimed**.
 
 ## Remaining quantitative gate
@@ -26,10 +29,11 @@ Before publication-level validation:
 2. extract the experimental markers and exact boundary conditions;
 3. archive figure pixel coordinates and axis calibration when digitization is required;
 4. independently re-extract a predefined subset;
-5. freeze the unfitted source runner;
-6. execute all eight source-condition groups;
-7. compare predicted and observed flux with MAE, RMSE, bias, and appropriate relative error;
-8. preserve failures and model-form differences.
+5. source-match or quantify uncertainty in the explicit engineering property closures;
+6. freeze the unfitted source runner;
+7. execute all eight source-condition groups only after exact boundary conditions are available;
+8. compare predicted and observed flux with MAE, RMSE, bias, and appropriate relative error;
+9. preserve failures and model-form differences.
 
 ## Important provenance issue
 
