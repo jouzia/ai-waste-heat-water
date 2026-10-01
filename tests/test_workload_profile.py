@@ -33,10 +33,10 @@ def test_profile_integrates_time_varying_it_energy_and_heat():
     assert result.duration_h == pytest.approx(1.5)
     assert result.it_energy_kwh == pytest.approx(120.0)
     assert result.heat_generated_kwh_th == pytest.approx(120.0)
-    assert result.usable_recoverable_heat_kwh_th == pytest.approx(18.0)
+    assert result.usable_recoverable_heat_kwh_th == pytest.approx(38.4)
     assert result.heat_availability_fraction == pytest.approx(1.0)
     assert result.heat_weighted_source_temperature_c == pytest.approx(
-        (60.0 * 16.0 + 70.0 * 2.0) / 18.0
+        (60.0 * 32.0 + 70.0 * 6.4) / 38.4
     )
 
 
