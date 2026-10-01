@@ -16,7 +16,7 @@ def config():
         pore_radius_m=0.1e-6,
         porosity=0.8,
         tortuosity=1.25,
-        channel_area_m2=0.00315,
+        channel_area_m2=3.15e-6,
         membrane_area_m2=0.00337,
         cells=20,
     )
@@ -72,8 +72,13 @@ def test_source_countercurrent_runner_conserves_total_water_transfer():
         config=cfg,
     )
     assert result.total_distillate_kg_s > 0
+    assert result.converged
     assert result.feed_outlet_mass_flow_kg_s < 1000.0 * 7e-6
+    assert result.feed_outlet_mass_flow_kg_s == pytest.approx(
+        1000.0 * 7e-6 - result.total_distillate_kg_s, rel=2e-3
+    )
     assert result.permeate_inlet_temperature_c == 30.0
+    assert result.permeate_outlet_mass_flow_kg_s > 1000.0 * 7e-6
 
 
 def test_source_countercurrent_permeate_mass_decreases_in_feed_coordinate():
