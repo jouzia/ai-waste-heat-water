@@ -76,7 +76,9 @@ def sobol_uniform(
         hybrid = a.copy()
         hybrid[:, i] = b[:, i]
         y_hybrid = evaluate_matrix(hybrid)
-        first = 1.0 - float(np.mean((yb - y_hybrid) ** 2)) / (2.0 * variance)
+        first = float(
+            np.mean((yb - np.mean(yb)) * (y_hybrid - ya))
+        ) / variance
         total = float(np.mean((ya - y_hybrid) ** 2)) / (2.0 * variance)
         indices.append(
             SobolIndex(
