@@ -16,8 +16,9 @@ This repository is a research model. Values are not automatically empirical just
 10. MD cooling duty is a thermal burden and may be assigned electricity and/or water consumption through explicit scenario parameters.
 11. Feed withdrawal and concentrate discharge are reported separately from freshwater consumption.
 12. Electricity-related water is represented by an explicit grid water factor. This factor is a site/boundary parameter, not a universal constant.
-13. The primary screening metric is Delta_W_net = W_additional_consumption - W_recovered. It does not by itself establish avoided freshwater consumption without an explicit counterfactual.
-14. IAPWS-08 validity limits are treated as model constraints; scenarios outside the documented range must not be silently extrapolated.
+13. The intervention burden includes only incremental facility electricity/cooling attributable to the intervention plus MD-specific auxiliary and cooling burdens. Baseline data-center operation belongs to the counterfactual and must not be counted again as an intervention burden.
+14. The primary screening metric is Delta_W_net = W_additional_consumption - W_avoided. W_avoided must be an explicitly justified counterfactual displacement of freshwater consumption; recovered distillate is not automatically counted as avoided consumption.
+15. IAPWS-08 validity limits are treated as model constraints; scenarios outside the documented range must not be silently extrapolated.
 
 ## Explicitly not assumed
 
