@@ -35,6 +35,34 @@ cases:
       - "Run unfitted source-condition comparisons."
       - "Reserve at least one source condition as held-out validation."
 
+
+  - source_id: MD-OEDI-VILLA-2018
+    role: independent_validation_candidate
+    source: "Villa et al. (2018), NREL Geothermal Data Repository"
+    doi: "10.15121/1452747"
+    dataset_url: "https://gdr.openei.org/submissions/1016"
+    configuration: "multiple flat-sheet and spiral-wound DCMD; co-current, counter-current, and AGMD"
+    source_facts:
+      reported_feed_salinity_g_l_nacl: 4.0
+      workbook_count: 7
+      dataset_size_mb_approx: 95.97
+      configurations_include:
+        - "3M plate-and-frame counter-current DCMD"
+        - "Aquastill plate-and-frame counter-current DCMD"
+        - "Aquastill spiral-wound counter-current DCMD"
+        - "CLARCOR QL822 flat-sheet co-current DCMD"
+        - "CLARCOR QL822 flat-sheet counter-current DCMD"
+        - "CLARCOR QL822 flat-sheet AGMD"
+    model_status: "candidate; workbook extraction, unit audit, and operating-condition crosswalk pending"
+    quantitative_claim: false
+    legal_status: "Repository record displays a Creative Commons indicator; exact licence variant must be verified before redistribution of adapted data."
+    next_required:
+      - "Acquire the public workbook files and record retrieval date and checksums."
+      - "Verify the exact licence from dataset metadata."
+      - "Separate measured data from theoretical/calculated worksheet columns."
+      - "Extract configuration-specific geometry, temperatures, flow rates, and measured flux."
+      - "Pre-register development and held-out configurations before any calibration."
+
   - source_id: MD-DCMD-VALIDATION-2026
     role: independent_validation_candidate
     source: "Sulaiman et al. (2026), Discover Water"
