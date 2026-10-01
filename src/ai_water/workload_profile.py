@@ -16,14 +16,14 @@ class WorkloadInterval(BaseModel):
 
     duration_h: float = Field(gt=0)
     it_power_kw: float = Field(ge=0)
-    recoverable_heat_fraction: float = Field(ge=0, le=1, default=0.8)
+    recoverable_heat_fraction: float = Field(ge=0, le=1)
     source_temperature_c: float
 
 
 class WorkloadProfileFactors(BaseModel):
-    recovery_efficiency: float = Field(ge=0, le=1, default=0.5)
-    heat_exchanger_effectiveness: float = Field(ge=0, le=1, default=0.8)
-    usable_heat_fraction: float = Field(ge=0, le=1, default=1.0)
+    recovery_efficiency: float = Field(ge=0, le=1)
+    heat_exchanger_effectiveness: float = Field(ge=0, le=1)
+    usable_heat_fraction: float = Field(ge=0, le=1)
     minimum_source_temperature_c: float = 0.0
 
 
