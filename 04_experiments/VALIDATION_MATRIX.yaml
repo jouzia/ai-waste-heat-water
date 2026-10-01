@@ -41,6 +41,8 @@ cases:
     source: "Villa et al. (2018), NREL Geothermal Data Repository"
     doi: "10.15121/1452747"
     dataset_url: "https://gdr.openei.org/submissions/1016"
+    benchmark_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
+    observation_ledger: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_observations.yaml"
     configuration: "multiple flat-sheet and spiral-wound DCMD; co-current, counter-current, and AGMD"
     source_facts:
       reported_feed_salinity_g_l_nacl: 4.0
