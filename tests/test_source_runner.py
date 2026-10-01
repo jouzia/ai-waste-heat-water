@@ -112,3 +112,42 @@ def test_source_countercurrent_permeate_mass_decreases_in_feed_coordinate():
         for i in range(len(result.cells) - 1)
     )
     assert result.cells[0].permeate_mass_flow_kg_s > result.cells[-1].permeate_mass_flow_kg_s
+
+
+@pytest.mark.parametrize("flow_m3_s", [7e-6, 11e-6])
+@pytest.mark.parametrize("salinity_mol_l", [0.0, 0.55, 1.15, 1.67])
+def test_source_runner_eight_case_numerical_smoke_matrix(flow_m3_s, salinity_mol_l):
+    """Smoke-test all flow/salinity combinations, not a source-condition validation.
+
+    The 60/30 C boundary temperatures are deliberately provisional software
+    inputs. They must not be reported as the Figure 3 experimental conditions.
+    """
+    from ai_water.source_keshavarzzadeh_runner import run_source_countercurrent
+
+    cfg = SourceRunnerConfig(
+        membrane_thickness_m=60e-6,
+        pore_radius_m=0.1e-6,
+        porosity=0.8,
+        tortuosity=1.25,
+        channel_area_m2=3.15e-6,
+        membrane_area_m2=0.00337,
+        cells=8,
+    )
+    result = run_source_countercurrent(
+        feed_inlet_temperature_c=60.0,
+        permeate_inlet_temperature_c=30.0,
+        feed_flow_m3_s=flow_m3_s,
+        permeate_flow_m3_s=flow_m3_s,
+        feed_salinity_mol_l=salinity_mol_l,
+        config=cfg,
+    )
+    assert result.converged
+    assert result.total_distillate_kg_s >= 0
+    assert result.feed_outlet_mass_flow_kg_s == pytest.approx(
+        _water_density_kg_m3(60.0) * flow_m3_s - result.total_distillate_kg_s,
+        rel=2e-3,
+    )
+    assert result.permeate_outlet_mass_flow_kg_s == pytest.approx(
+        _water_density_kg_m3(30.0) * flow_m3_s + result.total_distillate_kg_s,
+        rel=2e-3,
+    )
