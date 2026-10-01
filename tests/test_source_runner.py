@@ -79,7 +79,10 @@ def test_source_countercurrent_runner_conserves_total_water_transfer():
         _water_density_kg_m3(60.0) * 7e-6 - result.total_distillate_kg_s, rel=2e-3
     )
     assert result.permeate_inlet_temperature_c == 30.0
-    assert result.permeate_outlet_mass_flow_kg_s > _water_density_kg_m3(30.0) * 7e-6
+    assert result.permeate_outlet_mass_flow_kg_s == pytest.approx(
+        _water_density_kg_m3(30.0) * 7e-6 + result.total_distillate_kg_s,
+        rel=2e-3,
+    )
 
 
 def test_source_countercurrent_permeate_mass_decreases_in_feed_coordinate():
