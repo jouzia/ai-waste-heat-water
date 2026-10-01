@@ -51,3 +51,19 @@ def test_net_consumption_sign_is_explicit():
     result = simulate(scenario())
     assert result.net_consumption_change_l == -1.0
     assert result.net_freshwater_benefit_l == 1.0
+
+
+
+def test_incremental_cooling_water_excludes_baseline_facility_load():
+    s = scenario()
+    s.cooling = Cooling(
+        facility_overhead_fraction=0.3,
+        incremental_facility_electricity_kwh=3.0,
+        cooling_water_consumption_l_per_kwh_facility=2.0,
+    )
+    result = simulate(s)
+    assert result.facility_energy_kwh == 130.0
+    # Only 3 kWh of incremental facility electricity is attributable to
+    # the intervention; baseline facility cooling is in the counterfactual.
+    assert result.direct_cooling_consumption_l == 6.0
+    assert result.additional_water_consumption_l == 6.0
