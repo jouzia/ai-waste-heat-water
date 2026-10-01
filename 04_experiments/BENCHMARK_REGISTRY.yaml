@@ -63,6 +63,16 @@ cases:
     observation_ledger: "04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_observations.yaml"
     claim_status: "Primary experimental provenance established; no validation accuracy claim until source-matched unfitted comparison is completed."
 
+
+  - source_id: MD-OEDI-VILLA-2018
+    citation: "Villa et al. (2018), Membrane Specifications for Multi-Configuration Membrane Distillation Model, Geothermal Data Repository / NREL"
+    doi_or_stable_identifier: "10.15121/1452747"
+    configuration: "multiple experimental DCMD and AGMD configurations"
+    extraction_status: open_dataset_registered_extraction_pending
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
+    claim_status: "Candidate independent experimental dataset; extract measured rows and source conditions before quantitative comparison. Verify exact CC licence variant before redistributing adapted data."
+
 validation_split_policy:
   development: "Cases used to select or fit model parameters."
   held_out: "Cases locked before final model selection and never used for fitting."
