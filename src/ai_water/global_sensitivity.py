@@ -54,8 +54,14 @@ def sobol_uniform(
 
     dimension = len(names)
     exponent = int(log2(sample_size))
-    unit_a = qmc.Sobol(d=dimension, scramble=True, seed=seed).random_base2(exponent)
-    unit_b = qmc.Sobol(d=dimension, scramble=True, seed=seed + 1).random_base2(exponent)
+    # Generate A and B as disjoint coordinate blocks from one scrambled
+    # 2d-dimensional Sobol design; separate same-dimension scrambles can have
+    # undesirable finite-sample cross-correlation for covariance estimators.
+    unit = qmc.Sobol(d=2 * dimension, scramble=True, seed=seed).random_base2(
+        exponent
+    )
+    unit_a = unit[:, :dimension]
+    unit_b = unit[:, dimension:]
     a = lower + unit_a * (upper - lower)
     b = lower + unit_b * (upper - lower)
 
