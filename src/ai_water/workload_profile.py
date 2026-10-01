@@ -6,7 +6,7 @@ measured waste-heat stream; the IT-electricity-to-heat equivalence remains a
 first-order approximation.
 """
 from dataclasses import dataclass
-from typing import Iterable
+from collections.abc import Iterable
 
 from pydantic import BaseModel, Field
 
