@@ -5,8 +5,8 @@ integrates a declared workload trace without claiming that IT power is a
 measured waste-heat stream; the IT-electricity-to-heat equivalence remains a
 first-order approximation.
 """
-from dataclasses import dataclass
 from collections.abc import Iterable
+from dataclasses import dataclass
 
 from pydantic import BaseModel, Field
 
