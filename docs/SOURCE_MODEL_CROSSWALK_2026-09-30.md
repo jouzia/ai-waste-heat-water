@@ -97,7 +97,7 @@ model-form uncertainty, before calling the implementation source-exact.
 
 **Source equations: reconciled and unit-tested.**
 
-**Dedicated source-structure runner: implemented; CI verification pending for the latest mass-balance/convergence regression.**
+**Dedicated source-structure runner: implemented; source-runner smoke matrix, mass-conservation checks, and Ruff pass in CI (run 254, commit 95b982b6ac3550d15074d46a4231ab3f8c480f48).**
 
 **Source-exact reproduction: not yet established.**
 
