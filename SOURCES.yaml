@@ -29,6 +29,21 @@ sources:
     status: "primary-validation-source"
 
 
+
+  - id: MD-DCMD-DYNAMIC-ALI-2020
+    title: "Developing and validating a dynamic model of water production by direct-contact membrane distillation"
+    authors: "Ali, Orfi, and Najib"
+    year: 2020
+    role: C
+    used_for:
+      - "candidate transient DCMD validation"
+      - "time-varying heat-source and startup-response limitations"
+      - "experimental evidence on heat-loss/model-form discrepancy"
+    doi: "10.1371/journal.pone.0230207"
+    url: "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230207"
+    license: "CC BY 4.0"
+    status: "open-transient-validation-dataset-registered-extraction-pending"
+
   - id: MD-OEDI-VILLA-2018
     title: "Membrane Specifications for Multi-Configuration Membrane Distillation Model"
     authors: "Villa, Vanneste, Cath, Turchi, and Akar"
