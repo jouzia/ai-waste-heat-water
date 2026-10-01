@@ -1,0 +1,55 @@
+# Dynamic DCMD pilot dataset: Ali, Orfi & Najib (2020)
+
+source_id: MD-DCMD-DYNAMIC-ALI-2020
+citation: "Ali, E., Orfi, J., & Najib, A. (2020). Developing and validating a dynamic model of water production by direct-contact membrane distillation. PLOS ONE 15(3), e0230207."
+doi: "10.1371/journal.pone.0230207"
+article_url: "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230207"
+license: "Creative Commons Attribution (CC BY 4.0), as stated by the publisher"
+status: open_dataset_registered_extraction_pending
+configuration: "pilot-scale spiral-wound counter-current DCMD, transient step tests"
+supporting_data:
+  - doi: "10.1371/journal.pone.0230207.s002"
+    label: "S1 Data"
+    format: XLSX
+  - doi: "10.1371/journal.pone.0230207.s003"
+    label: "S2 Data"
+    format: XLSX
+  - doi: "10.1371/journal.pone.0230207.s004"
+    label: "S3 Data"
+    format: XLSX
+  - doi: "10.1371/journal.pone.0230207.s005"
+    label: "S4 Data"
+    format: XLSX
+  - doi: "10.1371/journal.pone.0230207.s006"
+    label: "S5 Data"
+    format: XLSX
+reported_module:
+  effective_membrane_area_m2: 10.0
+  membrane_thickness_um: 230.0
+  channel_length_m: 14.0
+  channel_height_m: 0.7
+  channel_gap_mm: 2.0
+  pore_diameter_um: 0.2
+  membrane_porosity: 0.8
+  water_entry_pressure_bar: 4.1
+reported_conditions:
+  feed_flow_rates_l_h: [50.0, 100.0, 200.0, 300.0]
+  feed_temperature_range_c: [50.0, 80.0]
+  cold_inlet_temperature_c_nominal: 25.0
+  feed_salinity_percent: 0.5
+  hot_cold_flow_rates_equal: true
+  sampling_interval_s: 10.0
+  observations: "Time evolution of accumulated distillate mass and derived production-rate responses; repeated experiments and uncertainty bars are described in the article."
+validation_role:
+  intended: "Candidate open transient dataset for testing whether a time-varying DCMD model captures startup and stepped-input mass-production response."
+  not_intended: "Not direct validation of the current steady-state/lumped net-water engine without implementing and validating transient states."
+  source_model_note: "The paper reports substantial mismatch for uncorrected lumped/spatial models and improved fit after adding a tuned heat-loss correction. Treat this as evidence of model-form risk; do not copy its fitted correction or call the same fitted cases independent validation."
+extraction_rules:
+  - "Retrieve the publisher-supplied XLSX supplements and record retrieval date, checksum, and worksheet names."
+  - "Separate raw measured accumulated mass from source-derived production rates, extrapolated curves, and model outputs."
+  - "Preserve reported measurement uncertainty and the 10-second sampling interval."
+  - "Record the step-input time course; the heater input is not instantaneous and the cold inlet temperature fluctuates."
+  - "Use measured time series only as observations; source-model outputs are not observations."
+  - "Pre-register development and held-out operating conditions before any fitting."
+  - "Report transient error metrics separately from steady-state flux metrics."
+  - "Do not claim dynamic validation until the time-dependent model and exact input histories are reconstructed."
