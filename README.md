@@ -39,7 +39,10 @@ Lei et al. (2025) demonstrate that workload-level data-center water use is highl
 - **1-D DCMD channel layer:** resolves axial feed/permeate temperature and flow changes for co-current operation and explicitly couples counter-current operation as a two-point boundary-value problem.
 - **Concentration polarization:** selectable exponential boundary-layer CPC model now couples feed-side mass transfer to membrane-interface salinity and IAPWS activity.
 - **Hydraulic layer:** converts pressure drop, feed recovery, flow, and pump efficiency into electrical pumping demand; direct literature specific-energy inputs remain supported.
-- **Cooling burden:** MD cooling duty can now propagate into electrical demand and direct cooling-water consumption instead of remaining a diagnostic-only value.
+- **Cooling burden:** MD cooling duty can now propagate into electrical demand and direct cooling-water consumption instead of remaining a diagnostic-only value. Incremental water accounting excludes baseline facility cooling from the intervention burden.
+- **Time-resolved workload profile:** piecewise-constant IT power and source-temperature intervals can be integrated to estimate thermally eligible duration and heat-weighted source temperature. This is a tested primitive, not yet coupled to measured workload traces or the full MD engine.
+- **Source-structured DCMD runner:** a dedicated counter-current runner follows the published Keshavarzzadeh balance structure with explicit engineering property closures. Its eight-case smoke matrix checks software behavior only; it is not source-exact reproduction or experimental validation.
+- **Uncertainty tools:** a seeded Monte Carlo scenario runner and Sobol first-order/total-effect estimators are implemented and covered by synthetic tests. Source-linked empirical distributions, convergence analysis, and study-level sensitivity results are still pending.
 - **Interface temperatures:** measured/interface temperatures can override the reduced-order temperature-polarization estimate.
 - **Salinity/thermodynamics:** standard-seawater cases now use IAPWS-08 water activity with an explicit single-pass concentration layer; concentrate salinity is reported.
 - **Continuous integration:** GitHub Actions runs the test suite and Ruff on pushes and pull requests.
@@ -50,7 +53,7 @@ These additions do not supply unsupported membrane properties, heat-transfer coe
 
 **No positive water-benefit conclusion is claimed.** The current baseline is a screening/accounting model, not an industrial digital twin. Before quantitative deployment claims, the study must validate the new channel transport correlations and concentration-polarization layer against source-matched experiments. The first literature case is a flat-sheet counter-current DCMD benchmark, for which the source confirms two recirculation rates and four NaCl concentrations; the benchmark remains unvalidated until the experimental observations and complete boundary conditions are reconstructed.
 
-The next stages are cooling and heat-sink constraints, source-matched membrane parameters, site-specific electricity-water factors, uncertainty distributions, geographic water-stress data, literature reproduction, and physical validation where feasible.
+The next stages are source-matched membrane-property closures and experimental observations, quantitative unfitted validation, realistic cooling-architecture and heat-sink constraints, source-linked uncertainty distributions, Monte Carlo convergence, study-level Sobol/Morris sensitivity, site-specific electricity-water factors, geographic water-stress integration, break-even/failure-envelope analysis, multi-objective results, and the full manuscript. These remain incomplete; software tests do not substitute for physical validation.
 
 ## External data and legal reproducibility
 
