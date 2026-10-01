@@ -5,6 +5,7 @@ citation: "Villa, D., Vanneste, J., Cath, T., Turchi, C., & Akar, S. (2018). Mem
 doi: "10.15121/1452747"
 source_url: "https://gdr.openei.org/submissions/1016"
 status: candidate_open_dataset_extraction_pending
+observation_ledger: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_observations.yaml"
 access: publicly_accessible
 license_status: "Repository search record displays a Creative Commons license indicator, but the exact CC variant must be verified from the dataset's licence metadata before redistribution of adapted data."
 dataset_size: "95.97 MB; 7 resources"
