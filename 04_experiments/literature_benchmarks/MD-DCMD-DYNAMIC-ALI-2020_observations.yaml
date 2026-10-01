@@ -1,0 +1,35 @@
+# Observation ledger for Ali, Orfi & Najib (2020) dynamic DCMD data
+source_id: MD-DCMD-DYNAMIC-ALI-2020
+source_doi: "10.1371/journal.pone.0230207"
+status: empty_template_extraction_pending
+observations: []
+
+required_fields:
+  - observation_id
+  - supporting_data_doi
+  - workbook_filename
+  - worksheet_name
+  - worksheet_cell_or_row_range
+  - operating_case_id
+  - feed_flow_rate_l_h
+  - permeate_flow_rate_l_h
+  - feed_temperature_setpoint_c
+  - measured_feed_inlet_temperature_c
+  - measured_cold_inlet_temperature_c
+  - timestamp_s
+  - accumulated_distillate_mass_kg
+  - derived_production_rate_kg_s
+  - measurement_uncertainty_kg
+  - input_step_history
+  - extraction_type
+  - unit_transformations
+
+rules:
+  - "Record workbook checksum, retrieval date, and worksheet names."
+  - "Preserve measured accumulated mass as the primary observation."
+  - "Keep source-derived rate curves and source-model predictions in separate fields/tables."
+  - "Do not use extrapolated steady-state mass-production lines as raw measurements."
+  - "Retain reported uncertainty and identify repeated-run versus digitization uncertainty."
+  - "Record heater lag and cold-inlet temperature fluctuations where data are available."
+  - "Do not impute missing time points or boundary conditions without an explicit method."
+  - "Lock development/held-out operating conditions before fitting."
