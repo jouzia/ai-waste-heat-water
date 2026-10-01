@@ -32,7 +32,9 @@ unsupported scenario range remains a scenario assumption.
 - Seeded scenario Monte Carlo runner: implemented and CI-tested.
 - Source-linked parameter distributions: not yet populated for the full study.
 - Monte Carlo convergence analysis: pending.
-- Morris/Sobol global sensitivity: pending.
+- Sobol first-order and total-effect estimators for independent uniform ranges: implemented in src/ai_water/global_sensitivity.py and covered by synthetic regression tests.
+- Application to source-linked study parameters and convergence checks: pending.
+- Morris screening: pending.
 - Break-even and failure-envelope analysis: pending.
 
 ## Required outputs
