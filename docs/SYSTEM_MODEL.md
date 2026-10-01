@@ -28,9 +28,11 @@ Cooling is a first-class variable. Recent system-level MD analysis reports cooli
 
 Withdrawal, consumption, and recovered freshwater are separate quantities. The primary operational screening metric is net consumption change:
 
-Delta W_net = W_additional_consumption - W_recovered
+Delta W_net = W_additional_consumption - W_avoided
 
-where W_additional_consumption includes direct cooling consumption, auxiliary burdens, and electricity-related water consumption. Negative Delta W_net indicates an offsetting net-consumption effect; zero is break-even; positive is additional consumption.
+where W_additional_consumption includes only intervention-incremental direct cooling consumption, MD-specific cooling, pumping, pretreatment, other auxiliary burdens, and electricity-related water from incremental electricity. Baseline data-center operation is part of the counterfactual, not an intervention burden.
+
+W_avoided is the freshwater consumption demonstrably displaced by the product water under a declared counterfactual. Recovered distillate is not automatically equal to avoided consumption; if displacement is not demonstrated, set W_avoided = 0 for the conservative case. Negative Delta W_net indicates lower modeled operational consumption than the counterfactual; zero is break-even; positive is additional consumption.
 
 Withdrawal is reported separately and is never substituted for consumption.
 
