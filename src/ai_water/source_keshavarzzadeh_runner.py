@@ -434,16 +434,15 @@ def _integrate(
     result = SourceRunnerResult(
         cells=tuple(cells),
         feed_outlet_temperature_c=tfb,
-        # At z=L this is the physical permeate inlet temperature that is
-        # compared against the specified boundary condition.
-        permeate_outlet_temperature_c=tpb,
+        # The permeate outlet boundary is the shooting guess at z=0.
+        permeate_outlet_temperature_c=permeate_outlet_guess_c,
         feed_outlet_mass_flow_kg_s=mf,
         # The outlet is at z=0, before the feed-direction march begins.
         permeate_outlet_mass_flow_kg_s=permeate_outlet_mass_guess_kg_s,
         total_flux_kg_m2_s_m2=sum(c.flux_kg_m2_s * area for c in cells),
         total_distillate_kg_s=sum(c.flux_kg_m2_s * area for c in cells),
         converged=False,
-        permeate_inlet_temperature_c=permeate_outlet_guess_c,
+        permeate_inlet_temperature_c=tpb,
         shooting_residual_k=0.0,
     )
     return result, tpb, mp
