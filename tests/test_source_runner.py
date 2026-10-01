@@ -143,6 +143,12 @@ def test_source_runner_eight_case_numerical_smoke_matrix(flow_m3_s, salinity_mol
     )
     assert result.converged
     assert result.total_distillate_kg_s >= 0
+    assert all(
+        cell.feed_bulk_temperature_c >= cell.feed_interface_temperature_c
+        > cell.permeate_interface_temperature_c >= cell.permeate_bulk_temperature_c
+        for cell in result.cells
+    )
+    assert all(cell.flux_kg_m2_s >= 0 for cell in result.cells)
     assert result.feed_outlet_mass_flow_kg_s == pytest.approx(
         _water_density_kg_m3(60.0) * flow_m3_s - result.total_distillate_kg_s,
         rel=2e-3,
