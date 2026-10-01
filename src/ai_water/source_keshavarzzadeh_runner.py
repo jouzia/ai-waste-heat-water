@@ -363,10 +363,10 @@ def _integrate(
 ) -> tuple[SourceRunnerResult, float, float]:
     """Integrate in the feed-flow direction using source Eqs. 9-12.
 
-    At z=0 the permeate stream has its unknown outlet conditions.  Because the
-    permeate flows from z=L to z=0, its mass flow increases and its bulk
-    enthalpy decreases as z increases.  The specified permeate inlet
-    temperature and mass flow at z=L are enforced by the outer shooting solve.
+    At z=0 the permeate stream has its unknown outlet conditions. Because the
+    permeate flows from z=L to z=0, its mass flow decreases as the coordinate
+    advances from z=0 to z=L. The specified permeate inlet temperature and
+    mass flow at z=L are enforced by the outer shooting solve.
     """
     dx = config.channel_length_m / config.cells
     area = source_cell_area(config)
@@ -402,9 +402,9 @@ def _integrate(
         mf_new = max(mf - dm, 1e-12)
         hf_new = hf_b - qf * area / max(mf, 1e-12)
 
-        # Permeate: Eq. 12 and Eq. 16.  With z defined in the feed-flow
+        # Permeate: Eq. 12 and Eq. 16. With z defined in the feed-flow
         # direction, the counter-current permeate mass flow decreases as z
-        # advances: m_p(z) = m_p(z+dz) + J dA.
+        # advances: m_p(z+dz) = m_p(z) - J dA.
         mp_new = max(mp - dm, 1e-12)
         hp_new = (mp * hp_b - qp * area) / max(mp_new, 1e-12)
 
@@ -441,7 +441,7 @@ def _integrate(
         permeate_outlet_mass_flow_kg_s=mp,
         total_flux_kg_m2_s_m2=sum(c.flux_kg_m2_s * area for c in cells),
         total_distillate_kg_s=sum(c.flux_kg_m2_s * area for c in cells),
-        converged=True,
+        converged=False,
         permeate_inlet_temperature_c=permeate_outlet_guess_c,
         shooting_residual_k=0.0,
     )
@@ -496,8 +496,14 @@ def run_source_countercurrent(
         mass_residual = mass_end - mp_target
         best = result
 
-        if abs(temp_residual) <= config.shooting_tolerance_k and abs(mass_residual) <= max(
-            1e-12, mp_target * 1e-8
+        if (
+            abs(temp_residual) <= config.shooting_tolerance_k
+            and abs(mass_residual) <= max(1e-12, mp_target * 1e-8)
+            and abs(
+                result.feed_outlet_mass_flow_kg_s
+                - (mf0 - result.total_distillate_kg_s)
+            )
+            <= max(1e-12, mf0 * 1e-8)
         ):
             return SourceRunnerResult(
                 cells=result.cells,
