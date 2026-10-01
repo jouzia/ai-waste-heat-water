@@ -2,6 +2,7 @@ import pytest
 
 from ai_water.source_keshavarzzadeh_runner import (
     SourceRunnerConfig,
+    _water_density_kg_m3,
     source_cell_area,
     source_membrane_conductivity,
     source_membrane_flux_kg_m2_s,
@@ -75,10 +76,10 @@ def test_source_countercurrent_runner_conserves_total_water_transfer():
     assert result.converged
     assert result.feed_outlet_mass_flow_kg_s < 1000.0 * 7e-6
     assert result.feed_outlet_mass_flow_kg_s == pytest.approx(
-        1000.0 * 7e-6 - result.total_distillate_kg_s, rel=2e-3
+        _water_density_kg_m3(60.0) * 7e-6 - result.total_distillate_kg_s, rel=2e-3
     )
     assert result.permeate_inlet_temperature_c == 30.0
-    assert result.permeate_outlet_mass_flow_kg_s > 1000.0 * 7e-6
+    assert result.permeate_outlet_mass_flow_kg_s > _water_density_kg_m3(30.0) * 7e-6
 
 
 def test_source_countercurrent_permeate_mass_decreases_in_feed_coordinate():
