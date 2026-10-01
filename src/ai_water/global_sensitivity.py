@@ -82,10 +82,11 @@ def sobol_uniform(
         hybrid = a.copy()
         hybrid[:, i] = b[:, i]
         y_hybrid = evaluate_matrix(hybrid)
-        # Covariance of f(B) and f(A with B_i) isolates the variance
-        # contribution shared through input i without subtracting the finite-
-        # sample covariance between the independent A and B designs.
-        first = float(np.cov(yb, y_hybrid, ddof=1)[0, 1]) / variance
+        # Saltelli covariance estimator. The A/B matrices are distinct
+        # coordinate blocks of the same 2d-dimensional scrambled Sobol design.
+        first = float(
+            np.mean((yb - np.mean(yb)) * (y_hybrid - ya))
+        ) / variance
         total = float(np.mean((ya - y_hybrid) ** 2)) / (2.0 * variance)
         indices.append(
             SobolIndex(
