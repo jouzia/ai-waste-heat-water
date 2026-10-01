@@ -62,23 +62,44 @@ The 1999 primary paper is independently identified as Journal of Membrane Scienc
 configuration includes a flat TF200 PTFE membrane, 80% void fraction, 60 micrometre
 thickness, 0.2 micrometre nominal pore size, and nine feed/nine permeate channels.
 
-## Next implementation gate
+## Source-runner implementation status (2026-10-01)
 
-1. Build a dedicated source-compatible axial solver using the source Eqs. 9-18.
-2. Derive source B at each control-volume membrane temperature rather than supplying
-   a fitted constant permeance.
-3. Implement source enthalpy and latent-heat terms explicitly.
-4. Convert the two volumetric flow cases to mass flow with recorded assumptions.
-5. Run all eight source-condition combinations before touching experimental markers.
-6. Compare the unfitted source runner to digitized observations.
-7. Only then evaluate the generic modern/IAPWS model against the same observations.
-8. Preserve both results as separate model forms for uncertainty/model-form analysis.
+A dedicated `source_keshavarzzadeh_runner.py` now implements the source-structured
+counter-current axial march, source membrane-flux coefficient, source water-activity
+equation, membrane conduction, source heat-transfer correlation, and enthalpy-based
+control-volume updates. The solver explicitly isolates its engineering property
+closures because the accessible source text does not provide a complete property
+table/closure sufficient to reconstruct every numerical detail without assumptions.
+
+This is therefore a **source-structure implementation, not yet a source-exact numerical
+reproduction**. In particular, liquid cp/enthalpy, density, viscosity, thermal
+conductivity, and latent-heat closures remain explicit engineering approximations.
+They must be replaced or source-matched, or their influence must be quantified as
+model-form uncertainty, before calling the implementation source-exact.
+
+## Next validation gate
+
+1. Freeze the property closures and record their provenance/uncertainty.
+2. Execute all eight source-condition combinations using documented, non-invented
+   boundary conditions. Figure 3 inlet temperatures must not be inferred from the
+   separate Table 1 design case.
+3. Check axial temperature profiles, positive driving force, mass conservation,
+   energy-balance residuals, and numerical convergence.
+4. Obtain or reconstruct the experimental markers and exact boundary conditions.
+5. Archive digitization calibration, pixel coordinates, uncertainty, and an independent
+   repeat extraction for a predefined subset.
+6. Run the source-structure implementation unfitted, then compare predictions with
+   observations using MAE, RMSE, bias, and appropriate relative error.
+7. Evaluate the modern/IAPWS model on the same observations and preserve both model
+   forms for uncertainty analysis.
 
 ## Status
 
-**Source equations: reconciled.**
+**Source equations: reconciled and unit-tested.**
 
-**Source-exact axial solver: pending.**
+**Dedicated source-structure runner: implemented; CI verification pending for the latest mass-balance/convergence regression.**
 
-**Experimental validation: blocked pending primary-source marker extraction and
-source-exact first run.**
+**Source-exact reproduction: not yet established.**
+
+**Experimental validation: blocked pending source-matched boundary conditions and
+primary-source marker crosswalk.**
