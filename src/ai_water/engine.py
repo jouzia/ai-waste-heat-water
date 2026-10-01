@@ -153,8 +153,12 @@ def simulate(s: Scenario) -> Result:
         * (s.auxiliary.pretreatment_kwh_per_m3 + s.auxiliary.other_kwh_per_m3)
         + md_cooling_electricity
     )
+    # The baseline data-center cooling burden belongs to the counterfactual.
+    # Count only incremental facility electricity attributable to the
+    # intervention here; MD-specific cooling water is always incremental.
     cooling_l = (
-        facility_energy * s.cooling.cooling_water_consumption_l_per_kwh_facility
+        s.cooling.incremental_facility_electricity_kwh
+        * s.cooling.cooling_water_consumption_l_per_kwh_facility
         + md_cooling_water
     )
     indirect_l = (s.cooling.incremental_facility_electricity_kwh + auxiliary_kwh) * s.water.grid_water_l_per_kwh
