@@ -2,7 +2,7 @@
 
 ## Implemented estimator
 
-The module src/ai_water/global_sensitivity.py implements Jansen-style first-order and total-effect Sobol indices for independently sampled uniform parameter ranges. The caller supplies parameter names, finite lower/upper bounds, a deterministic evaluation function, a power-of-two sample size, and a random seed. Synthetic tests check recovery of variance shares for a known additive function and reject invalid sample sizes/non-finite outputs.
+The module src/ai_water/global_sensitivity.py implements Saltelli covariance first-order and Jansen total-effect Sobol indices for independently sampled uniform parameter ranges. The caller supplies parameter names, finite lower/upper bounds, a deterministic evaluation function, a power-of-two sample size, and a random seed. Synthetic tests check recovery of variance shares for a known additive function and reject invalid sample sizes/non-finite outputs.
 
 ## Interpretation limits
 
