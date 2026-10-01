@@ -143,9 +143,11 @@ def test_source_runner_eight_case_numerical_smoke_matrix(flow_m3_s, salinity_mol
     )
     assert result.converged
     assert result.total_distillate_kg_s >= 0
+    # Interface values are evaluated from the cell-inlet bulk state, while
+    # stored bulk temperatures are cell-outlet states; compare the interfaces
+    # to each other rather than mixing axial locations.
     assert all(
-        cell.feed_bulk_temperature_c >= cell.feed_interface_temperature_c
-        > cell.permeate_interface_temperature_c >= cell.permeate_bulk_temperature_c
+        cell.feed_interface_temperature_c > cell.permeate_interface_temperature_c
         for cell in result.cells
     )
     assert all(cell.flux_kg_m2_s >= 0 for cell in result.cells)
