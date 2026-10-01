@@ -85,6 +85,31 @@ cases:
       - "Implement hollow-fiber geometry only if required parameters are source-backed."
       - "Keep this case independent from any parameter-fitting stage."
 
+
+  - source_id: MD-DCMD-DYNAMIC-ALI-2020
+    role: independent_transient_validation_candidate
+    source: "Ali, Orfi & Najib (2020), PLOS ONE 15(3), e0230207"
+    doi: "10.1371/journal.pone.0230207"
+    dataset_url: "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230207"
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020.yaml"
+    observation_ledger: "04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020_observations.yaml"
+    configuration: "10 m2 spiral-wound counter-current DCMD, transient step response"
+    source_facts:
+      feed_flow_rates_l_h: [50.0, 100.0, 200.0, 300.0]
+      feed_temperature_range_c: [50.0, 80.0]
+      cold_inlet_temperature_c_nominal: 25.0
+      feed_salinity_percent: 0.5
+      sampling_interval_s: 10.0
+      supporting_data_files: 5
+    model_status: "candidate; time-series extraction pending and transient model not yet implemented"
+    quantitative_claim: false
+    legal_status: "CC BY 4.0; attribute the source and preserve provenance."
+    next_required:
+      - "Extract measured accumulated mass and input histories from S1-S5 XLSX files."
+      - "Separate measured data from extrapolated correlations and source-model predictions."
+      - "Implement a transient model or explicitly scope this dataset to future work."
+      - "Pre-register held-out operating conditions before calibration."
+
   - source_id: MD-PILOT-VALIDATION-2026
     role: external_methodological_evidence
     source: "Bindels et al. (2026), Desalination 620, 119674"
