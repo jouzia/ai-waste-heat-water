@@ -68,7 +68,11 @@ def integrate_workload_profile(
     eligible = [
         item
         for item in samples
-        if item.source_temperature_c >= factors.minimum_source_temperature_c
+        if (
+            item.source_temperature_c >= factors.minimum_source_temperature_c
+            and item.it_power_kw > 0
+            and item.recoverable_heat_fraction > 0
+        )
     ]
     eligible_duration = sum(item.duration_h for item in eligible)
     usable_heat = sum(
