@@ -438,7 +438,8 @@ def _integrate(
         # compared against the specified boundary condition.
         permeate_outlet_temperature_c=tpb,
         feed_outlet_mass_flow_kg_s=mf,
-        permeate_outlet_mass_flow_kg_s=mp,
+        # The outlet is at z=0, before the feed-direction march begins.
+        permeate_outlet_mass_flow_kg_s=permeate_outlet_mass_guess_kg_s,
         total_flux_kg_m2_s_m2=sum(c.flux_kg_m2_s * area for c in cells),
         total_distillate_kg_s=sum(c.flux_kg_m2_s * area for c in cells),
         converged=False,
@@ -510,7 +511,7 @@ def run_source_countercurrent(
                 feed_outlet_temperature_c=result.feed_outlet_temperature_c,
                 permeate_outlet_temperature_c=temp_guess,
                 feed_outlet_mass_flow_kg_s=result.feed_outlet_mass_flow_kg_s,
-                permeate_outlet_mass_flow_kg_s=mass_end,
+                permeate_outlet_mass_flow_kg_s=mass_guess,
                 total_flux_kg_m2_s_m2=result.total_flux_kg_m2_s_m2,
                 total_distillate_kg_s=result.total_distillate_kg_s,
                 converged=True,
