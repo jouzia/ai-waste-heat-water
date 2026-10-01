@@ -1,6 +1,6 @@
 """Global sensitivity analysis for independent uniform input ranges.
 
-This implements Jansen-style first-order and total-effect Sobol estimators.
+This implements a Saltelli covariance first-order estimator and a Jansen total-effect estimator.
 The bounds are scenario ranges supplied by the researcher, not empirical
 probability distributions unless separately justified.
 """
