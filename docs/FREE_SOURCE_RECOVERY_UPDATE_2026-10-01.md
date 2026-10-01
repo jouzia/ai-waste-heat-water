@@ -32,3 +32,20 @@ Do not use unauthorized shadow libraries, bypass paywalls, or reproduce restrict
 ## Validation consequence
 
 Until the original experimental observations and exact operating conditions are lawfully accessible and crosswalked, the Keshavarzzadeh Figure 3 dataset remains a **development/reproduction target**, not independent held-out validation. The repository's source runner may be tested for numerical stability and conservation, but its output must not be described as experimentally validated.
+
+
+## Newly identified open experimental dataset: Villa et al. (2018)
+
+A publicly accessible NREL/Geothermal Data Repository dataset provides experimental DCMD and AGMD workbooks for 3M, Aquastill, and CLARCOR membranes, including co-current and counter-current configurations:
+
+- Dataset title: *Membrane Specifications for Multi-Configuration Membrane Distillation Model*
+- Authors: Villa, Vanneste, Cath, Turchi, and Akar
+- DOI: 10.15121/1452747
+- Record: https://gdr.openei.org/submissions/1016
+- Size: 7 workbooks, approximately 95.97 MB
+- Published record: 2018-03-01
+- Conditions described in the record include 4 g/L NaCl, with configuration-specific flow and membrane area.
+
+This is a promising legal alternative to the paywalled 1999 primary paper for **independent DCMD model validation**. It does not replace the 1999 source for reproducing the Keshavarzzadeh Figure 3 case because the membranes, geometry, salinity, and boundary conditions differ.
+
+The repository search record displays a Creative Commons indicator, but the exact CC licence variant must be verified from the dataset's licence metadata before redistributing adapted data. The workbooks contain both experimental data and theoretical/calculated worksheets: only measured observations may be used as validation targets. The benchmark is registered as MD-OEDI-VILLA-2018; extraction, checksum capture, licence verification, and a held-out split remain pending.
