@@ -1,0 +1,49 @@
+# Open experimental DCMD dataset: Villa et al. (2018), GDR/NREL
+
+source_id: MD-OEDI-VILLA-2018
+citation: "Villa, D., Vanneste, J., Cath, T., Turchi, C., & Akar, S. (2018). Membrane Specifications for Multi-Configuration Membrane Distillation Model. Geothermal Data Repository, National Renewable Energy Laboratory."
+doi: "10.15121/1452747"
+source_url: "https://gdr.openei.org/submissions/1016"
+landing_page_alternative: "https://data.openei.org/submissions/7175"
+status: candidate_open_dataset_extraction_pending
+access: publicly_accessible
+license_status: "Repository search record displays a Creative Commons license indicator, but the exact CC variant must be verified from the dataset's licence metadata before redistribution of adapted data."
+dataset_size: "95.97 MB; 7 resources"
+dataset_description: "Experimental data and membrane/module specifications for CLARCOR, 3M, and Aquastill membranes in counter-current DCMD, co-current DCMD, and air-gap MD configurations."
+experimental_provenance:
+  organization: "Colorado School of Mines, Advanced Water Technology Center; National Renewable Energy Laboratory / Sandia National Laboratories dataset authors"
+  dataset_date: "2018-03-01"
+  membrane_configurations:
+    - "3M 0.2 micron plate-and-frame counter-current DCMD"
+    - "Aquastill 0.3 micron plate-and-frame counter-current DCMD"
+    - "Aquastill 0.3 micron spiral-wound counter-current DCMD"
+    - "Aquastill polyethylene spiral-wound counter-current DCMD"
+    - "CLARCOR QL822 flat-sheet co-current DCMD"
+    - "CLARCOR QL822 flat-sheet counter-current DCMD"
+    - "CLARCOR QL822 flat-sheet air-gap MD"
+  reported_base_conditions:
+    salinity_g_l_nacl: 4.0
+    selected_flow_rates: "configuration-specific; see individual workbook specification sheets"
+    membrane_area_m2: "configuration-specific; see individual workbook specification sheets"
+  files:
+    - "3M 0.2 Micron Plate and Frame Countercurrent DCMD.xls"
+    - "Aquastill 0.3 Micron Plate and Frame Counter-Current DCMD .xls"
+    - "Aquastill 0.3 Micron Spiral Wound Countercurrent DCMD .xls"
+    - "Aquastill Polyethylene Spiral Wound Countercurrent DCMD.xls"
+    - "CLARCOR QL822 Flat Sheet Cocurrent DCMD.xls"
+    - "CLARCOR QL822 Flat Sheet Counter-Current DCMD.xls"
+    - "CLARCOR QL822 Flat Sheet Air-Gap MD.xls"
+extraction_rules:
+  - "Extract measured experimental observations only; never treat theoretical/model worksheets as observations."
+  - "Keep each workbook and configuration as a separate source case."
+  - "Record worksheet name, row/cell locator, units, and original column headings for every extracted value."
+  - "Preserve raw workbook, checksum, retrieval date, and licence metadata in the private/reproducibility manifest; do not commit the full 96 MB archive without a storage/legal review."
+  - "Convert units in a separate transformation layer; never overwrite raw values."
+  - "Do not calibrate membrane coefficients against held-out cases."
+  - "Split development and held-out configurations before parameter fitting."
+  - "Report whether operating conditions and membrane geometry fall inside the model's applicability domain."
+  - "Before sharing derived tables, verify the exact Creative Commons licence variant and comply with its attribution/redistribution conditions."
+validation_use:
+  intended: "Candidate independent experimental benchmark for the modern 1-D DCMD model and heat/mass-transfer correlation comparison."
+  not_intended: "Not direct validation of the Keshavarzzadeh 2020 source-specific implementation unless geometry, membrane, salinity, and boundary conditions are reconstructed to match."
+  quantitative_status: "No model-vs-data results yet; extraction and source-condition crosswalk pending."
