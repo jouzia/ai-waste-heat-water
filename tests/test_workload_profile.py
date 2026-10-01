@@ -73,3 +73,28 @@ def test_profile_excludes_below_threshold_heat_from_usable_recovery():
 def test_profile_rejects_empty_trace():
     with pytest.raises(ValueError, match="at least one"):
         integrate_workload_profile([], WorkloadProfileFactors())
+
+
+
+def test_profile_does_not_count_idle_intervals_as_heat_available():
+    intervals = [
+        WorkloadInterval(
+            duration_h=1.0,
+            it_power_kw=100.0,
+            recoverable_heat_fraction=0.8,
+            source_temperature_c=65.0,
+        ),
+        WorkloadInterval(
+            duration_h=1.0,
+            it_power_kw=0.0,
+            recoverable_heat_fraction=0.8,
+            source_temperature_c=65.0,
+        ),
+    ]
+    result = integrate_workload_profile(
+        intervals,
+        WorkloadProfileFactors(minimum_source_temperature_c=50.0),
+    )
+    assert result.duration_h == pytest.approx(2.0)
+    assert result.thermally_eligible_duration_h == pytest.approx(1.0)
+    assert result.heat_availability_fraction == pytest.approx(0.5)
