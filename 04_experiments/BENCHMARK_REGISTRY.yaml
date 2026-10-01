@@ -73,6 +73,18 @@ cases:
     benchmark_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
     claim_status: "Candidate independent experimental dataset; extract measured rows and source conditions before quantitative comparison. Verify exact CC licence variant before redistributing adapted data."
 
+
+  - source_id: MD-DCMD-DYNAMIC-ALI-2020
+    citation: "Ali, Orfi & Najib (2020), PLOS ONE 15(3), e0230207"
+    doi_or_stable_identifier: "10.1371/journal.pone.0230207"
+    configuration: "pilot-scale spiral-wound counter-current DCMD transient step tests"
+    extraction_status: open_transient_dataset_registered_extraction_pending
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020.yaml"
+    observation_ledger: "04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020_observations.yaml"
+    license_status: "CC BY 4.0"
+    claim_status: "Candidate transient validation dataset; the current model is not yet dynamic and no transient validation claim is made."
+
 validation_split_policy:
   development: "Cases used to select or fit model parameters."
   held_out: "Cases locked before final model selection and never used for fitting."
