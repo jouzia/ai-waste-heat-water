@@ -1,0 +1,27 @@
+version: "1.0"
+status: "INCOMPLETE"
+as_of: "2026-10-02"
+
+gates:
+  software_correctness: true
+  source_reconstruction: false
+  primary_observation_extraction: false
+  unfitted_validation: false
+  held_out_validation: false
+  model_form_comparison: false
+  cooling_architecture_scenarios: false
+  time_varying_workload_coupling: false
+  monte_carlo_convergence: false
+  global_sensitivity_execution: false
+  break_even_failure_envelope: false
+  geographic_integration: false
+  counterfactual_net_water_accounting: true
+  multi_objective_analysis: false
+  reproducibility_package: false
+  manuscript_and_supplement: false
+  final_publication_audit: false
+
+claim_policy:
+  quantitative_validation_claims: false
+  publication_ready_claim: false
+  note: "This file is a hard status declaration. No gate may be marked true without a reproducible artifact and provenance record."
