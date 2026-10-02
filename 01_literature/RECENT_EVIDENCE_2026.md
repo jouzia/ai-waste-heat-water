@@ -139,3 +139,38 @@ The defensible contribution is narrower:
 > A source-traceable, uncertainty-aware framework for determining when data-center waste heat coupled to membrane distillation produces a positive net freshwater-consumption benefit after accounting for thermal quality, cooling, hydraulic/auxiliary burdens, electricity-related water, counterfactual displacement and geographic water stress.
 
 This contribution remains subject to quantitative validation and comparison against the recent literature above.
+
+
+## 2026 evidence refresh — 2026-10-02
+
+### Malaguti et al. (2026), Desalination 628, 120039
+
+DOI: 10.1016/j.desal.2026.120039.
+
+This open-access study explicitly evaluates heating, cooling, and pumping burdens together. It reports that cooling demand can reach 80–100% of heating in some open-loop MD configurations and that pumping penalties of 0.2–0.5 kWh/m3 arise under representative low-recovery/high-pressure-loss conditions. The paper also emphasizes that free heat alone does not establish system viability.
+
+**Model implication:** cooling is a first-class constraint in the coupled water model; the study must not report a heat-only water benefit.
+
+### Barnett-Itzhaki (2026), Water Research 299, 125866
+
+DOI: 10.1016/j.watres.2026.125866.
+
+This 2026 review frames AI water use as a combination of direct cooling water, indirect electricity-related water, and other upstream components. It reports a wide global footprint estimate and emphasizes the role of siting and water stress.
+
+**Model implication:** preserve direct and indirect operational water accounting and keep basin-level water stress as a contextual deployment layer rather than converting it into a universal threshold.
+
+### DOE data-center design guidance
+
+The U.S. Department of Energy's data-center design guide states that higher server-exit temperatures improve opportunities for useful heat reuse and that heat reuse can reduce or eliminate some chiller/cooling-tower operation when a suitable heat host exists.
+
+**Model implication:** source temperature, heat-host availability, and counterfactual cooling displacement must be represented separately.
+
+### IEA 2026 data-center electricity update
+
+IEA reports that global data-center electricity consumption increased around 17% in 2025 and that AI-focused data-center demand grew faster than the overall data-center segment.
+
+**Model implication:** workload scenarios should cover both sustained/high-utilization and intermittent/low-utilization regimes rather than assuming a single steady IT load.
+
+### Evidence-status rule
+
+These literature findings are contextual/methodological evidence. They are not measurements of this project's integrated AI-waste-heat-to-water system and must not be presented as model validation.
