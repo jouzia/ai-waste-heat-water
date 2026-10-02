@@ -54,7 +54,8 @@ sources:
       - "cross-configuration model comparison"
     doi: "10.15121/1452747"
     url: "https://gdr.openei.org/submissions/1016"
-    license_status: "Public record displays a Creative Commons indicator; exact licence variant must be verified before redistribution of adapted data."
+    license: "CC BY (data.gov catalogue metadata)"
+    license_status: "CC BY identified in the U.S. data.gov catalogue; preserve source attribution and verify exact file-level terms before redistribution."
     status: "open-validation-dataset-registered-extraction-pending"
 
   - id: MD-DCMD-CHANNEL-2020
@@ -222,6 +223,28 @@ sources:
       - "data-centre waste-heat quality and cooling-architecture scope"
       - "liquid-cooling recovery boundary"
     url: "https://www.itu.int/epublications/publication/itu-t-l-1328-2025-09-specification-for-waste-heat-reuse-in-telecommunication-rooms-and-data-centres"
+    status: "method-reference"
+
+  - id: DOE-DATA-CENTER-WASTE-HEAT-2024
+    title: "Best Practices Guide for Energy-Efficient Data Center Design"
+    year: 2024
+    role: A
+    used_for:
+      - "waste-heat temperature-quality and heat-host requirements"
+      - "cooling-tower water-reduction counterfactual framing"
+      - "data-center cooling architecture boundary"
+    url: "https://www.energy.gov/sites/default/files/2024-07/best-practice-guide-data-center-design.pdf"
+    status: "method-reference"
+
+  - id: DOE-FEMP-DATA-CENTER-COOLING-WATER
+    title: "Cooling Water Efficiency Opportunities for Federal Data Centers"
+    year: 2019
+    role: A
+    used_for:
+      - "WUE definition and cooling-tower water accounting"
+      - "evaporation and blowdown mechanisms"
+      - "cooling-water efficiency scenarios"
+    url: "https://www.energy.gov/cmei/femp/cooling-water-efficiency-opportunities-federal-data-centers"
     status: "method-reference"
 
   - id: WRI-AQUEDUCT-4.0
