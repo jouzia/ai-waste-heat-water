@@ -49,3 +49,8 @@ Do not commit the full WRI ZIP or derived geospatial database to the repository.
 Store acquisition metadata and small derived tables only. Record the exact
 source version and retrieval date so another researcher can reconstruct the
 analysis.
+
+
+## Execution status
+
+The geographic layer is a declared analysis interface, not yet an executed site study. Before any site-level result is reported, the study must ingest a versioned Aqueduct release, freeze site/basin mapping, attach a site-specific electricity-water factor with its system boundary, and preserve retrieval metadata. NASA POWER climate forcing is complementary and must not be substituted for Aqueduct water-stress indicators.
