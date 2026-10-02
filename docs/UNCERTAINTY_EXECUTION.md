@@ -37,3 +37,13 @@ The probability of a negative `Delta_W_net` is conditional on the declared uncer
 No empirical distribution is embedded in the Python package. A distribution may be used only when its parameters and interpretation are traceable to a source, measurement dataset, or explicitly declared scenario assumption.
 
 Scenario assumptions must be reported separately from empirical uncertainty.
+
+## Study-level execution utility
+
+`src/ai_water/study_analysis.py` now provides:
+
+- median, 5th/95th percentile and conditional sign-probability summaries;
+- deterministic prefix convergence curves for fixed Monte Carlo records;
+- sign-change bracketing for one-dimensional break-even sweeps.
+
+These are analysis utilities, not empirical calibration. The manuscript must report the declared distributions, counterfactual, valid/invalid sample counts, seed, Git SHA, and parameter provenance alongside every result.
