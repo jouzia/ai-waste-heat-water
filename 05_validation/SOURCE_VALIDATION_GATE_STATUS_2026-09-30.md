@@ -16,7 +16,7 @@ The published model is a one-dimensional counter-current flat-sheet DCMD model. 
 - Eight-case **software smoke matrix**: added for two flow rates and four salinities using explicitly provisional 60/30 °C boundary temperatures; these are not source conditions and are not experimental validation.
 - Counter-current feed/permeate mass conservation and interface-gradient smoke checks: tested.
 - Incremental cooling-water accounting: corrected so baseline data-center cooling is not double-counted as intervention burden.
-- CI: green on commit 95b982b6ac3550d15074d46a4231ab3f8c480f48 (run 254); pytest and Ruff completed successfully.
+- CI: green on current commit 6a86881342d419f42ae4395587c7ae89173167b4 (run 276); pytest and Ruff completed successfully. Runs 274–275 exposed a missing explicit test factor after removal of unproven workload defaults; the test was corrected and run 276 passed.
 - Experimental validation accuracy: **not claimed**.
 
 ## Remaining quantitative gate
