@@ -60,6 +60,7 @@ def test_profile_excludes_below_threshold_heat_from_usable_recovery():
         WorkloadProfileFactors(
             recovery_efficiency=0.5,
             heat_exchanger_effectiveness=0.8,
+            usable_heat_fraction=1.0,
             minimum_source_temperature_c=50.0,
         ),
     )
