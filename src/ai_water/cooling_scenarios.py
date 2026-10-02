@@ -35,6 +35,7 @@ class CoolingScenario:
             raise ValueError("heat rejection fraction must be in [0, 1]")
         if not 0 <= self.heat_recovery_fraction <= 1:
             raise ValueError("heat recovery fraction must be in [0, 1]")
+
     @property
     def non_recovered_heat_fraction(self) -> float:
         return 1.0 - self.heat_recovery_fraction
