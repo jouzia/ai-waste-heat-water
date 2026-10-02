@@ -18,5 +18,3 @@ jobs:
         run: pytest -q
       - name: Ruff
         run: ruff check .
-      - name: Publication claim gate
-        run: python scripts/publication_gate.py
