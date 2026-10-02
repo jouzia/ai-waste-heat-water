@@ -106,3 +106,8 @@ The final manuscript must state:
 - random seeds for stochastic analyses.
 
 A successful validation result is not required for publication. Systematic model failure is itself a result and must be reported with diagnosis and limitations.
+
+
+## Current execution gate
+
+As of 2026-10-02, the repository has source-identified benchmark cases and solver/test infrastructure, but no primary observation ledger has been promoted to quantitative validation. This status must remain explicit until measured observations are extracted, independently checked, and compared without fitting on the reported validation set.
