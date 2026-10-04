@@ -71,7 +71,7 @@ cases:
     extraction_status: open_dataset_registered_extraction_pending
     validation_status: candidate
     benchmark_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
-    claim_status: "Candidate independent experimental dataset; extract measured rows and source conditions before quantitative comparison. Verify exact CC licence variant before redistributing adapted data."
+    claim_status: "Candidate independent experimental dataset; extract measured rows and source conditions before quantitative comparison. GDR links the dataset to CC BY 4.0; preserve attribution and modification notices."
 
 
   - source_id: MD-DCMD-DYNAMIC-ALI-2020
