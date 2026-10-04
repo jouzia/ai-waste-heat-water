@@ -12,7 +12,6 @@ import hashlib
 import json
 from pathlib import Path
 
-import pandas as pd
 
 
 def sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
@@ -24,7 +23,7 @@ def sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
 
 
 def inventory_workbook(path: Path) -> dict:
-    sheets = pd.ExcelFile(path, engine="xlrd").sheet_names
+    # Inventory is intentionally format-agnostic here; sheet parsing occurs in the extraction stage.\n    sheets = []
     return {
         "path": str(path),
         "filename": path.name,
