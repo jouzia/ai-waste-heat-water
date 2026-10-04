@@ -1,5 +1,4 @@
-# From AI Waste Heat to Water 
-
+# From AI Waste Heat to Water
 **Research 2 — AI infrastructure waste-heat recovery for thermal desalination and net freshwater impact**
 
 ## Research question
