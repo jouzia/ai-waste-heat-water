@@ -57,7 +57,7 @@ cases:
         - "CLARCOR QL822 flat-sheet AGMD"
     model_status: "candidate; workbook extraction, unit audit, and operating-condition crosswalk pending"
     quantitative_claim: false
-    legal_status: "Repository record displays a Creative Commons indicator; exact licence variant must be verified before redistribution of adapted data."
+    legal_status: "GDR dataset record links directly to Creative Commons Attribution 4.0 International (CC BY 4.0). Redistribution/adaptation remains subject to the license attribution and modification-notice terms."
     next_required:
       - "Acquire the public workbook files and record retrieval date and checksums."
       - "Verify the exact licence from dataset metadata."
