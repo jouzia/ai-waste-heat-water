@@ -61,3 +61,16 @@ For every downloaded source file record:
 
 Never reconstruct a numeric observation from a prose summary when the underlying
 source file is available. Never infer missing boundary conditions.
+
+## Reproducible local extraction utility
+
+The repository now includes `scripts/extract_open_md_data.py`. It performs a **pre-extraction inventory only**: it discovers local XLS/XLSX workbooks, records file size and SHA-256, inventories workbook sheets, and writes a JSON manifest. It does not select observations, transform values, or label any case as validated. Legacy XLS support is provided through the analysis extra's `xlrd` dependency.
+
+Example after legally downloading the registered source files:
+
+```bash
+python scripts/extract_open_md_data.py 02_data/raw/open_md 02_data/raw/open_md_inventory.json
+```
+
+The next scientific step remains manual, source-specific column/range mapping followed by an independently checked observation ledger. No validation result may be promoted from the inventory alone.
+
