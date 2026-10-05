@@ -174,3 +174,23 @@ IEA reports that global data-center electricity consumption increased around 17%
 ### Evidence-status rule
 
 These literature findings are contextual/methodological evidence. They are not measurements of this project's integrated AI-waste-heat-to-water system and must not be presented as model validation.
+
+
+## 2026 evidence additions verified 2026-10-05
+
+### Malaguti et al. (2026) — cooling and pumping are explicit MD burdens
+Malaguti, M., Morciano, M., Viano, G., Achilli, A., Ali, A., Quist-Jensen, C. A., & Tiraferri, A. (2026). *Waste heat won't make membrane distillation cool: Thermodynamic analysis of cooling and pumping burdens*. Desalination, 628, 120039. DOI: 10.1016/j.desal.2026.120039. Open access under CC BY 4.0.
+
+Verified findings relevant to this study: cooling loads can reach 80–100% of thermal input in some open-loop MD configurations; pumping penalties of 0.2–0.5 kWh/m³ arise under representative low single-pass recoveries and pressure losses; and feasibility depends on heat-sink effectiveness and hydraulic resistance, not heat availability alone.
+
+Research consequence: cooling and pumping remain first-class terms in the integrated AI-waste-heat-to-MD model. These published values are contextual evidence and are not inserted as universal parameter defaults.
+
+### Barnett-Itzhaki (2026) — AI water footprint and governance boundary
+Barnett-Itzhaki, Z. (2026). *The water footprint of artificial intelligence: Emerging solutions and governance imperatives*. Water Research, 299, 125866. DOI: 10.1016/j.watres.2026.125866.
+
+The review frames AI water demand as including direct evaporative cooling and indirect electricity-related water use, emphasizes water-stressed siting and facility-level transparency, and discusses waste-heat recovery among potential technical responses. Its global projections are treated as contextual literature, not as direct parameter values for this study.
+
+### Lei et al. (2025) — workload-level water heterogeneity
+Lei, N., Lu, J., Shehabi, A., & Masanet, E. (2025). *The water use of data center workloads: A review and assessment of key determinants*. Resources, Conservation and Recycling, 219, 108310. DOI: 10.1016/j.resconrec.2025.108310.
+
+The study identifies server efficiency, grid water factors, utilization, cooling system type, infrastructure efficiency, climate, inactive-server share, and refresh cycle as important determinants of workload-level water use. This supports the study's separation of workload, cooling architecture, geography, and indirect electricity-water accounting rather than using a single universal WUE factor.
