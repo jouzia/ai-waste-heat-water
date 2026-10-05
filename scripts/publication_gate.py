@@ -4,8 +4,6 @@ This script intentionally fails while any mandatory scientific gate remains
 unmet. It is a claim-control mechanism, not a quality score.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 
 
