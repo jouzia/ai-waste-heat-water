@@ -350,3 +350,16 @@ sources:
     doi: "10.1016/j.resconrec.2025.108310"
     url: "https://doi.org/10.1016/j.resconrec.2025.108310"
     status: "method-reference"
+
+
+  - id: SULAIMAN-2026-HF-DCMD-HEAT-RECOVERY
+    title: "Energy-efficient design and optimization of hollow fiber direct contact membrane distillation modules with integrated heat recovery"
+    year: 2026
+    role: B
+    used_for:
+      - "independent recent validation-method reference"
+      - "heat-recovery and multi-objective MD context"
+    doi: "10.1016/j.jwpe.2026.110673"
+    url: "https://doi.org/10.1016/j.jwpe.2026.110673"
+    license: "CC BY 4.0"
+    status: "method-reference-not-validation-of-this-repository"
