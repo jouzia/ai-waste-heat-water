@@ -1,4 +1,5 @@
 name: research-ci
+# Software CI only; publication readiness is audited separately.
 
 on:
   push:
