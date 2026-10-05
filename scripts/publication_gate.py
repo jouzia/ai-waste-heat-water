@@ -4,16 +4,14 @@ This script intentionally fails while any mandatory scientific gate remains
 unmet. It is a claim-control mechanism, not a quality score.
 """
 
-from pathlib import Path
-
-
-ROOT = Path(__file__).resolve().parents[1]
-
 
 def _load(path: str):
+    from pathlib import Path
+
     import yaml
 
-    return yaml.safe_load((ROOT / path).read_text(encoding="utf-8"))
+    root = Path(__file__).resolve().parents[1]
+    return yaml.safe_load((root / path).read_text(encoding="utf-8"))
 
 
 def main() -> int:
@@ -28,7 +26,10 @@ def main() -> int:
             if not bench:
                 failures.append(f"{case['source_id']}: held-out case has no benchmark file")
             else:
-                ledger = ROOT / bench.replace(".yaml", "_observations.yaml")
+                from pathlib import Path
+
+                root = Path(__file__).resolve().parents[1]
+                ledger = root / bench.replace(".yaml", "_observations.yaml")
                 if not ledger.exists():
                     failures.append(f"{case['source_id']}: observation ledger missing")
 
@@ -45,8 +46,11 @@ def main() -> int:
         "docs/GEOGRAPHIC_LAYER.md",
         "10_manuscript/MANUSCRIPT_PLAN.md",
     ]
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
     for path in required_docs:
-        if not (ROOT / path).exists():
+        if not (root / path).exists():
             failures.append(f"missing required protocol: {path}")
 
     if failures:
