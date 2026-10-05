@@ -58,3 +58,7 @@ Research consequence:
 ## Evidence status after this update
 
 The research remains incomplete until the raw observations are extracted, independently checked, and passed through unfitted and held-out validation. No quantitative validation claim is promoted by this document.
+
+
+## CI verification note
+The software CI suite is kept separate from the scientific publication gate; publication readiness requires the evidence gates documented in `05_validation/FINAL_GATE_STATUS.yaml`.
