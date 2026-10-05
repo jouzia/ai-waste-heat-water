@@ -10,8 +10,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import zipfile
 from pathlib import Path
-
+from xml.etree import ElementTree as ET
 
 
 def sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
@@ -22,13 +23,34 @@ def sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
     return digest.hexdigest()
 
 
+def _xlsx_sheet_names(path: Path) -> list[str]:
+    """Read worksheet names from an XLSX package without loading cell data."""
+    with zipfile.ZipFile(path) as archive:
+        workbook = ET.fromstring(archive.read("xl/workbook.xml"))
+    namespace = {"main": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+    return [
+        sheet.attrib["name"]
+        for sheet in workbook.findall("main:sheets/main:sheet", namespace)
+    ]
+
+
 def inventory_workbook(path: Path) -> dict:
-    # Inventory is intentionally format-agnostic here; sheet parsing occurs in the extraction stage.\n    sheets = []
+    suffix = path.suffix.lower()
+    if suffix == ".xlsx":
+        sheets = _xlsx_sheet_names(path)
+        inventory_status = "sheet_names_extracted"
+    else:
+        # Legacy XLS parsing is intentionally deferred to the analysis environment
+        # where xlrd is installed; never report unknown sheets as extracted.
+        sheets = []
+        inventory_status = "legacy_xls_sheet_inventory_deferred"
     return {
         "path": str(path),
         "filename": path.name,
         "bytes": path.stat().st_size,
         "sha256": sha256(path),
+        "format": suffix.lstrip("."),
+        "inventory_status": inventory_status,
         "sheets": sheets,
     }
 
@@ -40,15 +62,14 @@ def main() -> int:
     args = parser.parse_args()
 
     files = sorted(
-        p for p in args.input_dir.iterdir()
+        p
+        for p in args.input_dir.iterdir()
         if p.is_file() and p.suffix.lower() in {".xls", ".xlsx"}
     )
     if not files:
         raise SystemExit("No Excel workbooks found; extraction cannot proceed.")
 
-    records = []
-    for path in files:
-        records.append(inventory_workbook(path))
+    records = [inventory_workbook(path) for path in files]
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
