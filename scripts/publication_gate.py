@@ -8,13 +8,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import yaml
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def _load(path: str):
+    import yaml
+
     return yaml.safe_load((ROOT / path).read_text(encoding="utf-8"))
 
 
