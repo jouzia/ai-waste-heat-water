@@ -74,3 +74,21 @@ python scripts/extract_open_md_data.py 02_data/raw/open_md 02_data/raw/open_md_i
 
 The next scientific step remains manual, source-specific column/range mapping followed by an independently checked observation ledger. No validation result may be promoted from the inventory alone.
 
+
+
+## 2026-10-06 access verification
+
+The Villa GDR landing page was re-verified: the repository exposes seven downloadable workbooks and explicitly describes the theoretical, Specifications, Data, and temperature-range worksheets. The record is publicly accessible and links a Creative Commons licence. The binary XLS files remain unsuitable for direct ingestion through the research automation environment, so no observations are fabricated from the landing-page metadata.
+
+The Ali et al. (2020) dataset was independently re-verified through the publisher/PMC record: five XLSX supporting datasets are available (S1 Data through S5 Data), and the article states that the study used experimental step-response data from a pilot DCMD plant. The associated dataset catalogue identifies CC BY 4.0 and the Figshare dataset record. Observation extraction remains gated until the actual supporting workbooks are locally available to the extraction script.
+
+### Extraction rule
+1. Download the original binary files from the authoritative landing page.
+2. Preserve the original filename and SHA-256.
+3. Run `python scripts/extract_open_md_data.py <input_dir> <output_json>`.
+4. Review worksheet names and select source-defined ranges before any unit transformation.
+5. Store raw observations separately from transformed model inputs.
+6. Record development/held-out assignment before model fitting.
+7. Independently re-extract a sample of observations and reconcile discrepancies.
+
+The inventory tool is now executable for both legacy `.xls` and `.xlsx` workbooks; it does not claim that an inventory is a validation result.
