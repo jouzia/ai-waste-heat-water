@@ -1,8 +1,11 @@
-"""Extract reproducible observations from the registered open MD datasets.
+"""Inventory and extract metadata from registered open MD workbooks.
 
 This utility never invents observations. It requires locally downloaded source
-workbooks, records SHA-256 hashes, inventories sheets, and writes a manifest
-before any researcher-selected extraction is performed.
+workbooks, records SHA-256 hashes, inventories worksheet names, and writes a
+manifest before researcher-selected observation extraction is performed.
+
+Legacy XLS files are handled with xlrd and XLSX files with openpyxl through
+pandas. Cell values are not transformed by this inventory stage.
 """
 
 from __future__ import annotations
@@ -10,9 +13,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import zipfile
 from pathlib import Path
-from xml.etree import ElementTree as ET
+
+import pandas as pd
 
 
 def sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
@@ -23,34 +26,23 @@ def sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
     return digest.hexdigest()
 
 
-def _xlsx_sheet_names(path: Path) -> list[str]:
-    """Read worksheet names from an XLSX package without loading cell data."""
-    with zipfile.ZipFile(path) as archive:
-        workbook = ET.fromstring(archive.read("xl/workbook.xml"))
-    namespace = {"main": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
-    return [
-        sheet.attrib["name"]
-        for sheet in workbook.findall("main:sheets/main:sheet", namespace)
-    ]
-
-
 def inventory_workbook(path: Path) -> dict:
     suffix = path.suffix.lower()
-    if suffix == ".xlsx":
-        sheets = _xlsx_sheet_names(path)
-        inventory_status = "sheet_names_extracted"
-    else:
-        # Legacy XLS parsing is intentionally deferred to the analysis environment
-        # where xlrd is installed; never report unknown sheets as extracted.
-        sheets = []
-        inventory_status = "legacy_xls_sheet_inventory_deferred"
+    if suffix not in {".xls", ".xlsx"}:
+        raise ValueError(f"unsupported workbook format: {suffix}")
+
+    engine = "xlrd" if suffix == ".xls" else "openpyxl"
+    with pd.ExcelFile(path, engine=engine) as workbook:
+        sheets = list(workbook.sheet_names)
+
     return {
         "path": str(path),
         "filename": path.name,
         "bytes": path.stat().st_size,
         "sha256": sha256(path),
         "format": suffix.lstrip("."),
-        "inventory_status": inventory_status,
+        "engine": engine,
+        "inventory_status": "sheet_names_extracted",
         "sheets": sheets,
     }
 
@@ -75,7 +67,7 @@ def main() -> int:
     args.output.write_text(
         json.dumps(
             {
-                "schema_version": "1.0",
+                "schema_version": "1.1",
                 "purpose": "source-file inventory before observation extraction",
                 "files": records,
             },
