@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import Iterable
 
 from .engine import simulate
-from .models import Result, Scenario, Workload
+from .models import HeatRecovery, Result, Scenario, Workload
 from .workload_profile import WorkloadInterval, WorkloadProfileFactors
 
 
@@ -33,8 +33,8 @@ def simulate_workload_profile(
     """Run the reduced-order engine once per workload interval.
 
     The scenario's avoided-freshwater value is interpreted as a profile-level
-    counterfactual and is applied once after interval aggregation. All
-    intervention energy/water quantities are otherwise additive.
+    counterfactual and is applied once after interval aggregation. The supplied
+    profile factors control heat recovery for every eligible interval.
     """
     samples = tuple(intervals)
     if not samples:
@@ -42,15 +42,25 @@ def simulate_workload_profile(
 
     interval_results: list[Result] = []
     for interval in samples:
+        eligible = (
+            interval.source_temperature_c >= factors.minimum_source_temperature_c
+            and interval.it_power_kw > 0
+            and interval.recoverable_heat_fraction > 0
+        )
+        recoverable_fraction = interval.recoverable_heat_fraction if eligible else 0.0
         interval_scenario = scenario.model_copy(
             update={
                 "workload": Workload(
                     it_power_kw=interval.it_power_kw,
                     duration_h=interval.duration_h,
-                    recoverable_heat_fraction=interval.recoverable_heat_fraction,
+                    recoverable_heat_fraction=recoverable_fraction,
                 ),
-                "recovery": scenario.recovery.model_copy(
-                    update={"source_temperature_c": interval.source_temperature_c}
+                "recovery": HeatRecovery(
+                    recovery_efficiency=factors.recovery_efficiency,
+                    heat_exchanger_effectiveness=factors.heat_exchanger_effectiveness,
+                    usable_heat_fraction=factors.usable_heat_fraction,
+                    source_temperature_c=interval.source_temperature_c,
+                    cold_side_temperature_c=scenario.recovery.cold_side_temperature_c,
                 ),
                 "water": scenario.water.model_copy(
                     update={"avoided_freshwater_consumption_l": 0.0}
@@ -96,7 +106,9 @@ def simulate_workload_profile(
     }
 
     weighted_heat = sum(
-        item.source_temperature_c * item.it_power_kw * item.duration_h
+        item.source_temperature_c
+        * item.it_power_kw
+        * item.duration_h
         * item.recoverable_heat_fraction
         * factors.recovery_efficiency
         * factors.heat_exchanger_effectiveness
@@ -109,7 +121,8 @@ def simulate_workload_profile(
         )
     )
     usable_heat = sum(
-        item.it_power_kw * item.duration_h
+        item.it_power_kw
+        * item.duration_h
         * item.recoverable_heat_fraction
         * factors.recovery_efficiency
         * factors.heat_exchanger_effectiveness
@@ -126,12 +139,13 @@ def simulate_workload_profile(
     aggregate = Result(
         **values,
         concentrate_salinity_g_kg=(
-            values["concentrate_discharge_l"] and
             sum(
                 item.concentrate_salinity_g_kg * item.concentrate_discharge_l
                 for item in interval_results
-            ) / values["concentrate_discharge_l"]
-            or 0.0
+            )
+            / values["concentrate_discharge_l"]
+            if values["concentrate_discharge_l"] > 0
+            else 0.0
         ),
         avoided_freshwater_consumption_l=avoided,
         net_consumption_change_l=values["additional_water_consumption_l"] - avoided,
