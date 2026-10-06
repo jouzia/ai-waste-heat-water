@@ -1,9 +1,10 @@
 version: "1.0"
 status: "INCOMPLETE"
-as_of: "2026-10-02"
+as_of: "2026-10-06"
 
 gates:
   software_correctness: true
+  open_data_access_verified: true
   source_reconstruction: false
   primary_observation_extraction: false
   unfitted_validation: false
