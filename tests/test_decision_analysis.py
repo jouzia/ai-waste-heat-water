@@ -36,4 +36,4 @@ def test_pareto_mask_supports_minimize_and_maximize_objectives():
         [(1, 5), (2, 4), (3, 3), (4, 6)],
         minimize=(True, False),
     )
-    assert result == (True, True, True, False)
+    assert result == (True, False, False, True)
