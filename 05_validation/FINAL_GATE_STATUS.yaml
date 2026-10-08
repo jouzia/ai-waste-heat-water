@@ -1,6 +1,6 @@
 version: "1.0"
 status: "INCOMPLETE"
-as_of: "2026-10-06"
+as_of: "2026-10-08"
 
 gates:
   software_correctness: true
@@ -11,7 +11,7 @@ gates:
   held_out_validation: false
   model_form_comparison: false
   cooling_architecture_scenarios: false
-  time_varying_workload_coupling: false
+  time_varying_workload_coupling: true
   monte_carlo_convergence: false
   global_sensitivity_execution: false
   break_even_failure_envelope: false
