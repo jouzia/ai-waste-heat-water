@@ -11,6 +11,7 @@
 - Piecewise-constant workload-profile integration and a workload-to-scenario coupling layer.
 - Monte Carlo sampling utilities, Sobol estimator utilities, study-summary/convergence helpers, break-even and Pareto primitives.
 - Benchmark registry, validation matrix, data-acquisition manifest, extraction inventory utility, protocols, manuscript outline and reproducibility plan.
+- A provenance-labelled transcription of the source-reported model–plant error summary in Ali, Orfi & Najib (2020), Table 1, saved as `01_literature/derived/ali_2020_table1_model_errors.csv` with its limits documented in `docs/ALI_2020_TABLE1_EXTRACTION.md`. This is summary evidence only—not raw observations or validation of this repository's model.
 - Automated software tests and CI configuration.
 
 These are code capabilities or protocols; they do not themselves demonstrate physical accuracy or complete the corresponding study analyses.
@@ -18,7 +19,7 @@ These are code capabilities or protocols; they do not themselves demonstrate phy
 ## Still unfinished — publication-critical
 
 1. Download and preserve original experimental files; record source, retrieval time, filenames, sizes and SHA-256.
-2. Extract measurements into source-linked observation ledgers with sheet/range, units, missingness and transformation records.
+2. Extract measurements into source-linked observation ledgers with sheet/range, units, missingness and transformation records. The available PDF supports transcription of Table 1 summary errors only; it does not replace the five supporting XLSX files.
 3. Independently check extraction and freeze development/held-out partitions by experimental configuration/source.
 4. Run unfitted source-matched validation and publish residuals and appropriate error metrics.
 5. Complete genuinely held-out validation and model-form comparison.
