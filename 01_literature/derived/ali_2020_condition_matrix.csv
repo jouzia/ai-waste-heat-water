@@ -1,0 +1,17 @@
+source_id,case_id,hot_cold_mass_flow_l_h,hot_inlet_temperature_c,cold_inlet_temperature_c,feed_salinity_percent,hot_cold_flow_equal,source_figure_with_response,raw_time_series_workbook_present_in_repo
+ALI_ORFI_NAJIB_2020,ALI20-01,50,50,25,0.5,true,"Fig. 2",false
+ALI_ORFI_NAJIB_2020,ALI20-02,50,60,25,0.5,true,"Fig. 2",false
+ALI_ORFI_NAJIB_2020,ALI20-03,50,70,25,0.5,true,"Fig. 2",false
+ALI_ORFI_NAJIB_2020,ALI20-04,50,80,25,0.5,true,"Fig. 2",false
+ALI_ORFI_NAJIB_2020,ALI20-05,100,50,25,0.5,true,"Fig. 7",false
+ALI_ORFI_NAJIB_2020,ALI20-06,100,60,25,0.5,true,"Fig. 7",false
+ALI_ORFI_NAJIB_2020,ALI20-07,100,70,25,0.5,true,"Fig. 7",false
+ALI_ORFI_NAJIB_2020,ALI20-08,100,80,25,0.5,true,"Fig. 7",false
+ALI_ORFI_NAJIB_2020,ALI20-09,200,50,25,0.5,true,"Fig. 7",false
+ALI_ORFI_NAJIB_2020,ALI20-10,200,60,25,0.5,true,"Fig. 7",false
+ALI_ORFI_NAJIB_2020,ALI20-11,200,70,25,0.5,true,"Fig. 7",false
+ALI_ORFI_NAJIB_2020,ALI20-12,200,80,25,0.5,true,"Fig. 7",false
+ALI_ORFI_NAJIB_2020,ALI20-13,300,50,25,0.5,true,"Fig. 3",false
+ALI_ORFI_NAJIB_2020,ALI20-14,300,60,25,0.5,true,"Fig. 3",false
+ALI_ORFI_NAJIB_2020,ALI20-15,300,70,25,0.5,true,"Fig. 3",false
+ALI_ORFI_NAJIB_2020,ALI20-16,300,80,25,0.5,true,"Fig. 3",false
