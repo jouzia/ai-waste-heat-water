@@ -233,7 +233,7 @@ def extract_summary(input_path: Path, output_path: Path) -> list[dict[str, objec
 
     workbook.release_resources()
     records.sort(key=lambda record: str(record["condition_id"]))
-    if set(record["condition_id"] for record in records) != CONDITION_SHEETS:
+    if {record["condition_id"] for record in records} != CONDITION_SHEETS:
         missing = sorted(CONDITION_SHEETS - {str(record["condition_id"]) for record in records})
         raise ValueError(f"Missing condition sheets: {missing}")
 
