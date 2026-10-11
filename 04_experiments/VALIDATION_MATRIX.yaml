@@ -5,7 +5,7 @@ purpose: "Publication-facing validation ledger. This file records evidence statu
 cases:
   - source_id: MD-DCMD-CHANNEL-2020
     role: development_benchmark
-    source: "Keshavarzzadeh et al. (2020), Scientific Reports 10, 16790"
+    source: "Keshavarzzadeh (2020), Scientific Reports 10, 16790"
     doi: "10.1038/s41598-020-73964-7"
     upstream_experiment: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273"
     configuration: "flat-sheet counter-current DCMD"
