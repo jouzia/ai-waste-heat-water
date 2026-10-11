@@ -1,0 +1,105 @@
+name: GDR DCMD source-data ingestion
+
+on:
+  pull_request:
+    paths:
+      - "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
+      - "scripts/download_gdr_villa.py"
+      - ".github/workflows/gdr-villa-ingest.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  retrieve-and-export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install legacy XLS reader
+        run: python -m pip install "xlrd>=2.0.1"
+
+      - name: Retrieve selected CC BY 4.0 workbook
+        run: python scripts/download_gdr_villa.py --dataset 3m-countercurrent
+
+      - name: Inspect workbook and export sheets
+        run: |
+          python scripts/inspect_gdr_villa.py
+          mkdir -p artifacts/gdr_villa_exports
+          python - <<'PY'
+          import csv
+          import json
+          import re
+          from collections import Counter
+          from pathlib import Path
+
+          import xlrd
+
+          source = Path("data/raw/gdr_villa_2018/3M 0.2 Micron Plate and Frame Countercurrent DCMD.xls")
+          out = Path("artifacts/gdr_villa_exports")
+          out.mkdir(parents=True, exist_ok=True)
+          workbook = xlrd.open_workbook(str(source), on_demand=True)
+          index = []
+          for sheet in workbook.sheets():
+              safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", sheet.name).strip("_") or "sheet"
+              csv_path = out / f"{safe_name}.csv"
+              with csv_path.open("w", newline="", encoding="utf-8-sig") as stream:
+                  writer = csv.writer(stream)
+                  for row_index in range(sheet.nrows):
+                      writer.writerow(sheet.row_values(row_index))
+              types = Counter(
+                  str(sheet.cell_type(row, col))
+                  for row in range(sheet.nrows)
+                  for col in range(sheet.ncols)
+              )
+              index.append({
+                  "sheet_name": sheet.name,
+                  "rows": sheet.nrows,
+                  "columns": sheet.ncols,
+                  "csv_file": csv_path.name,
+                  "cell_type_counts_xlrd": dict(types),
+                  "preview_first_6_rows_first_12_columns": [
+                      [sheet.cell_value(row, col) for col in range(min(sheet.ncols, 12))]
+                      for row in range(min(sheet.nrows, 6))
+                  ],
+                  "interpretation": (
+                      "mixed steady-state experimental and calculated values; exclude calculated columns"
+                      if sheet.name.strip().lower() == "theoretical"
+                      else "full-data sheet; inspect each column's provenance and units"
+                      if sheet.name.strip().lower() == "data"
+                      else "worksheet exported for inspection; not automatically classified as observations"
+                  ),
+              })
+          workbook.release_resources()
+          manifest = {
+              "source_doi": "10.15121/1452747",
+              "source_page": "https://gdr.openei.org/submissions/1016",
+              "license": "CC BY 4.0",
+              "license_url": "https://creativecommons.org/licenses/by/4.0/",
+              "source_workbook": source.name,
+              "source_sha256": __import__("hashlib").sha256(source.read_bytes()).hexdigest(),
+              "sheets": index,
+              "scope_note": "Raw workbook is included. CSV files are value exports for inspection, not an observation ledger; validate sheet, column, unit, and measurement provenance before using any values as experimental targets.",
+          }
+          (out / "sheet_export_manifest.json").write_text(
+              json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Upload raw workbook and inspection artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gdr-villa-3m-countercurrent
+          path: |
+            data/raw/gdr_villa_2018/*
+            artifacts/provenance/gdr_villa_workbook_inspection.json
+            artifacts/gdr_villa_exports/*
+          if-no-files-found: error
+          retention-days: 14
