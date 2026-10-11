@@ -63,7 +63,10 @@ def simulate_workload_profile(
                     cold_side_temperature_c=scenario.recovery.cold_side_temperature_c,
                 ),
                 "water": scenario.water.model_copy(
-                    update={"avoided_freshwater_consumption_l": 0.0}
+                    update={
+                        "avoided_freshwater_consumption_l": 0.0,
+                        "freshwater_displacement_fraction": 0.0,
+                    }
                 ),
             }
         )
@@ -135,7 +138,19 @@ def simulate_workload_profile(
         )
     )
 
-    avoided = scenario.water.avoided_freshwater_consumption_l
+    if scenario.water.avoided_freshwater_consumption_l is not None:
+        if scenario.water.freshwater_displacement_fraction > 0:
+            raise ValueError(
+                "specify either an explicit avoided-water volume or a displacement fraction, not both"
+            )
+        avoided = scenario.water.avoided_freshwater_consumption_l
+    else:
+        avoided = values["freshwater_produced_l"] * scenario.water.freshwater_displacement_fraction
+    if avoided > values["freshwater_produced_l"] + 1e-9:
+        raise ValueError(
+            "avoided freshwater consumption cannot exceed total distillate produced"
+        )
+
     aggregate = Result(
         **values,
         concentrate_salinity_g_kg=(
