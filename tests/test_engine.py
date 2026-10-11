@@ -97,3 +97,13 @@ def test_absolute_volume_and_displacement_fraction_cannot_both_be_set():
     s.water.freshwater_displacement_fraction = 0.5
     with pytest.raises(ValueError, match="not both"):
         simulate(s)
+
+
+
+def test_displacement_fraction_is_bounded_between_zero_and_one():
+    import pytest
+
+    with pytest.raises(ValueError):
+        WaterFactors(freshwater_displacement_fraction=-0.01)
+    with pytest.raises(ValueError):
+        WaterFactors(freshwater_displacement_fraction=1.01)
