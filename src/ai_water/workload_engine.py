@@ -32,9 +32,10 @@ def simulate_workload_profile(
 ) -> WorkloadCoupledResult:
     """Run the reduced-order engine once per workload interval.
 
-    The scenario's avoided-freshwater value is interpreted as a profile-level
-    counterfactual and is applied once after interval aggregation. The supplied
-    profile factors control heat recovery for every eligible interval.
+    The scenario's freshwater-displacement fraction or explicit avoided-water
+    volume is applied once after interval aggregation. Explicit avoided volume
+    must not exceed total distillate produced. The supplied profile factors
+    control heat recovery for every eligible interval.
     """
     samples = tuple(intervals)
     if not samples:
