@@ -76,3 +76,28 @@ def test_supplement_inspector_rejects_empty_directory(tmp_path: Path) -> None:
     assert result.returncode != 0
     assert "No XLSX/XLSM files found" in result.stderr
     assert not output.exists()
+
+
+
+def test_supplement_inspector_reports_invalid_workbook(tmp_path: Path) -> None:
+    input_dir = tmp_path / "invalid"
+    input_dir.mkdir()
+    (input_dir / "broken.xlsx").write_bytes(b"not a zip archive")
+    output = tmp_path / "manifest.json"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(INSPECTOR),
+            "--input-dir",
+            str(input_dir),
+            "--output",
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode != 0
+    assert "File is not a zip file" in result.stderr
+    assert not output.exists()
