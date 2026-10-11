@@ -142,7 +142,8 @@ def simulate_workload_profile(
     if scenario.water.avoided_freshwater_consumption_l is not None:
         if scenario.water.freshwater_displacement_fraction > 0:
             raise ValueError(
-                "specify either an explicit avoided-water volume or a displacement fraction, not both"
+                "specify either an explicit avoided-water volume or a displacement "
+                "fraction, not both"
             )
         avoided = scenario.water.avoided_freshwater_consumption_l
     else:
