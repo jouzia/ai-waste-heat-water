@@ -6,6 +6,8 @@ Break-even analysis is performed on a declared scalar response, normally:
 
 net_consumption_change_l = additional_water_consumption_l - avoided_freshwater_consumption_l
 
+The avoided-consumption term must represent water demonstrably displaced under the declared counterfactual. It is specified either as a displacement fraction in [0, 1] applied to produced distillate or as an explicit avoided volume no greater than produced distillate. Do not specify both. If displacement is not demonstrated, use zero.
+
 A break-even point is reported only when a sampled parameter interval contains a sign change or an exact zero. The repository utility uses bisection only inside a supplied bracket and therefore does not claim a global optimum or a universal threshold.
 
 The study must report:
