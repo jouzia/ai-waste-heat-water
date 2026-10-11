@@ -65,6 +65,16 @@ The geographic evidence layer uses official scientific and government sources un
 The source register in `01_literature/literature_matrix.csv` distinguishes primary experiments, secondary reproductions, model studies, and open datasets, and records the specific validation gap for each. The 2026 analysis by Malaguti et al. makes cooling and pumping burdens central constraints; this project therefore does not claim that waste heat alone makes MD viable. The intended contribution is the coupled, site- and workload-aware **net freshwater impact** accounting layer, evaluated only after source-matched membrane validation. See `docs/ALI_2020_TRANSIENT_SOURCE_AUDIT.md` for the transient DCMD benchmark's source-confirmed conditions and extraction rules.
 The falsifiable research question, counterfactual definition, hypothesis set, comparison plan, and release gate are specified in `docs/RESEARCH_GAP_AND_FALSIFIABLE_DESIGN.md`.
 
+## Retrieving the open DCMD benchmark
+
+The GDR/NREL Villa et al. (2018) dataset is available under CC BY 4.0. To retrieve one configuration and generate a local SHA-256 manifest:
+
+```bash
+python scripts/download_gdr_villa.py --dataset clarcor-countercurrent
+```
+
+Use `--dataset all` to download the full seven-workbook collection (about 96 MB). Raw workbooks are written under the git-ignored `data/raw/gdr_villa_2018/` directory. The source page identifies the `Specifications` sheet as experiment inputs, `Data` as the full data, temperature-named sheets as subsets, and `Theoretical` as steady-state experimental values plus calculated values. Do not mix these categories: quantitative extraction and source-condition crosswalk are still pending.
+
 ## Reproducibility policy
 
 Every externally sourced parameter must carry a source identifier, definition, unit, applicability range, transformation, uncertainty treatment, and validation status. Scenario-only values remain visibly labelled. Negative or non-beneficial outcomes are preserved rather than filtered from the results.
