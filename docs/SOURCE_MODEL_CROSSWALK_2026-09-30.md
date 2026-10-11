@@ -5,7 +5,7 @@ Date: 2026-09-30
 ## Purpose
 
 This document freezes the source-model reconciliation step before any quantitative
-comparison with the experimental markers reproduced in Keshavarzzadeh et al. (2020).
+comparison with the experimental markers reproduced in Keshavarzzadeh (2020).
 The source paper is open access and explicitly defines a one-dimensional, counter-flow,
 flat-sheet DCMD model. It reports mass flux as a function of average feed bulk
 temperature for two inlet flow rates (7 and 11 cm^3/s) and NaCl concentrations
