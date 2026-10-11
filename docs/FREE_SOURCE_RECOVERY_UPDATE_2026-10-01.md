@@ -48,7 +48,7 @@ A publicly accessible NREL/Geothermal Data Repository dataset provides experimen
 
 This is a promising legal alternative to the paywalled 1999 primary paper for **independent DCMD model validation**. It does not replace the 1999 source for reproducing the Keshavarzzadeh Figure 3 case because the membranes, geometry, salinity, and boundary conditions differ.
 
-The repository search record displays a Creative Commons indicator, but the exact CC licence variant must be verified from the dataset's licence metadata before redistributing adapted data. The workbooks contain both experimental data and theoretical/calculated worksheets: only measured observations may be used as validation targets. The benchmark is registered as MD-OEDI-VILLA-2018; extraction, checksum capture, licence verification, and a held-out split remain pending.
+The GDR submission links to CC BY 4.0. The workbooks contain both experimental data and theoretical/calculated worksheets: only measured observations may be used as validation targets. The benchmark is registered as MD-OEDI-VILLA-2018; workbook download, checksum capture, observation extraction, and a held-out split remain pending. Retrieval commands are documented in the README and implemented in `scripts/download_gdr_villa.py`.
 
 
 ## Newly identified open transient dataset: Ali, Orfi & Najib (2020)
