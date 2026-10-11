@@ -34,6 +34,7 @@ experimental_provenance:
     - "CLARCOR QL822 Flat Sheet Counter-Current DCMD.xls"
     - "CLARCOR QL822 Flat Sheet Air-Gap MD.xls"
 extraction_rules:
+  - "Retrieve a single workbook with `python scripts/download_gdr_villa.py --dataset clarcor-countercurrent`; use `--dataset all` for all seven files. The script writes a SHA-256 manifest and stores raw files locally under the git-ignored data/raw directory."
   - "Extract measured experimental observations only; never treat theoretical/model worksheets as observations."
   - "Keep each workbook and configuration as a separate source case."
   - "Record worksheet name, row/cell locator, units, and original column headings for every extracted value."
