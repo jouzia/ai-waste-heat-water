@@ -29,7 +29,7 @@ The publisher labels the article open access under CC BY 4.0 and states that rel
 
 ## Required extraction sequence
 
-1. Download all five publisher XLSX supplements; store immutable originals outside version control if file size/license practice requires it. Record URL, retrieval timestamp, SHA-256, workbook names, worksheets, and file metadata in the retrieval manifest.
+1. Download all five publisher XLSX supplements; store immutable originals outside version control if file size/license practice requires it. Run `python scripts/inspect_ali_supplements.py --input-dir data/raw/ali_2020` to create a metadata-only manifest with file hashes and worksheet names. Record the retrieval URL and actual retrieval timestamp; the script's manifest creation timestamp is not a substitute for retrieval time.
 2. Inspect every workbook and map each sheet to the paper's figures/tables and operating conditions. Do not assume S1 Data–S5 Data map one-to-one to the five operating flow rates.
 3. Identify whether the workbook contains raw measured time series, processed rates, model predictions, or multiple categories. Preserve original values and add derived columns separately.
 4. Reconstruct actual step-input histories and measured hot/cold boundary conditions. A nominal setpoint is not a substitute for a measured input trajectory.
