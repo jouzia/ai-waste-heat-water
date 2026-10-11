@@ -266,27 +266,33 @@ def run_comparison(
 
     for correlation, geometry in variants:
         train = [row for row in rows if str(row["condition_id"]).startswith("20-")]
-        held_out = [row for row in rows if str(row["condition_id"]).startswith("30-")]
         observed_train = [_number(row["derived_flux_l_m2_h"]) for row in train]
 
-        def objective(log10_permeance: float) -> float:
+        def objective(
+            log10_permeance: float,
+            *,
+            _correlation: str = correlation,
+            _geometry: str = geometry,
+            _train: list[dict[str, float | str]] = train,
+            _observed_train: list[float] = observed_train,
+        ) -> float:
             permeance = 10.0**log10_permeance
             try:
                 predicted = [
                     _predict(
                         row,
                         permeance,
-                        correlation=correlation,
-                        geometry=geometry,
+                        correlation=_correlation,
+                        geometry=_geometry,
                         cells=cells,
                     )[0]
-                    for row in train
+                    for row in _train
                 ]
             except (ValueError, RuntimeError, ArithmeticError):
                 return 1e12
             return sum(
                 math.log(max(p, 1e-12) / o) ** 2
-                for o, p in zip(observed_train, predicted, strict=True)
+                for o, p in zip(_observed_train, predicted, strict=True)
             )
 
         optimum = minimize_scalar(
