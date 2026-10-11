@@ -12,7 +12,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 from xml.etree import ElementTree as ET
-from zipfile import ZipFile
+from zipfile import BadZipFile, ZipFile
 
 SOURCE_DOI = "10.1371/journal.pone.0230207"
 SOURCE_URL = "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230207"
@@ -96,7 +96,7 @@ def main() -> int:
 
     try:
         manifest = build_manifest(args.input_dir)
-    except (OSError, ValueError, KeyError, ET.ParseError) as exc:
+    except (OSError, ValueError, KeyError, ET.ParseError, BadZipFile) as exc:
         parser.error(str(exc))
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
