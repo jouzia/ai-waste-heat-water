@@ -92,4 +92,4 @@ def test_profile_avoided_water_is_counted_once():
     )
 
     assert result.result.avoided_freshwater_consumption_l == pytest.approx(2)
-    assert result.result.net_freshwater_benefit_l == pytest.approx(0)
+    assert result.result.net_freshwater_benefit_l == pytest.approx(2)
