@@ -169,13 +169,10 @@ def _make_config(
     perm_mass_flow = 0.06 * perm_props["rho"]
     latent_temp = (feed_mean + perm_mean) / 2.0
     config = ChannelConfig(
-        area_m2=SOURCE_AREA_M2,
-        channel_length_m=SOURCE_LENGTH_M,
+        membrane_area_m2=SOURCE_AREA_M2,
         membrane_permeance_kg_m2_h_bar=permeance,
         membrane_thermal_conductivity_w_m_k=membrane_k,
         membrane_thickness_m=MEMBRANE_THICKNESS_M,
-        feed_in_temperature_c=feed_in,
-        permeate_in_temperature_c=perm_in,
         feed_mass_flow_kg_h=feed_mass_flow,
         permeate_mass_flow_kg_h=perm_mass_flow,
         feed_cp_kj_kg_k=feed_props["cp"] / 1000.0,
@@ -186,6 +183,7 @@ def _make_config(
         feed_salinity_g_kg=FEED_SALINITY_G_L,
         water_activity_override=_nacl_water_activity(),
         cells=cells,
+        duration_h=1.0,
         flow_arrangement="counter_current",
     )
     meta = {
@@ -217,7 +215,11 @@ def _predict(
     config, meta = _make_config(
         row, permeance, correlation=correlation, geometry=geometry, cells=cells
     )
-    result = simulate_dcmd_channel(config)
+    result = simulate_dcmd_channel(
+        config=config,
+        feed_in_temperature_c=_number(row["feed_inlet_mean_c"]),
+        permeate_in_temperature_c=_number(row["distillate_inlet_mean_c"]),
+    )
     # Convert model mass flux to volumetric flux using pure-water density at
     # the mean permeate bulk temperature. The source observation is L/m2/h.
     perm_mean = (
@@ -225,11 +227,12 @@ def _predict(
         + _number(row["distillate_outlet_mean_c"])
     ) / 2.0
     rho_distillate = _water_properties(perm_mean)["rho"]
-    predicted_l_m2_h = result.flux_kg_m2_h / (rho_distillate / 1000.0)
+    mass_flux_kg_m2_h = result.freshwater_produced_kg / (config.membrane_area_m2 * config.duration_h)
+    predicted_l_m2_h = mass_flux_kg_m2_h / (rho_distillate / 1000.0)
     return (
         predicted_l_m2_h,
-        result.feed_outlet_temp_c,
-        result.permeate_outlet_temp_c,
+        result.feed_out_temperature_c,
+        result.permeate_out_temperature_c,
         meta,
     )
 
