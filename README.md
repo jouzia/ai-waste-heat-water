@@ -75,6 +75,16 @@ python scripts/download_gdr_villa.py --dataset clarcor-countercurrent
 
 Use `--dataset all` to download the full seven-workbook collection (about 96 MB). Raw workbooks are written under the git-ignored `data/raw/gdr_villa_2018/` directory. The source page identifies the `Specifications` sheet as experiment inputs, `Data` as the full data, temperature-named sheets as subsets, and `Theoretical` as steady-state experimental values plus calculated values. Do not mix these categories: quantitative extraction and source-condition crosswalk are still pending.
 
+## Local verification
+
+Run the regression suite and lint checks before interpreting any quantitative output:
+
+```bash
+python -m pip install -e ".[dev]"
+pytest -q
+ruff check .
+```
+
 ## Reproducibility policy
 
 Every externally sourced parameter must carry a source identifier, definition, unit, applicability range, transformation, uncertainty treatment, and validation status. Scenario-only values remain visibly labelled. Negative or non-beneficial outcomes are preserved rather than filtered from the results.
