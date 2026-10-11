@@ -1,6 +1,6 @@
 """Source-compatible axial counter-current DCMD runner.
 
-The runner implements the published Keshavarzzadeh et al. (2020) control-volume
+The runner implements the published Keshavarzzadeh (2020) control-volume
 structure (Eqs. 9-18): mass balances, enthalpy balances, membrane conduction,
 and source Nusselt correlation. The paper does not publish a complete numerical
 property table/enthalpy closure in the displayed equations, so this module
