@@ -86,6 +86,8 @@ pytest -q
 ruff check .
 ```
 
+Latest recorded software CI evidence is in `docs/CI_STATUS_2026-10-11.md`. Software tests and lint are separate from empirical membrane-model validation.
+
 ## Reproducibility policy
 
 Every externally sourced parameter must carry a source identifier, definition, unit, applicability range, transformation, uncertainty treatment, and validation status. Scenario-only values remain visibly labelled. Negative or non-beneficial outcomes are preserved rather than filtered from the results.
