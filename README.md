@@ -45,6 +45,7 @@ Lei et al. (2025) demonstrate that workload-level data-center water use is highl
 - **Interface temperatures:** measured/interface temperatures can override the reduced-order temperature-polarization estimate.
 - **Salinity/thermodynamics:** standard-seawater cases now use IAPWS-08 water activity with an explicit single-pass concentration layer; concentrate salinity is reported.
 - **Continuous integration:** GitHub Actions runs the test suite and Ruff on pushes and pull requests.
+- **Evidence-gate regression tests:** benchmark entries with empty primary-observation ledgers cannot be labeled development-validated or held-out-validated; software smoke tests remain distinct from empirical validation.
 
 These additions do not supply unsupported membrane properties, heat-transfer coefficients, grid-water factors, or site-specific cooling assumptions. Membrane-specific transport parameters, channel heat-transfer coefficients, and geographic water factors remain explicit inputs awaiting source extraction.
 
