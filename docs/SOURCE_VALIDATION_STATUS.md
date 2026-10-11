@@ -4,7 +4,7 @@ Last updated: 2026-09-30
 
 ## Current gate
 
-The Keshavarzzadeh et al. (2020) source formulation has been transcribed into a dedicated source-model pathway. The published paper defines a one-dimensional counter-current flat-sheet DCMD control-volume model with membrane mass transfer, feed/permeate mass balances, enthalpy balances, membrane conduction, and an entry-effect Nusselt correlation. The paper compares model results with experimental markers for two flow rates (7 and 11 cm^3/s) and four NaCl concentrations (0, 0.55, 1.15, 1.67 M).
+The Keshavarzzadeh (2020) source formulation has been transcribed into a dedicated source-model pathway. The published paper defines a one-dimensional counter-current flat-sheet DCMD control-volume model with membrane mass transfer, feed/permeate mass balances, enthalpy balances, membrane conduction, and an entry-effect Nusselt correlation. The paper compares model results with experimental markers for two flow rates (7 and 11 cm^3/s) and four NaCl concentrations (0, 0.55, 1.15, 1.67 M).
 
 This repository now keeps that source formulation separate from the preferred modern thermodynamic pathway.
 
