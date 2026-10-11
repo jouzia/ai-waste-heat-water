@@ -78,3 +78,22 @@ def test_avoided_consumption_cannot_exceed_produced_distillate():
     s.water.avoided_freshwater_consumption_l = 1.01
     with pytest.raises(ValueError, match="cannot exceed distillate produced"):
         simulate(s)
+
+
+
+def test_fractional_displacement_is_applied_to_produced_distillate():
+    s = scenario()
+    s.water.avoided_freshwater_consumption_l = None
+    s.water.freshwater_displacement_fraction = 0.25
+    result = simulate(s)
+    assert result.freshwater_produced_l == 1.0
+    assert result.avoided_freshwater_consumption_l == 0.25
+
+
+def test_absolute_volume_and_displacement_fraction_cannot_both_be_set():
+    import pytest
+
+    s = scenario()
+    s.water.freshwater_displacement_fraction = 0.5
+    with pytest.raises(ValueError, match="not both"):
+        simulate(s)
