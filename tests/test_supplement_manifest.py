@@ -13,7 +13,8 @@ def _make_minimal_xlsx(path: Path) -> None:
         xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
         <sheets><sheet name="Measured mass" sheetId="1" r:id="rId1"/></sheets>
     </workbook>"""
-    relationships = """<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+    relationships = """<Relationships
+        xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
         <Relationship Id="rId1"
         Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet"
         Target="worksheets/sheet1.xml"/>
