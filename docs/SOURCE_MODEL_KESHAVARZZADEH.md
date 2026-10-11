@@ -67,3 +67,14 @@ The source equation for water activity uses a dimensionless salt mole-fraction v
 A bibliographic cross-check found an important source-trace issue: the 2020 article's Figure 3 caption attributes the experimental symbols to reference 25, while reference 25 in that article is a Geothermics ground-source heat-exchanger paper. The Martínez-Díez & Vázquez-González (1999) MD paper is reference 37. Therefore the Figure 3 markers are currently treated as observations reproduced by Keshavarzzadeh (2020), not as independently verified primary-source observations.
 
 This does not invalidate the figure as a development benchmark, but it blocks a publication-level claim that the plotted observations have been directly reconstructed from the cited 1999 primary experiment. The next validation gate is an explicit marker-by-marker crosswalk against the primary source.
+
+
+
+## Property-closure audit (2026-10-11)
+
+The source-compatible runner's explicit engineering closure was audited for thermodynamic consistency. The heat-capacity closure is
+`cp(T) = 4174 + 0.3 T J kg⁻¹ K⁻¹`; its enthalpy must be the integral
+`h(T) = 4174 T + 0.15 T² J kg⁻¹` using a 0 °C reference, rather than `cp(T) × T`.
+The runner was corrected to use the integral and the inverse was updated to match its stated temperature domain. Regression coverage now checks round-trip temperature recovery and that the numerical derivative of enthalpy agrees with the heat-capacity closure.
+
+This is a code-consistency correction only. The closure remains an explicit engineering approximation, not an experimentally identified property table from the 2020 paper. The source-compatible runner therefore remains unvalidated until primary-source conditions and observations are extracted and the unfitted model is compared with them.
