@@ -35,11 +35,11 @@ required_fields:
 
 rules:
   - "Keep the original workbook unchanged and record its SHA-256 checksum."
-  - "Record retrieval date and exact licence metadata before extracting."
-  - "Use only measured observations; theoretical/model-calculated columns are excluded."
+  - "Record retrieval date and CC BY 4.0 attribution metadata before extracting."
+  - "The GDR page describes Data as the full dataset, temperature-named sheets as subsets, and Theoretical as steady-state experimental values plus calculated values; inspect provenance column by column and exclude model-calculated columns."
   - "Every extracted value must have a worksheet and cell/row locator."
   - "Preserve raw values and units; put converted values in separate fields."
   - "If a measurement uncertainty is not reported, record unknown rather than zero."
   - "Do not infer missing boundary conditions from another membrane/configuration."
   - "Freeze development and held-out configurations before parameter fitting."
-  - "The exact Creative Commons licence variant must be verified before derived data are redistributed."
+  - "The GDR submission links CC BY 4.0; attribute the dataset, link the licence, identify modifications, and retain the source-file checksum."
