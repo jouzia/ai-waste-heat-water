@@ -1,6 +1,6 @@
 # Source-validation gate status — updated 2026-10-01
 
-## Keshavarzzadeh et al. (2020)
+## Keshavarzzadeh (2020)
 
 The published model is a one-dimensional counter-current flat-sheet DCMD model. Its displayed formulation includes membrane vapor-pressure transport, control-volume mass balances, feed/permeate enthalpy balances, membrane conduction, and convective heat-transfer correlations. The paper evaluates two recirculation rates (7 and 11 cm³/s) and four NaCl concentrations (0, 0.55, 1.15, 1.67 mol/L) against experimental markers. See the primary article and the repository crosswalk before interpreting its validation claim.
 
