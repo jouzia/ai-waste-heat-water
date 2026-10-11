@@ -36,8 +36,8 @@ def base_scenario():
 def test_monte_carlo_is_reproducible_for_fixed_seed():
     distributions = {
         "recovery.recovery_efficiency": DistributionSpec("uniform", (0.2, 0.8)),
-        "water.avoided_freshwater_consumption_l": DistributionSpec(
-            "uniform", (0.0, 2.0)
+        "water.freshwater_displacement_fraction": DistributionSpec(
+            "uniform", (0.0, 1.0)
         ),
     }
     first = run_monte_carlo(
