@@ -145,7 +145,7 @@ def tpc_from_interfaces(
 
 
 def keshavarzzadeh_f_re_sqrt_area(aspect_ratio: float) -> float:
-    """Eq. (25) from Keshavarzzadeh et al. (2020).
+    """Eq. (25) from Keshavarzzadeh (2020).
 
     The aspect ratio is width/height or its reciprocal chosen consistently
     with the source convention; the source validation module uses the
@@ -175,7 +175,7 @@ def keshavarzzadeh_nusselt(
     aspect_ratio: float,
     gamma: float = -0.3,
 ) -> float:
-    """Eq. (23) from Keshavarzzadeh et al. (2020).
+    """Eq. (23) from Keshavarzzadeh (2020).
 
     This is retained separately from generic correlations so source-model
     reproduction can be audited without silently changing model form.
