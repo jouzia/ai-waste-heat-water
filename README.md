@@ -64,6 +64,7 @@ The geographic evidence layer uses official scientific and government sources un
 
 The source register in `01_literature/literature_matrix.csv` distinguishes primary experiments, secondary reproductions, model studies, and open datasets, and records the specific validation gap for each. The 2026 analysis by Malaguti et al. makes cooling and pumping burdens central constraints; this project therefore does not claim that waste heat alone makes MD viable. The intended contribution is the coupled, site- and workload-aware **net freshwater impact** accounting layer, evaluated only after source-matched membrane validation. See `docs/ALI_2020_TRANSIENT_SOURCE_AUDIT.md` for the transient DCMD benchmark's source-confirmed conditions and extraction rules.
 The falsifiable research question, counterfactual definition, hypothesis set, comparison plan, and release gate are specified in `docs/RESEARCH_GAP_AND_FALSIFIABLE_DESIGN.md`.
+The uncertainty register distinguishes evidence-based distributions from engineering priors and scenario grids: `docs/UNCERTAINTY_PRIOR_REGISTER.md`.
 
 ## Retrieving the open DCMD benchmark
 
