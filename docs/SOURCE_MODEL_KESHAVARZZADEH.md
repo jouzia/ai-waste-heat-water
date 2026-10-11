@@ -4,7 +4,7 @@ This document freezes the source-specific formulation used for the first quantit
 
 ## Evidence boundary
 
-Keshavarzzadeh et al. (2020) describes a one-dimensional counter-current flat-sheet DCMD model and compares water mass flux against experimental data reported by Martínez-Díez and Vázquez-González (1999). The validation figure contains two recirculation rates (7 and 11 cm³/s) and four NaCl concentrations (0, 0.55, 1.15, and 1.67 M). The plotted feed temperature is the average of inlet and outlet bulk feed temperature.
+Keshavarzzadeh (2020) describes a one-dimensional counter-current flat-sheet DCMD model and compares water mass flux against experimental data reported by Martínez-Díez and Vázquez-González (1999). The validation figure contains two recirculation rates (7 and 11 cm³/s) and four NaCl concentrations (0, 0.55, 1.15, and 1.67 M). The plotted feed temperature is the average of inlet and outlet bulk feed temperature.
 
 The paper is open access under CC BY 4.0.
 
