@@ -16,3 +16,15 @@ def test_gdr_downloader_help_is_available_without_network_access() -> None:
 
     assert "clarcor-countercurrent" in result.stdout
     assert "all" in result.stdout
+
+
+
+def test_gdr_workbook_inspector_help_is_available_without_optional_dependencies() -> None:
+    inspector = ROOT / "scripts" / "inspect_gdr_villa.py"
+    result = subprocess.run(
+        [sys.executable, str(inspector), "--help"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "downloaded GDR .xls files" in result.stdout
