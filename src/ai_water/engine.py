@@ -166,7 +166,8 @@ def simulate(s: Scenario) -> Result:
     if s.water.avoided_freshwater_consumption_l is not None:
         if s.water.freshwater_displacement_fraction > 0:
             raise ValueError(
-                "specify either an explicit avoided-water volume or a displacement fraction, not both"
+                "specify either an explicit avoided-water volume or a displacement "
+                "fraction, not both"
             )
         avoided_l = s.water.avoided_freshwater_consumption_l
         if avoided_l > freshwater_l + 1e-9:
