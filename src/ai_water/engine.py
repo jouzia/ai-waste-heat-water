@@ -164,6 +164,11 @@ def simulate(s: Scenario) -> Result:
     indirect_l = (s.cooling.incremental_facility_electricity_kwh + auxiliary_kwh) * s.water.grid_water_l_per_kwh
     additional_l = cooling_l + indirect_l
     avoided_l = s.water.avoided_freshwater_consumption_l
+    if avoided_l > freshwater_l + 1e-9:
+        raise ValueError(
+            "avoided freshwater consumption cannot exceed distillate produced; "
+            "declare only the volume demonstrably displaced by this intervention"
+        )
 
     concentrate_salinity = (
         s.md.feed_salinity_g_kg
