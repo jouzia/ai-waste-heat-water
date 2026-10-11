@@ -40,6 +40,7 @@ def test_energy_to_heat_is_explicit_and_recoverable():
 def test_heat_limiting_reduces_production():
     s = scenario()
     s.recovery.recovery_efficiency = 0.005
+    s.water.avoided_freshwater_consumption_l = 0.5
     result = simulate(s)
     assert result.heat_limited is True
     # 0.5 kWh_th is available and the configured effective duty is
@@ -67,3 +68,13 @@ def test_incremental_cooling_water_excludes_baseline_facility_load():
     # the intervention; baseline facility cooling is in the counterfactual.
     assert result.direct_cooling_consumption_l == 6.0
     assert result.additional_water_consumption_l == 6.0
+
+
+
+def test_avoided_consumption_cannot_exceed_produced_distillate():
+    import pytest
+
+    s = scenario()
+    s.water.avoided_freshwater_consumption_l = 1.01
+    with pytest.raises(ValueError, match="cannot exceed distillate produced"):
+        simulate(s)
