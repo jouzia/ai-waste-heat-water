@@ -29,7 +29,7 @@ def scenario():
             thermal_energy_kwh_th_per_kg=1,
         ),
         auxiliary=AuxiliaryLoads(),
-        water=WaterFactors(avoided_freshwater_consumption_l=2.0),
+        water=WaterFactors(freshwater_displacement_fraction=1.0),
     )
 
 
@@ -63,7 +63,7 @@ def test_piecewise_profile_changes_heat_available_to_md():
     assert result.heat_availability_fraction == pytest.approx(0.5)
     assert result.result.it_energy_kwh == pytest.approx(200)
     assert result.result.freshwater_produced_l == pytest.approx(1)
-    assert result.result.avoided_freshwater_consumption_l == pytest.approx(2)
+    assert result.result.avoided_freshwater_consumption_l == pytest.approx(1)
     assert result.result.net_consumption_change_l == pytest.approx(-1)
 
 
