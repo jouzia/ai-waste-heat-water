@@ -159,3 +159,27 @@ def test_source_runner_eight_case_numerical_smoke_matrix(flow_m3_s, salinity_mol
         _water_density_kg_m3(30.0) * flow_m3_s + result.total_distillate_kg_s,
         rel=2e-3,
     )
+
+
+
+def test_source_runner_enthalpy_is_integral_of_heat_capacity():
+    from ai_water.source_keshavarzzadeh_runner import (
+        _liquid_enthalpy_j_kg,
+        _temperature_from_liquid_enthalpy_j_kg,
+        _water_cp_j_kg_k,
+    )
+
+    for temperature_c in (0.0, 20.0, 45.0, 80.0):
+        enthalpy = _liquid_enthalpy_j_kg(temperature_c)
+        assert _temperature_from_liquid_enthalpy_j_kg(enthalpy) == pytest.approx(
+            temperature_c, abs=1e-9
+        )
+        # The derivative of h(T) must match the implemented cp(T).
+        delta = 1e-3
+        derivative = (
+            _liquid_enthalpy_j_kg(temperature_c + delta)
+            - _liquid_enthalpy_j_kg(temperature_c - delta)
+        ) / (2 * delta)
+        assert derivative == pytest.approx(
+            _water_cp_j_kg_k(temperature_c), rel=1e-7
+        )
