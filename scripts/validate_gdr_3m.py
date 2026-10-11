@@ -12,8 +12,6 @@ import json
 import math
 from pathlib import Path
 
-from scipy.optimize import minimize_scalar
-
 from ai_water.channel_transport import (
     graetz_leveque_nusselt,
     heat_transfer_coefficient,
@@ -295,10 +293,11 @@ def run_comparison(
                 for o, p in zip(_observed_train, predicted, strict=True)
             )
 
-        optimum = minimize_scalar(
-            objective, bounds=(-3.0, 3.0), method="bounded", options={"xatol": 0.2, "maxiter": 12}
-        )
-        fitted_permeance = 10.0**float(optimum.x)
+        log_grid = [-2.0 + 0.25 * index for index in range(21)]
+        scored = [(objective(log_value), log_value) for log_value in log_grid]
+        best_objective, best_log_permeance = min(scored)
+        fitted_permeance = 10.0**best_log_permeance
+        fit_at_boundary = best_log_permeance in (log_grid[0], log_grid[-1])
         all_predictions = []
         metadata_for_variant = None
         for row in rows:
@@ -348,8 +347,12 @@ def run_comparison(
             "heat_transfer_correlation": correlation,
             "channel_geometry_assumption": geometry,
             "fitted_membrane_permeance_kg_m2_h_bar": fitted_permeance,
-            "training_objective_log_relative_sse": float(optimum.fun),
-            "optimization_success": bool(optimum.success),
+            "training_objective_log_relative_sse": float(best_objective),
+            "optimization_success": bool(best_objective < 1e11),
+            "optimization_method": "coarse_log_grid_0.25_decades",
+            "permeance_fit_at_search_boundary": bool(fit_at_boundary),
+            "permeance_search_min_kg_m2_h_bar": 0.01,
+            "permeance_search_max_kg_m2_h_bar": 1000.0,
             "cells": cells,
             "water_activity_model": "Keshavarzzadeh-style NaCl activity at 4 g/L, approximate density conversion",
             "latent_heat_model": "IAPWS97 saturated liquid-vapor enthalpy difference at mean bulk temperature",
