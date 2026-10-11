@@ -58,6 +58,10 @@ The next stages are source-matched membrane-property closures and experimental o
 
 The geographic evidence layer uses official scientific and government sources under their applicable reuse terms. WRI Aqueduct 4.0 is used for basin-level water-risk screening; NASA POWER/MERRA-2 is used for climate forcing; India OGD and India-WRIS are reserved for dataset-specific Indian hydrological evidence. Exact source version, retrieval date, license, transformation, and uncertainty are recorded. See `docs/DATA_PROVENANCE.md`, `docs/EXTERNAL_DATA_LEGAL.md`, and `docs/NASA_POWER_PROTOCOL.md`.
 
+## Literature and validation provenance
+
+The source register in `01_literature/literature_matrix.csv` distinguishes primary experiments, secondary reproductions, model studies, and open datasets, and records the specific validation gap for each. The 2026 analysis by Malaguti et al. makes cooling and pumping burdens central constraints; this project therefore does not claim that waste heat alone makes MD viable. The intended contribution is the coupled, site- and workload-aware **net freshwater impact** accounting layer, evaluated only after source-matched membrane validation. See `docs/ALI_2020_TRANSIENT_SOURCE_AUDIT.md` for the transient DCMD benchmark's source-confirmed conditions and extraction rules.
+
 ## Reproducibility policy
 
 Every externally sourced parameter must carry a source identifier, definition, unit, applicability range, transformation, uncertainty treatment, and validation status. Scenario-only values remain visibly labelled. Negative or non-beneficial outcomes are preserved rather than filtered from the results.
