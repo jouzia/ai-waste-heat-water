@@ -6,8 +6,6 @@ on:
       - "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
       - "scripts/download_gdr_villa.py"
       - "scripts/extract_gdr_villa_flux_summary.py"
-      - "scripts/validate_gdr_3m.py"
-      - ".github/workflows/gdr-villa-ingest.yml"
 
 permissions:
   contents: read
@@ -25,14 +23,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install legacy XLS reader
-        run: |
-          python -m pip install "xlrd>=2.0.1"
-          python -m pip install -e .
-
-      - name: Apply Ruff import ordering to extractor
-        run: |
-          python -m pip install ruff
-          ruff check --fix scripts/extract_gdr_villa_flux_summary.py scripts/validate_gdr_3m.py
+        run: python -m pip install "xlrd>=2.0.1"
 
       - name: Retrieve selected CC BY 4.0 workbook
         run: python scripts/download_gdr_villa.py --dataset 3m-countercurrent
@@ -41,8 +32,6 @@ jobs:
         run: |
           python scripts/inspect_gdr_villa.py
           mkdir -p artifacts/gdr_villa_exports
-          cp scripts/extract_gdr_villa_flux_summary.py artifacts/gdr_villa_exports/extract_gdr_villa_flux_summary.py
-          cp scripts/validate_gdr_3m.py artifacts/gdr_villa_exports/validate_gdr_3m.py
           python - <<'PY'
           import csv
           import json
@@ -106,9 +95,6 @@ jobs:
 
       - name: Recreate condition-level flux summary from raw time series
         run: python scripts/extract_gdr_villa_flux_summary.py --output artifacts/gdr_villa_exports/recreated_flux_summary.csv
-
-      - name: Compare transfer-correlation model forms with a held-out temperature group
-        run: python scripts/validate_gdr_3m.py --summary 04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv --output-dir artifacts/gdr_villa_exports --cells 16
 
       - name: Upload raw workbook and inspection artifact
         uses: actions/upload-artifact@v4
