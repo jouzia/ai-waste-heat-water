@@ -46,6 +46,7 @@ Lei et al. (2025) demonstrate that workload-level data-center water use is highl
 - **Salinity/thermodynamics:** standard-seawater cases now use IAPWS-08 water activity with an explicit single-pass concentration layer; concentrate salinity is reported.
 - **Continuous integration:** GitHub Actions runs the test suite and Ruff on pushes and pull requests.
 - **Evidence-gate regression tests:** benchmark entries with empty primary-observation ledgers cannot be labeled development-validated or held-out-validated; software smoke tests remain distinct from empirical validation.
+- **Bounded counterfactual displacement:** avoided freshwater consumption is either an explicit, substantiated volume no greater than distillate produced or a declared displacement fraction between 0 and 1; the two inputs cannot be combined.
 
 These additions do not supply unsupported membrane properties, heat-transfer coefficients, grid-water factors, or site-specific cooling assumptions. Membrane-specific transport parameters, channel heat-transfer coefficients, and geographic water factors remain explicit inputs awaiting source extraction.
 
