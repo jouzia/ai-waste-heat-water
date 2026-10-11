@@ -14,6 +14,8 @@ Under what combinations of AI workload intensity, recoverable heat quantity and 
 
 A coupled, uncertainty-aware thermo-hydraulic-water accounting framework that identifies conditional feasibility and failure regimes for data-center waste-heat-assisted MD. The contribution is the integrated boundary, explicit counterfactual, source-traceable model comparison, and quantified feasibility envelope—not the broad idea of coupling waste heat to desalination by itself.
 
+The novelty boundary, recent adjacent studies, falsifiable hypotheses, primary estimand, and release gate are maintained in `docs/RESEARCH_GAP_AND_FALSIFIABLE_DESIGN.md`. This should be reconciled against a fresh literature search before submission; do not claim global novelty from the current shortlist alone.
+
 ## Planned structure
 
 1. **Abstract** — complete only after results are frozen; include research question, model boundary, validation evidence, principal quantitative findings, uncertainty, and limits.
