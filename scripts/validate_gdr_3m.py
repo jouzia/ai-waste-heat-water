@@ -296,7 +296,7 @@ def run_comparison(
             )
 
         optimum = minimize_scalar(
-            objective, bounds=(-3.0, 3.0), method="bounded", options={"xatol": 0.03}
+            objective, bounds=(-3.0, 3.0), method="bounded", options={"xatol": 0.1}
         )
         fitted_permeance = 10.0**float(optimum.x)
         all_predictions = []
