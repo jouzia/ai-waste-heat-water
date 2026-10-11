@@ -161,7 +161,9 @@ def simulate(s: Scenario) -> Result:
         * s.cooling.cooling_water_consumption_l_per_kwh_facility
         + md_cooling_water
     )
-    indirect_l = (s.cooling.incremental_facility_electricity_kwh + auxiliary_kwh) * s.water.grid_water_l_per_kwh
+    indirect_l = (
+        s.cooling.incremental_facility_electricity_kwh + auxiliary_kwh
+    ) * s.water.grid_water_l_per_kwh
     additional_l = cooling_l + indirect_l
     if s.water.avoided_freshwater_consumption_l is not None:
         if s.water.freshwater_displacement_fraction > 0:
