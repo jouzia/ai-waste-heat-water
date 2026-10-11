@@ -6,7 +6,7 @@ then additive water/energy quantities are aggregated. This is a study
 integration layer, not a transient CFD or plant controller model.
 """
 from dataclasses import dataclass
-from typing import Iterable
+from collections.abc import Iterable
 
 from .engine import simulate
 from .models import HeatRecovery, Result, Scenario, Workload
