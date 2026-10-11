@@ -4,12 +4,21 @@ source_id: MD-OEDI-VILLA-2018
 citation: "Villa, D., Vanneste, J., Cath, T., Turchi, C., & Akar, S. (2018). Membrane Specifications for Multi-Configuration Membrane Distillation Model. Geothermal Data Repository, National Renewable Energy Laboratory."
 doi: "10.15121/1452747"
 source_url: "https://gdr.openei.org/submissions/1016"
-status: candidate_open_dataset_extraction_pending
+status: partial_condition_level_summary_extracted_row_level_ledger_pending
 observation_ledger: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_observations.yaml"
+reproducible_retrieval:
+  downloader_script: "scripts/download_gdr_villa.py"
+  extraction_script: "scripts/extract_gdr_villa_flux_summary.py"
+  ingestion_workflow: ".github/workflows/gdr-villa-ingest.yml"
+  selected_workbook: "3M 0.2 Micron Plate and Frame Countercurrent DCMD.xls"
+  derived_summary: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
+  source_workbook_sha256: "5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb"
+  extraction_scope: "12 condition-level flux summaries derived from cumulative distillate volume versus runtime; row-level source observations remain in the reproducible workbook."
+  caveats: "Theoretical-sheet flux is a non-independent cross-check; conflicting CLARCOR label and invalid flux/flow channels are documented in docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md."
 access: publicly_accessible
 license_status: "The GDR submission links to the Creative Commons Attribution 4.0 International deed (CC BY 4.0); provide attribution, link the licence, and identify changes."
 dataset_size: "95.97 MB; 7 resources"
-dataset_description: "Experimental data and membrane/module specifications for CLARCOR, 3M, and Aquastill membranes in counter-current DCMD, co-current DCMD, and air-gap MD configurations. The GDR page states that the Specifications sheet contains experiment inputs; Data contains the full dataset; temperature-named sheets contain feed-temperature subsets; and Theoretical contains steady-state values for experimental runs plus calculated values."
+dataset_description: "Experimental data and membrane/module specifications for CLARCOR, 3M, and Aquastill membranes in counter-current DCMD, co-current DCMD, and air-gap MD configurations. The GDR landing page describes generic Data and Theoretical worksheets; the selected 3M workbook actually contains 12 temperature-condition time-series sheets plus Specifications and Theoretical, with no worksheet literally named Data."
 experimental_provenance:
   organization: "Colorado School of Mines, Advanced Water Technology Center; National Renewable Energy Laboratory / Sandia National Laboratories dataset authors"
   dataset_date: "2018-03-01"
