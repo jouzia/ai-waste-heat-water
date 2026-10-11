@@ -1,4 +1,4 @@
-# Source notes: Keshavarzzadeh et al. (2020) DCMD benchmark
+# Source notes: Keshavarzzadeh (2020) DCMD benchmark
 
 Source: Keshavarzzadeh, A. H. (2020), *Design and bio-inspired optimization of direct contact membrane distillation for desalination based on constructal law*, Scientific Reports 10, 16790.
 
