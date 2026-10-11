@@ -252,11 +252,13 @@ def run_comparison(
     output_dir: Path,
     *,
     cells: int = 20,
+    correlations: list[str] | None = None,
 ) -> dict[str, object]:
     rows = _read_summary(summary_path)
+    selected_correlations = correlations or ["graetz_leveque", "watertap"]
     variants = [
         (correlation, geometry)
-        for correlation in ("graetz_leveque", "watertap")
+        for correlation in selected_correlations
         for geometry in ("smooth_channel", "spacer_porosity")
     ]
     detail_rows: list[dict[str, object]] = []
@@ -415,9 +417,17 @@ def main() -> int:
     )
     parser.add_argument("--output-dir", type=Path, default=Path("artifacts/gdr_villa_exports"))
     parser.add_argument("--cells", type=int, default=20)
+    parser.add_argument(
+        "--correlations",
+        nargs="+",
+        choices=("graetz_leveque", "watertap"),
+        default=["graetz_leveque", "watertap"],
+    )
     args = parser.parse_args()
     try:
-        report = run_comparison(args.summary, args.output_dir, cells=args.cells)
+        report = run_comparison(
+            args.summary, args.output_dir, cells=args.cells, correlations=args.correlations
+        )
     except (OSError, ValueError, RuntimeError, ArithmeticError) as exc:
         parser.error(str(exc))
     (args.output_dir / "model_form_metrics.json").write_text(
