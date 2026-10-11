@@ -127,7 +127,9 @@ def extract_summary(input_path: Path, output_path: Path) -> list[dict[str, objec
 
     theoretical = workbook.sheet_by_name("Theoretical")
     summary_fluxes: dict[str, float] = {}
-    for row in range(theoretical.nrows):
+    # The worksheet repeats condition labels in later calculation blocks.
+    # Restrict this cross-check to the first 12-row summary table only.
+    for row in range(3, min(theoretical.nrows, 3 + len(CONDITION_SHEETS))):
         key = str(theoretical.cell_value(row, 0)).strip()
         value = theoretical.cell_value(row, 13) if theoretical.ncols > 13 else None
         if key in CONDITION_SHEETS and is_number(value):
