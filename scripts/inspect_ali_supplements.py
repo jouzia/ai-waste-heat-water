@@ -9,7 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from xml.etree import ElementTree as ET
 from zipfile import BadZipFile, ZipFile
@@ -68,7 +68,7 @@ def build_manifest(input_dir: Path) -> dict[str, object]:
     return {
         "source_doi": SOURCE_DOI,
         "source_url": SOURCE_URL,
-        "retrieval_manifest_created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "retrieval_manifest_created_at_utc": datetime.now(UTC).isoformat(),
         "input_directory": str(input_dir),
         "files": inspected,
         "scope_note": (

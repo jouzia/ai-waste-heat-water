@@ -69,6 +69,7 @@ def test_supplement_inspector_rejects_empty_directory(tmp_path: Path) -> None:
             "--output",
             str(output),
         ],
+        check=False,
         capture_output=True,
         text=True,
     )
@@ -94,6 +95,7 @@ def test_supplement_inspector_reports_invalid_workbook(tmp_path: Path) -> None:
             "--output",
             str(output),
         ],
+        check=False,
         capture_output=True,
         text=True,
     )
