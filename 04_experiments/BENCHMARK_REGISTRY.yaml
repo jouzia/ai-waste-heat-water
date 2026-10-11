@@ -86,6 +86,16 @@ cases:
     license_status: "CC BY 4.0"
     claim_status: "Candidate transient validation dataset; the current model is not yet dynamic and no transient validation claim is made."
 
+  - source_id: MD-HOLLOWFIBER-HEATRECOVERY-2026
+    citation: "Sulaiman et al. (2026), Journal of Water Process Engineering"
+    doi_or_stable_identifier: "10.1016/j.jwpe.2026.110673"
+    configuration: "hollow-fiber DCMD with integrated heat recovery"
+    extraction_status: candidate_26_experiments_reported_extraction_pending
+    validation_status: candidate
+    benchmark_file: null
+    license_status: "Institutional research portal reports CC BY 4.0; verify against final publisher record before reuse."
+    claim_status: "Adjacent benchmark for MD-level heat recovery and model-form comparison; not direct validation of data-center heat availability or net-water accounting. Extract exact conditions and observations before quantitative use."
+
 validation_split_policy:
   development: "Cases used to select or fit model parameters."
   held_out: "Cases locked before final model selection and never used for fitting."
