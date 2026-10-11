@@ -68,10 +68,13 @@ cases:
     citation: "Villa et al. (2018), Membrane Specifications for Multi-Configuration Membrane Distillation Model, Geothermal Data Repository / NREL"
     doi_or_stable_identifier: "10.15121/1452747"
     configuration: "multiple experimental DCMD and AGMD configurations"
-    extraction_status: open_dataset_registered_extraction_pending
+    extraction_status: 12_condition_flux_summary_extracted_raw_time_series_available_via_source
     validation_status: candidate
     benchmark_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
-    claim_status: "Candidate independent experimental dataset; extract measured rows and source conditions before quantitative comparison. GDR links the dataset to CC BY 4.0; preserve attribution and modification notices."
+    observation_ledger: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_observations.yaml"
+    derived_summary: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
+    source_audit: "docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md"
+    claim_status: "12 condition-level fluxes were derived from cumulative distillate-volume time series; this is not model validation. Workbook has conflicting Theoretical-sheet membrane label and invalid flux columns; use raw volume/time and measured temperatures, and resolve flow-channel provenance before fitting. GDR links CC BY 4.0; preserve attribution and transformation notes."
 
 
   - source_id: MD-DCMD-DYNAMIC-ALI-2020
