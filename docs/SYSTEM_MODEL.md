@@ -34,7 +34,7 @@ Delta W_net = W_additional_consumption - W_avoided
 
 where W_additional_consumption includes only intervention-incremental direct cooling consumption, MD-specific cooling, pumping, pretreatment, other auxiliary burdens, and electricity-related water from incremental electricity. Baseline data-center operation is part of the counterfactual, not an intervention burden.
 
-W_avoided is the freshwater consumption demonstrably displaced by the product water under a declared counterfactual. Recovered distillate is not automatically equal to avoided consumption; if displacement is not demonstrated, set W_avoided = 0 for the conservative case. Negative Delta W_net indicates lower modeled operational consumption than the counterfactual; zero is break-even; positive is additional consumption.
+W_avoided is the freshwater consumption demonstrably displaced by the product water under a declared counterfactual. Recovered distillate is not automatically equal to avoided consumption; if displacement is not demonstrated, set W_avoided = 0 for the conservative case. The implementation accepts either an explicit avoided volume (which must not exceed produced distillate) or a displacement fraction bounded between 0 and 1; it rejects simultaneous specification to avoid double counting. Negative Delta W_net indicates lower modeled operational consumption than the counterfactual; zero is break-even; positive is additional consumption.
 
 Withdrawal is reported separately and is never substituted for consumption.
 
