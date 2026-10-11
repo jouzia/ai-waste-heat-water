@@ -40,6 +40,10 @@ class ChannelConfig:
     salt_mass_transfer_coefficient_m_s: float | None = None
     solvent_density_kg_m3: float | None = None
     flow_arrangement: Literal["co_current", "counter_current"] = "co_current"
+    counter_current_max_iterations: int = 500
+    counter_current_relaxation: float = 0.5
+    counter_current_temperature_tolerance_c: float = 1e-6
+    counter_current_mass_tolerance_relative: float = 1e-6
 
 
 @dataclass(frozen=True)
@@ -151,6 +155,14 @@ def simulate_dcmd_channel(
             raise ValueError("solvent density is required when CP is enabled")
     if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_k <= 0:
         raise ValueError("heat capacities must be positive")
+    if config.counter_current_max_iterations <= 0:
+        raise ValueError("counter-current iteration limit must be positive")
+    if not 0 < config.counter_current_relaxation <= 1:
+        raise ValueError("counter-current relaxation must be in (0, 1]")
+    if config.counter_current_temperature_tolerance_c <= 0:
+        raise ValueError("counter-current temperature tolerance must be positive")
+    if config.counter_current_mass_tolerance_relative <= 0:
+        raise ValueError("counter-current mass tolerance must be positive")
     if not 0 <= config.feed_salinity_g_kg <= 120:
         raise ValueError("feed salinity must remain within the IAPWS-08 range")
     if config.water_activity_override is not None and not 0 < config.water_activity_override <= 1:
@@ -270,7 +282,11 @@ def simulate_dcmd_channel(
         # Solve it by fixed-point iteration on the permeate bulk-temperature profile.
         profile = [permeate_in_temperature_c] * config.cells
         mass_profile = [config.permeate_mass_flow_kg_h] * config.cells
-        for _ in range(200):
+        mass_tolerance = (
+            config.counter_current_mass_tolerance_relative
+            * max(config.permeate_mass_flow_kg_h, 1.0)
+        )
+        for _ in range(config.counter_current_max_iterations):
             feed_out, _, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile, mass_profile)
             candidate_t = [permeate_in_temperature_c] * config.cells
             candidate_m = [config.permeate_mass_flow_kg_h] * config.cells
@@ -284,12 +300,27 @@ def simulate_dcmd_channel(
                     candidate_m[i] = mass_profile[i + 1] + downstream.product_water_kg / config.duration_h
             error_t = max(abs(a - b) for a, b in zip(profile, candidate_t))
             error_m = max(abs(a - b) for a, b in zip(mass_profile, candidate_m))
-            profile = [0.5 * a + 0.5 * b for a, b in zip(profile, candidate_t)]
-            mass_profile = [0.5 * a + 0.5 * b for a, b in zip(mass_profile, candidate_m)]
-            if error_t < 1e-7 and error_m < 1e-8:
+            relaxation = config.counter_current_relaxation
+            profile = [
+                (1.0 - relaxation) * a + relaxation * b
+                for a, b in zip(profile, candidate_t)
+            ]
+            mass_profile = [
+                (1.0 - relaxation) * a + relaxation * b
+                for a, b in zip(mass_profile, candidate_m)
+            ]
+            if (
+                error_t < config.counter_current_temperature_tolerance_c
+                and error_m < mass_tolerance
+            ):
                 break
         else:
-            raise RuntimeError("counter-current temperature coupling did not converge")
+            raise RuntimeError(
+                "counter-current temperature coupling did not converge after "
+                f"{config.counter_current_max_iterations} iterations "
+                f"(temperature residual={error_t:.3e} C; "
+                f"mass-flow residual={error_m:.3e} kg/h)"
+            )
         feed_out, permeate_out, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile, mass_profile)
 
     product_total = sum(c.product_water_kg for c in cells)
