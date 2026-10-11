@@ -217,8 +217,9 @@ def _liquid_enthalpy_j_kg(temperature_c: float) -> float:
 
 def _temperature_from_liquid_enthalpy_j_kg(enthalpy_j_kg: float) -> float:
     """Invert the explicit liquid enthalpy closure used by this runner."""
-    if enthalpy_j_kg < 0:
-        raise ValueError("liquid enthalpy must be non-negative")
+    minimum_enthalpy = 4174.0 * (-20.0) + 0.15 * (-20.0) ** 2
+    if enthalpy_j_kg < minimum_enthalpy:
+        raise ValueError("enthalpy outside supported liquid-temperature closure")
     # h(T) = 4174*T + 0.15*T^2.
     discriminant = 4174.0**2 + 0.6 * enthalpy_j_kg
     temperature_c = (-4174.0 + math.sqrt(discriminant)) / 0.3
