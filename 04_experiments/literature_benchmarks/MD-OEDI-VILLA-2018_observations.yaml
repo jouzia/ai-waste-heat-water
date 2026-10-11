@@ -1,8 +1,13 @@
 # Observation ledger for Villa et al. (2018), GDR/NREL dataset
 source_id: MD-OEDI-VILLA-2018
 source_doi: "10.15121/1452747"
-status: empty_template_extraction_pending
+status: condition_level_summary_extracted_row_level_observation_ledger_pending
 observations: []
+derived_summary_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
+source_audit: "docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md"
+source_workbook_sha256: "5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb"
+source_workbook_storage: "GDR source / reproducible local retrieval; raw XLS retained in 14-day GitHub Actions artifact for initial extraction, not committed to repository"
+extraction_note: "Twelve condition-level flux summaries are derived by OLS on raw cumulative distillate volume versus runtime. Theoretical-sheet flux is included only as a non-independent cross-check. Row-level observations remain in the source workbook and are not committed here."
 
 required_fields:
   - observation_id
