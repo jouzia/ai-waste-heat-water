@@ -7,9 +7,9 @@ source_url: "https://gdr.openei.org/submissions/1016"
 status: candidate_open_dataset_extraction_pending
 observation_ledger: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_observations.yaml"
 access: publicly_accessible
-license_status: "Repository search record displays a Creative Commons license indicator, but the exact CC variant must be verified from the dataset's licence metadata before redistribution of adapted data."
+license_status: "The GDR submission links to the Creative Commons Attribution 4.0 International deed (CC BY 4.0); provide attribution, link the licence, and identify changes."
 dataset_size: "95.97 MB; 7 resources"
-dataset_description: "Experimental data and membrane/module specifications for CLARCOR, 3M, and Aquastill membranes in counter-current DCMD, co-current DCMD, and air-gap MD configurations."
+dataset_description: "Experimental data and membrane/module specifications for CLARCOR, 3M, and Aquastill membranes in counter-current DCMD, co-current DCMD, and air-gap MD configurations. The GDR page states that the Specifications sheet contains experiment inputs; Data contains the full dataset; temperature-named sheets contain feed-temperature subsets; and Theoretical contains steady-state values for experimental runs plus calculated values."
 experimental_provenance:
   organization: "Colorado School of Mines, Advanced Water Technology Center; National Renewable Energy Laboratory / Sandia National Laboratories dataset authors"
   dataset_date: "2018-03-01"
@@ -42,7 +42,7 @@ extraction_rules:
   - "Do not calibrate membrane coefficients against held-out cases."
   - "Split development and held-out configurations before parameter fitting."
   - "Report whether operating conditions and membrane geometry fall inside the model's applicability domain."
-  - "Before sharing derived tables, verify the exact Creative Commons licence variant and comply with its attribution/redistribution conditions."
+  - "Attribute the dataset under CC BY 4.0, link the licence, and state changes. Keep measured Data-sheet values separate from calculated values in Theoretical sheets."
 validation_use:
   intended: "Candidate independent experimental benchmark for the modern 1-D DCMD model and heat/mass-transfer correlation comparison."
   not_intended: "Not direct validation of the Keshavarzzadeh 2020 source-specific implementation unless geometry, membrane, salinity, and boundary conditions are reconstructed to match."
