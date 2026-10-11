@@ -8,7 +8,6 @@ import hashlib
 import math
 from pathlib import Path
 
-
 CONDITION_SHEETS = {
     f"{cold}-{hot}" for cold in (20, 30) for hot in (40, 45, 50, 55, 60, 65)
 }
