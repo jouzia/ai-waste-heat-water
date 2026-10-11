@@ -18,6 +18,8 @@ This is a conditional systems question, not a presumption that waste heat create
 | Source-matched DCMD transport | Keshavarzzadeh (2020; DOI 10.1038/s41598-020-73964-7) provides a one-dimensional DCMD formulation and a secondary-reproduced experimental comparison. Martínez-Díez and Vázquez-González (1999; DOI 10.1016/S0376-7388(98)00349-4) are the primary experimental provenance target. | Do not treat the 2020 paper's reported model agreement as validation of this repository; primary observations and boundary conditions must be reconstructed. |
 | Dynamic MD behavior | Ali et al. (2020; DOI 10.1371/journal.pone.0230207) publish transient DCMD experimental responses and supporting data. Their approximately 3% model error follows a tuned heat-loss correction. | Do not reuse the tuned correction or count the same fitted conditions as held-out validation. |
 | Industrial wastewater/heat reuse | Sulaiman et al. (2026; DOI 10.1007/s43832-026-00418-y) study DCMD for steel-industry wastewater and report experiments plus model comparisons. | Do not transfer hollow-fiber wastewater results directly to a data-center heat source or a different feed chemistry. |
+| Membrane properties and scaling | Hu et al. (2025; DOI 10.1016/j.memsci.2025.124533) report membrane pore-size, temperature-polarization, salinity, and long-duration scaling trade-offs. | Do not assume constant membrane flux or ignore fouling/scaling uncertainty when moving from short benchmark runs to sustained operation. |
+| Integrated MD heat recovery | Sulaiman et al. (2026; DOI 10.1016/j.jwpe.2026.110673) report a validated hollow-fiber DCMD model and multi-objective optimization with integrated heat recovery. | Do not claim novelty for MD heat recovery or MD-level optimization alone; distinguish the data-center heat source, temporal eligibility, and counterfactual net-water accounting. |
 
 These papers materially narrow the novelty claim. Neither “MD can use low-grade heat,” “data centers consume water,” nor “cooling and pumping matter” is a defensible stand-alone novelty claim.
 
@@ -95,4 +97,6 @@ No net-benefit headline is permitted until primary validation, independent/held-
 - Keshavarzzadeh (2020): https://doi.org/10.1038/s41598-020-73964-7
 - Martínez-Díez & Vázquez-González (1999): https://doi.org/10.1016/S0376-7388(98)00349-4
 - Ali et al. (2020): https://doi.org/10.1371/journal.pone.0230207
-- Sulaiman et al. (2026): https://doi.org/10.1007/s43832-026-00418-y
+- Sulaiman et al. (2026), steel-wastewater DCMD: https://doi.org/10.1007/s43832-026-00418-y
+- Hu et al. (2025): https://doi.org/10.1016/j.memsci.2025.124533
+- Sulaiman et al. (2026), integrated MD heat recovery: https://doi.org/10.1016/j.jwpe.2026.110673
