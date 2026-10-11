@@ -82,6 +82,7 @@ cases:
     validation_status: candidate
     benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020.yaml"
     observation_ledger: "04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020_observations.yaml"
+    source_audit: "docs/ALI_2020_TRANSIENT_SOURCE_AUDIT.md"
     license_status: "CC BY 4.0"
     claim_status: "Candidate transient validation dataset; the current model is not yet dynamic and no transient validation claim is made."
 
