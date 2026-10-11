@@ -108,7 +108,7 @@ jobs:
         run: python scripts/extract_gdr_villa_flux_summary.py --output artifacts/gdr_villa_exports/recreated_flux_summary.csv
 
       - name: Compare transfer-correlation model forms with a held-out temperature group
-        run: python scripts/validate_gdr_3m.py --summary 04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv --output-dir artifacts/gdr_villa_exports --cells 4
+        run: python scripts/validate_gdr_3m.py --summary 04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv --output-dir artifacts/gdr_villa_exports --cells 8
 
       - name: Upload raw workbook and inspection artifact
         uses: actions/upload-artifact@v4
