@@ -169,7 +169,7 @@ def test_source_runner_enthalpy_is_integral_of_heat_capacity():
         _water_cp_j_kg_k,
     )
 
-    for temperature_c in (0.0, 20.0, 45.0, 80.0):
+    for temperature_c in (-10.0, 0.0, 20.0, 45.0, 80.0):
         enthalpy = _liquid_enthalpy_j_kg(temperature_c)
         assert _temperature_from_liquid_enthalpy_j_kg(enthalpy) == pytest.approx(
             temperature_c, abs=1e-9
