@@ -204,17 +204,24 @@ def _water_conductivity_w_m_k(temperature_c: float) -> float:
 
 
 def _liquid_enthalpy_j_kg(temperature_c: float) -> float:
-    """Reference-independent liquid enthalpy from the explicit cp closure."""
-    return _water_cp_j_kg_k(temperature_c) * temperature_c
+    """Integrate the explicit cp(T) closure from the 0 C reference.
+
+    With cp(T) = 4174 + 0.3*T J kg-1 K-1, h(T) is
+    4174*T + 0.15*T**2, not cp(T)*T. Integrating the closure keeps
+    the enthalpy balance thermodynamically self-consistent.
+    """
+    if not -20 <= temperature_c <= 150:
+        raise ValueError("temperature outside supported water cp closure")
+    return 4174.0 * temperature_c + 0.15 * temperature_c**2
 
 
 def _temperature_from_liquid_enthalpy_j_kg(enthalpy_j_kg: float) -> float:
     """Invert the explicit liquid enthalpy closure used by this runner."""
     if enthalpy_j_kg < 0:
         raise ValueError("liquid enthalpy must be non-negative")
-    # h(T) = [4180 + 0.3(T-20)]T = 0.3 T^2 + 4174 T.
-    discriminant = 4174.0**2 + 1.2 * enthalpy_j_kg
-    temperature_c = (-4174.0 + math.sqrt(discriminant)) / 0.6
+    # h(T) = 4174*T + 0.15*T^2.
+    discriminant = 4174.0**2 + 0.6 * enthalpy_j_kg
+    temperature_c = (-4174.0 + math.sqrt(discriminant)) / 0.3
     if not -20 <= temperature_c <= 150:
         raise ValueError("enthalpy outside supported liquid-temperature closure")
     return temperature_c
