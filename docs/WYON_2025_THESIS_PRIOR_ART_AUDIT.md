@@ -35,3 +35,10 @@ A potentially defensible distinction would require all of the following, rather 
 5. **Prior-art comparison:** compare the full Kanbur et al. (2020) data-centre/DCMD paper and Wyon (2025) thesis directly before asserting novelty.
 
 This audit is based on the full thesis text and the displayed validation figure. It is a literature comparison, not evidence that the current repository's model is validated or that the proposed contribution is novel.
+
+
+## Additional recent prior art surfaced on 2026-10-13
+
+**System-scale design and analysis of desalination systems for meeting water needs of data centers** (ScienceDirect record: https://www.sciencedirect.com/science/article/pii/S0043135426014223). The indexed abstract/discussion explicitly situates data-centre desalination within prior work including Kanbur et al. (2020), Wyon (2025), and other recent studies. It notes limitations in existing literature such as simplified first-principles models, constant-flux/area-normalized production, limited salinity ranges, singular recovery assumptions, and incomplete accounting for pretreatment, brine disposal, and post-treatment.
+
+This is a direct novelty threat, not a peripheral citation. Before the manuscript claims a novel system-scale framework, retrieve and read the full article, map its equations/system boundaries/outputs against this repository, and update the contribution matrix. The safer prospective contribution is not “using data-centre waste heat for desalination”; it is a source-traceable, experimentally audited, counterfactual-consistent net operational blue-water assessment that explicitly tests time-varying heat eligibility, cooling-system changes, uncertainty, and negative/failure regimes. Even that narrower claim remains provisional until the full 2026 article is compared and primary model validation is complete.
