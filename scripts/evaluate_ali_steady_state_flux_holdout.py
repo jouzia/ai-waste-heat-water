@@ -135,7 +135,7 @@ def fit_and_score(rows: list[dict[str, object]], salinity_case: str) -> tuple[fl
         predicted = np.asarray([float(r["predicted_flux_kg_m2_h"]) for r in subset])
         residual = predicted - observed
         return {
-            "n": int(len(subset)),
+            "n": len(subset),
             "mae_kg_m2_h": float(np.mean(np.abs(residual))),
             "rmse_kg_m2_h": float(np.sqrt(np.mean(residual**2))),
             "bias_predicted_minus_measured_kg_m2_h": float(np.mean(residual)),
@@ -173,7 +173,7 @@ def run(input_path: Path, output_dir: Path) -> dict[str, object]:
     predictions: list[dict[str, object]] = []
     cases: dict[str, object] = {}
     for salinity_case in SALINITY_CASES:
-        permeance, rows, summary = fit_and_score(source_rows, salinity_case)
+        _permeance, rows, summary = fit_and_score(source_rows, salinity_case)
         predictions.extend(rows)
         cases[salinity_case] = summary
 
