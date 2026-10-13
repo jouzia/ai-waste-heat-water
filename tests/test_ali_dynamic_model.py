@@ -86,7 +86,21 @@ def test_lumped_transient_rejects_nonmonotonic_time() -> None:
 
 
 
-def test_spatial_transient_resolves_hot_and_cold_sides_without_unphysical_outlets() -> None:
+def test_spatial_transient_rejects_source_scale_low_flow_envelope_violation() -> None:
+    times = np.linspace(0.0, 1.0, 7)
+    with pytest.raises(RuntimeError, match="outside the inlet-temperature envelope"):
+        simulate_spatial_transient(
+            time_min=times,
+            hot_inlet_c=np.full(7, 60.0),
+            cold_inlet_c=np.full(7, 25.0),
+            nominal_flow_l_h=50.0,
+            n_cells=10,
+            initial_hot_outlet_c=25.0,
+            initial_cold_outlet_c=25.0,
+        )
+
+
+def test_spatial_transient_stays_physical_for_reduced_area() -> None:
     times = np.linspace(0.0, 1.0, 7)
     result = simulate_spatial_transient(
         time_min=times,
@@ -96,6 +110,7 @@ def test_spatial_transient_resolves_hot_and_cold_sides_without_unphysical_outlet
         n_cells=10,
         initial_hot_outlet_c=25.0,
         initial_cold_outlet_c=25.0,
+        config=AliDynamicConfig(membrane_area_m2=0.1),
     )
     assert result.solver_success
     assert np.all(np.isfinite(result.accumulated_mass_kg))
