@@ -40,7 +40,7 @@ The project must not claim that data-center-to-MD integration, waste-heat-driven
 
 ## Current hard gate
 
-`05_validation/FINAL_GATE_STATUS.yaml` is the authoritative release gate. It records five of eighteen gates as true: software correctness, open-data access verification, GDR primary-observation extraction, workload-coupling infrastructure, and counterfactual net-water accounting. It intentionally leaves independent validation, uncertainty/sensitivity execution, geographic analysis, manuscript, and publication audit incomplete.
+`05_validation/FINAL_GATE_STATUS.yaml` is the authoritative release gate. It records five of eighteen gates as true: software correctness, open-data access verification, GDR and Ali primary-observation extraction, workload-coupling infrastructure, and counterfactual net-water accounting. It intentionally leaves independent validation, uncertainty/sensitivity execution, geographic analysis, manuscript, and publication audit incomplete.
 
 ## Completion rule
 
