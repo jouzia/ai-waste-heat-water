@@ -50,7 +50,7 @@ def inspect_layers() -> dict[str, object]:
                     "geometry_name": info.get("geometry_name"),
                 }
             )
-        except Exception as exc:  # Preserve per-layer errors as evidence.
+        except Exception as exc:  # noqa: BLE001 - preserve per-layer errors as evidence.
             layers.append(
                 {
                     "name": name,
