@@ -31,7 +31,7 @@ The project must not claim that data-center-to-MD integration, waste-heat-driven
 
 ## Remaining publication-critical work
 
-1. Acquire and hash Ali, Orfi & Najib (2020) supporting XLSX data and inspect their source data; binary acquisition is not yet complete.
+1. Ali, Orfi & Najib (2020) source acquisition and row-level extraction are complete (five XLSX files, 17,385 transient records, 16 steady-state observations). The remaining task is to reconstruct and validate the dynamic MD model against these data without tuning on held-out conditions.
 2. Obtain or lawfully reconstruct primary 1999 MD observations and exact operating boundary conditions; digitization must include pixel coordinates, axis calibration, uncertainty, and repeat extraction.
 3. Resolve GDR flow-sensor/sign issues and source-match the 3M channel geometry before treating the GDR run as a physical validation case.
 4. Complete unfitted validation and independent study-level held-out validation.
