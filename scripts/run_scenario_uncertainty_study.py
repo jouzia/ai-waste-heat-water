@@ -34,8 +34,8 @@ from ai_water.study_analysis import convergence_curve, summarize_net_water
 from ai_water.uncertainty import DistributionSpec
 
 SEED = 20261013
-MC_SAMPLES = 10000
-SOBOL_SIZES = (512, 2048)
+MC_SAMPLES = 5000
+SOBOL_SIZES = (256, 1024)
 
 # Broad engineering scenario ranges, intentionally not labelled empirical.
 # Each range must be replaced or narrowed using a source/measurement prior
@@ -47,7 +47,6 @@ SCENARIO_BOUNDS: dict[str, tuple[float, float]] = {
     "recovery.heat_exchanger_effectiveness": (0.5, 0.95),
     "md.membrane_permeance_kg_m2_h_bar": (5.0, 25.0),
     "md.temperature_polarization_coefficient": (0.6, 1.0),
-    "md.feed_salinity_g_kg": (0.0, 35.0),
     "md.thermal_energy_kwh_th_per_kg": (0.06, 0.2),
     "cooling.cooling_heat_penalty_fraction": (0.0, 0.3),
     "cooling.incremental_facility_electricity_kwh": (0.0, 20.0),
@@ -93,7 +92,8 @@ def base_scenario() -> Scenario:
             membrane_thickness_m=0.0002,
             feed_recovery_fraction=0.2,
             feed_salinity_g_kg=5.0,
-            use_iapws_seawater=True,
+            water_activity=0.995,
+            use_iapws_seawater=False,
             temperature_polarization_coefficient=0.8,
         ),
         auxiliary=AuxiliaryLoads(
@@ -180,7 +180,7 @@ def run(output_dir: Path) -> dict[str, object]:
     convergence = [
         point.__dict__
         for point in convergence_curve(
-            net_values, sample_counts=(1000, 2500, 5000, 10000)
+            net_values, sample_counts=(500, 1000, 2500, 5000)
         )
     ]
     write_csv(output_dir / "monte_carlo_convergence.csv", convergence)
@@ -219,16 +219,16 @@ def run(output_dir: Path) -> dict[str, object]:
             sobol_runs[output_name].extend(rows)
         sobol_results[output_name] = {
             "sample_sizes_per_matrix": list(SOBOL_SIZES),
-            "index_change_512_to_2048": {
+            "index_change_256_to_1024": {
                 parameter: {
                     "first_order_abs_delta": abs(
                         next(
                             r["first_order"] for r in sobol_runs[output_name]
-                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 512
+                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 256
                         )
                         - next(
                             r["first_order"] for r in sobol_runs[output_name]
-                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 2048
+                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 1024
                         )
                     ),
                     "total_effect_abs_delta": abs(
@@ -282,6 +282,7 @@ def run(output_dir: Path) -> dict[str, object]:
             "All input ranges are illustrative scenario assumptions, not empirically calibrated probability distributions.",
             "Sign probabilities are conditional on this model, these ranges, and the declared freshwater-displacement counterfactual; they are not real-world probabilities.",
             "The model has not passed empirical MD validation or held-out validation.",
+            "Water activity is fixed at 0.995 as a screening assumption; salinity uncertainty is not sampled.",
             "Sobol analysis assumes independent uniform inputs and is bound-dependent.",
             "The fixed one-hour scenario is not a time-resolved data-centre workload or a dynamic MD model.",
         ],
