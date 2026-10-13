@@ -12,7 +12,7 @@ Audit date: 2026-10-11
 - Licence: CC BY 4.0; attribute the dataset, link the licence, and state modifications.
 - File size: 13,192,704 bytes.
 - SHA-256: `5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb`
-- Retrieval/inspection artifact: GitHub Actions artifact `gdr-villa-3m-countercurrent`, run ID `38148220473`; raw workbook retained in that artifact, not committed to git.
+- Retrieval/inspection artifact: GitHub Actions artifact `gdr-villa-3m-countercurrent`, latest run ID `38425489743`, artifact ID `11828433138`, SHA-256 `0ad2b425c0238bfa7aed0bb6f25e837fa29381ea96c0cee747e49710bd3b30d2`, retained until 2026-10-27; contains the raw workbook, worksheet CSV exports, row-level observation ledger (631 rows), and manifests. The raw workbook and generated ledger are not committed to git; the extraction code and workflow are committed.
 - Derived flux summary: `04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv`.
 
 ## Workbook structure
@@ -20,6 +20,10 @@ Audit date: 2026-10-11
 The workbook contains 12 time-series sheets (`20-40`, `20-45`, `20-50`, `20-55`, `20-60`, `20-65`, `30-40`, `30-45`, `30-50`, `30-55`, `30-60`, `30-65`), plus `Specifications` and `Theoretical`. It does not contain a worksheet literally named `Data`, despite the GDR landing-page description of a general `Data` worksheet. The first number in each condition label is the nominal cold-side setpoint (20 or 30 °C); the second is the nominal hot-feed setpoint (40–65 °C). Use measured temperatures, not nominal labels, in model comparisons.
 
 The `Specifications` worksheet identifies the membrane as 3M, model 0.2 micron, polypropylene, thickness 110 μm, membrane area 0.23088 m², channel length 1.04 m, width 0.222 m, and channel height 0.0018 m. It lists 85% porosity and a mean pore radius of 0.59 μm but marks those properties as not used in its calculation. The GDR page describes a nominal 1 L/min feed flow and 4 g/L NaCl.
+
+## Row-level observation ledger
+
+The workflow now exports `artifacts/gdr_villa_exports/observation_ledger.csv` with **631 rows across 12 condition sheets**. Each row records the source DOI, workbook name, workbook SHA-256, worksheet, one-based Excel row, runtime, cumulative distillate volume, measured inlet/outlet temperatures, and selected raw flow/sensor values. Raw non-finite flow values such as `Inf` are preserved as text and not repaired. The `Theoretical` worksheet is excluded. The artifact is reproducible from the public CC BY 4.0 source with `scripts/download_gdr_villa.py` and `scripts/extract_gdr_villa_observation_ledger.py`; the current artifact is temporary (14-day retention), so the source download and extraction scripts remain the durable provenance path.
 
 ## Extraction method
 
