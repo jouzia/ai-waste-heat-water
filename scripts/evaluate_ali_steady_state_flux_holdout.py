@@ -93,7 +93,7 @@ def prepare_observation(row: dict[str, str], salinity_case: str) -> dict[str, ob
         "water_activity_used": activity,
         "vapor_pressure_difference_bar": delta_p_bar,
         "measured_flux_kg_m2_h": measured_flux,
-        "split": "train" if flow in TRAIN_FLOWS_L_H else (
+        "split": "train" if any(abs(flow - target) < 0.1 for target in TRAIN_FLOWS_L_H) else (
             "held_out_flow_300_l_h" if flow == HELD_OUT_FLOW_L_H else "excluded"
         ),
     }
