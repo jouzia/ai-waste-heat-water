@@ -1,0 +1,55 @@
+name: Ali preregistered held-out transient trace
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ali-heldout-trace.yml"
+      - "docs/ALI_2020_HELDOUT_TRACE_PREREGISTRATION_2026-10-13.md"
+      - "scripts/validate_ali_dynamic_source_trace.py"
+      - "scripts/download_ali_2020_data.py"
+      - "scripts/extract_ali_2020_observations.py"
+      - "src/ai_water/ali_dynamic_model.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  heldout-trace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install analysis and workbook dependencies
+        run: python -m pip install -e ".[analysis]" "openpyxl>=3.1.2"
+      - name: Retrieve publisher source workbooks
+        run: |
+          python scripts/download_ali_2020_data.py \
+            --output-dir data/raw/ali_2020 \
+            --manifest artifacts/provenance/ali_2020_supporting_data_manifest.json
+      - name: Extract source-linked observation ledger
+        run: |
+          python scripts/extract_ali_2020_observations.py \
+            --input-dir data/raw/ali_2020 \
+            --output-dir artifacts/ali_2020_exports
+      - name: Evaluate pre-registered S3/60 held-out trace without refitting
+        run: |
+          python scripts/validate_ali_dynamic_source_trace.py \
+            --ledger artifacts/ali_2020_exports/ali_2020_transient_observation_ledger.csv \
+            --workbook S3_Data.xlsx \
+            --worksheet 60 \
+            --duration-min 0
+      - name: Upload held-out metrics, predictions, raw ledger, and provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: ali-2020-preregistered-heldout-S3-60C
+          path: |
+            artifacts/ali_source_trace_validation/*
+            artifacts/ali_2020_exports/ali_2020_transient_observation_ledger.csv
+            artifacts/ali_2020_exports/ali_2020_observation_ledger_manifest.json
+            artifacts/provenance/ali_2020_supporting_data_manifest.json
+          if-no-files-found: error
+          retention-days: 90
