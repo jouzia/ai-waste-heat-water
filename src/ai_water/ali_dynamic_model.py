@@ -920,6 +920,6 @@ def simulate_spatial_transient(
         membrane_flux_kg_m2_h=np.asarray(flux_by_time),
         hot_membrane_c=np.asarray(hot_membrane_by_time),
         cold_membrane_c=np.asarray(cold_membrane_by_time),
-        solver_success=bool(solution.success),
-        solver_message=str(solution.message),
+        solver_success=True,
+        solver_message="Integrated separately at each measured-input interval.",
     )
