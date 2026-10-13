@@ -660,9 +660,10 @@ def simulate_spatial_transient(
         )
     )
     cell_volume_m3 = cfg.channel_volume_m3 / n_cells
-    cell_area_m2 = (
-        cfg.channel_length_m / n_cells
-    ) * cfg.channel_width_m
+    # Split the configured effective membrane area across cells. Hydraulic
+    # volume and heat-transfer area are distinct; using length × width here
+    # silently ignored a caller's effective-area override.
+    cell_area_m2 = cfg.membrane_area_m2 / n_cells
 
     def input_at(t_s: float) -> tuple[float, float]:
         return (
