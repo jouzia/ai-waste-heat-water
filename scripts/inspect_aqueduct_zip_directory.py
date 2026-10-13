@@ -10,13 +10,10 @@ from __future__ import annotations
 import argparse
 import csv
 import io
-import hashlib
 import json
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Callable
-from urllib.error import HTTPError, URLError
-from urllib.parse import urlparse
+from collections.abc import Callable
 from urllib.request import Request, urlopen
 from zipfile import ZipFile
 
