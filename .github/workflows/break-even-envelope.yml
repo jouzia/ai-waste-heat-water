@@ -1,0 +1,71 @@
+name: Break-even and failure envelope
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/run_break_even_failure_envelope.py"
+      - "src/ai_water/engine.py"
+      - "src/ai_water/md.py"
+      - ".github/workflows/break-even-envelope.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  break-even-envelope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install research package
+        run: python -m pip install -e .
+
+      - name: Run break-even and failure envelope
+        run: python scripts/run_break_even_failure_envelope.py --output-dir artifacts/break_even_envelope
+
+      - name: Verify envelope coverage and checksums
+        run: |
+          python - <<'PY'
+          import csv
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path("artifacts/break_even_envelope")
+          manifest = json.loads((root / "manifest.json").read_text())
+          assert manifest["base_parameter_combinations"] == 5184, manifest
+          assert manifest["displacement_sweep_rows"] == 25920, manifest
+          assert sum(manifest["failure_class_counts"].values()) == 5184, manifest
+          for filename, expected in manifest["files"].items():
+              actual = hashlib.sha256((root / filename).read_bytes()).hexdigest()
+              assert actual == expected, (filename, expected, actual)
+          with (root / "break_even_failure_envelope.csv").open(encoding="utf-8", newline="") as stream:
+              envelope = list(csv.DictReader(stream))
+          with (root / "net_water_by_displacement.csv").open(encoding="utf-8", newline="") as stream:
+              sweep = list(csv.DictReader(stream))
+          assert len(envelope) == 5184 and len(sweep) == 25920
+          assert {row["failure_class"] for row in envelope} <= {
+              "no_freshwater_production",
+              "break_even_impossible_at_full_displacement",
+              "break_even_possible_with_sufficient_displacement",
+          }
+          print("Verified 5,184 break-even cases and 25,920 displacement-sweep rows.")
+          print("All ranges are illustrative; the result is not a real-world probability.")
+          PY
+
+      - name: Upload reproducible break-even outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: break-even-failure-envelope
+          path: artifacts/break_even_envelope/*
+          if-no-files-found: error
+          retention-days: 90
