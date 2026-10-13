@@ -1,44 +1,40 @@
-# Remaining work and effort estimate — 2026-10-09
+# Remaining work and effort estimate — 2026-10-13
 
 ## Status snapshot
 
-This is a planning estimate, not a completion claim. The publication-critical scientific work is not complete.
+This remains a planning estimate, not a completion claim. The hard publication gate has **8 of 18 gates true and 10 false**. Software correctness, open-source data access, primary-observation extraction, cooling-architecture scenario execution, time-varying workload coupling, global-sensitivity execution, counterfactual water accounting, and exploratory multi-objective execution have reproducible artifacts. The publication gate still correctly returns incomplete.
 
-From `05_validation/FINAL_GATE_STATUS.yaml`, 5 of 18 gates are marked true and 13 remain false. The true gates cover software correctness (latest CI: 100 tests and Ruff pass; hard publication gate enforces all 18 gates), public-source access verification, extraction of 12 GDR/NREL Villa et al. experimental conditions, time-varying workload-coupling infrastructure, and counterfactual net-water accounting. The new GDR model-form run compares four transfer-correlation/geometry combinations on a within-workbook held-out split, but remains diagnostic and is not independent validation. These gates are not equivalent to a completed empirical study.
+The Ali et al. (2020) source data have now been acquired, checksummed, and extracted into source-linked raw, transient, and steady-state ledgers. A 20,000-draw scenario-only Monte Carlo and a 512/2,048-point Sobol study run reproducibly, but the lower-tail estimate and freshwater-production sensitivity indices need more convergence work. A 1,440-row cooling/water/energy/carbon scenario sweep now emits a Pareto set, but its architecture and grid factors are illustrative rather than measured.
 
-The literature review has also identified direct prior art: Kanbur et al. (2020) already couple data-center immersion-cooling heat to DCMD; Wyon (2025) models data-center waste-heat-to-MD with heat exchanger and pumps; Chen et al. (2026) report a CPU-waste-heat MD experiment; Yang et al. (2026) integrate data-center heat with RO desalination; Katakam et al. (2026, online ahead of print) add system-scale data-center desalination and a water-stress metric. The manuscript must not claim novelty from the system concept, thermoeconomic optimization, or water-stress assessment alone.
+The Ali S1 steady-state data also expose an important flux-model mismatch. With TPC fixed at 0.8, the fitted-permeance model has held-out 300 L/h MAE 0.828 kg m⁻² h⁻¹. A fitted flow-dependent TPC alternative improves this to 0.181 under the article's stated 0.5% salinity interpretation, but this is only an internal held-out-flow diagnostic. The alternative TDS interpretation drives fitted permeance to the optimizer's upper bound. Separately, the default 10 m² / 50 L/h dynamic reconstruction returned an outlet below the inlet-temperature envelope; the code now rejects that trajectory. Dynamic source reconstruction is therefore not validated.
 
-## Work packages and active effort
+Prior art now includes Kanbur et al. (2020), Wyon (2025), Chen (2026), Yang (2026), Katakam et al. (2026 online-ahead-of-print), and a newly surfaced system-scale data-centre desalination study. The manuscript must not claim novelty from waste-heat-to-MD integration, technoeconomic optimization, or a water-stress metric alone.
 
-Estimates below are person-hours of focused work, assuming the original experimental files are accessible, parseable, and licensed for the intended use. They are not elapsed calendar hours and do not include waiting for external access, review, or new experiments.
+## Remaining work packages
 
-| Work package | Estimated active hours | Dependency / exit criterion |
+Estimates are person-hours of focused research work, not elapsed calendar time. They assume the current public source data remain accessible and no new experiments are needed.
+
+| Work package | Estimated active hours | Exit criterion |
 |---|---:|---|
-| Acquire, checksum, inventory and document source workbooks | 2–5 | Original XLS/XLSX files are available |
-| Map sheets/columns, create source-linked ledgers, audit units and independently check extraction | 8–18 | Source workbook layouts understood; ambiguities resolved |
-| Source-match the model and perform unfitted validation with residuals and diagnostics | 10–18 | Audited observations and boundary conditions exist |
-| Diagnose structural error, make justified corrections, freeze model and run held-out evaluation | 12–24 | Development/held-out split frozen; no held-out leakage |
-| Cooling-architecture and time-varying workload case studies | 8–16 | Defensible parameter sources and at least one documented workload trace/scenario |
-| Monte Carlo, convergence, global sensitivity and failure/break-even envelopes | 12–22 | Model executes reliably and parameter ranges are sourced/frozen |
-| Geographic screening and electricity-water integration | 8–16 | Versioned spatial/water-stress and grid-water datasets documented |
-| Multi-objective decision analysis, figures and tables | 6–12 | Validated study outputs available |
-| Reproducibility archive, manuscript, supplement and claim audit | 16–30 | Main results stable; all claims trace to data/code |
-| Final test/CI run, review and repair allowance | 4–8 | Candidate manuscript and artifact package assembled |
+| Recover and digitize the primary Martínez-Díez & Vázquez-González (1999) observations; independently check a subset | 6–12 | Source-located observation ledger with units, conditions, calibration and uncertainty |
+| Correct and source-match MD heat/mass-transfer structure; run unfitted comparisons | 10–20 | Physically admissible predictions and source-matched residual report |
+| Complete held-out and model-form evaluation using transfer-correlation alternatives | 12–24 | Frozen development split, no holdout fitting, independent/held-out results |
+| Source-backed cooling architectures and realistic time-varying workload/temperature traces | 6–12 | Versioned parameter sources and at least one defensible workload profile |
+| Monte Carlo convergence, sensitivity convergence, and break-even/failure envelope | 8–16 | Predeclared tolerances, independent-seed checks, stable quantiles/indices |
+| Geographic water stress and electricity-water integration | 8–16 | Versioned location/grid/water datasets, licensing and spatial alignment |
+| Replace illustrative multi-objective inputs with evidence-linked cases; regenerate figures/tables | 4–8 | Pareto outputs supported by validated cases and sourced factors |
+| Reproducibility package, manuscript, supplementary methods/data and claim audit | 16–30 | Every main-text number linked to code/data, artifact package and methods |
+| Final review, test/CI, and repair allowance | 4–8 | Final commit CI green, publication gate and manual audit pass |
 
-**Estimated remaining focused effort: 86–169 hours.** A realistic planning midpoint is about **120 hours**, roughly 3–4 full-time work weeks for one researcher, plus review and any data-access delays. If only the Ali dataset is used and geographic/workload claims are narrowed, a smaller scoped paper may take less time, but it would answer a narrower research question.
+**Estimated remaining focused effort: 74–146 hours; midpoint approximately 110 hours.** That is roughly 3–4 full-time work weeks for one researcher, excluding peer review and external data-access delays. This is lower than the previous estimate because source data ingestion and initial scenario-analysis execution are now reproducible; it is not a promise of a completion date.
 
-## Important uncertainty
+## Largest remaining risks
 
-The largest risk is not typing or coding time: it is the time needed to obtain and interpret valid experimental data and to resolve model–experiment mismatch without tuning to held-out observations. If source workbooks cannot be retrieved, the study cannot honestly complete empirical validation; replacing them with synthetic data would not solve that gap.
+1. **Model-form validity:** the current dynamic reconstruction can produce inadmissible outlet states under the source-scale low-flow case, and the simpler flux law underpredicts held-out high-flow observations.
+2. **Novelty:** direct prior art makes a broad system-concept contribution untenable; the contribution must be narrower and supported by stronger validation/accounting.
+3. **Probabilistic claims:** current Monte Carlo/Sobol ranges are illustrative, not empirical priors. No real-world benefit probability can be reported.
+4. **Net-water causality:** recovered distillate counts as avoided freshwater only when actual freshwater consumption is displaced. Gross production alone is insufficient.
 
 ## Definition of complete
 
-The research is complete only when:
-1. the raw-data provenance and extraction ledgers are reproducible;
-2. unfitted and independent held-out validation have been run and reported;
-3. all planned scenario, uncertainty, sensitivity, break-even, geographic and multi-objective analyses have saved outputs;
-4. tests and CI pass on the final commit;
-5. the manuscript and supplement are fully linked to reproducible artifacts;
-6. `scripts/publication_gate.py` and a final manual claim audit pass without weakening criteria to manufacture a pass.
-
-No completion date is guaranteed by the hour estimate. Any estimate must be revised after the source workbooks are extracted and the first unfitted validation results are available.
+Research is complete only when all 18 hard gates in `05_validation/FINAL_GATE_STATUS.yaml` are true with reproducible evidence, the final source-matched and independent/held-out validation has been reported, geographic and time-varying cases use documented inputs, the manuscript and supplement are assembled, CI passes on the final commit, and the hard publication gate passes without weakening criteria.
