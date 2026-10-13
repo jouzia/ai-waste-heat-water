@@ -1,8 +1,8 @@
 """Extract source-linked observations from Ali, Orfi & Najib (2020) supplements.
 
-Outputs preserve raw workbook rows and distinguish timed cumulative-mass
-observations from temperature-only rows that lack timestamps. Derived tail-slope
-comparisons are diagnostic only and are not model validation.
+Outputs preserve raw workbook rows and distinguish timed raw mw readings from
+temperature-only rows that lack timestamps. Mass-column semantics are audited
+before any cumulative-mass or flux derivation is permitted.
 """
 
 from __future__ import annotations
@@ -308,11 +308,11 @@ def _mw_semantics_audit(
     output: list[dict[str, Any]] = []
     for (filename, flow, sheet_name), rows in sorted(grouped.items()):
         rows = sorted(rows, key=lambda row: float(row["time_min"]))
-        time_values = np.asarray([float(row["time_min"]) for row in rows], dtype=float)
-        mw_values = np.asarray([float(row["mw_raw_reading_kg"]) for row in rows], dtype=float)
-        differences = np.diff(mw_values)
-        negative = differences[differences < 0.0]
-        positive = differences[differences > 0.0]
+        time_values = [float(row["time_min"]) for row in rows]
+        mw_values = [float(row["mw_raw_reading_kg"]) for row in rows]
+        differences = [right - left for left, right in zip(mw_values, mw_values[1:])]
+        negative = [difference for difference in differences if difference < 0.0]
+        positive = [difference for difference in differences if difference > 0.0]
         target_match = re.fullmatch(r"(\d+)(R?)", sheet_name.strip(), flags=re.IGNORECASE)
         output.append(
             {
@@ -329,26 +329,26 @@ def _mw_semantics_audit(
                 "time_end_min": float(time_values[-1]),
                 "mw_raw_start_kg": float(mw_values[0]),
                 "mw_raw_end_kg": float(mw_values[-1]),
-                "mw_raw_min_kg": float(np.min(mw_values)),
-                "mw_raw_max_kg": float(np.max(mw_values)),
+                "mw_raw_min_kg": float(min(mw_values)),
+                "mw_raw_max_kg": float(max(mw_values)),
                 "first_positive_mw_time_min": (
-                    float(time_values[np.flatnonzero(mw_values > 0.0)[0]])
-                    if np.any(mw_values > 0.0)
+                    float(time_values[next(index for index, value in enumerate(mw_values) if value > 0.0)])
+                    if any(value > 0.0 for value in mw_values)
                     else None
                 ),
                 "negative_step_count": int(len(negative)),
                 "positive_step_count": int(len(positive)),
                 "max_negative_step_magnitude_kg": (
-                    float(abs(np.min(negative))) if len(negative) else 0.0
+                    float(abs(min(negative))) if negative else 0.0
                 ),
                 "median_negative_step_magnitude_kg": (
-                    float(np.median(abs(negative))) if len(negative) else 0.0
+                    float(sorted(abs(value) for value in negative)[len(negative) // 2]) if negative else 0.0
                 ),
-                "zero_fraction": float(np.mean(mw_values == 0.0)),
-                "raw_mw_monotonic": bool(np.all(differences >= 0.0)),
+                "zero_fraction": sum(value == 0.0 for value in mw_values) / len(mw_values),
+                "raw_mw_monotonic": all(difference >= 0.0 for difference in differences),
                 "status": (
                     "nonmonotonic_raw_mw_semantics_unverified"
-                    if np.any(differences < 0.0)
+                    if any(difference < 0.0 for difference in differences)
                     else "monotonic_raw_mw_semantics_still_unverified"
                 ),
                 "interpretation": (
