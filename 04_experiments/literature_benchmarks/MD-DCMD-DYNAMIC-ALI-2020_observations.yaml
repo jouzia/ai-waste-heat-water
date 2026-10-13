@@ -2,7 +2,22 @@
 source_id: MD-DCMD-DYNAMIC-ALI-2020
 source_doi: "10.1371/journal.pone.0230207"
 status: extracted_source_linked_ledgers_in_ci_artifact
-observations: [] # Large row-level datasets are in the immutable workflow artifact; do not inline thousands of rows here.
+observations: []
+ledger_artifact:
+  artifact_name: "ali-2020-dynamic-dcmd-source-data"
+  workflow_run_id: 38427509655
+  artifact_id: 11829695926
+  artifact_sha256: "1a12fadca90d89452c11f0f7cc5bcbc6b7804e5c16c78528c5a5f70723e15224"
+  expires_at_utc: "2027-01-11T16:04:42Z"
+  outputs:
+    raw_nonempty_worksheet_rows: 17430
+    transient_records: 17385
+    complete_timed_transient_rows: 16837
+    temperature_only_without_timestamps: 548
+    steady_state_conditions: 16
+    excluded_noncondition_rows: 2
+    tail_flux_consistency_checks: 34
+  note: "The ledgers are in the artifact, not inline in this YAML. Source hashes are pinned in the extraction script; raw workbook files and all generated CSVs are available in the artifact." # Large row-level datasets are in the immutable workflow artifact; do not inline thousands of rows here.
 
 artifact_outputs:
   artifact_name: "ali-2020-dynamic-dcmd-source-data"
