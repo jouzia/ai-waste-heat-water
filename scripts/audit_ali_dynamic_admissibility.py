@@ -69,7 +69,7 @@ def run_case(
                 "mass_rate_nonnegative": bool(np.all(result.mass_rate_kg_h >= -1e-9)),
             }
         )
-    except Exception as exc:  # The failure itself is the diagnostic result.
+    except Exception as exc:  # noqa: BLE001 - every failed case is diagnostic evidence.
         row["status"] = "rejected"
         row["error"] = f"{type(exc).__name__}: {exc}"
     return row
