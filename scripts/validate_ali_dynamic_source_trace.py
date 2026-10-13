@@ -125,10 +125,27 @@ def main() -> None:
     parser.add_argument("--workbook", default="S2_Data.xlsx")
     parser.add_argument("--worksheet", default="50")
     parser.add_argument(
+        "--duration-min",
+        type=float,
+        default=30.0,
+        help="Analyze the initial trace window; use 0 to run the full source trace.",
+    )
+    parser.add_argument(
         "--output-dir", type=Path, default=Path("artifacts/ali_source_trace_validation")
     )
     args = parser.parse_args()
     rows = read_trace(args.ledger, args.workbook, args.worksheet)
+    if args.duration_min < 0:
+        raise ValueError("duration-min must be non-negative")
+    if args.duration_min > 0:
+        start_time = float(rows[0]["time_min"])
+        rows = [
+            row
+            for row in rows
+            if float(row["time_min"]) <= start_time + args.duration_min
+        ]
+        if len(rows) < 3:
+            raise ValueError("duration-min selected fewer than 3 observations")
     if not all(
         math.isfinite(float(row[field]))
         for row in rows
@@ -161,6 +178,7 @@ def main() -> None:
             "workbook": args.workbook,
             "worksheet": args.worksheet,
             "trace_rows": len(rows),
+            "duration_cap_min": args.duration_min,
             "input_ledger": str(args.ledger),
             "initial_outlets_from_measurement": True,
             "measured_input_histories_used": True,
