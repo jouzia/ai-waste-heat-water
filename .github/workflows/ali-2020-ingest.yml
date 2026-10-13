@@ -108,6 +108,9 @@ jobs:
           with (root / "ali_2020_flux_law_holdout_predictions.csv").open(encoding="utf-8", newline="") as stream:
               rows = list(csv.DictReader(stream))
           assert len(rows) == 32, len(rows)
+          with (root / "ali_2020_flow_dependent_tpc_predictions.csv").open(encoding="utf-8", newline="") as stream:
+              flow_rows = list(csv.DictReader(stream))
+          assert len(flow_rows) == 32, len(flow_rows)
           assert set(summary["cases"]) == {
               "reported_0p5_percent_feed_salinity", "measured_TDS_E_proxy"
           }
@@ -115,7 +118,8 @@ jobs:
               assert case["training_metrics"]["n"] == 12
               assert case["held_out_metrics"]["n"] == 4
               assert case["fitted_permeance_kg_m2_h_bar"] > 0
-          print("Verified 32 predictions across two salinity interpretations; 300 L/h held out.")
+              assert case["flow_dependent_tpc_model"]["held_out_metrics"]["n"] == 4
+          print("Verified 32 fixed-TPC and 32 flow-dependent-TPC predictions across two salinity interpretations; 300 L/h held out.")
           PY
 
       - name: Upload raw supporting files, observation ledgers, and provenance
