@@ -555,19 +555,43 @@ def simulate_lumped_transient(
         )
         return [d_hot_out_dt, d_cold_out_dt, d_mass_rate_dt, mass_rate_kg_s]
 
-    predicted_states = _integrate_piecewise_input_trace(
-        rhs,
+    def thermal_rhs(t_s: float, thermal_state: np.ndarray) -> list[float]:
+        full_state = np.asarray(
+            [thermal_state[0], thermal_state[1], 0.0, 0.0], dtype=float
+        )
+        return rhs(t_s, full_state)[:2]
+
+    thermal_states = _integrate_piecewise_input_trace(
+        thermal_rhs,
         time_seconds,
-        np.asarray(initial_state, dtype=float),
+        np.asarray(initial_state[:2], dtype=float),
         cfg,
         [
             cfg.absolute_tolerance_temperature_k,
             cfg.absolute_tolerance_temperature_k,
-            cfg.absolute_tolerance_mass_rate_kg_s,
-            cfg.absolute_tolerance_mass_kg,
         ],
         active_segment,
     )
+    predicted_states = np.empty((len(time_seconds), 4), dtype=float)
+    predicted_states[:, :2] = thermal_states
+    predicted_states[0, 2:] = np.asarray(initial_state[2:], dtype=float)
+    for index in range(len(time_seconds) - 1):
+        active_segment[0] = index
+        start_s = float(time_seconds[index])
+        end_s = float(time_seconds[index + 1])
+        delta_s = end_s - start_s
+        left_derivative = np.asarray(rhs(start_s, predicted_states[index]))
+        right_state = predicted_states[index].copy()
+        right_state[:2] = thermal_states[index + 1]
+        right_derivative = np.asarray(rhs(end_s, right_state))
+        next_rate = predicted_states[index, 2] + 0.5 * (
+            left_derivative[2] + right_derivative[2]
+        ) * delta_s
+        next_mass = predicted_states[index, 3] + 0.5 * (
+            predicted_states[index, 2] + next_rate
+        ) * delta_s
+        predicted_states[index + 1, 2] = next_rate
+        predicted_states[index + 1, 3] = next_mass
     # A passive DCMD module cannot drive either outlet outside the global
     # inlet-temperature envelope without an external heat source/sink. Reject
     # such trajectories instead of returning numerically converged but
@@ -628,7 +652,7 @@ def simulate_lumped_transient(
         hot_membrane_c=np.asarray(hot_membrane_c),
         cold_membrane_c=np.asarray(cold_membrane_c),
         solver_success=True,
-        solver_message="Integrated separately at each measured-input interval.",
+        solver_message="Thermal states integrated at input knots; mass states integrated by trapezoid.",
     )
 
 
@@ -835,20 +859,45 @@ def simulate_spatial_transient(
         total_mass_rate = float(np.mean(mass_rates))
         return np.concatenate((d_hot, d_cold, d_mass_rates, [total_mass_rate]))
 
-    states = _integrate_piecewise_input_trace(
-        rhs,
+    thermal_state_size = 2 * n_cells
+
+    def thermal_rhs(t_s: float, thermal_state: np.ndarray) -> np.ndarray:
+        full_state = np.concatenate(
+            (thermal_state, np.zeros(n_cells, dtype=float), np.asarray([0.0]))
+        )
+        return np.asarray(rhs(t_s, full_state))[:thermal_state_size]
+
+    thermal_states = _integrate_piecewise_input_trace(
+        thermal_rhs,
         time_seconds,
-        initial_state,
+        initial_state[:thermal_state_size],
         cfg,
-        np.concatenate(
-            (
-                np.full(2 * n_cells, cfg.absolute_tolerance_temperature_k),
-                np.full(n_cells, cfg.absolute_tolerance_mass_rate_kg_s),
-                np.asarray([cfg.absolute_tolerance_mass_kg]),
-            )
-        ),
+        np.full(thermal_state_size, cfg.absolute_tolerance_temperature_k),
         active_segment,
     )
+    states = np.empty((len(time_seconds), 3 * n_cells + 1), dtype=float)
+    states[:, :thermal_state_size] = thermal_states
+    states[0, thermal_state_size:] = initial_state[thermal_state_size:]
+    for index in range(len(time_seconds) - 1):
+        active_segment[0] = index
+        start_s = float(time_seconds[index])
+        end_s = float(time_seconds[index + 1])
+        delta_s = end_s - start_s
+        left_derivative = np.asarray(rhs(start_s, states[index]))
+        right_state = states[index].copy()
+        right_state[:thermal_state_size] = thermal_states[index + 1]
+        right_derivative = np.asarray(rhs(end_s, right_state))
+        rate_start = states[index, thermal_state_size : 3 * n_cells]
+        rate_next = rate_start + 0.5 * (
+            left_derivative[thermal_state_size : 3 * n_cells]
+            + right_derivative[thermal_state_size : 3 * n_cells]
+        ) * delta_s
+        total_rate_start = float(np.mean(rate_start))
+        total_rate_next = float(np.mean(rate_next))
+        states[index + 1, thermal_state_size : 3 * n_cells] = rate_next
+        states[index + 1, -1] = states[index, -1] + 0.5 * (
+            total_rate_start + total_rate_next
+        ) * delta_s
     hot_cells = states[:, :n_cells]
     cold_cells = states[:, n_cells : 2 * n_cells]
     mass_rates = states[:, 2 * n_cells : 3 * n_cells]
