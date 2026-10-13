@@ -18,6 +18,30 @@ def _load(path: str):
     return yaml.safe_load((root / path).read_text(encoding="utf-8"))
 
 
+REQUIRED_GATE_NAMES = frozenset(
+    {
+        "software_correctness",
+        "open_data_access_verified",
+        "source_reconstruction",
+        "primary_observation_extraction",
+        "unfitted_validation",
+        "held_out_validation",
+        "model_form_comparison",
+        "cooling_architecture_scenarios",
+        "time_varying_workload_coupling",
+        "monte_carlo_convergence",
+        "global_sensitivity_execution",
+        "break_even_failure_envelope",
+        "geographic_integration",
+        "counterfactual_net_water_accounting",
+        "multi_objective_analysis",
+        "reproducibility_package",
+        "manuscript_and_supplement",
+        "final_publication_audit",
+    }
+)
+
+
 def _status_failures(status: dict) -> list[str]:
     """Return hard-gate failures; protocol presence alone is never readiness."""
     failures: list[str] = []
@@ -29,11 +53,18 @@ def _status_failures(status: dict) -> list[str]:
     if not isinstance(gates, dict) or not gates:
         failures.append("final gate status has no scientific gate mapping")
     else:
-        incomplete = sorted(name for name, value in gates.items() if value is not True)
+        missing = sorted(REQUIRED_GATE_NAMES.difference(gates))
+        unexpected = sorted(set(gates).difference(REQUIRED_GATE_NAMES))
+        if missing:
+            failures.append("missing required scientific gates: " + ", ".join(missing))
+        if unexpected:
+            failures.append("unexpected scientific gates: " + ", ".join(unexpected))
+        incomplete = sorted(
+            name for name in REQUIRED_GATE_NAMES.intersection(gates)
+            if gates[name] is not True
+        )
         if incomplete:
-            failures.append(
-                "unmet scientific gates: " + ", ".join(incomplete)
-            )
+            failures.append("unmet scientific gates: " + ", ".join(incomplete))
     claim_policy = status.get("claim_policy", {})
     if claim_policy.get("publication_ready_claim") is True and (
         status.get("status") != "COMPLETE"
