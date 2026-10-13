@@ -51,3 +51,51 @@ def test_flux_metrics_are_correct_for_known_errors() -> None:
     assert metrics["rmse_l_m2_h"] == pytest.approx(math.sqrt(0.14 / 3))
     assert metrics["bias_l_m2_h"] == pytest.approx(0.0666666667)
     assert metrics["mape_percent"] == pytest.approx(10.0)
+
+
+_ledger_extractor = _load_script_module(
+    "gdr_villa_observation_ledger", "extract_gdr_villa_observation_ledger.py"
+)
+
+
+class _FakeSheet:
+    def __init__(self, name: str, rows: list[list[object]]) -> None:
+        self.name = name
+        self._rows = rows
+        self.nrows = len(rows)
+
+    def cell_value(self, row: int, column: int) -> object:
+        return self._rows[row][column]
+
+
+def test_observation_ledger_preserves_source_rows_and_raw_sensor_values() -> None:
+    rows = [[""] * 25 for _ in range(7)]
+    rows[3][2], rows[3][4], rows[3][6] = 1.0, 0, 0.10
+    rows[3][17], rows[3][21], rows[3][22], rows[3][23], rows[3][24] = (
+        "Inf", 45.0, 25.0, 42.0, 28.0
+    )
+    rows[4][2], rows[4][4], rows[4][6] = 2.0, 0, 0.20
+    rows[4][17] = "Inf"
+    rows[5][2], rows[5][6] = "bad-runtime", 0.30
+    rows[6][2], rows[6][6] = 3.0, 0.40  # Must not resume after a broken trace.
+    sheet = _FakeSheet("20-40", rows)
+
+    extracted = _ledger_extractor.extract_sheet_rows(
+        sheet,
+        workbook_filename="benchmark.xls",
+        source_sha256="abc123",
+    )
+
+    assert len(extracted) == 2
+    assert extracted[0]["observation_id"] == "VILLA3M-20-40-row4"
+    assert extracted[0]["excel_row_1based"] == 4
+    assert extracted[0]["distillate_volume_l"] == 0.10
+    assert extracted[0]["feed_flowrate_low_lpm_raw"] == "Inf"
+    assert extracted[0]["source_file_sha256"] == "abc123"
+
+
+def test_observation_ledger_excludes_theoretical_sheet() -> None:
+    sheet = _FakeSheet("Theoretical", [[""] * 25 for _ in range(5)])
+    assert _ledger_extractor.extract_sheet_rows(
+        sheet, workbook_filename="benchmark.xls", source_sha256="abc123"
+    ) == []
