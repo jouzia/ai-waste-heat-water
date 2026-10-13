@@ -970,5 +970,5 @@ def simulate_spatial_transient(
         hot_membrane_c=np.asarray(hot_membrane_by_time),
         cold_membrane_c=np.asarray(cold_membrane_by_time),
         solver_success=True,
-        solver_message="Integrated separately at each measured-input interval.",
+        solver_message="Thermal states integrated at input knots; mass states integrated by trapezoid.",
     )
