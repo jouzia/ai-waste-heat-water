@@ -22,6 +22,19 @@ Metrics below are for volumetric flux in L m⁻² h⁻¹. Bias is predicted minu
 
 The two Graetz–Lévêque fits reach the upper permeance search bound of 1000. This is a parameter-identifiability/model-form warning, not a successful unconstrained estimate. The WaterTAP variants fit the development conditions more closely, but the best development MAPE does not give the best held-out MAPE. This is evidence that the result depends on heat-transfer and geometry assumptions.
 
+## Outlet-temperature diagnostics
+
+A post-run audit of the same artifact compared model-predicted outlet temperatures against the workbook's measured outlet-temperature means. Held-out mean absolute errors (MAE) were:
+
+| Model form | Feed outlet MAE (°C) | Permeate outlet MAE (°C) |
+|---|---:|---:|
+| Graetz–Lévêque + smooth channel | 6.239 | 12.654 |
+| Graetz–Lévêque + spacer-porosity geometry | 5.433 | 12.610 |
+| WaterTAP correlation + smooth channel | 1.190 | 12.424 |
+| WaterTAP correlation + spacer-porosity geometry | 0.371 | 12.401 |
+
+The persistent permeate-outlet discrepancy is a major diagnostic failure. Before interpreting the flux metrics physically, the counter-current inlet/outlet boundary-condition mapping, temperature averaging, and solver energy balance must be audited. A low flux MAE in one split cannot override an approximately 12.4 °C held-out permeate outlet MAE.
+
 ## Interpretation
 
 1. The present reduced-order channel model does not yet provide sufficiently stable cross-condition predictions for use as an empirically validated MD transport engine.
