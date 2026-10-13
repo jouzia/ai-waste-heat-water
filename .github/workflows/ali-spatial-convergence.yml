@@ -1,0 +1,80 @@
+name: Ali spatial-grid and solver-tolerance convergence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/audit_ali_spatial_convergence.py"
+      - "src/ai_water/ali_dynamic_model.py"
+      - "scripts/download_ali_2020_data.py"
+      - "scripts/extract_ali_2020_observations.py"
+      - ".github/workflows/ali-spatial-convergence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  convergence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install model and data dependencies
+        run: python -m pip install -e ".[analysis]" "openpyxl>=3.1.2"
+      - name: Retrieve source workbooks
+        run: |
+          python scripts/download_ali_2020_data.py \
+            --output-dir data/raw/ali_2020 \
+            --manifest artifacts/provenance/ali_2020_supporting_data_manifest.json
+      - name: Extract source-linked temperature trace
+        run: |
+          python scripts/extract_ali_2020_observations.py \
+            --input-dir data/raw/ali_2020 \
+            --output-dir artifacts/ali_2020_exports
+      - name: Run unfitted spatial-grid and solver-tolerance convergence study
+        run: |
+          python scripts/audit_ali_spatial_convergence.py \
+            --ledger artifacts/ali_2020_exports/ali_2020_transient_observation_ledger.csv \
+            --workbook S2_Data.xlsx \
+            --worksheet 50 \
+            --output-dir artifacts/ali_spatial_convergence
+      - name: Verify result coverage, reference identity, and output checksums
+        run: |
+          python - <<'PY'
+          import csv
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path("artifacts/ali_spatial_convergence")
+          summary = json.loads((root / "ali_spatial_grid_tolerance_summary.json").read_text())
+          manifest = json.loads((root / "manifest.json").read_text())
+          with (root / "ali_spatial_grid_tolerance_metrics.csv").open(newline="", encoding="utf-8") as f:
+              metrics = list(csv.DictReader(f))
+          with (root / "ali_spatial_grid_tolerance_convergence.csv").open(newline="", encoding="utf-8") as f:
+              convergence = list(csv.DictReader(f))
+          assert len(metrics) == 5, len(metrics)
+          assert len(convergence) == 5, len(convergence)
+          assert summary["reference"] == {"n_cells": 20, "relative_tolerance": 1e-6}
+          assert summary["source"]["rows"] > 1000
+          for name, expected in manifest["outputs"].items():
+              actual = hashlib.sha256((root / name).read_bytes()).hexdigest()
+              assert actual == expected, (name, expected, actual)
+          assert all(row["mass_rate_nonnegative"] == "True" for row in metrics)
+          assert all(row["accumulated_mass_monotonic"] == "True" for row in metrics)
+          print("Verified 5 grid/tolerance runs, 5 convergence comparisons, physical mass-state checks, and output checksums.")
+          print("This is numerical convergence evidence only, not empirical validation.")
+          PY
+      - name: Upload convergence outputs and source manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: ali-spatial-grid-tolerance-convergence
+          path: |
+            artifacts/ali_spatial_convergence/*
+            artifacts/provenance/ali_2020_supporting_data_manifest.json
+          if-no-files-found: error
+          retention-days: 90
