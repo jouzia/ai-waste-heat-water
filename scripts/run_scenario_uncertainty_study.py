@@ -47,7 +47,7 @@ SCENARIO_BOUNDS: dict[str, tuple[float, float]] = {
     "recovery.heat_exchanger_effectiveness": (0.5, 0.95),
     "md.membrane_permeance_kg_m2_h_bar": (5.0, 25.0),
     "md.temperature_polarization_coefficient": (0.6, 1.0),
-    "md.thermal_energy_kwh_th_per_kg": (0.06, 0.2),
+    "md.latent_heat_kwh_th_per_kg": (0.55, 0.75),
     "cooling.cooling_heat_penalty_fraction": (0.0, 0.3),
     "cooling.incremental_facility_electricity_kwh": (0.0, 20.0),
     "cooling.cooling_water_consumption_l_per_kwh_facility": (0.0, 1.0),
