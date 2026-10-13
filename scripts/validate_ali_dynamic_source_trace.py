@@ -113,6 +113,41 @@ def run_case(
             if mass_rate_nonnegative and mass_monotonic
             else "completed_but_mass_state_nonphysical"
         )
+        result["_trajectory_rows"] = [
+            {
+                "case_id": case_id,
+                "model_kind": model_kind,
+                "n_cells": n_cells,
+                "observation_id": row["observation_id"],
+                "workbook_filename": row["workbook_filename"],
+                "worksheet_name": row["worksheet_name"],
+                "excel_row_1based": row["excel_row_1based"],
+                "source_file_sha256": row["source_file_sha256"],
+                "time_min": float(time_min[index]),
+                "hot_inlet_measured_c": float(hot_in[index]),
+                "cold_inlet_measured_c": float(cold_in[index]),
+                "hot_outlet_measured_c": float(hot_out_observed[index]),
+                "hot_outlet_predicted_c": float(predicted.hot_outlet_c[index]),
+                "hot_outlet_residual_c": float(
+                    predicted.hot_outlet_c[index] - hot_out_observed[index]
+                ),
+                "cold_outlet_measured_c": float(cold_out_observed[index]),
+                "cold_outlet_predicted_c": float(predicted.cold_outlet_c[index]),
+                "cold_outlet_residual_c": float(
+                    predicted.cold_outlet_c[index] - cold_out_observed[index]
+                ),
+                "accumulated_mass_measured_kg": float(mass_observed[index]),
+                "accumulated_mass_predicted_kg": float(
+                    predicted.accumulated_mass_kg[index]
+                ),
+                "mass_residual_kg": float(
+                    predicted.accumulated_mass_kg[index] - mass_observed[index]
+                ),
+                "mass_rate_predicted_kg_h": float(predicted.mass_rate_kg_h[index]),
+                "flux_predicted_kg_m2_h": float(predicted.membrane_flux_kg_m2_h[index]),
+            }
+            for index, row in enumerate(rows)
+        ]
         result["metrics"] = {
             "mass_rate_nonnegative": mass_rate_nonnegative,
             "accumulated_mass_monotonic": mass_monotonic,
@@ -198,6 +233,9 @@ def main() -> None:
             n_cells=10,
         ),
     ]
+    trajectory_rows = []
+    for case in cases:
+        trajectory_rows.extend(case.pop("_trajectory_rows", []))
     args.output_dir.mkdir(parents=True, exist_ok=True)
     report = {
         "source": {
@@ -220,6 +258,8 @@ def main() -> None:
             "status": "exploratory; tolerance convergence must be checked before publication claims",
         },
         "cases": cases,
+        "prediction_trajectory_csv": "ali_source_trace_predictions.csv",
+        "prediction_trajectory_rows": len(trajectory_rows),
         "interpretation_rules": [
             "Do not tune parameters on this trace and report it as held-out validation.",
             "The published heat-loss correction is a separate source-reproduction case, not a newly estimated physical heat-loss coefficient.",
@@ -246,6 +286,35 @@ def main() -> None:
                     "metrics": json.dumps(case["metrics"], allow_nan=False),
                 }
             )
+    trajectory_path = args.output_dir / "ali_source_trace_predictions.csv"
+    trajectory_fields = [
+        "case_id",
+        "model_kind",
+        "n_cells",
+        "observation_id",
+        "workbook_filename",
+        "worksheet_name",
+        "excel_row_1based",
+        "source_file_sha256",
+        "time_min",
+        "hot_inlet_measured_c",
+        "cold_inlet_measured_c",
+        "hot_outlet_measured_c",
+        "hot_outlet_predicted_c",
+        "hot_outlet_residual_c",
+        "cold_outlet_measured_c",
+        "cold_outlet_predicted_c",
+        "cold_outlet_residual_c",
+        "accumulated_mass_measured_kg",
+        "accumulated_mass_predicted_kg",
+        "mass_residual_kg",
+        "mass_rate_predicted_kg_h",
+        "flux_predicted_kg_m2_h",
+    ]
+    with trajectory_path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=trajectory_fields)
+        writer.writeheader()
+        writer.writerows(trajectory_rows)
     for case in cases:
         print(
             f"{case['case_id']}: {case['status']}; "
