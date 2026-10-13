@@ -11,9 +11,9 @@ import argparse
 import csv
 import io
 import json
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
-from collections.abc import Callable
 from urllib.request import Request, urlopen
 from zipfile import ZipFile
 
