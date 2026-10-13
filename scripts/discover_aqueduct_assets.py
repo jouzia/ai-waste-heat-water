@@ -10,7 +10,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import re
 from datetime import UTC, datetime
 from html.parser import HTMLParser
 from pathlib import Path
@@ -34,6 +33,7 @@ class PageParser(HTMLParser):
         self.links: list[dict[str, str]] = []
         self.title_parts: list[str] = []
         self.in_title = False
+        self.current_anchor_index: int | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attributes = dict(attrs)
@@ -48,16 +48,20 @@ class PageParser(HTMLParser):
                     "rel": str(attributes.get("rel") or ""),
                 }
             )
+            if tag == "a":
+                self.current_anchor_index = len(self.links) - 1
 
     def handle_data(self, data: str) -> None:
         if self.in_title:
             self.title_parts.append(data.strip())
-        if self.links and self.links[-1]["tag"] == "a":
-            self.links[-1]["text"] += data.strip()
+        if self.current_anchor_index is not None:
+            self.links[self.current_anchor_index]["text"] += data.strip()
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
             self.in_title = False
+        if tag == "a":
+            self.current_anchor_index = None
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -74,7 +78,10 @@ def candidate_links(page_url: str, links: list[dict[str, str]]) -> list[dict[str
             continue
         lower_path = parsed.path.lower()
         lower_text = f"{item['href']} {item['text']}".lower()
-        same_source_family = parsed.netloc.lower().endswith(("wri.org", "datasets.wri.org"))
+        same_source_family = (
+            parsed.netloc.lower() == "wri.org"
+            or parsed.netloc.lower().endswith(".wri.org")
+        )
         looks_like_data = lower_path.endswith(DATA_EXTENSIONS) or any(
             keyword in lower_text for keyword in LINK_KEYWORDS
         )
