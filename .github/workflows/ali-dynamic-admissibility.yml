@@ -43,7 +43,7 @@ jobs:
             --ledger artifacts/ali_2020_exports/ali_2020_transient_observation_ledger.csv \
             --workbook S2_Data.xlsx \
             --worksheet 50 \
-            --duration-min 30
+            --duration-min 0
       - name: Upload diagnostic matrix and measured-trace comparison
         uses: actions/upload-artifact@v4
         with:
