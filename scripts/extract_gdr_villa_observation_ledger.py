@@ -20,6 +20,8 @@ SOURCE_DOI = "10.15121/1452747"
 SOURCE_PAGE = "https://gdr.openei.org/submissions/1016"
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
 WORKBOOK_NAME = "3M 0.2 Micron Plate and Frame Countercurrent DCMD.xls"
+EXPECTED_SOURCE_SHA256 = "5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb"
+EXPECTED_LEDGER_ROWS = 631
 CONDITION_SHEETS = tuple(
     f"{cold}-{hot}" for cold in (20, 30) for hot in (40, 45, 50, 55, 60, 65)
 )
@@ -57,6 +59,15 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def validate_source_checksum(actual_sha256: str) -> None:
+    """Fail closed if the public workbook bytes differ from the audited source."""
+    if actual_sha256.lower() != EXPECTED_SOURCE_SHA256:
+        raise ValueError(
+            "Source workbook SHA-256 changed; audit the new source version before "
+            f"extracting observations (got {actual_sha256})."
+        )
 
 
 def _finite_number(value: Any) -> float | None:
@@ -122,6 +133,7 @@ def extract_ledger(
         raise ValueError(f"Workbook missing required sheets: {missing}")
 
     source_sha = sha256_file(input_path)
+    validate_source_checksum(source_sha)
     records: list[dict[str, object]] = []
     counts: dict[str, int] = {}
     for sheet_name in CONDITION_SHEETS:
@@ -132,6 +144,12 @@ def extract_ledger(
         records.extend(sheet_records)
         counts[sheet_name] = len(sheet_records)
     workbook.release_resources()
+
+    if len(records) != EXPECTED_LEDGER_ROWS:
+        raise ValueError(
+            f"Expected {EXPECTED_LEDGER_ROWS} source rows for the audited workbook, "
+            f"found {len(records)}."
+        )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", newline="", encoding="utf-8") as stream:
