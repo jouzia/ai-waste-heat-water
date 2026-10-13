@@ -32,11 +32,12 @@ _SCENARIO_SPEC.loader.exec_module(_SCENARIO_MODULE)
 SCENARIO_BOUNDS = _SCENARIO_MODULE.SCENARIO_BOUNDS
 base_scenario = _SCENARIO_MODULE.base_scenario
 
+# Phase 1 failed the predeclared thresholds; phase 2 increases all runs.
 DESIGNS = (
-    (20261013, 20_000),
-    (20261014, 20_000),
-    (20261015, 20_000),
-    (20261016, 50_000),
+    (20261017, 50_000),
+    (20261018, 50_000),
+    (20261019, 50_000),
+    (20261020, 100_000),
 )
 P05_RELATIVE_TOLERANCE = 0.05
 SIGN_PROBABILITY_ABSOLUTE_TOLERANCE = 0.005
@@ -139,7 +140,7 @@ def run(output_dir: Path) -> dict[str, object]:
         "freshwater_p95_absolute_spread_within_tolerance": freshwater_p95_spread <= P95_FRESHWATER_ABSOLUTE_TOLERANCE_L,
     }
     summary: dict[str, object] = {
-        "study_id": "SCENARIO-MC-INDEPENDENT-SEED-CONVERGENCE-2026-10-13",
+        "study_id": "SCENARIO-MC-INDEPENDENT-SEED-CONVERGENCE-PHASE2-2026-10-13",
         "generated_at_utc": datetime.now(UTC).isoformat(),
         "python_version": platform.python_version(),
         "input_interpretation": "illustrative independent-uniform scenario ranges; not empirical probability distributions",
