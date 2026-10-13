@@ -7,6 +7,7 @@ on:
       - "scripts/download_gdr_villa.py"
       - "scripts/extract_gdr_villa_flux_summary.py"
       - "scripts/extract_gdr_villa_observation_ledger.py"
+      - ".github/workflows/gdr-villa-ingest.yml"
   pull_request:
     paths:
       - "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
@@ -128,7 +129,11 @@ jobs:
               summary = list(csv.DictReader(stream))
           with (root / "Specifications.csv").open(encoding="utf-8-sig", newline="") as stream:
               specifications = list(csv.reader(stream))
-          area_m2 = float(specifications[1][0])
+          area_row = next(
+              row for row in specifications
+              if row and row[0].strip().lower() == "membrane surface area"
+          )
+          area_m2 = float(area_row[1])
 
           assert manifest["source_file_sha256"] == "5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb"
           assert len(ledger) == 631 == manifest["output_row_count"]
