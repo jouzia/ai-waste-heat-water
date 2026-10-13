@@ -10,7 +10,7 @@
 - Artifact ID: `11833462795`; archive digest: `sha256:a20d3e19b77f1c9d7d8ad09f1b6c1c202fd4b6ba4042cb0c0520715e2b88d7ee`.
 - Artifact retention expiry: 2027-01-11 17:19 UTC.
 - Five original XLSX supporting objects are retained in the artifact with SHA-256 checksums; extraction code and manifests are in the repository.
-- The artifact includes source-linked transient and steady-state ledgers, excluded-row ledger, tail-flux diagnostic table, and a manifest recording file hashes and sheet/row locators.
+- The artifact includes source-linked transient and steady-state ledgers, excluded-row ledger, raw `mw` semantics audit, and a manifest recording file hashes and sheet/row locators.
 - Raw worksheet ledger SHA-256: `e24887bb94c1f903d623c4eb9bd19e1798615e5aa6b45776a81a5073d43956f7` (unchanged source export).
 - Transient observation ledger SHA-256: `1bc2ca946a9a42034eb13b8d53d6795258b225362140c75d1fa84e69defe7275`.
 - Steady-state ledger SHA-256: `87e338a4ac7868d380d6948025ff83b50061212894bb1c35dcf193ac4d363e27`.
