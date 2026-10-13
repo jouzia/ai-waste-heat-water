@@ -6,6 +6,7 @@ on:
     paths:
       - "scripts/download_ali_2020_data.py"
       - "scripts/extract_ali_2020_observations.py"
+      - "scripts/extract_ali_2020_observation_ledger.py"
       - ".github/workflows/ali-2020-ingest.yml"
   workflow_dispatch:
 
@@ -46,6 +47,24 @@ jobs:
           print("Verified five supporting XLSX files:")
           for item in manifest["files"]:
               print(item["filename"], item["size_bytes"], item["sha256"])
+          PY
+
+      - name: Export lossless raw worksheet-row ledger
+        run: |
+          python scripts/extract_ali_2020_observation_ledger.py \
+            --input-dir data/raw/ali_2020 \
+            --output-dir artifacts/ali_2020_exports
+
+      - name: Verify raw ledger coverage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("artifacts/ali_2020_exports/ali_2020_raw_observation_ledger_manifest.json").read_text())
+          assert len(manifest["workbooks"]) == 5, manifest
+          assert manifest["total_nonempty_rows_exported"] > 10000, manifest
+          assert all(item["sha256"] for item in manifest["workbooks"]), manifest
+          print("Verified raw worksheet ledger:", manifest["total_nonempty_rows_exported"], "nonempty source rows")
           PY
 
       - name: Extract source-linked transient and steady-state ledgers
