@@ -106,8 +106,6 @@ def run_case(
             "config": AliDynamicConfig(
                 relative_tolerance=1e-4,
                 absolute_tolerance_temperature_k=1e-4,
-                absolute_tolerance_mass_rate_kg_s=1e-7,
-                absolute_tolerance_mass_kg=1e-5,
             ),
         }
         if model_kind.startswith("spatial"):
@@ -237,8 +235,7 @@ def main() -> None:
         "numerical_tolerance_profile": {
             "relative_tolerance": 1e-4,
             "absolute_temperature_tolerance_k": 1e-4,
-            "absolute_mass_rate_tolerance_kg_s": 1e-7,
-            "absolute_mass_tolerance_kg": 1e-5,
+            "mass_state_integration": "trapezoidal at measured-input knots; step-refinement check required",
             "status": "exploratory; tolerance convergence must be checked before publication claims",
         },
         "cases": cases,
