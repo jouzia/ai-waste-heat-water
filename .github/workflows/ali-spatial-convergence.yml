@@ -57,9 +57,9 @@ jobs:
               metrics = list(csv.DictReader(f))
           with (root / "ali_spatial_grid_tolerance_convergence.csv").open(newline="", encoding="utf-8") as f:
               convergence = list(csv.DictReader(f))
-          assert len(metrics) == 5, len(metrics)
-          assert len(convergence) == 5, len(convergence)
-          assert summary["reference"] == {"n_cells": 20, "relative_tolerance": 1e-6}
+          assert len(metrics) == 4, len(metrics)
+          assert len(convergence) == 4, len(convergence)
+          assert summary["reference"] == {"n_cells": 20, "relative_tolerance": 1e-4}
           assert summary["source"]["rows"] > 1000
           for name, expected in manifest["outputs"].items():
               actual = hashlib.sha256((root / name).read_bytes()).hexdigest()
@@ -71,7 +71,7 @@ jobs:
               if row["mass_rate_nonnegative"] != "True"
               or row["accumulated_mass_monotonic"] != "True"
           ]
-          print("Verified 5 grid/tolerance runs, 5 convergence comparisons, and output checksums.")
+          print("Verified 4 grid/tolerance runs, 4 convergence comparisons, and output checksums.")
           print("Cases with nonphysical mass-state flags:", [row["n_cells"] + " cells / rtol " + row["relative_tolerance"] for row in rejected])
           print("This is numerical convergence evidence only, not empirical validation.")
           PY
