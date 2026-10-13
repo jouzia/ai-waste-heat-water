@@ -5,7 +5,7 @@ citation: "Ali, E., Orfi, J., & Najib, A. (2020). Developing and validating a dy
 doi: "10.1371/journal.pone.0230207"
 article_url: "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230207"
 license: "Creative Commons Attribution (CC BY 4.0), as stated by the publisher"
-status: open_dataset_registered_extraction_pending
+status: source_linked_ledgers_extracted_and_archived
 configuration: "pilot-scale spiral-wound counter-current DCMD, transient step tests"
 supporting_data:
   - doi: "10.1371/journal.pone.0230207.s002"
@@ -53,3 +53,20 @@ extraction_rules:
   - "Pre-register development and held-out operating conditions before any fitting."
   - "Report transient error metrics separately from steady-state flux metrics."
   - "Do not claim dynamic validation until the time-dependent model and exact input histories are reconstructed."
+
+
+extraction_artifact:
+  workflow_run_id: 38427214234
+  artifact_id: 11828704483
+  artifact_name: "ali-2020-dynamic-dcmd-source-data"
+  artifact_sha256: "63f188990ed82e78775cd52048bde5696bf100ced8e43703382392c7baa06042"
+  expires_at_utc: "2027-01-11T16:02:34Z"
+  raw_ledger: "ali_2020_raw_observation_ledger.csv"
+  raw_ledger_sha256: "e24887bb94c1f903d623c4eb9bd19e1798615e5aa6b45776a81a5073d43956f7"
+  raw_ledger_rows: 17430
+  transient_ledger_rows: 17385
+  complete_time_series_rows: 16837
+  timestamp_free_temperature_rows: 548
+  steady_state_observations: 16
+  excluded_steady_state_rows: 2
+  tail_consistency_diagnostics: 34
