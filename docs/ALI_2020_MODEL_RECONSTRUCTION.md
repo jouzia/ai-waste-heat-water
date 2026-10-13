@@ -72,7 +72,7 @@ V\rho C_p\frac{dT_{c,out}}{dt}=
 +h_mA(T_{hm}-T_{cm})+j_wAH_v.
 \]
 
-The ODE solver now integrates separately over each measured-input knot, using the interval's derivative consistently at its right endpoint. This avoids adaptive RK stages stepping across a derivative discontinuity in the piecewise-linear input. A synthetic regression test verifies interval-boundary integration.
+The thermal ODE now integrates separately over each measured-input knot, using the interval's derivative consistently at its right endpoint. This avoids adaptive RK stages stepping across a derivative discontinuity in the piecewise-linear input. Because the mass-rate state does not feed back into the thermal states, thermal integration is decoupled from the mass-rate and accumulated-mass states; those mass states are advanced by trapezoidal quadrature at the measured-input knots. Regression tests verify interval-boundary integration and mass conservation. This is an explicit numerical discretization, not a source-paper claim; a tighter time-grid/solver-tolerance convergence study remains required before quantitative validation.
 
 For measured, piecewise-linear inlet-temperature histories, the derivative chain rule also includes inlet-temperature derivatives. In the spatial model, each cell's bulk-temperature derivative includes the neighboring upstream/downstream cell derivative (or the boundary-input derivative at the module edge). Omitting these terms is only defensible under constant boundary inputs; it is not consistent with a fluctuating measured-input trace.
 
