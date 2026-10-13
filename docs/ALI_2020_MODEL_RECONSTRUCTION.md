@@ -156,3 +156,10 @@ The current 90-day artifact and per-file/ledger checksums are recorded in 04_exp
 ## What this does and does not establish
 
 The data acquisition, hashes, source row locators, and structured extraction are complete. This document establishes a reproducible prior-art benchmark and a clear test protocol. It does **not** establish that the repository's current model matches the Ali experiment, that the published model's heuristic correction is physically identified, or that data-center waste heat yields a net freshwater benefit.
+
+
+## 2026-10-13 admissibility check and held-out-flow diagnostic
+
+The first transient smoke test on the default 10 m² configuration (50 L/h, 60 °C hot inlet, 25 °C cold inlet, both outlets initialized at 25 °C) numerically converged but predicted a hot outlet of **11.714 °C** after one minute—below the global inlet/initial-state temperature envelope. This is thermodynamically inadmissible for the declared passive system. The implementation now rejects such trajectories with an explicit error instead of returning them as successful predictions. The generic integration smoke test uses a deliberately reduced 0.1 m² area; that test is only an integrator sanity check and is **not** the source geometry. The default source-geometry/low-flow case remains a known structural mismatch and must not be treated as a successful reconstruction.
+
+The separate S1 flux-law diagnostic fits permeance on the 50/100/200 L/h observations and holds out all four 300 L/h observations. A fixed-TPC model (α=0.8) has held-out MAE 0.828 kg m⁻² h⁻¹ and RMSE 0.861. An exploratory logistic TPC-versus-log-flow model reduces held-out MAE to 0.181 and RMSE to 0.214 under the 0.5% salinity interpretation. This is a within-paper, fitted, held-out-flow diagnostic—not independent validation. Under the alternative measured-TDS proxy, fitted permeance hits the optimizer's upper bound (200 kg m⁻² h⁻¹ bar⁻¹), signalling parameter/boundary sensitivity. Both the salinity discrepancy and model-form issue remain unresolved.
