@@ -249,8 +249,17 @@ def simulate_dcmd_channel(
                 * (tfm - tpm) * cell_area
             )
             feed_heat_kwh = q_feed_w / 1000.0 * config.duration_h
-            feed_temperature -= feed_heat_kwh * 3600.0 / (feed_mass_flow * config.feed_cp_kj_kg_k)
-            permeate_temperature += feed_heat_kwh * 3600.0 / (permeate_mass_flow * config.permeate_cp_kj_kg_k)
+            # Channel temperatures are steady-state bulk states. Their changes
+            # depend on heat-transfer rate (kJ/h) divided by mass-flow rate
+            # (kg/h), not on the arbitrary integration/reporting duration.
+            feed_temperature -= (
+                q_feed_w / 1000.0 * 3600.0
+                / (feed_mass_flow * config.feed_cp_kj_kg_k)
+            )
+            permeate_temperature += (
+                q_feed_w / 1000.0 * 3600.0
+                / (permeate_mass_flow * config.permeate_cp_kj_kg_k)
+            )
             feed_mass_flow -= product_rate
             permeate_mass_flow += product_rate
             if feed_mass_flow <= 0:
