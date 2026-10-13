@@ -8,6 +8,8 @@ dataset landing page and is pinned here with source provenance.
 from __future__ import annotations
 
 import argparse
+import csv
+import io
 import hashlib
 import json
 from datetime import UTC, datetime
@@ -148,6 +150,36 @@ def inspect_zip(url: str = SOURCE_URL) -> dict[str, object]:
                 }
                 for info in archive.infolist()
             ]
+            selected_previews: list[dict[str, object]] = []
+            preview_members = (
+                "Aqueduct40_waterrisk_download_Y2023M07D05/CVS/Aqueduct40_baseline_annual_y2023m07d05.csv",
+                "Aqueduct40_waterrisk_download_Y2023M07D05/CVS/Aqueduct40_future_annual_y2023m07d05.csv",
+            )
+            for member_name in preview_members:
+                if member_name not in archive.namelist():
+                    selected_previews.append(
+                        {"path": member_name, "status": "not_found_in_archive"}
+                    )
+                    continue
+                with archive.open(member_name) as raw_stream:
+                    text_stream = io.TextIOWrapper(raw_stream, encoding="utf-8-sig", newline="")
+                    reader_csv = csv.reader(text_stream)
+                    header = next(reader_csv, [])
+                    samples = []
+                    for _ in range(3):
+                        row = next(reader_csv, None)
+                        if row is None:
+                            break
+                        samples.append(row)
+                    selected_previews.append(
+                        {
+                            "path": member_name,
+                            "status": "previewed",
+                            "header": header,
+                            "sample_rows": samples,
+                            "note": "Only header and three data rows were read via ranged archive access.",
+                        }
+                    )
     finally:
         reader.close()
 
@@ -164,6 +196,7 @@ def inspect_zip(url: str = SOURCE_URL) -> dict[str, object]:
         ),
         "directory_entry_count": len(entries),
         "entries": entries,
+        "selected_csv_previews": selected_previews,
         "source_policy": [
             "Only HTTP byte ranges needed to inspect the ZIP central directory were requested.",
             "No data layer was extracted or interpreted.",
