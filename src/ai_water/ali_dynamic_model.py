@@ -12,8 +12,8 @@ from __future__ import annotations
 
 import math
 from collections.abc import Callable
-from functools import lru_cache
 from dataclasses import dataclass
+from functools import lru_cache
 
 import numpy as np
 from iapws import IAPWS95
