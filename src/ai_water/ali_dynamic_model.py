@@ -341,6 +341,22 @@ def interface_state(
     )
 
 
+def _piecewise_linear_derivative(
+    time_s: float,
+    sample_times_s: np.ndarray,
+    sample_values: np.ndarray,
+) -> float:
+    """Derivative of the piecewise-linear input interpolation, in value units/s."""
+    if len(sample_times_s) != len(sample_values) or len(sample_times_s) < 2:
+        raise ValueError("input derivative requires equally sized arrays with at least 2 points")
+    index = int(np.searchsorted(sample_times_s, time_s, side="right") - 1)
+    index = min(max(index, 0), len(sample_times_s) - 2)
+    return float(
+        (sample_values[index + 1] - sample_values[index])
+        / (sample_times_s[index + 1] - sample_times_s[index])
+    )
+
+
 def simulate_lumped_transient(
     *,
     time_min: list[float] | np.ndarray,
@@ -408,9 +424,16 @@ def simulate_lumped_transient(
             float(np.interp(t_s, time_seconds, cold_values_k)),
         )
 
+    def input_derivative_at(t_s: float) -> tuple[float, float]:
+        return (
+            _piecewise_linear_derivative(t_s, time_seconds, hot_values_k),
+            _piecewise_linear_derivative(t_s, time_seconds, cold_values_k),
+        )
+
     def rhs(t_s: float, state: np.ndarray) -> list[float]:
         hot_out_k, cold_out_k, mass_rate_kg_s, _ = state
         hot_in_k, cold_in_k = input_at(t_s)
+        d_hot_in_dt, d_cold_in_dt = input_derivative_at(t_s)
         interface = interface_state(
             hot_in_k, hot_out_k, cold_in_k, cold_out_k, mass_flow_kg_s, cfg
         )
@@ -459,6 +482,14 @@ def simulate_lumped_transient(
         )
         if abs(denominator) < 1e-12:
             raise RuntimeError("Ali mass-rate derivative denominator approached zero")
+        d_hot_bulk_dt = (
+            0.5 * math.sqrt(hot_out_k / hot_in_k) * d_hot_in_dt
+            + 0.5 * math.sqrt(hot_in_k / hot_out_k) * d_hot_out_dt
+        )
+        d_cold_bulk_dt = (
+            0.5 * math.sqrt(cold_out_k / cold_in_k) * d_cold_in_dt
+            + 0.5 * math.sqrt(cold_in_k / cold_out_k) * d_cold_out_dt
+        )
         d_mass_rate_dt = (
             interface.membrane_coefficient_s_m
             * area
@@ -468,16 +499,12 @@ def simulate_lumped_transient(
                     interface.beta_hot_pa_k * interface.a_hot
                     - interface.beta_cold_pa_k * interface.b_hot
                 )
-                * 0.5
-                * math.sqrt(hot_in_k / hot_out_k)
-                * d_hot_out_dt
+                * d_hot_bulk_dt
                 + (
                     interface.beta_hot_pa_k * interface.a_cold
                     - interface.beta_cold_pa_k * interface.b_cold
                 )
-                * 0.5
-                * math.sqrt(cold_in_k / cold_out_k)
-                * d_cold_out_dt
+                * d_cold_bulk_dt
             )
         )
         return [d_hot_out_dt, d_cold_out_dt, d_mass_rate_dt, mass_rate_kg_s]
@@ -643,14 +670,22 @@ def simulate_spatial_transient(
             float(np.interp(t_s, time_seconds, cold_values_k)),
         )
 
+    def input_derivative_at(t_s: float) -> tuple[float, float]:
+        return (
+            _piecewise_linear_derivative(t_s, time_seconds, hot_values_k),
+            _piecewise_linear_derivative(t_s, time_seconds, cold_values_k),
+        )
+
     def rhs(t_s: float, state: np.ndarray) -> np.ndarray:
         hot_cells = state[:n_cells]
         cold_cells = state[n_cells : 2 * n_cells]
         mass_rates = state[2 * n_cells : 3 * n_cells]
         hot_in_k, cold_in_k = input_at(t_s)
+        d_hot_in_dt, d_cold_in_dt = input_derivative_at(t_s)
         d_hot = np.zeros(n_cells, dtype=float)
         d_cold = np.zeros(n_cells, dtype=float)
         d_mass_rates = np.zeros(n_cells, dtype=float)
+        cell_states: list[tuple[InterfaceState, float, float, float, float]] = []
 
         for index in range(n_cells):
             hot_previous_k = hot_in_k if index == 0 else hot_cells[index - 1]
@@ -697,6 +732,13 @@ def simulate_spatial_transient(
                 cell_volume_m3 * cold_props.density_kg_m3 * cp_cold
             )
 
+            cell_states.append(
+                (interface, hot_previous_k, hot_out_k, cold_next_k, cold_out_k)
+            )
+
+        for index, (interface, hot_previous_k, hot_out_k, cold_next_k, cold_out_k) in enumerate(
+            cell_states
+        ):
             denominator = (
                 1.0
                 + interface.membrane_coefficient_s_m
@@ -710,6 +752,17 @@ def simulate_spatial_transient(
             )
             if abs(denominator) < 1e-12:
                 raise RuntimeError("Ali spatial mass-rate derivative denominator approached zero")
+
+            d_hot_previous_dt = d_hot_in_dt if index == 0 else d_hot[index - 1]
+            d_cold_next_dt = d_cold_in_dt if index == n_cells - 1 else d_cold[index + 1]
+            d_hot_bulk_dt = (
+                0.5 * math.sqrt(hot_out_k / hot_previous_k) * d_hot_previous_dt
+                + 0.5 * math.sqrt(hot_previous_k / hot_out_k) * d_hot[index]
+            )
+            d_cold_bulk_dt = (
+                0.5 * math.sqrt(cold_out_k / cold_next_k) * d_cold_next_dt
+                + 0.5 * math.sqrt(cold_next_k / cold_out_k) * d_cold[index]
+            )
             d_mass_rates[index] = (
                 interface.membrane_coefficient_s_m
                 * cfg.membrane_area_m2
@@ -719,16 +772,12 @@ def simulate_spatial_transient(
                         interface.beta_hot_pa_k * interface.a_hot
                         - interface.beta_cold_pa_k * interface.b_hot
                     )
-                    * 0.5
-                    * math.sqrt(hot_previous_k / hot_out_k)
-                    * d_hot[index]
+                    * d_hot_bulk_dt
                     + (
                         interface.beta_hot_pa_k * interface.a_cold
                         - interface.beta_cold_pa_k * interface.b_cold
                     )
-                    * 0.5
-                    * math.sqrt(cold_next_k / cold_out_k)
-                    * d_cold[index]
+                    * d_cold_bulk_dt
                 )
             )
 
