@@ -86,6 +86,16 @@ def test_lumped_transient_integrates_measured_input_trace() -> None:
     assert result.hot_outlet_c[-1] > result.hot_outlet_c[0]
     assert result.accumulated_mass_kg[-1] > result.accumulated_mass_kg[0]
     assert result.mass_rate_kg_h.shape == times.shape
+    expected_mass_increment = (
+        0.5
+        * (result.mass_rate_kg_h[:-1] + result.mass_rate_kg_h[1:])
+        * np.diff(times)
+        * 60.0
+        / 3600.0
+    )
+    np.testing.assert_allclose(
+        np.diff(result.accumulated_mass_kg), expected_mass_increment, atol=1e-12
+    )
 
 
 def test_lumped_transient_rejects_thermodynamically_inadmissible_outlet() -> None:
@@ -149,3 +159,13 @@ def test_spatial_transient_stays_physical_for_reduced_area() -> None:
     assert result.accumulated_mass_kg[-1] > result.accumulated_mass_kg[0]
     assert np.all(result.hot_outlet_c >= 24.0)
     assert np.all(result.cold_outlet_c <= 61.0)
+    expected_mass_increment = (
+        0.5
+        * (result.mass_rate_kg_h[:-1] + result.mass_rate_kg_h[1:])
+        * np.diff(times)
+        * 60.0
+        / 3600.0
+    )
+    np.testing.assert_allclose(
+        np.diff(result.accumulated_mass_kg), expected_mass_increment, atol=1e-12
+    )
