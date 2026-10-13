@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import itertools
 import json
 import math
 import re
@@ -310,7 +311,7 @@ def _mw_semantics_audit(
         rows = sorted(rows, key=lambda row: float(row["time_min"]))
         time_values = [float(row["time_min"]) for row in rows]
         mw_values = [float(row["mw_raw_reading_kg"]) for row in rows]
-        differences = [right - left for left, right in zip(mw_values, mw_values[1:])]
+        differences = [right - left for left, right in itertools.pairwise(mw_values)]
         negative = [difference for difference in differences if difference < 0.0]
         positive = [difference for difference in differences if difference > 0.0]
         target_match = re.fullmatch(r"(\d+)(R?)", sheet_name.strip(), flags=re.IGNORECASE)
@@ -336,8 +337,8 @@ def _mw_semantics_audit(
                     if any(value > 0.0 for value in mw_values)
                     else None
                 ),
-                "negative_step_count": int(len(negative)),
-                "positive_step_count": int(len(positive)),
+                "negative_step_count": len(negative),
+                "positive_step_count": len(positive),
                 "max_negative_step_magnitude_kg": (
                     float(abs(min(negative))) if negative else 0.0
                 ),
