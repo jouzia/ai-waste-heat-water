@@ -52,12 +52,26 @@ def test_lumped_transient_integrates_measured_input_trace() -> None:
         nominal_flow_l_h=50.0,
         initial_hot_outlet_c=25.0,
         initial_cold_outlet_c=25.0,
+        config=AliDynamicConfig(membrane_area_m2=0.1),
     )
     assert result.solver_success
     assert np.all(np.isfinite(result.accumulated_mass_kg))
     assert result.hot_outlet_c[-1] > result.hot_outlet_c[0]
     assert result.accumulated_mass_kg[-1] > result.accumulated_mass_kg[0]
     assert result.mass_rate_kg_h.shape == times.shape
+
+
+def test_lumped_transient_rejects_thermodynamically_inadmissible_outlet() -> None:
+    times = np.linspace(0.0, 1.0, 7)
+    with pytest.raises(RuntimeError, match="outside the inlet-temperature envelope"):
+        simulate_lumped_transient(
+            time_min=times,
+            hot_inlet_c=np.full(7, 60.0),
+            cold_inlet_c=np.full(7, 25.0),
+            nominal_flow_l_h=50.0,
+            initial_hot_outlet_c=25.0,
+            initial_cold_outlet_c=25.0,
+        )
 
 
 def test_lumped_transient_rejects_nonmonotonic_time() -> None:
