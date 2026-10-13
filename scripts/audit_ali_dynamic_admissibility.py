@@ -10,7 +10,6 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import math
 from dataclasses import replace
 from pathlib import Path
 
@@ -41,12 +40,12 @@ def run_case(
         "heat_loss_correction": heat_loss_correction,
         "status": "not_run",
         "error": "",
-        "hot_outlet_min_c": math.nan,
-        "hot_outlet_max_c": math.nan,
-        "cold_outlet_min_c": math.nan,
-        "cold_outlet_max_c": math.nan,
-        "final_accumulated_mass_kg": math.nan,
-        "final_mass_rate_kg_h": math.nan,
+        "hot_outlet_min_c": None,
+        "hot_outlet_max_c": None,
+        "cold_outlet_min_c": None,
+        "cold_outlet_max_c": None,
+        "final_accumulated_mass_kg": None,
+        "final_mass_rate_kg_h": None,
         "mass_rate_nonnegative": False,
     }
     try:
