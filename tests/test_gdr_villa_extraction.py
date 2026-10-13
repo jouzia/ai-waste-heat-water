@@ -99,3 +99,11 @@ def test_observation_ledger_excludes_theoretical_sheet() -> None:
     assert _ledger_extractor.extract_sheet_rows(
         sheet, workbook_filename="benchmark.xls", source_sha256="abc123"
     ) == []
+
+
+def test_observation_ledger_source_checksum_is_pinned() -> None:
+    assert _ledger_extractor.validate_source_checksum(
+        _ledger_extractor.EXPECTED_SOURCE_SHA256
+    ) is None
+    with pytest.raises(ValueError, match="Source workbook SHA-256 changed"):
+        _ledger_extractor.validate_source_checksum("different-source-checksum")
