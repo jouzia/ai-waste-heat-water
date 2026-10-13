@@ -62,3 +62,8 @@ The latest source-linked audit covers 19 complete timed worksheet traces, of whi
 ## Spatial-grid and ODE-tolerance convergence (2026-10-13)
 
 A five-case unfitted convergence audit now compares 5/10/20 spatial cells and relative/absolute tolerances of 1e-4/1e-6 on the full 1,662-row S2/50 measured trace. The 10-cell 1e-4 run differs from the 20-cell 1e-6 numerical reference by hot-outlet RMSE 0.00315 °C, cold-outlet RMSE 0.0722 °C, mass-rate RMSE 0.0485 kg/h, and model-predicted accumulated-mass RMSE 0.0314 kg. Tightening tolerance at fixed 20 cells changes cold-outlet temperature by only 5.94e-5 °C RMSE, so spatial discretization dominates the tested numerical difference. However, 10- and 20-cell model-to-measurement cold-outlet RMSE remain about 4.98 and 5.01 °C respectively. This is numerical convergence evidence, not source reconstruction or validation. See `docs/ALI_2020_SPATIAL_GRID_TOLERANCE_CONVERGENCE_2026-10-13.md` and workflow run #1.
+
+
+## Pre-registered S3/60 held-out operating condition (2026-10-13)
+
+The 10-cell spatial model was run without refitting on the 1,068-row S3/60 trace (100 L/h, 60 °C nominal target). Hot/cold outlet RMSE is 2.079/3.323 °C without heat-loss correction and 2.173/2.643 °C with the published 0.20 correction. The correction improves cold-side RMSE but worsens hot-side RMSE and flips the cold-side bias. This is a within-source held-out condition, not external validation; raw mass comparison remains disabled. Full results: `docs/ALI_2020_HELDOUT_TRACE_RESULTS_2026-10-13.md`.
