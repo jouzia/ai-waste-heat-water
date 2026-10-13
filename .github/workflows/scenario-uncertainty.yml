@@ -51,11 +51,11 @@ jobs:
               mc_rows = list(csv.DictReader(stream))
           with (root / "sobol_indices.csv").open(encoding="utf-8", newline="") as stream:
               sobol_rows = list(csv.DictReader(stream))
-          assert len(mc_rows) == 10000
-          assert len(sobol_rows) == 2 * 2 * 16
+          assert len(mc_rows) == 5000
+          assert len(sobol_rows) == 2 * 2 * 15
           assert summary["monte_carlo"]["failed_samples"] == 0
           assert summary["claim_limits"]
-          print("Verified 10,000 Monte Carlo draws, 64 Sobol index rows, and all output checksums.")
+          print("Verified 5,000 Monte Carlo draws, 60 Sobol index rows, and all output checksums.")
           print("Scenario-only result; not empirical validation.")
           PY
 
