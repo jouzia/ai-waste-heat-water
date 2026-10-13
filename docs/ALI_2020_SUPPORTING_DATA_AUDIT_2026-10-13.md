@@ -6,11 +6,15 @@
 
 ## Reproducible acquisition
 
-- Workflow: [Ali et al. 2020 dynamic DCMD source-data ingestion, run #8](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38427037707).
-- Artifact ID: `11829415818`; archive digest: `sha256:1a66d080c3e4ddbfde2a5ba77def7418fb48ff797c2d651442a970122ffd7b30`.
-- Artifact retention expiry: 2027-01-11 16:01 UTC.
+- Workflow: [Ali et al. 2020 dynamic DCMD source-data ingestion, run #12](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38427509655).
+- Artifact ID: `11829695926`; archive digest: `sha256:1a12fadca90d89452c11f0f7cc5bcbc6b7804e5c16c78528c5a5f70723e15224`.
+- Artifact retention expiry: 2027-01-11 16:04 UTC.
 - Five original XLSX supporting objects are retained in the artifact with SHA-256 checksums; extraction code and manifests are in the repository.
 - The artifact includes source-linked transient and steady-state ledgers, excluded-row ledger, tail-flux diagnostic table, and a manifest recording file hashes and sheet/row locators.
+- Raw worksheet ledger SHA-256: `e24887bb94c1f903d623c4eb9bd19e1798615e5aa6b45776a81a5073d43956f7`.
+- Transient observation ledger SHA-256: `ee31a5604a01eb33683672b7ace2bae817273976425dc79509923b92647ec35c`.
+- Steady-state ledger SHA-256: `87e338a4ac7868d380d6948025ff83b50061212894bb1c35dcf193ac4d363e27`.
+- Tail consistency CSV SHA-256: `0fcbd73063027d9c1fb0f981b1b69411caee23d1274b8aeb102a41b62687b76b`.
 
 ## Extracted material
 
