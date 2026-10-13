@@ -47,3 +47,13 @@ Scenario assumptions must be reported separately from empirical uncertainty.
 - sign-change bracketing for one-dimensional break-even sweeps.
 
 These are analysis utilities, not empirical calibration. The manuscript must report the declared distributions, counterfactual, valid/invalid sample counts, seed, Git SHA, and parameter provenance alongside every result.
+
+
+## Execution record — scenario-only study
+
+- Commit: `ec7624afd7cecd34b12802a6e0d779a75ce97ff`
+- Seed: `20261013`
+- Monte Carlo: 20,000 requested, 20,000 successful, 0 invalid draws.
+- Sobol: 512 and 2,048 samples per matrix, 15 independent uniform scenario ranges, two outputs.
+- Artifact: [run #8](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38428133917), artifact ID `11829716834`, SHA-256 `f8d4380906e0fe45ad5f377c828339b7f0eb06b08b516ebf8be63d114a4e7faf`.
+- Interpretation: conditional on the one-hour illustrative scenario, the model and the selected ranges only. The run is not a physical forecast, empirical uncertainty study, or validation result. Monte Carlo lower-tail and freshwater Sobol convergence remain open.
