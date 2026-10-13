@@ -5,7 +5,7 @@
 
 ## Verified progress
 
-- CI passed on commit `e649146e17594e8223e952785e7de76d488479a7`: 139 tests passed, 1 skipped; Ruff passed. The fixed publication gate now requires all 18 named scientific gates to be true and currently fails by design because the status is INCOMPLETE.
+- CI passed on commit `0221845645f77b0e8a6f49cf82db1f3100c7b548`: 139 tests passed, 1 skipped; Ruff passed. Independent-seed Monte Carlo convergence now passes under illustrative scenario ranges; the overall publication gate remains INCOMPLETE (10/18). The fixed publication gate now requires all 18 named scientific gates to be true and currently fails by design because the status is INCOMPLETE.
 - GDR/NREL open-data source: Villa et al. (2018), DOI 10.15121/1452747. The original 3M counter-current DCMD workbook was downloaded in a workflow artifact, SHA-256 recorded, and 12 condition-level cumulative-volume traces were extracted into `04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv`. See `docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md`.
 - A reproducible four-way comparison of Graetz–Lévêque/WaterTAP transfer correlations and smooth-channel/spacer-porosity assumptions was run with a 20 °C development group and a 30 °C within-workbook held-out group. Results are recorded in `docs/GDR_3M_MODEL_FORM_COMPARISON_2026-10-11.md` and the GitHub Actions artifact. This is diagnostic evidence, not independent validation.
 - A counter-current permeate outlet-state bug was corrected; a regression test checks the correct outlet temperature/mass state. A separate duration-invariance defect in steady-state channel temperatures was corrected and tested.
