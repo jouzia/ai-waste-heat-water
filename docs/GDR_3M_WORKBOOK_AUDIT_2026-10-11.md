@@ -12,7 +12,7 @@ Audit date: 2026-10-11
 - Licence: CC BY 4.0; attribute the dataset, link the licence, and state modifications.
 - File size: 13,192,704 bytes.
 - SHA-256: `5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb`
-- Retrieval/inspection artifact: GitHub Actions artifact `gdr-villa-3m-countercurrent`, latest run ID `38425489743`, artifact ID `11828433138`, SHA-256 `0ad2b425c0238bfa7aed0bb6f25e837fa29381ea96c0cee747e49710bd3b30d2`, retained until 2026-10-27; contains the raw workbook, worksheet CSV exports, row-level observation ledger (631 rows), and manifests. The raw workbook and generated ledger are not committed to git; the extraction code and workflow are committed.
+- Retrieval/inspection artifact: GitHub Actions artifact `gdr-villa-3m-countercurrent`, latest run ID `38426375700`, artifact ID `11829345287`, SHA-256 `4589fe2907e751a80316dcafd0c4fdfe8d2c8aa4703e185afb800a37ab7fb956`, retained until 2027-01-11; contains the raw workbook, worksheet CSV exports, row-level observation ledger (631 rows), and manifests. The raw workbook and generated ledger are not committed to git; the extraction code and workflow are committed.
 - Derived flux summary: `04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv`.
 
 ## Workbook structure
@@ -23,7 +23,7 @@ The `Specifications` worksheet identifies the membrane as 3M, model 0.2 micron, 
 
 ## Row-level observation ledger
 
-The workflow now exports `artifacts/gdr_villa_exports/observation_ledger.csv` with **631 rows across 12 condition sheets**. Each row records the source DOI, workbook name, workbook SHA-256, worksheet, one-based Excel row, runtime, cumulative distillate volume, measured inlet/outlet temperatures, and selected raw flow/sensor values. Raw non-finite flow values such as `Inf` are preserved as text and not repaired. The `Theoretical` worksheet is excluded. The artifact is reproducible from the public CC BY 4.0 source with `scripts/download_gdr_villa.py` and `scripts/extract_gdr_villa_observation_ledger.py`; the current artifact is temporary (14-day retention), so the source download and extraction scripts remain the durable provenance path.
+The workflow now exports `artifacts/gdr_villa_exports/observation_ledger.csv` with **631 rows across 12 condition sheets** and checks that the source SHA-256 matches the audited workbook, the ledger has exactly 631 rows, all 12 conditions are present, and each OLS-derived flux can be independently recomputed from the ledger. The maximum absolute difference against the generated condition-level summary is `4.82 × 10⁻⁹ L m⁻² h⁻¹`. Each row records the source DOI, workbook name, workbook SHA-256, worksheet, one-based Excel row, runtime, cumulative distillate volume, measured inlet/outlet temperatures, and selected raw flow/sensor values. Raw non-finite flow values such as `Inf` are preserved as text and not repaired. The `Theoretical` worksheet is excluded. The artifact is reproducible from the public CC BY 4.0 source with `scripts/download_gdr_villa.py` and `scripts/extract_gdr_villa_observation_ledger.py`; the current artifact is temporary (14-day retention), so the source download and extraction scripts remain the durable provenance path.
 
 ## Extraction method
 
