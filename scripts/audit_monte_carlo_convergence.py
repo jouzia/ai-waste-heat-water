@@ -10,8 +10,10 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import importlib.util
 import json
 import platform
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -19,7 +21,16 @@ import numpy as np
 
 from ai_water.monte_carlo import run_monte_carlo
 from ai_water.uncertainty import DistributionSpec
-from scripts.run_scenario_uncertainty_study import SCENARIO_BOUNDS, base_scenario
+
+_SCENARIO_SCRIPT = Path(__file__).resolve().with_name("run_scenario_uncertainty_study.py")
+_SCENARIO_SPEC = importlib.util.spec_from_file_location("scenario_uncertainty_module", _SCENARIO_SCRIPT)
+if _SCENARIO_SPEC is None or _SCENARIO_SPEC.loader is None:
+    raise ImportError(f"Could not load scenario definitions from {_SCENARIO_SCRIPT}")
+_SCENARIO_MODULE = importlib.util.module_from_spec(_SCENARIO_SPEC)
+sys.modules[_SCENARIO_SPEC.name] = _SCENARIO_MODULE
+_SCENARIO_SPEC.loader.exec_module(_SCENARIO_MODULE)
+SCENARIO_BOUNDS = _SCENARIO_MODULE.SCENARIO_BOUNDS
+base_scenario = _SCENARIO_MODULE.base_scenario
 
 DESIGNS = (
     (20261013, 20_000),
