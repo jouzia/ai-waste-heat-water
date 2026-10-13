@@ -87,6 +87,16 @@ Appendix B specifies the following submodels:
 
 The exact Appendix A/B equations and their notation are in the source PDF. Equation transcription and units should be checked against the page images, not only OCR text.
 
+## Equation-level ambiguities that must be handled explicitly
+
+Two items require a reconstruction decision before any result can be called a faithful reproduction:
+
+1. **Transition-regime membrane coefficient.** Appendix B's printed transition expression combines the reciprocal Knudsen-resistance term with a term involving (\tau\delta P_a/(\epsilon P_D)). Under the paper's nomenclature (P_D=P_aD) (pressure × diffusivity), those terms appear to have incompatible dimensions unless an additional factor or a different definition of (P_D) is intended. Do not implement the printed sum blindly. The first implementation should use the dimensionally consistent series-resistance relation (C_m=(C_{m,K}^{-1}+C_{m,MD}^{-1})^{-1}), retain the exact printed equation as a documented discrepancy, and test plausible interpretations of (P_D) separately.
+
+2. **Pore radius and property closures.** The experimental description gives a 0.2 μm pore diameter, while the transport equations use a pore-size symbol that is conventionally a radius. The article does not fully enumerate tortuosity and all property correlations in the main text. Use the 0.1 μm and 0.2 μm radius interpretations as explicit sensitivity cases; do not silently tune the radius to match the paper's error table. The pressure-diffusivity product, water viscosity, heat capacity, conductivity, and membrane solid/gas conductivity must each have a source citation or be labeled as reconstruction assumptions.
+
+The reported (H_v(T)=1850.7+2.8273T-1.6\times10^{-3}T^2) also needs a unit audit. With (T) in kelvin, its numeric scale is consistent with vapor enthalpy in kJ/kg, not J/kg. The energy balances use it as a vapor-enthalpy transport term relative to the stated reference temperature. Keep the source's symbol and physical interpretation distinct from a pure latent-heat-of-vaporization correlation until verified against the cited property source.
+
 ## Published error and correction values
 
 The paper reports the following overall relative errors (lumped / spatial):
