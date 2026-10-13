@@ -13,7 +13,7 @@ gates:
   cooling_architecture_scenarios: false
   time_varying_workload_coupling: true
   monte_carlo_convergence: false
-  global_sensitivity_execution: false
+  global_sensitivity_execution: true
   break_even_failure_envelope: false
   geographic_integration: false
   counterfactual_net_water_accounting: true
@@ -25,4 +25,4 @@ gates:
 claim_policy:
   quantitative_validation_claims: false
   publication_ready_claim: false
-  note: "This file is a hard status declaration. No gate may be marked true without a reproducible artifact and provenance record. Primary-observation extraction is true for the 12-condition GDR/NREL Villa et al. 3M workbook summary and 631-row source-linked ledger, plus Ali et al. (2020) source-linked raw (17,430 rows), transient (17,385 rows), and steady-state (16 observations) ledgers archived in a checksummed 90-day artifact. The Ali transient traces are not dynamic validation of the current steady-state model; the separate 1999 Martínez-Díez source benchmark remains unextracted. The GDR transfer-correlation/geometry run is a within-workbook diagnostic and does not satisfy independent held-out validation or the final validation-grade model-form gate. The publication_gate.py script now checks that status is COMPLETE and every scientific gate is true; it is expected to fail while this status is INCOMPLETE. Direct prior art from Kanbur (2020), Wyon (2025), Chen (2026), Yang (2026), and Katakam et al. (2026 online-ahead-of-print) materially narrows the novelty claim."
+  note: "This file is a hard status declaration. No gate may be marked true without a reproducible artifact and provenance record. Primary-observation extraction is true for the 12-condition GDR/NREL Villa et al. 3M workbook summary and 631-row source-linked ledger, plus Ali et al. (2020) source-linked raw (17,430 rows), transient (17,385 rows), and steady-state (16 observations) ledgers archived in a checksummed 90-day artifact. The Ali transient traces are not dynamic validation of the current steady-state model; the separate 1999 Martínez-Díez source benchmark remains unextracted. A 20,000-draw scenario-only Monte Carlo and 512/2,048-point Sobol analysis now execute reproducibly, but the lower quantile and freshwater-output Sobol indices need further convergence checks; the Monte Carlo convergence gate therefore remains false. The GDR transfer-correlation/geometry run is a within-workbook diagnostic and does not satisfy independent held-out validation or the final validation-grade model-form gate. The publication_gate.py script now checks that status is COMPLETE and every scientific gate is true; it is expected to fail while this status is INCOMPLETE. Direct prior art from Kanbur (2020), Wyon (2025), Chen (2026), Yang (2026), and Katakam et al. (2026 online-ahead-of-print) materially narrows the novelty claim."
