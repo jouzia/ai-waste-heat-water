@@ -54,3 +54,16 @@ analysis.
 ## Execution status
 
 The geographic layer is a declared analysis interface, not yet an executed site study. Before any site-level result is reported, the study must ingest a versioned Aqueduct release, freeze site/basin mapping, attach a site-specific electricity-water factor with its system boundary, and preserve retrieval metadata. NASA POWER climate forcing is complementary and must not be substituted for Aqueduct water-stress indicators.
+
+
+## Official Aqueduct source discovery (2026-10-13)
+
+The official WRI landing page exposed the archive URL `https://files.wri.org/aqueduct/aqueduct-4-0-water-risk-data.zip`. A HEAD request reports 261,527,511 bytes, byte-range support, and a Last-Modified header of 2025-08-06. The ZIP central directory was inspected through HTTP range requests; the full archive was not downloaded.
+
+The embedded geodatabase `Aqueduct40_waterrisk_download_Y2023M07D05/GDB/Aq40_Y2023D07M05.gdb` exposes three layers in EPSG:4326:
+
+- `baseline_annual`: 68,506 multipolygons; includes `pfaf_id`, country/admin names, `bws_score/cat/label`, and `bwd_score/cat/label`.
+- `baseline_monthly`: 16,395 multipolygons; includes monthly BWS/BWD/IAV fields.
+- `future_annual`: 16,395 multipolygons; includes source-native `bau`, `opt`, and `pes` future water-stress fields for 2030/2050/2080.
+
+The repository now has a reproducible remote-GDAL sampling script and six clearly labeled **city-centroid proxies** in `data/geography/site_proxies.csv`. They are not actual data-centre locations. Baseline and future layer basin IDs are recorded separately because the layers have different feature counts and must not be assumed to share identical geometry/resolution. Water stress remains contextual metadata, not a multiplier on water volume. Electricity-water factors and a defensible facility-site dataset remain missing; the geographic publication gate stays false until the site-sampling artifact, future-field semantics, and grid-water/carbon data are reviewed.
