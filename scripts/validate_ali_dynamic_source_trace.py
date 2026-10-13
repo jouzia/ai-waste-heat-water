@@ -13,6 +13,7 @@ import numpy as np
 
 from ai_water.ali_dynamic_model import (
     PUBLISHED_FLOS_LUMPED,
+    PUBLISHED_FLOS_SPATIAL,
     AliDynamicConfig,
     simulate_lumped_transient,
     simulate_spatial_transient,
@@ -204,7 +205,7 @@ def main() -> None:
         ),
         run_case(
             rows,
-            correction=PUBLISHED_FLOS_LUMPED[flow],
+            correction=PUBLISHED_FLOS_SPATIAL[flow],
             case_id="spatial_published_source_correction_not_refitted",
             model_kind="spatial",
         ),
