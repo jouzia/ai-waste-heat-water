@@ -23,4 +23,4 @@ The module src/ai_water/global_sensitivity.py implements Saltelli covariance fir
 6. Analyze sign changes and failure constraints in addition to variance shares.
 7. Do not report these synthetic estimator tests as sensitivity results for the physical research question.
 
-Application to the full coupled model remains pending until evidence-linked parameter ranges and validated model configurations are available.
+An exploratory execution was completed on 2026-10-13 with 512 and 2,048 samples per Sobol matrix for net water-consumption change and freshwater production. The run is archived in [GitHub Actions run #8](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38428133917). Net-water index differences between sample sizes were generally smaller than those for freshwater production; freshwater-output index differences reached about 0.10 in total-effect estimates. This is not adequate to declare the freshwater sensitivity ranking converged. All bounds are illustrative scenario assumptions and water activity is fixed at 0.995, so the results are execution diagnostics, not evidence-calibrated physical sensitivities.
