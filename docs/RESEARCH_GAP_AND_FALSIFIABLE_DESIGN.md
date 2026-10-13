@@ -107,6 +107,8 @@ No net-benefit headline is permitted until primary validation, independent/held-
 - Hu et al. (2025): https://doi.org/10.1016/j.memsci.2025.124533
 - Sulaiman et al. (2026), integrated MD heat recovery: https://doi.org/10.1016/j.jwpe.2026.110673
 - Kanbur et al. (2020), data-center immersion cooling integrated with DCMD: https://doi.org/10.1002/er.5677
+- Katakam et al. (2026, online ahead of print), system-scale data-center desalination and SWUI: https://doi.org/10.1016/j.watres.2026.126748
+- Wyon (2025), *Desalination utilizing data centre waste heat* (open-access Lund University thesis): https://lup.lub.lu.se/student-papers/record/9198095
 - Yang et al. (2026), data-center waste heat and RO desalination co-optimization: https://doi.org/10.1016/j.apenergy.2026.127428
 - Chen et al. (2026), CPU waste-heat-driven MD (full-text access/underlying data not audited here): https://xuebao.zstu.edu.cn/oa/darticle.aspx?id=20260109&type=view
 - Arthur et al. (2023), electrolyser waste heat and MD: https://doi.org/10.1016/j.jwpe.2023.104426
