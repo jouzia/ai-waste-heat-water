@@ -1,8 +1,8 @@
 # GDR Villa 3M DCMD model-form comparison
 
-Date: 2026-10-11  
-Workflow commit: `a227769a17fd6c647ba0f78cb5b2e65c5875ba99`  
-Workflow run: [GDR DCMD model validation #1](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38150806555)  
+Date: 2026-10-13 (updated after counter-current outlet-state correction)  
+Workflow commit: `2e7c9f436ab5e045537a817304d91dd3a8874ccb`  
+Workflow run: [GDR DCMD model validation #5](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38424108325)  
 Input summary: `04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv`
 
 ## Question and split
@@ -28,12 +28,12 @@ A post-run audit of the same artifact compared model-predicted outlet temperatur
 
 | Model form | Feed outlet MAE (°C) | Permeate outlet MAE (°C) |
 |---|---:|---:|
-| Graetz–Lévêque + smooth channel | 6.239 | 12.654 |
-| Graetz–Lévêque + spacer-porosity geometry | 5.433 | 12.610 |
-| WaterTAP correlation + smooth channel | 1.190 | 12.424 |
-| WaterTAP correlation + spacer-porosity geometry | 0.371 | 12.401 |
+| Graetz–Lévêque + smooth channel | 6.239 | 3.253 |
+| Graetz–Lévêque + spacer-porosity geometry | 5.433 | 2.477 |
+| WaterTAP correlation + smooth channel | 1.190 | 1.611 |
+| WaterTAP correlation + spacer-porosity geometry | 0.371 | 2.390 |
 
-The persistent permeate-outlet discrepancy is a major diagnostic failure. Before interpreting the flux metrics physically, the counter-current inlet/outlet boundary-condition mapping, temperature averaging, and solver energy balance must be audited. A low flux MAE in one split cannot override an approximately 12.4 °C held-out permeate outlet MAE.
+A counter-current outlet-state mapping defect was found in `src/ai_water/md_channel.py`: the solver returned the temperature and mass flow at the last feed-coordinate cell rather than the permeate outlet at the first feed-coordinate cell. This was corrected in commit `1890a792a68049f4d4febbe8ff1ed395b6ce6426`, and a regression test now checks the outlet state and total permeate mass balance. The rerun reduced held-out permeate outlet MAE to 1.61–3.25 °C depending on model form, but remaining temperature residuals and flux error still show that the model is not empirically validated.
 
 ## Interpretation
 
@@ -54,6 +54,6 @@ The persistent permeate-outlet discrepancy is a major diagnostic failure. Before
 
 ## Reproducibility
 
-The workflow uploads `model_form_comparison.csv`, `model_form_metrics.csv`, and `model_form_metrics.json` as the artifact `gdr-model-validation`. The artifact SHA-256 reported by GitHub Actions is `8af512b47b077e27af349da2cf181796d352c9b0f031b5e6e35d96ebca3d0deb`.
+The workflow uploads `model_form_comparison.csv`, `model_form_metrics.csv`, and `model_form_metrics.json` as the artifact `gdr-model-validation`. The current artifact SHA-256 reported by GitHub Actions is `7919a438ddedbab6ff016d014f4415b8fa4d58f9de075820ee91c65358ef51ba`.
 
 This note records the actual diagnostic output; it does not claim source-exact reconstruction, independent validation, or net-water-benefit evidence.
