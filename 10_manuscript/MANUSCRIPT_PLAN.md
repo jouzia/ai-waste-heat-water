@@ -7,7 +7,7 @@ Working title: **From AI Waste Heat to Water: A Net-Water-Impact Framework for S
 This plan remains intentionally provisional. Current executable evidence is:
 - Source-linked primary observation ledgers exist for the 12-condition GDR/NREL 3M workbook and the five Ali et al. (2020) supporting workbooks.
 - The Ali S1 flux-law split holds out 300 L/h. Fixed TPC underpredicts the held-out flow; a fitted flow-dependent TPC improves error but is an internal same-paper diagnostic only.
-- The source-scale Ali dynamic reconstruction has an inadmissible low-flow outlet state; the code now rejects it instead of reporting numerical convergence as physical success.
+- The Ali lumped dynamic reconstruction fails a measured 30-minute warm-up trace from S2 Data worksheet 50: the predicted hot outlet falls to 4.56–4.99 °C despite measured inlet/initial-outlet temperatures remaining above 18.75 °C, with or without the published heat-loss correction. The 10-cell spatial model comparison is pending; no dynamic validation claim is allowed.
 - Scenario-only uncertainty: 20,000 Monte Carlo draws and Sobol matrices of 512/2,048 points execute reproducibly. Lower-tail Monte Carlo and freshwater-output Sobol convergence remain unresolved.
 - Cooling architecture Pareto sweep and break-even/failure envelope execute reproducibly, but their architecture/grid/model ranges are illustrative, not source-backed empirical priors.
 - Geographic Aqueduct/electricity-water integration, primary Martínez-Díez figure extraction, unfitted source-matched validation, independent external validation, final manuscript, and publication audit remain incomplete.
