@@ -6,6 +6,7 @@ on:
     paths:
       - "scripts/discover_aqueduct_assets.py"
       - "scripts/inspect_aqueduct_zip_directory.py"
+      - "scripts/inspect_aqueduct_geodatabase.py"
       - "docs/GEOGRAPHIC_LAYER.md"
       - "configs/geography.yaml"
       - ".github/workflows/aqueduct-discovery.yml"
@@ -27,11 +28,17 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install GDAL vector reader
+        run: python -m pip install pyogrio
+
       - name: Discover official WRI landing-page assets
         run: python scripts/discover_aqueduct_assets.py --output artifacts/aqueduct_discovery/aqueduct_asset_discovery.json
 
       - name: Inspect official Aqueduct ZIP central directory using byte ranges
         run: python scripts/inspect_aqueduct_zip_directory.py --output artifacts/aqueduct_discovery/aqueduct_zip_directory.json
+
+      - name: Inspect Aqueduct geodatabase layer schemas via remote GDAL
+        run: python scripts/inspect_aqueduct_geodatabase.py --output artifacts/aqueduct_discovery/aqueduct_geodatabase_layers.json
 
       - name: Verify source-page provenance record
         run: |
@@ -48,6 +55,9 @@ jobs:
           assert inventory["directory_entry_count"] > 0, inventory
           assert inventory["archive_metadata"]["size_bytes"] > 0, inventory
           assert inventory["archive_sha256"] is None, inventory
+          geodata = json.loads(Path("artifacts/aqueduct_discovery/aqueduct_geodatabase_layers.json").read_text())
+          assert geodata["layer_count"] > 0, geodata
+          assert any("metadata_error" not in layer for layer in geodata["layers"]), geodata
           print("ZIP directory inventory verified; full archive not downloaded.")
           PY
 
