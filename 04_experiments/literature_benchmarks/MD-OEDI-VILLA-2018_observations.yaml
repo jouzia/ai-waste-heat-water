@@ -1,13 +1,21 @@
 # Observation ledger for Villa et al. (2018), GDR/NREL dataset
 source_id: MD-OEDI-VILLA-2018
 source_doi: "10.15121/1452747"
-status: condition_level_summary_extracted_row_level_observation_ledger_pending
+status: row_level_observation_ledger_extracted_and_archived
 observations: []
+row_level_ledger:
+  artifact_name: "gdr-villa-3m-countercurrent"
+  workflow_run_id: 38425489743
+  artifact_id: 11828433138
+  artifact_sha256: "0ad2b425c0238bfa7aed0bb6f25e837fa29381ea96c0cee747e49710bd3b30d2"
+  row_count: 631
+  expires_at_utc: "2026-10-27T15:50:39Z"
+  generated_by: "scripts/extract_gdr_villa_observation_ledger.py"
 derived_summary_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
 source_audit: "docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md"
 source_workbook_sha256: "5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb"
-source_workbook_storage: "GDR source / reproducible local retrieval; raw XLS retained in 14-day GitHub Actions artifact for initial extraction, not committed to repository"
-extraction_note: "Twelve condition-level flux summaries are derived by OLS on raw cumulative distillate volume versus runtime. Theoretical-sheet flux is included only as a non-independent cross-check. Row-level observations remain in the source workbook and are not committed here."
+source_workbook_storage: "Reproducibly retrieved by scripts/download_gdr_villa.py; raw XLS and derived row-level ledger retained in GitHub Actions artifact (14-day retention), not committed to repository"
+extraction_note: "Twelve condition-level flux summaries are derived by OLS on raw cumulative distillate volume versus runtime. A separate script now exports 631 source-linked rows across the 12 condition sheets to observation_ledger.csv, with one-based Excel row locators and source SHA-256. Theoretical-sheet flux is included only as a non-independent cross-check. The row-level CSV and raw XLS are reproducibly generated in the GDR ingestion workflow artifact, not committed to the repository."
 
 required_fields:
   - observation_id
