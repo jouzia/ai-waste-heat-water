@@ -48,6 +48,33 @@ def discover_figure_urls() -> list[str]:
         results = search_data.get("resultList", {}).get("result", [])
         pmcid = next((item.get("pmcid") for item in results if item.get("pmcid")), None)
         if pmcid:
+            article_url = f"https://pmc.ncbi.nlm.nih.gov/articles/{pmcid}/"
+            try:
+                with urlopen(
+                    Request(article_url, headers={"User-Agent": "Mozilla/5.0 (compatible; ai-waste-heat-water/1.0)"}),
+                    timeout=45,
+                ) as response:
+                    article_html = response.read().decode("utf-8", errors="replace")
+                import re
+
+                figure_urls = re.findall(
+                    r"https?://[^\\\"' ]*41598_2020_73964_Fig3_HTML\\.(?:jpg|png|webp)",
+                    article_html,
+                    flags=re.IGNORECASE,
+                )
+                figure_urls.extend(
+                    re.findall(
+                        r"//[^\\\"' ]*41598_2020_73964_Fig3_HTML\\.(?:jpg|png|webp)",
+                        article_html,
+                        flags=re.IGNORECASE,
+                    )
+                )
+                candidates.extend(
+                    url if url.startswith("http") else f"https:{url}"
+                    for url in figure_urls
+                )
+            except (HTTPError, URLError, TimeoutError, OSError, UnicodeError) as exc:
+                print(f"PMC article HTML discovery unavailable: {exc}")
             xml_url = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{pmcid}/fullTextXML"
             with urlopen(Request(xml_url, headers={"User-Agent": "ai-waste-heat-water/1.0"}), timeout=45) as response:
                 root = ET.fromstring(response.read())
