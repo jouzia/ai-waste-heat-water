@@ -10,8 +10,8 @@ documented in docs/ALI_2020_MODEL_RECONSTRUCTION.md.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import math
+from dataclasses import dataclass
 
 import numpy as np
 from iapws import IAPWS95
