@@ -126,6 +126,42 @@ def fetch_page(url: str) -> dict[str, object]:
     }
 
 
+def inspect_asset_headers(url: str) -> dict[str, object]:
+    """Record HTTP metadata only; never download the dataset bytes here."""
+    request = Request(
+        url,
+        method="HEAD",
+        headers={"User-Agent": "ai-waste-heat-water/1.0 (research source discovery)"},
+    )
+    try:
+        with urlopen(request, timeout=60) as response:
+            headers = response.headers
+            length_raw = headers.get("Content-Length")
+            return {
+                "url": url,
+                "http_status": getattr(response, "status", 200),
+                "content_type": headers.get("Content-Type", ""),
+                "content_length_bytes": int(length_raw) if length_raw and length_raw.isdigit() else None,
+                "last_modified": headers.get("Last-Modified"),
+                "etag": headers.get("ETag"),
+                "accept_ranges": headers.get("Accept-Ranges"),
+                "final_url": response.geturl(),
+                "error": None,
+            }
+    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+        return {
+            "url": url,
+            "http_status": None,
+            "content_type": "",
+            "content_length_bytes": None,
+            "last_modified": None,
+            "etag": None,
+            "accept_ranges": None,
+            "final_url": None,
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+
+
 def discover(output_path: Path) -> dict[str, object]:
     pages: list[dict[str, object]] = []
     errors: list[dict[str, str]] = []
@@ -144,6 +180,12 @@ def discover(output_path: Path) -> dict[str, object]:
             for item in page["candidate_asset_links"]
         }
     )
+    direct_data_urls = [
+        url for url in candidate_urls
+        if urlparse(url).netloc.lower() in {"files.wri.org", "datasets.wri.org"}
+        and urlparse(url).path.lower().endswith(DATA_EXTENSIONS)
+    ]
+    asset_headers = [inspect_asset_headers(url) for url in direct_data_urls]
     manifest: dict[str, object] = {
         "dataset": "WRI Aqueduct Global Maps 4.0",
         "license_claim_in_project_docs": "CC BY 4.0; confirm on retrieved source page before redistribution",
@@ -151,6 +193,7 @@ def discover(output_path: Path) -> dict[str, object]:
         "retrieved_at_utc": datetime.now(UTC).isoformat(),
         "pages": pages,
         "candidate_asset_url_count": len(candidate_urls),
+        "direct_data_asset_headers": asset_headers,
         "candidate_asset_urls": candidate_urls,
         "errors": errors,
         "status": "landing_page_retrieved_assets_need_manual_verification" if candidate_urls else "landing_page_retrieved_no_candidate_asset_links",
