@@ -1,11 +1,22 @@
 name: GDR DCMD source-data ingestion
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
+      - "scripts/download_gdr_villa.py"
+      - "scripts/extract_gdr_villa_flux_summary.py"
+      - "scripts/extract_gdr_villa_observation_ledger.py"
+      - ".github/workflows/gdr-villa-ingest.yml"
   pull_request:
     paths:
       - "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
       - "scripts/download_gdr_villa.py"
       - "scripts/extract_gdr_villa_flux_summary.py"
+      - "scripts/extract_gdr_villa_observation_ledger.py"
+      - ".github/workflows/gdr-villa-ingest.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -95,6 +106,12 @@ jobs:
 
       - name: Recreate condition-level flux summary from raw time series
         run: python scripts/extract_gdr_villa_flux_summary.py --output artifacts/gdr_villa_exports/recreated_flux_summary.csv
+
+      - name: Export row-level observation ledger with source locators
+        run: >-
+          python scripts/extract_gdr_villa_observation_ledger.py
+          --output artifacts/gdr_villa_exports/observation_ledger.csv
+          --manifest artifacts/gdr_villa_exports/observation_ledger_manifest.json
 
       - name: Upload raw workbook and inspection artifact
         uses: actions/upload-artifact@v4
