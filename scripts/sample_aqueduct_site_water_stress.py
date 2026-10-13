@@ -11,6 +11,7 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import os
 from datetime import UTC, datetime
 from pathlib import Path
@@ -116,7 +117,7 @@ def sample_layer(
             attributes[column] = None
         elif hasattr(value, "item"):
             value = value.item()
-            attributes[column] = None if isinstance(value, float) and not __import__("math").isfinite(value) else value
+            attributes[column] = None if isinstance(value, float) and not math.isfinite(value) else value
         elif isinstance(value, float) and not __import__("math").isfinite(value):
             attributes[column] = None
         else:
