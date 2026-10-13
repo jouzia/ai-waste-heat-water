@@ -1,12 +1,6 @@
 name: Retrieve secondary DCMD Figure 3 for calibrated digitization
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "scripts/retrieve_keshavarzzadeh_fig3.py"
-      - "05_validation/digitization/MD-DCMD-CHANNEL-2020-FIG3.yaml"
-      - ".github/workflows/keshavarzzadeh-figure-retrieval.yml"
   workflow_dispatch:
 
 permissions:
