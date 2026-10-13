@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "scripts/discover_aqueduct_assets.py"
+      - "scripts/inspect_aqueduct_zip_directory.py"
       - "docs/GEOGRAPHIC_LAYER.md"
       - "configs/geography.yaml"
       - ".github/workflows/aqueduct-discovery.yml"
@@ -29,6 +30,9 @@ jobs:
       - name: Discover official WRI landing-page assets
         run: python scripts/discover_aqueduct_assets.py --output artifacts/aqueduct_discovery/aqueduct_asset_discovery.json
 
+      - name: Inspect official Aqueduct ZIP central directory using byte ranges
+        run: python scripts/inspect_aqueduct_zip_directory.py --output artifacts/aqueduct_discovery/aqueduct_zip_directory.json
+
       - name: Verify source-page provenance record
         run: |
           python - <<'PY'
@@ -40,13 +44,17 @@ jobs:
           assert manifest["pages"], manifest
           assert all(page["page_sha256"] for page in manifest["pages"]), manifest
           print(f"Retrieved {len(manifest['pages'])} official landing page(s); candidate asset links: {manifest['candidate_asset_url_count']}.")
-          print("No geospatial layer has been downloaded or interpreted by this discovery step.")
+          inventory = json.loads(Path("artifacts/aqueduct_discovery/aqueduct_zip_directory.json").read_text())
+          assert inventory["directory_entry_count"] > 0, inventory
+          assert inventory["archive_metadata"]["size_bytes"] > 0, inventory
+          assert inventory["archive_sha256"] is None, inventory
+          print("ZIP directory inventory verified; full archive not downloaded.")
           PY
 
       - name: Upload Aqueduct discovery metadata
         uses: actions/upload-artifact@v4
         with:
           name: aqueduct-asset-discovery
-          path: artifacts/aqueduct_discovery/aqueduct_asset_discovery.json
+          path: artifacts/aqueduct_discovery/*.json
           if-no-files-found: error
           retention-days: 90
