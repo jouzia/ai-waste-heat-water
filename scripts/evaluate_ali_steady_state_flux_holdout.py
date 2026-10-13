@@ -15,6 +15,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
+from scipy.optimize import least_squares
 
 from ai_water.md import (
     interface_temperatures,
@@ -99,7 +100,130 @@ def prepare_observation(row: dict[str, str], salinity_case: str) -> dict[str, ob
     }
 
 
-def fit_and_score(rows: list[dict[str, object]], salinity_case: str) -> tuple[float, list[dict[str, object]], dict[str, object]]:
+def fit_flow_dependent_tpc(
+    rows: list[dict[str, str]], salinity_case: str
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    """Fit permeance plus a bounded log-flow TPC curve on training flows only."""
+    training = [
+        row for row in rows
+        if any(abs(parse_float(row, "nominal_flow_l_h") - target) < 0.1 for target in TRAIN_FLOWS_L_H)
+    ]
+    held_out = [
+        row for row in rows
+        if abs(parse_float(row, "nominal_flow_l_h") - HELD_OUT_FLOW_L_H) < 0.1
+    ]
+    if len(training) != 12 or len(held_out) != 4:
+        raise ValueError(
+            f"Expected 12 training and 4 held-out rows for flow-dependent TPC, got {len(training)} and {len(held_out)}"
+        )
+
+    def evaluate_one(row: dict[str, str], params: np.ndarray) -> tuple[float, float, float]:
+        log_permeance, intercept, slope = (float(value) for value in params)
+        flow = parse_float(row, "nominal_flow_l_h")
+        logit = intercept + slope * math.log(flow / 100.0)
+        logistic = 1.0 / (1.0 + math.exp(-max(-30.0, min(30.0, logit))))
+        tpc = 0.5 + 0.5 * logistic
+        hot_bulk = 0.5 * (
+            parse_float(row, "hot_inlet_temperature_c")
+            + parse_float(row, "hot_outlet_temperature_c")
+        )
+        cold_bulk = 0.5 * (
+            parse_float(row, "cold_inlet_temperature_c")
+            + parse_float(row, "cold_outlet_temperature_c")
+        )
+        hot_interface, cold_interface = interface_temperatures(hot_bulk, cold_bulk, tpc)
+        if salinity_case == "reported_0p5_percent_feed_salinity":
+            salinity = 5.0
+        else:
+            salinity = parse_float(row, "tds_hot_ppm_raw") / 1000.0
+        activity = seawater_water_activity(hot_interface, salinity)
+        delta_p = vapor_pressure_driving_force_bar(hot_interface, cold_interface, activity)
+        prediction = math.exp(log_permeance) * delta_p
+        return prediction, tpc, delta_p
+
+    observed_train = np.asarray(
+        [parse_float(row, "mass_flux_kg_m2_h") for row in training], dtype=float
+    )
+
+    def residuals(params: np.ndarray) -> np.ndarray:
+        return np.asarray(
+            [
+                evaluate_one(row, params)[0] - observed
+                for row, observed in zip(training, observed_train, strict=True)
+            ],
+            dtype=float,
+        )
+
+    fitted = least_squares(
+        residuals,
+        x0=np.asarray([math.log(30.0), 0.0, 0.0]),
+        bounds=(
+            np.asarray([math.log(0.1), -8.0, -4.0]),
+            np.asarray([math.log(200.0), 8.0, 4.0]),
+        ),
+        max_nfev=5000,
+    )
+    if not fitted.success:
+        raise RuntimeError(f"Flow-dependent TPC fit did not converge: {fitted.message}")
+
+    prediction_rows: list[dict[str, object]] = []
+    for row in rows:
+        prediction, tpc, delta_p = evaluate_one(row, fitted.x)
+        observed = parse_float(row, "mass_flux_kg_m2_h")
+        flow = parse_float(row, "nominal_flow_l_h")
+        prediction_rows.append(
+            {
+                "observation_id": row["observation_id"],
+                "source_workbook": row["workbook_filename"],
+                "source_worksheet": row["worksheet_name"],
+                "source_excel_row_1based": int(row["excel_row_1based"]),
+                "flow_l_h": flow,
+                "salinity_case": salinity_case,
+                "model_form": "flow_dependent_logistic_tpc",
+                "split": "train" if any(abs(flow - target) < 0.1 for target in TRAIN_FLOWS_L_H) else "held_out_flow_300_l_h",
+                "fitted_permeance_kg_m2_h_bar": math.exp(float(fitted.x[0])),
+                "fitted_tpc": tpc,
+                "vapor_pressure_difference_bar": delta_p,
+                "measured_flux_kg_m2_h": observed,
+                "predicted_flux_kg_m2_h": prediction,
+                "residual_predicted_minus_measured": prediction - observed,
+                "absolute_error_kg_m2_h": abs(prediction - observed),
+                "absolute_relative_error_percent": abs(prediction - observed) / observed * 100.0 if observed > 0 else "",
+            }
+        )
+
+    def metrics(subset: list[dict[str, object]]) -> dict[str, float | int]:
+        observed = np.asarray([float(row["measured_flux_kg_m2_h"]) for row in subset])
+        predicted = np.asarray([float(row["predicted_flux_kg_m2_h"]) for row in subset])
+        residual = predicted - observed
+        return {
+            "n": len(subset),
+            "mae_kg_m2_h": float(np.mean(np.abs(residual))),
+            "rmse_kg_m2_h": float(np.sqrt(np.mean(residual**2))),
+            "bias_predicted_minus_measured_kg_m2_h": float(np.mean(residual)),
+            "mean_absolute_relative_error_percent": float(np.mean(np.abs(residual) / observed) * 100.0),
+        }
+
+    train_predictions = [row for row in prediction_rows if row["split"] == "train"]
+    holdout_predictions = [row for row in prediction_rows if row["split"] == "held_out_flow_300_l_h"]
+    summary = {
+        "model_form": "flow_dependent_logistic_tpc",
+        "tpc_function": "0.5 + 0.5 * logistic(intercept + slope * ln(flow_l_h / 100))",
+        "fitted_log_permeance": float(fitted.x[0]),
+        "fitted_permeance_kg_m2_h_bar": math.exp(float(fitted.x[0])),
+        "fitted_tpc_logistic_intercept": float(fitted.x[1]),
+        "fitted_tpc_log_flow_slope": float(fitted.x[2]),
+        "training_metrics": metrics(train_predictions),
+        "held_out_metrics": metrics(holdout_predictions),
+        "interpretation": (
+            "Exploratory three-parameter flow-dependent TPC alternative fitted on 50/100/200 L/h only; "
+            "300 L/h remains held out. This is model-form exploration within one source study, not independent validation."
+        ),
+    }
+    return prediction_rows, summary
+
+
+def fit_and_score(rows: list[dict[str, str]], salinity_case: str) -> tuple[float, list[dict[str, object]], dict[str, object], list[dict[str, object]]]:
     prepared = [prepare_observation(row, salinity_case) for row in rows]
     training = [r for r in prepared if r["split"] == "train"]
     held_out = [r for r in prepared if r["split"] == "held_out_flow_300_l_h"]
@@ -160,7 +284,9 @@ def fit_and_score(rows: list[dict[str, object]], salinity_case: str) -> tuple[fl
             "the complete MD or data-centre water model."
         ),
     }
-    return fitted_permeance, prepared, summary
+    flow_predictions, flow_summary = fit_flow_dependent_tpc(rows, salinity_case)
+    summary["flow_dependent_tpc_model"] = flow_summary
+    return fitted_permeance, prepared, summary, flow_predictions
 
 
 def run(input_path: Path, output_dir: Path) -> dict[str, object]:
@@ -171,10 +297,12 @@ def run(input_path: Path, output_dir: Path) -> dict[str, object]:
         raise ValueError(f"Expected 16 S1 steady-state observations, found {len(source_rows)}")
 
     predictions: list[dict[str, object]] = []
+    flow_dependent_predictions: list[dict[str, object]] = []
     cases: dict[str, object] = {}
     for salinity_case in SALINITY_CASES:
-        _permeance, rows, summary = fit_and_score(source_rows, salinity_case)
+        _permeance, rows, summary, flow_rows = fit_and_score(source_rows, salinity_case)
         predictions.extend(rows)
+        flow_dependent_predictions.extend(flow_rows)
         cases[salinity_case] = summary
 
     predictions_path = output_dir / "ali_2020_flux_law_holdout_predictions.csv"
@@ -183,6 +311,12 @@ def run(input_path: Path, output_dir: Path) -> dict[str, object]:
         writer.writeheader()
         writer.writerows(predictions)
 
+    flow_predictions_path = output_dir / "ali_2020_flow_dependent_tpc_predictions.csv"
+    with flow_predictions_path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(flow_dependent_predictions[0]))
+        writer.writeheader()
+        writer.writerows(flow_dependent_predictions)
+
     summary: dict[str, object] = {
         "experiment_id": "ALI-2020-FLUX-LAW-HELD-OUT-FLOW-2026-10-13",
         "generated_at_utc": datetime.now(UTC).isoformat(),
@@ -190,6 +324,7 @@ def run(input_path: Path, output_dir: Path) -> dict[str, object]:
         "input_ledger": str(input_path),
         "input_ledger_sha256": sha256_file(input_path),
         "prediction_rows": len(predictions),
+        "flow_dependent_tpc_prediction_rows": len(flow_dependent_predictions),
         "cases": cases,
         "source_discrepancy": (
             "The article reports 0.5% feed salinity, while the S1 TDS_E column contains "
@@ -212,8 +347,10 @@ def run(input_path: Path, output_dir: Path) -> dict[str, object]:
     manifest = {
         "summary_file": summary_path.name,
         "predictions_file": predictions_path.name,
+        "flow_dependent_tpc_predictions_file": flow_predictions_path.name,
         "summary_sha256": sha256_file(summary_path),
         "predictions_sha256": sha256_file(predictions_path),
+        "flow_dependent_tpc_predictions_sha256": sha256_file(flow_predictions_path),
         "status": "internal_held_out_flux_law_diagnostic_not_independent_validation",
     }
     (output_dir / "manifest.json").write_text(
