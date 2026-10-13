@@ -53,6 +53,7 @@ def run_case(
     correction: float,
     case_id: str,
     model_kind: str,
+    n_cells: int = 10,
 ) -> dict[str, object]:
     time_min = np.asarray([float(row["time_min"]) for row in rows])
     hot_in = np.asarray([float(row["hot_inlet_temperature_c"]) for row in rows])
@@ -67,6 +68,7 @@ def run_case(
     result: dict[str, object] = {
         "case_id": case_id,
         "model_kind": model_kind,
+        "n_cells": n_cells if model_kind.startswith("spatial") else 1,
         "status": "not_run",
         "heat_loss_correction": correction,
         "rows": len(rows),
@@ -103,8 +105,8 @@ def run_case(
             "initial_accumulated_mass_kg": float(mass_observed[0]),
             "config": AliDynamicConfig(),
         }
-        if model_kind == "spatial":
-            model_kwargs["n_cells"] = 10
+        if model_kind.startswith("spatial"):
+            model_kwargs["n_cells"] = n_cells
         predicted = model_function(**model_kwargs)
         mass_rate_nonnegative = bool(np.all(predicted.mass_rate_kg_h >= -1e-9))
         mass_monotonic = bool(
@@ -200,14 +202,16 @@ def main() -> None:
         run_case(
             rows,
             correction=0.0,
-            case_id="spatial_unfitted_no_correction",
-            model_kind="spatial",
+            case_id="spatial_3_cell_coarse_unfitted_no_correction",
+            model_kind="spatial_3_cell_coarse",
+            n_cells=3,
         ),
         run_case(
             rows,
             correction=PUBLISHED_FLOS_SPATIAL[flow],
-            case_id="spatial_published_source_correction_not_refitted",
-            model_kind="spatial",
+            case_id="spatial_3_cell_coarse_published_source_correction_not_refitted",
+            model_kind="spatial_3_cell_coarse",
+            n_cells=3,
         ),
     ]
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -231,7 +235,7 @@ def main() -> None:
             "The published heat-loss correction is a separate source-reproduction case, not a newly estimated physical heat-loss coefficient.",
             "Any physical-admissibility rejection is a failed model case, not a missing result.",
             "The source trace includes warm-up; measured input and initial outlet temperatures are used rather than an artificial instantaneous 60 C step.",
-            "Lumped and 10-cell spatial model forms are compared without fitting any parameter to this trace.",
+            "Lumped and 3-cell coarse spatial model forms are compared without fitting any parameter to this trace; the coarse spatial result is not a converged discretization.",
         ],
     }
     json_path = args.output_dir / "ali_source_trace_validation.json"
