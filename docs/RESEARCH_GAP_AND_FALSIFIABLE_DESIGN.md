@@ -113,3 +113,8 @@ No net-benefit headline is permitted until primary validation, independent/held-
 - Arthur et al. (2023), electrolyser waste heat and MD: https://doi.org/10.1016/j.jwpe.2023.104426
 - Bahar & Ng (2020), marine-engine waste heat and MD: https://doi.org/10.1016/j.seta.2020.100860
 - Khalifa et al. (2025), engine-exhaust-driven MD: https://doi.org/10.1016/j.applthermaleng.2024.124839
+
+
+## Prior-art update — 2026-10-13
+
+A recent system-scale study titled **“System-scale design and analysis of desalination systems for meeting water needs of data centers”** surfaced in the literature audit (ScienceDirect: https://www.sciencedirect.com/science/article/pii/S0043135426014223). Full-text comparison is still required. This further rules out novelty claims based on the broad combination of data-centre water demand, desalination technology, and system-scale technoeconomic design. Any defensible contribution must be narrower: source-traceable experimental validation, physically admissible heat/mass-transfer coupling, explicit counterfactual net-water accounting, and a failure envelope under sourced cooling/workload/geographic inputs. That narrower contribution is still a hypothesis, not an established novelty claim.
