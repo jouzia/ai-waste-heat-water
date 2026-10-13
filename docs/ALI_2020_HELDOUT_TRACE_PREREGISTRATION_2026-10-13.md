@@ -20,7 +20,7 @@ The held-out trace is selected by a deterministic rule: use the first complete t
 2. Use the source-reported geometry and initial outlet temperatures from the first complete measured row. Use measured hot- and cold-inlet temperature histories from the observation ledger.
 3. Use the current documented IAPWS95 property closure and cached 0.1 K grid. Record the model-code commit, input-ledger checksum, raw workbook SHA-256, number of rows, and actual time span.
 4. Do not fit membrane parameters, pore size, tortuosity, heat-transfer coefficients, heat-loss correction, salinity, or any time shift to this held-out trace.
-5. Do not shift the time origin to align cumulative mass. If a lag appears, first inspect the source paper's measurement/collection protocol and report it as unresolved unless a source-backed correction is justified.
+5. Do not shift the time origin to align mass. The raw `mw (kg)` column is nonmonotonic in 13 of 18 timed traces and its cumulative/reset semantics are not verified. Preserve raw readings and do not compute mass error metrics or infer a lag until the source measurement/collection protocol is resolved.
 6. Do not split adjacent time points randomly. The entire trace remains held out as one operating condition.
 
 ## Primary metrics and admissibility checks
@@ -29,13 +29,13 @@ Report all values without dropping unfavorable intervals:
 
 - Hot-outlet temperature MAE, RMSE, and bias.
 - Cold-outlet temperature MAE, RMSE, and bias.
-- Cumulative distillate mass MAE, RMSE, final measured/predicted mass, and final bias.
+- Raw `mw` reading range, first/last values, monotonicity, negative-step count, and raw time series; no comparison to predicted cumulative mass until semantics are verified.
 - Predicted outlet temperature range relative to the measured inlet/initial-outlet envelope.
 - Whether predicted mass rate is nonnegative and accumulated mass monotonic.
 - Residuals versus time and the time at which measured cumulative mass first becomes positive.
 - Solver tolerance, input-knot integration method, time-grid sensitivity, and spatial cell count.
 
-The current exploratory mass-state quadrature is trapezoidal at measured input knots. Before treating errors quantitatively, repeat the held-out calculation on a refined input/output grid and demonstrate that the principal metrics are stable.
+The model's cumulative-mass output may be reported as a model output only; it must not be compared with raw `mw` at this stage. The current exploratory mass-state quadrature is trapezoidal at measured input knots. Before treating mass predictions quantitatively, verify source measurement semantics and repeat the held-out calculation on a refined input/output grid.
 
 ## Interpretation policy
 
