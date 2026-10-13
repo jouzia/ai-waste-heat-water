@@ -39,3 +39,26 @@ def test_candidate_links_keep_wri_assets_and_skip_external_domains() -> None:
     assert len(candidates) == 2
     assert candidates[0]["url"].startswith("https://datasets.wri.org/")
     assert candidates[1]["url"] == "https://www.wri.org/data/aqueduct"
+
+
+def test_range_reader_can_list_local_zip_without_reading_full_archive() -> None:
+    import io
+    from zipfile import ZipFile
+
+    payload = io.BytesIO()
+    with ZipFile(payload, "w") as archive:
+        archive.writestr("baseline/baseline_water_stress.tif", b"raster placeholder")
+        archive.writestr("metadata/readme.txt", b"metadata")
+    source_bytes = payload.getvalue()
+    reader = _discovery.RangeReader(
+        "https://example.invalid/aqueduct.zip",
+        len(source_bytes),
+        fetch_range=lambda start, end: source_bytes[start : end + 1],
+        chunk_size=64,
+    )
+    with ZipFile(reader) as archive:
+        assert archive.namelist() == [
+            "baseline/baseline_water_stress.tif",
+            "metadata/readme.txt",
+        ]
+    reader.close()
