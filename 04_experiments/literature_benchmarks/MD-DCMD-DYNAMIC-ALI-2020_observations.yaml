@@ -1,8 +1,24 @@
 # Observation ledger for Ali, Orfi & Najib (2020) dynamic DCMD data
 source_id: MD-DCMD-DYNAMIC-ALI-2020
 source_doi: "10.1371/journal.pone.0230207"
-status: empty_template_extraction_pending
-observations: []
+status: extracted_source_linked_ledgers_in_ci_artifact
+observations: [] # Large row-level datasets are in the immutable workflow artifact; do not inline thousands of rows here.
+
+artifact_outputs:
+  artifact_name: "ali-2020-dynamic-dcmd-source-data"
+  workflow_run_id: 38427214234
+  artifact_id: 11828704483
+  artifact_sha256: "63f188990ed82e78775cd52048bde5696bf100ced8e43703382392c7baa06042"
+  raw_ledger_csv: "ali_2020_raw_observation_ledger.csv"
+  raw_ledger_sha256: "e24887bb94c1f903d623c4eb9bd19e1798615e5aa6b45776a81a5073d43956f7"
+  raw_ledger_rows: 17430
+  transient_ledger_csv: "ali_2020_transient_observation_ledger.csv"
+  transient_ledger_rows: 17385
+  steady_state_ledger_csv: "ali_2020_steady_state_observation_ledger.csv"
+  steady_state_observations: 16
+  tail_flux_diagnostic_csv: "ali_2020_tail_flux_consistency_check.csv"
+  excluded_rows_csv: "ali_2020_excluded_steady_state_rows.csv"
+  artifact_expires_at_utc: "2027-01-11T16:02:34Z"
 
 required_fields:
   - observation_id
