@@ -29,6 +29,12 @@ PUBLISHED_FLOS_LUMPED = {
     200: 0.10,
     300: 0.17,
 }
+PUBLISHED_FLOS_SPATIAL = {
+    50: 0.15,
+    100: 0.20,
+    200: 0.22,
+    300: 0.26,
+}
 
 
 @dataclass(frozen=True)
@@ -387,15 +393,12 @@ def simulate_lumped_transient(
     initial_cold_k = (
         room_k if initial_cold_outlet_c is None else initial_cold_outlet_c + 273.15
     )
-    initial_interface = interface_state(
-        hot_values_k[0], initial_hot_k, cold_values_k[0], initial_cold_k,
-        mass_flow_kg_s, cfg,
-    )
-    initial_mass_rate = initial_interface.mass_flux_kg_m2_s * cfg.membrane_area_m2
+    # The source paper states zero initial mass production; do not initialize
+    # this state from the small salinity-driven algebraic flux at equal temperatures.
     initial_state = [
         initial_hot_k,
         initial_cold_k,
-        initial_mass_rate,
+        0.0,
         float(initial_accumulated_mass_kg),
     ]
 
@@ -553,6 +556,272 @@ def simulate_lumped_transient(
         membrane_flux_kg_m2_h=np.asarray(fluxes),
         hot_membrane_c=np.asarray(hot_membrane_c),
         cold_membrane_c=np.asarray(cold_membrane_c),
+        solver_success=bool(solution.success),
+        solver_message=str(solution.message),
+    )
+
+
+def simulate_spatial_transient(
+    *,
+    time_min: list[float] | np.ndarray,
+    hot_inlet_c: list[float] | np.ndarray,
+    cold_inlet_c: list[float] | np.ndarray,
+    nominal_flow_l_h: float,
+    n_cells: int = 10,
+    heat_loss_correction: float = 0.0,
+    initial_hot_outlet_c: float | None = None,
+    initial_cold_outlet_c: float | None = None,
+    initial_accumulated_mass_kg: float = 0.0,
+    config: AliDynamicConfig | None = None,
+) -> AliDynamicResult:
+    """Integrate the paper's upwind finite-volume DCMD model.
+
+    Hot cells are indexed from hot inlet to hot outlet. Cold cells are indexed
+    from cold outlet to cold inlet, so the cold boundary is applied at the
+    opposite end. Each cell has outlet-temperature and mass-rate states; total
+    product rate is the mean of the per-cell mass-rate states, as described by
+    Ali et al. (2020). The spatial model is the preferred next test after the
+    lumped model's physical-admissibility failure.
+    """
+    cfg = config or AliDynamicConfig()
+    if n_cells < 1:
+        raise ValueError("n_cells must be at least 1")
+    time_values = np.asarray(time_min, dtype=float)
+    hot_values_c = np.asarray(hot_inlet_c, dtype=float)
+    cold_values_c = np.asarray(cold_inlet_c, dtype=float)
+    if time_values.ndim != 1 or len(time_values) < 3:
+        raise ValueError("time_min must be a one-dimensional series with at least 3 points")
+    if len(hot_values_c) != len(time_values) or len(cold_values_c) != len(time_values):
+        raise ValueError("time and inlet-temperature arrays must have equal length")
+    if (
+        not np.all(np.isfinite(time_values))
+        or not np.all(np.isfinite(hot_values_c))
+        or not np.all(np.isfinite(cold_values_c))
+    ):
+        raise ValueError("time and inlet-temperature arrays must be finite")
+    if np.any(np.diff(time_values) <= 0):
+        raise ValueError("time_min must be strictly increasing")
+    if nominal_flow_l_h <= 0:
+        raise ValueError("nominal_flow_l_h must be positive")
+    if not math.isfinite(heat_loss_correction) or heat_loss_correction < 0:
+        raise ValueError("heat_loss_correction must be finite and non-negative")
+
+    time_seconds = time_values * 60.0
+    hot_values_k = hot_values_c + 273.15
+    cold_values_k = cold_values_c + 273.15
+    mass_flow_kg_s = nominal_flow_l_h / 3600.0
+    reference_k = cfg.reference_temperature_c + 273.15
+    room_k = cfg.room_temperature_c + 273.15
+    if initial_hot_outlet_c is None:
+        hot_initial = np.full(n_cells, room_k, dtype=float)
+    else:
+        hot_initial = np.linspace(
+            hot_values_k[0], initial_hot_outlet_c + 273.15, n_cells
+        )
+    if initial_cold_outlet_c is None:
+        cold_initial = np.full(n_cells, room_k, dtype=float)
+    else:
+        cold_initial = np.linspace(
+            initial_cold_outlet_c + 273.15, cold_values_k[0], n_cells
+        )
+    initial_state = np.concatenate(
+        (
+            hot_initial,
+            cold_initial,
+            np.zeros(n_cells, dtype=float),
+            np.asarray([initial_accumulated_mass_kg], dtype=float),
+        )
+    )
+    cell_volume_m3 = cfg.channel_volume_m3 / n_cells
+    cell_area_m2 = (
+        cfg.channel_length_m / n_cells
+    ) * cfg.channel_width_m
+
+    def input_at(t_s: float) -> tuple[float, float]:
+        return (
+            float(np.interp(t_s, time_seconds, hot_values_k)),
+            float(np.interp(t_s, time_seconds, cold_values_k)),
+        )
+
+    def rhs(t_s: float, state: np.ndarray) -> np.ndarray:
+        hot_cells = state[:n_cells]
+        cold_cells = state[n_cells : 2 * n_cells]
+        mass_rates = state[2 * n_cells : 3 * n_cells]
+        hot_in_k, cold_in_k = input_at(t_s)
+        d_hot = np.zeros(n_cells, dtype=float)
+        d_cold = np.zeros(n_cells, dtype=float)
+        d_mass_rates = np.zeros(n_cells, dtype=float)
+
+        for index in range(n_cells):
+            hot_previous_k = hot_in_k if index == 0 else hot_cells[index - 1]
+            cold_next_k = (
+                cold_in_k if index == n_cells - 1 else cold_cells[index + 1]
+            )
+            hot_out_k = float(hot_cells[index])
+            cold_out_k = float(cold_cells[index])
+            interface = interface_state(
+                hot_previous_k,
+                hot_out_k,
+                cold_next_k,
+                cold_out_k,
+                mass_flow_kg_s,
+                cfg,
+            )
+            hot_props = water_properties(interface.bulk_hot_k)
+            cold_props = water_properties(interface.bulk_cold_k)
+            cp_hot = hot_props.heat_capacity_j_kg_k
+            cp_cold = cold_props.heat_capacity_j_kg_k
+            heat_transfer_w = cell_area_m2 * (
+                interface.membrane_heat_transfer_w_m2_k
+                * (interface.hot_membrane_k - interface.cold_membrane_k)
+                + interface.mass_flux_kg_m2_s * interface.vapor_enthalpy_j_kg
+            )
+            hot_energy_rate_w = (
+                mass_flow_kg_s * cp_hot * (hot_previous_k - reference_k)
+                - mass_flow_kg_s * cp_hot * (hot_out_k - reference_k)
+                - heat_transfer_w
+                - heat_loss_correction
+                * mass_flow_kg_s
+                * cp_hot
+                * (hot_previous_k - hot_out_k)
+            )
+            cold_energy_rate_w = (
+                mass_flow_kg_s * cp_cold * (cold_next_k - reference_k)
+                - mass_flow_kg_s * cp_cold * (cold_out_k - reference_k)
+                + heat_transfer_w
+            )
+            d_hot[index] = hot_energy_rate_w / (
+                cell_volume_m3 * hot_props.density_kg_m3 * cp_hot
+            )
+            d_cold[index] = cold_energy_rate_w / (
+                cell_volume_m3 * cold_props.density_kg_m3 * cp_cold
+            )
+
+            denominator = (
+                1.0
+                + interface.membrane_coefficient_s_m
+                * interface.beta_hot_pa_k
+                * interface.c_hot_m2_k_w
+                * interface.vapor_enthalpy_j_kg
+                + interface.membrane_coefficient_s_m
+                * interface.beta_cold_pa_k
+                * interface.c_cold_m2_k_w
+                * interface.vapor_enthalpy_j_kg
+            )
+            if abs(denominator) < 1e-12:
+                raise RuntimeError("Ali spatial mass-rate derivative denominator approached zero")
+            d_mass_rates[index] = (
+                interface.membrane_coefficient_s_m
+                * cfg.membrane_area_m2
+                / denominator
+                * (
+                    (
+                        interface.beta_hot_pa_k * interface.a_hot
+                        - interface.beta_cold_pa_k * interface.b_hot
+                    )
+                    * 0.5
+                    * math.sqrt(hot_previous_k / hot_out_k)
+                    * d_hot[index]
+                    + (
+                        interface.beta_hot_pa_k * interface.a_cold
+                        - interface.beta_cold_pa_k * interface.b_cold
+                    )
+                    * 0.5
+                    * math.sqrt(cold_next_k / cold_out_k)
+                    * d_cold[index]
+                )
+            )
+
+        total_mass_rate = float(np.mean(mass_rates))
+        return np.concatenate((d_hot, d_cold, d_mass_rates, [total_mass_rate]))
+
+    solution = solve_ivp(
+        rhs,
+        (float(time_seconds[0]), float(time_seconds[-1])),
+        initial_state,
+        method="RK45",
+        t_eval=time_seconds,
+        max_step=cfg.max_step_s,
+        rtol=cfg.relative_tolerance,
+        atol=np.concatenate(
+            (
+                np.full(2 * n_cells, cfg.absolute_tolerance_temperature_k),
+                np.full(n_cells, cfg.absolute_tolerance_mass_rate_kg_s),
+                np.asarray([cfg.absolute_tolerance_mass_kg]),
+            )
+        ),
+    )
+    if not solution.success:
+        raise RuntimeError(f"Ali spatial transient ODE failed: {solution.message}")
+
+    states = solution.y.T
+    hot_cells = states[:, :n_cells]
+    cold_cells = states[:, n_cells : 2 * n_cells]
+    mass_rates = states[:, 2 * n_cells : 3 * n_cells]
+    hot_outlet_values_c = hot_cells[:, -1] - 273.15
+    cold_outlet_values_c = cold_cells[:, 0] - 273.15
+    all_inlet_c = np.concatenate((hot_values_c, cold_values_c))
+    if initial_hot_outlet_c is not None:
+        all_inlet_c = np.append(all_inlet_c, initial_hot_outlet_c)
+    if initial_cold_outlet_c is not None:
+        all_inlet_c = np.append(all_inlet_c, initial_cold_outlet_c)
+    lower_bound_c = float(np.min(all_inlet_c))
+    upper_bound_c = float(np.max(all_inlet_c))
+    if (
+        np.any(hot_outlet_values_c < lower_bound_c - 1e-3)
+        or np.any(hot_outlet_values_c > upper_bound_c + 1e-3)
+        or np.any(cold_outlet_values_c < lower_bound_c - 1e-3)
+        or np.any(cold_outlet_values_c > upper_bound_c + 1e-3)
+    ):
+        raise RuntimeError(
+            "Ali spatial transient produced an outlet outside the inlet-temperature "
+            f"envelope [{lower_bound_c:.3f}, {upper_bound_c:.3f}] °C."
+        )
+
+    flux_by_time: list[float] = []
+    hot_membrane_by_time: list[float] = []
+    cold_membrane_by_time: list[float] = []
+    for time_index, state in enumerate(states):
+        hot_in_k = hot_values_k[time_index]
+        cold_in_k = cold_values_k[time_index]
+        local_fluxes: list[float] = []
+        local_hot_membranes: list[float] = []
+        local_cold_membranes: list[float] = []
+        for cell_index in range(n_cells):
+            hot_previous_k = (
+                hot_in_k if cell_index == 0 else state[cell_index - 1]
+            )
+            cold_next_k = (
+                cold_in_k
+                if cell_index == n_cells - 1
+                else state[n_cells + cell_index + 1]
+            )
+            interface = interface_state(
+                hot_previous_k,
+                float(state[cell_index]),
+                cold_next_k,
+                float(state[n_cells + cell_index]),
+                mass_flow_kg_s,
+                cfg,
+            )
+            local_fluxes.append(interface.mass_flux_kg_m2_s * 3600.0)
+            local_hot_membranes.append(interface.hot_membrane_k - 273.15)
+            local_cold_membranes.append(interface.cold_membrane_k - 273.15)
+        flux_by_time.append(float(np.mean(local_fluxes)))
+        hot_membrane_by_time.append(float(np.mean(local_hot_membranes)))
+        cold_membrane_by_time.append(float(np.mean(local_cold_membranes)))
+
+    return AliDynamicResult(
+        time_min=time_values.copy(),
+        hot_inlet_c=hot_values_c.copy(),
+        cold_inlet_c=cold_values_c.copy(),
+        hot_outlet_c=hot_outlet_values_c,
+        cold_outlet_c=cold_outlet_values_c,
+        mass_rate_kg_h=np.mean(mass_rates, axis=1) * 3600.0,
+        accumulated_mass_kg=states[:, 3 * n_cells],
+        membrane_flux_kg_m2_h=np.asarray(flux_by_time),
+        hot_membrane_c=np.asarray(hot_membrane_by_time),
+        cold_membrane_c=np.asarray(cold_membrane_by_time),
         solver_success=bool(solution.success),
         solver_message=str(solution.message),
     )
