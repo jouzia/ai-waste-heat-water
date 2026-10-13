@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from iapws import IAPWS95
 
 from ai_water.ali_dynamic_model import (
     AliDynamicConfig,
@@ -20,6 +21,26 @@ def test_iapws_water_properties_are_physical_in_model_range() -> None:
     assert 4000 < props.heat_capacity_j_kg_k < 4500
     assert 1e-4 < props.viscosity_pa_s < 2e-3
     assert 0.4 < props.conductivity_w_m_k < 0.8
+
+
+@pytest.mark.parametrize("temperature_k", [278.16, 293.37, 323.49, 363.21])
+def test_cached_water_property_grid_stays_close_to_iapws95(temperature_k: float) -> None:
+    cached = water_properties(temperature_k)
+    exact = IAPWS95(T=temperature_k, P=0.101325)
+    exact_values = {
+        "density": float(exact.rho),
+        "heat_capacity": float(exact.cp) * 1000.0,
+        "viscosity": float(exact.mu),
+        "conductivity": float(exact.k),
+    }
+    cached_values = {
+        "density": cached.density_kg_m3,
+        "heat_capacity": cached.heat_capacity_j_kg_k,
+        "viscosity": cached.viscosity_pa_s,
+        "conductivity": cached.conductivity_w_m_k,
+    }
+    for key, exact_value in exact_values.items():
+        assert abs(cached_values[key] - exact_value) / exact_value < 0.002
 
 
 def test_ali_vapor_pressure_is_higher_on_hot_side() -> None:
