@@ -1,8 +1,8 @@
 # GDR Villa 3M DCMD model-form comparison
 
-Date: 2026-10-13 (updated after counter-current outlet-state correction)  
-Workflow commit: `2e7c9f436ab5e045537a817304d91dd3a8874ccb`  
-Workflow run: [GDR DCMD model validation #5](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38424108325)  
+Date: 2026-10-13 (updated after counter-current outlet-state and duration-invariance corrections)  
+Workflow commit: `35615f22cf2735fb2ba69960ad7b568700527885`  
+Workflow run: [GDR DCMD model validation #9](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38424450187)  
 Input summary: `04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv`
 
 ## Question and split
@@ -54,6 +54,6 @@ A counter-current outlet-state mapping defect was found in `src/ai_water/md_chan
 
 ## Reproducibility
 
-The workflow uploads `model_form_comparison.csv`, `model_form_metrics.csv`, and `model_form_metrics.json` as the artifact `gdr-model-validation`. The current artifact SHA-256 reported by GitHub Actions is `7919a438ddedbab6ff016d014f4415b8fa4d58f9de075820ee91c65358ef51ba`.
+The workflow uploads `model_form_comparison.csv`, `model_form_metrics.csv`, and `model_form_metrics.json` as the artifact `gdr-model-validation`. The current artifact SHA-256 reported by GitHub Actions is `de7dc1ac36bf7b5c45ae83a9834289c3d571bd532f57e54a611e351ebee8690e`.
 
 This note records the actual diagnostic output; it does not claim source-exact reconstruction, independent validation, or net-water-benefit evidence.
