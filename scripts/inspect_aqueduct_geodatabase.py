@@ -50,7 +50,8 @@ def inspect_layers() -> dict[str, object]:
                     "geometry_name": info.get("geometry_name"),
                 }
             )
-        # Preserve per-layer metadata failures as output instead of aborting the inventory.\n        except Exception as exc:  # noqa: BLE001
+        # Preserve per-layer metadata failures as output instead of aborting the inventory.
+        except Exception as exc:  # noqa: BLE001
             layers.append(
                 {
                     "name": name,
