@@ -2,6 +2,18 @@
 
 Working title: **From AI Waste Heat to Water: A Net-Water-Impact Framework for Sustainable AI Infrastructure**
 
+## Current evidence status — 2026-10-13
+
+This plan remains intentionally provisional. Current executable evidence is:
+- Source-linked primary observation ledgers exist for the 12-condition GDR/NREL 3M workbook and the five Ali et al. (2020) supporting workbooks.
+- The Ali S1 flux-law split holds out 300 L/h. Fixed TPC underpredicts the held-out flow; a fitted flow-dependent TPC improves error but is an internal same-paper diagnostic only.
+- The source-scale Ali dynamic reconstruction has an inadmissible low-flow outlet state; the code now rejects it instead of reporting numerical convergence as physical success.
+- Scenario-only uncertainty: 20,000 Monte Carlo draws and Sobol matrices of 512/2,048 points execute reproducibly. Lower-tail Monte Carlo and freshwater-output Sobol convergence remain unresolved.
+- Cooling architecture Pareto sweep and break-even/failure envelope execute reproducibly, but their architecture/grid/model ranges are illustrative, not source-backed empirical priors.
+- Geographic Aqueduct/electricity-water integration, primary Martínez-Díez figure extraction, unfitted source-matched validation, independent external validation, final manuscript, and publication audit remain incomplete.
+
+Do not transfer any scenario-only number into the manuscript's principal results as if it were an empirical finding. The hard gate remains INCOMPLETE (9/18 gates true).
+
 ## Publication status
 
 This is a manuscript plan, not a completed paper. Quantitative results, validated claims, and conclusions must remain unwritten until the source-matched experiments, uncertainty analysis, and geographic scenarios are complete. Do not fill the placeholders with illustrative demo outputs.
