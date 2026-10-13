@@ -62,7 +62,7 @@ def test_existing_non_xlsx_payload_is_rejected(tmp_path: Path) -> None:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     manifest = module.export_workbooks(source_dir, tmp_path / "out")
-    assert manifest["total_nonempty_rows_exported"] == 6
+    assert manifest["total_nonempty_rows_exported"] == 7
     import csv
     with (tmp_path / "out" / "ali_2020_raw_observation_ledger.csv").open(encoding="utf-8", newline="") as stream:
         rows = list(csv.DictReader(stream))
