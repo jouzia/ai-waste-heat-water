@@ -111,6 +111,50 @@ jobs:
           --output artifacts/gdr_villa_exports/observation_ledger.csv
           --manifest artifacts/gdr_villa_exports/observation_ledger_manifest.json
 
+      - name: Verify ledger row count and independently recompute flux summary
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          import math
+          from collections import defaultdict
+          from pathlib import Path
+
+          root = Path("artifacts/gdr_villa_exports")
+          manifest = json.loads((root / "observation_ledger_manifest.json").read_text())
+          with (root / "observation_ledger.csv").open(encoding="utf-8", newline="") as stream:
+              ledger = list(csv.DictReader(stream))
+          with (root / "recreated_flux_summary.csv").open(encoding="utf-8-sig", newline="") as stream:
+              summary = list(csv.DictReader(stream))
+          with (root / "Specifications.csv").open(encoding="utf-8-sig", newline="") as stream:
+              specifications = list(csv.reader(stream))
+          area_m2 = float(specifications[1][0])
+
+          assert manifest["source_file_sha256"] == "5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb"
+          assert len(ledger) == 631 == manifest["output_row_count"]
+          assert len(summary) == 12
+          assert len({row["worksheet_name"] for row in ledger}) == 12
+          assert area_m2 > 0
+
+          grouped = defaultdict(list)
+          for row in ledger:
+              grouped[row["worksheet_name"]].append(row)
+          max_abs_diff = 0.0
+          for item in summary:
+              rows = grouped[item["condition_id"]]
+              x = [float(row["runtime_hr"]) for row in rows]
+              y = [float(row["distillate_volume_l"]) for row in rows]
+              xbar = sum(x) / len(x)
+              ybar = sum(y) / len(y)
+              sxx = sum((value - xbar) ** 2 for value in x)
+              slope = sum((a - xbar) * (b - ybar) for a, b in zip(x, y, strict=True)) / sxx
+              recomputed = slope / area_m2
+              difference = abs(recomputed - float(item["derived_flux_l_m2_h"]))
+              max_abs_diff = max(max_abs_diff, difference)
+              assert difference < 1e-6, (item["condition_id"], difference)
+          print(f"Validated {len(ledger)} source rows across {len(summary)} conditions; max flux-summary difference={max_abs_diff:.3g} L m^-2 h^-1")
+          PY
+
       - name: Upload raw workbook and inspection artifact
         uses: actions/upload-artifact@v4
         with:
