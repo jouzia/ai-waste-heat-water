@@ -6,15 +6,15 @@
 
 ## Reproducible acquisition
 
-- Workflow: [Ali et al. 2020 dynamic DCMD source-data ingestion, run #12](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38427509655).
-- Artifact ID: `11829695926`; archive digest: `sha256:1a12fadca90d89452c11f0f7cc5bcbc6b7804e5c16c78528c5a5f70723e15224`.
-- Artifact retention expiry: 2027-01-11 16:04 UTC.
+- Workflow: [Ali et al. 2020 dynamic DCMD source-data ingestion, run #22](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38437677652).
+- Artifact ID: `11833462795`; archive digest: `sha256:a20d3e19b77f1c9d7d8ad09f1b6c1c202fd4b6ba4042cb0c0520715e2b88d7ee`.
+- Artifact retention expiry: 2027-01-11 17:19 UTC.
 - Five original XLSX supporting objects are retained in the artifact with SHA-256 checksums; extraction code and manifests are in the repository.
 - The artifact includes source-linked transient and steady-state ledgers, excluded-row ledger, tail-flux diagnostic table, and a manifest recording file hashes and sheet/row locators.
-- Raw worksheet ledger SHA-256: `e24887bb94c1f903d623c4eb9bd19e1798615e5aa6b45776a81a5073d43956f7`.
-- Transient observation ledger SHA-256: `ee31a5604a01eb33683672b7ace2bae817273976425dc79509923b92647ec35c`.
+- Raw worksheet ledger SHA-256: `e24887bb94c1f903d623c4eb9bd19e1798615e5aa6b45776a81a5073d43956f7` (unchanged source export).
+- Transient observation ledger SHA-256: `1bc2ca946a9a42034eb13b8d53d6795258b225362140c75d1fa84e69defe7275`.
 - Steady-state ledger SHA-256: `87e338a4ac7868d380d6948025ff83b50061212894bb1c35dcf193ac4d363e27`.
-- Tail consistency CSV SHA-256: `0fcbd73063027d9c1fb0f981b1b69411caee23d1274b8aeb102a41b62687b76b`.
+- Raw `mw` semantics audit CSV SHA-256: `eaa0d848bc50e7fcd66c2f05fc04508000da3b96f16194d8a0e00c04a15667a3`.
 
 ## Extracted material
 
@@ -25,15 +25,13 @@
 - **2** non-condition rows from S1 are explicitly excluded and preserved in an exclusion ledger with original row locators.
 - The source paper reports a 10-second sampling interval; the workbook time column is expressed in minutes. Do not assume every worksheet reaches its target setpoint.
 
-## Cross-check performed
+## Raw mass-field semantics: blocking issue
 
-For each timestamped transient series, the extraction pipeline compares linear slopes over the final 25% and final 10% of rows against the corresponding S1 steady-state flux. This is a **within-paper consistency diagnostic**, not independent validation: the transient and steady-state data come from the same publication and may share experimental/systematic errors.
+The previous tail-slope consistency numbers in this document are **withdrawn from evidentiary use**. They were computed by treating the workbook's `mw` column as accumulated distillate mass. A later source-data audit found that this column decreases between adjacent observations in **14 of 19 complete timed worksheet traces**. That behavior is incompatible with an unqualified cumulative-mass interpretation unless the instrument's reset/measurement protocol explains it.
 
-For 15 traces whose final measured hot-inlet temperature is within 2 °C of the sheet's nominal setpoint:
-- Final-25% tail slope: median absolute difference **2.78%**, mean absolute difference **3.64%**, range **−5.14% to +9.61%**.
-- Final-10% tail slope: median absolute difference **2.83%**, mean absolute difference **4.15%**, range **−12.87% to +11.27%**.
+The current extraction therefore preserves the field as `mw_raw_reading_kg`, leaves `cumulative_distillate_mass_kg` unset, and disables all tail-flux consistency comparisons. The 19-row audit records source file, worksheet, row counts, time span, min/max, monotonicity, and step counts. Neither the monotonic traces nor the nonmonotonic traces are promoted to cumulative-mass observations until the source semantics are verified.
 
-The tails are not guaranteed to be statistically steady merely because they are the final rows. These values must not be presented as validation accuracy or as a model-versus-experiment error metric.
+The 16 S1 steady-state mass-flux values remain source-listed observations, but their salinity-column ambiguity and model-form limitations are documented separately. The S1 train/held-out-flow diagnostic is an internal same-paper model-form comparison, not independent validation.
 
 ## Data-quality findings to retain
 
