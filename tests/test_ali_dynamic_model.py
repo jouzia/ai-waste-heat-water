@@ -3,6 +3,7 @@ import pytest
 
 from ai_water.ali_dynamic_model import (
     AliDynamicConfig,
+    _piecewise_linear_derivative,
     interface_state,
     membrane_mass_transfer_coefficient_s_m,
     simulate_lumped_transient,
@@ -10,6 +11,15 @@ from ai_water.ali_dynamic_model import (
     vapor_pressures_pa,
     water_properties,
 )
+
+
+def test_piecewise_linear_input_derivative_uses_measured_ramp() -> None:
+    times_s = np.array([0.0, 10.0, 30.0])
+    temperatures_k = np.array([298.15, 308.15, 328.15])
+    assert _piecewise_linear_derivative(0.0, times_s, temperatures_k) == pytest.approx(1.0)
+    assert _piecewise_linear_derivative(10.0, times_s, temperatures_k) == pytest.approx(1.0)
+    assert _piecewise_linear_derivative(20.0, times_s, temperatures_k) == pytest.approx(1.0)
+    assert _piecewise_linear_derivative(30.0, times_s, temperatures_k) == pytest.approx(1.0)
 
 
 def test_iapws_water_properties_are_physical_in_model_range() -> None:
