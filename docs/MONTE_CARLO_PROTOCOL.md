@@ -45,3 +45,8 @@ A Monte Carlo probability is not a real-world probability unless the model struc
 The repository now runs `scripts/run_scenario_uncertainty_study.py` through [GitHub Actions run #8](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38428133917). The archived artifact is `scenario-only-uncertainty-study` (ID `11829716834`, SHA-256 `f8d4380906e0fe45ad5f377c828339b7f0eb06b08b516ebf8be63d114a4e7faf`, retained through 2027-01-11). It contains 20,000 Monte Carlo records, prefix convergence diagnostics, 512/2,048-point Sobol indices for two outputs, and output checksums.
 
 These are explicitly illustrative independent-uniform scenario ranges, not empirical parameter distributions. The run is useful as an execution and failure-regime diagnostic only. The median modeled freshwater output is zero under this scenario design, and the Sobol indices for freshwater production remain unstable between sample sizes; do not rank physical parameters or claim empirical uncertainty convergence from this run. The publication gate remains incomplete.
+
+
+## Independent-seed convergence audit (2026-10-13)
+
+Phase 1 failed the predeclared 5% net-water P05 spread and 0.5 L freshwater-output P95 spread tolerances. Phase 2 increased sample sizes to three independent 50,000-draw runs and one 100,000-draw run without relaxing the criteria. All checks passed (P05 spread 4.58%; sign-fraction spread 0.131 percentage points; P95 net-water spread 0.437%; freshwater P95 spread 0.337 L). The numerical Monte Carlo convergence gate is therefore true for these illustrative scenario ranges only. This does not calibrate empirical priors or support real-world probability claims. See `docs/MONTE_CARLO_CONVERGENCE_RESULTS_2026-10-13.md`.
