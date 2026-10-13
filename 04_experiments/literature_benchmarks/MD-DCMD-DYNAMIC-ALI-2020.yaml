@@ -35,6 +35,8 @@ reported_module:
 reported_conditions:
   feed_flow_rates_l_h: [50.0, 100.0, 200.0, 300.0]
   feed_temperature_range_c: [50.0, 80.0]
+  supplementary_sheet_targets_c: [40, 50, 55, 60, 70, 80]
+  special_cases: ["40 C and 55 C traces in S2", "80R replicate in S4", "S5 80 C trace does not attain its sheet target"]
   cold_inlet_temperature_c_nominal: 25.0
   feed_salinity_percent: 0.5
   hot_cold_flow_rates_equal: true
@@ -56,11 +58,11 @@ extraction_rules:
 
 
 extraction_artifact:
-  workflow_run_id: 38427214234
-  artifact_id: 11828704483
+  workflow_run_id: 38427509655
+  artifact_id: 11829695926
   artifact_name: "ali-2020-dynamic-dcmd-source-data"
-  artifact_sha256: "63f188990ed82e78775cd52048bde5696bf100ced8e43703382392c7baa06042"
-  expires_at_utc: "2027-01-11T16:02:34Z"
+  artifact_sha256: "1a12fadca90d89452c11f0f7cc5bcbc6b7804e5c16c78528c5a5f70723e15224"
+  expires_at_utc: "2027-01-11T16:04:42Z"
   raw_ledger: "ali_2020_raw_observation_ledger.csv"
   raw_ledger_sha256: "e24887bb94c1f903d623c4eb9bd19e1798615e5aa6b45776a81a5073d43956f7"
   raw_ledger_rows: 17430
@@ -70,3 +72,6 @@ extraction_artifact:
   steady_state_observations: 16
   excluded_steady_state_rows: 2
   tail_consistency_diagnostics: 34
+  transient_ledger_sha256: "ee31a5604a01eb33683672b7ace2bae817273976425dc79509923b92647ec35c"
+  steady_state_ledger_sha256: "87e338a4ac7868d380d6948025ff83b50061212894bb1c35dcf193ac4d363e27"
+  tail_consistency_csv_sha256: "0fcbd73063027d9c1fb0f981b1b69411caee23d1274b8aeb102a41b62687b76b"
