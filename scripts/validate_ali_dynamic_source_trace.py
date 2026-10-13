@@ -103,7 +103,12 @@ def run_case(
             "initial_hot_outlet_c": float(hot_out_observed[0]),
             "initial_cold_outlet_c": float(cold_out_observed[0]),
             "initial_accumulated_mass_kg": float(mass_observed[0]),
-            "config": AliDynamicConfig(),
+            "config": AliDynamicConfig(
+                relative_tolerance=1e-4,
+                absolute_tolerance_temperature_k=1e-4,
+                absolute_tolerance_mass_rate_kg_s=1e-7,
+                absolute_tolerance_mass_kg=1e-5,
+            ),
         }
         if model_kind.startswith("spatial"):
             model_kwargs["n_cells"] = n_cells
@@ -229,6 +234,13 @@ def main() -> None:
             "measured_input_histories_used": True,
         },
         "purpose": "Unfitted source-reconstruction diagnostic, not independent validation",
+        "numerical_tolerance_profile": {
+            "relative_tolerance": 1e-4,
+            "absolute_temperature_tolerance_k": 1e-4,
+            "absolute_mass_rate_tolerance_kg_s": 1e-7,
+            "absolute_mass_tolerance_kg": 1e-5,
+            "status": "exploratory; tolerance convergence must be checked before publication claims",
+        },
         "cases": cases,
         "interpretation_rules": [
             "Do not tune parameters on this trace and report it as held-out validation.",
@@ -236,6 +248,7 @@ def main() -> None:
             "Any physical-admissibility rejection is a failed model case, not a missing result.",
             "The source trace includes warm-up; measured input and initial outlet temperatures are used rather than an artificial instantaneous 60 C step.",
             "Lumped and 3-cell coarse spatial model forms are compared without fitting any parameter to this trace; the coarse spatial result is not a converged discretization.",
+            "The tolerance profile is relaxed for exploratory runtime; a tighter-versus-looser convergence comparison is required before quantitative validation.",
         ],
     }
     json_path = args.output_dir / "ali_source_trace_validation.json"
