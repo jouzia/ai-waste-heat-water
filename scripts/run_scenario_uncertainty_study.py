@@ -185,7 +185,6 @@ def run(output_dir: Path) -> dict[str, object]:
     ]
     write_csv(output_dir / "monte_carlo_convergence.csv", convergence)
 
-    base_dump = base.model_dump()
     names = tuple(SCENARIO_BOUNDS)
     sobol_runs: dict[str, list[dict[str, object]]] = {}
     sobol_results: dict[str, dict[str, object]] = {}
