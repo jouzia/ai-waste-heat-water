@@ -265,8 +265,12 @@ def _extract_transient_sheet(
                 "hot_outlet_temperature_c": _cell(row, hot_out_column),
                 "cold_inlet_temperature_c": _cell(row, cold_in_column),
                 "cold_outlet_temperature_c": _cell(row, cold_out_column),
-                "cumulative_distillate_mass_kg": mass_value,
-                "circulation_flow_l_h_raw": _cell(row, flow_column),
+                "cumulative_distillate_mass_kg": None,
+                "mw_raw_reading_kg": mass_value,
+                "mw_semantics_status": "unverified_raw_mw_measurement",
+                "fr_raw_reading": _cell(row, flow_column),
+                "fr_units_label_from_header": "L/h" if flow_column is not None else None,
+                "fr_semantics_status": "unverified_role_relative_to_nominal_flow",
                 "row_status": row_status,
                 "raw_header_json": _raw_json(header_row),
                 "raw_row_json": _raw_json(row),
@@ -286,61 +290,74 @@ def _extract_transient_sheet(
     }
 
 
-def _tail_crosscheck(
-    transient_rows: list[dict[str, Any]], steady_rows: list[dict[str, Any]]
+def _mw_semantics_audit(
+    transient_rows: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    steady_lookup = {
-        (round(row["nominal_flow_l_h"]), round(row["hot_inlet_temperature_c"])): row
-        for row in steady_rows
-    }
-    grouped: dict[tuple[int, str], list[dict[str, Any]]] = defaultdict(list)
+    """Summarize raw mw behavior without assuming it is cumulative mass."""
+    grouped: dict[tuple[str, int, str], list[dict[str, Any]]] = defaultdict(list)
     for row in transient_rows:
         if row["row_status"] == "complete_time_series_row":
-            grouped[(int(row["nominal_flow_l_h"]), str(row["worksheet_name"]))].append(row)
+            grouped[
+                (
+                    str(row["workbook_filename"]),
+                    int(row["nominal_flow_l_h"]),
+                    str(row["worksheet_name"]),
+                )
+            ].append(row)
 
     output: list[dict[str, Any]] = []
-    for (flow, sheet_name), rows in sorted(grouped.items()):
-        try:
-            target = int(sheet_name.rstrip("R"))
-        except ValueError:
-            continue
-        if target not in STEADY_TARGETS_C or (flow, target) not in steady_lookup:
-            continue
+    for (filename, flow, sheet_name), rows in sorted(grouped.items()):
         rows = sorted(rows, key=lambda row: float(row["time_min"]))
-        time_values = [float(row["time_min"]) for row in rows]
-        mass_values = [float(row["cumulative_distillate_mass_kg"]) for row in rows]
-        if len(rows) < 10:
-            continue
-        steady_flux = float(steady_lookup[(flow, target)]["mass_flux_kg_m2_h"])
-        final_hot = finite_number(rows[-1]["hot_inlet_temperature_c"])
-        target_attained = (
-            final_hot is not None and abs(final_hot - target) <= 2.0
+        time_values = np.asarray([float(row["time_min"]) for row in rows], dtype=float)
+        mw_values = np.asarray([float(row["mw_raw_reading_kg"]) for row in rows], dtype=float)
+        differences = np.diff(mw_values)
+        negative = differences[differences < 0.0]
+        positive = differences[differences > 0.0]
+        target_match = re.fullmatch(r"(\d+)(R?)", sheet_name.strip(), flags=re.IGNORECASE)
+        output.append(
+            {
+                "workbook_filename": filename,
+                "source_file_sha256": rows[0]["source_file_sha256"],
+                "nominal_flow_l_h_crosswalk": flow,
+                "worksheet_name": sheet_name,
+                "hot_inlet_target_c_from_sheet_label": (
+                    int(target_match.group(1)) if target_match else None
+                ),
+                "replicate_label": rows[0]["replicate_label"],
+                "row_count": len(rows),
+                "time_start_min": float(time_values[0]),
+                "time_end_min": float(time_values[-1]),
+                "mw_raw_start_kg": float(mw_values[0]),
+                "mw_raw_end_kg": float(mw_values[-1]),
+                "mw_raw_min_kg": float(np.min(mw_values)),
+                "mw_raw_max_kg": float(np.max(mw_values)),
+                "first_positive_mw_time_min": (
+                    float(time_values[np.flatnonzero(mw_values > 0.0)[0]])
+                    if np.any(mw_values > 0.0)
+                    else None
+                ),
+                "negative_step_count": int(len(negative)),
+                "positive_step_count": int(len(positive)),
+                "max_negative_step_magnitude_kg": (
+                    float(abs(np.min(negative))) if len(negative) else 0.0
+                ),
+                "median_negative_step_magnitude_kg": (
+                    float(np.median(abs(negative))) if len(negative) else 0.0
+                ),
+                "zero_fraction": float(np.mean(mw_values == 0.0)),
+                "raw_mw_monotonic": bool(np.all(differences >= 0.0)),
+                "status": (
+                    "nonmonotonic_raw_mw_semantics_unverified"
+                    if np.any(differences < 0.0)
+                    else "monotonic_raw_mw_semantics_still_unverified"
+                ),
+                "interpretation": (
+                    "Raw mw readings are preserved without cumulative-mass interpretation. "
+                    "Do not derive cumulative production or flux from this column until "
+                    "the source measurement/reset protocol is verified."
+                ),
+            }
         )
-        for fraction in (0.25, 0.10):
-            start = int(len(rows) * (1.0 - fraction))
-            slope_kg_min = _linear_slope(time_values[start:], mass_values[start:])
-            flux_estimate = slope_kg_min * 60.0 / MEMBRANE_AREA_M2
-            output.append(
-                {
-                    "supporting_data_id": rows[0]["supporting_data_id"],
-                    "nominal_flow_l_h": flow,
-                    "worksheet_name": sheet_name,
-                    "hot_inlet_target_c": target,
-                    "replicate_label": rows[0]["replicate_label"],
-                    "tail_fraction_by_row_count": fraction,
-                    "n_rows_in_tail": len(rows) - start,
-                    "tail_flux_estimate_kg_m2_h": flux_estimate,
-                    "s1_steady_state_flux_kg_m2_h": steady_flux,
-                    "relative_difference_percent": (
-                        (flux_estimate / steady_flux - 1.0) * 100.0
-                    ),
-                    "final_measured_hot_inlet_c": final_hot,
-                    "target_attained_within_2c": target_attained,
-                    "interpretation": (
-                        "diagnostic_consistency_check_only; not independent validation"
-                    ),
-                }
-            )
     return output
 
 
@@ -425,16 +442,16 @@ def extract_all(input_dir: Path, output_dir: Path) -> dict[str, Any]:
             f"other-incomplete={len(other_incomplete_rows)}, steady={len(steady_rows)}."
         )
 
-    tail_rows = _tail_crosscheck(transient_rows, steady_rows)
+    mw_audit_rows = _mw_semantics_audit(transient_rows)
     transient_path = output_dir / "ali_2020_transient_observation_ledger.csv"
     steady_path = output_dir / "ali_2020_steady_state_observation_ledger.csv"
     excluded_path = output_dir / "ali_2020_excluded_steady_state_rows.csv"
-    tail_path = output_dir / "ali_2020_tail_flux_consistency_check.csv"
+    mw_audit_path = output_dir / "ali_2020_mw_semantics_audit.csv"
     _write_csv(transient_path, transient_rows)
     _write_csv(steady_path, steady_rows)
     if excluded_steady_rows:
         _write_csv(excluded_path, excluded_steady_rows)
-    _write_csv(tail_path, tail_rows)
+    _write_csv(mw_audit_path, mw_audit_rows)
 
     manifest = {
         "source_article_doi": SOURCE_DOI,
@@ -446,14 +463,15 @@ def extract_all(input_dir: Path, output_dir: Path) -> dict[str, Any]:
         "extracted_at_utc": datetime.now(UTC).isoformat(),
         "flow_crosswalk": FLOW_BY_FILE,
         "flow_crosswalk_basis": (
-            "S2-S5 are mapped to nominal 50/100/200/300 L/h conditions using the "
-            "measured FR circulation-flow series and the paper's operating matrix. "
-            "FR is circulating stream flow, not distillate production."
+            "S2-S5 are mapped to nominal 50/100/200/300 L/h conditions from the "
+            "paper's operating matrix and workbook organization. FR is retained as a "
+            "raw column and is not used as a model input because its role relative to "
+            "the nominal circulation flow is not verified."
         ),
         "time_unit": "minute",
         "sampling_interval_reported_by_source": "10 seconds",
-        "cumulative_distillate_mass_unit": "kg",
-        "membrane_area_m2_used_only_for_tail_consistency_check": MEMBRANE_AREA_M2,
+        "mw_raw_reading_unit_label": "kg (from source column header)",
+        "mass_semantics_status": "unverified; raw mw is nonmonotonic in multiple traces",
         "expected_source_sha256": EXPECTED_SHA256,
         "files": file_records,
         "outputs": {
@@ -466,20 +484,22 @@ def extract_all(input_dir: Path, output_dir: Path) -> dict[str, Any]:
             "steady_state_rows": len(steady_rows),
             "excluded_steady_state_rows": excluded_path.name,
             "excluded_steady_state_row_count": len(excluded_steady_rows),
-            "tail_flux_consistency_check": tail_path.name,
-            "tail_flux_check_rows": len(tail_rows),
+            "mw_semantics_audit": mw_audit_path.name,
+            "mw_semantics_audit_rows": len(mw_audit_rows),
+            "tail_flux_consistency_check": "disabled_pending_mw_semantics_verification",
+            "tail_flux_check_rows": 0,
         },
         "data_quality_findings": [
             "S5 50/60/70 sheets contain temperature-only rows without timestamps after the timed series; retained as temperature_only_no_timestamp and excluded from time-domain fitting.",
-            "S2 55 begins with nonzero cumulative mass and its final measured hot-inlet temperature is below the sheet label; treat as a partial/nonstandard trace unless source documentation resolves the condition.",
+            "S2 55 begins with a nonzero raw mw reading and its final measured hot-inlet temperature is below the sheet label; treat as a partial/nonstandard trace unless source documentation resolves the condition.",
             "S5 80 ends at a measured hot-inlet temperature below the 80 C sheet label; do not treat it as a fully attained 80 C steady-state condition.",
             "The S1 Q=300 workbook contains a numeric row that is not a valid operating condition; it is excluded and archived in the excluded-row ledger.",
-            "The 25% and 10% tail slopes are derived diagnostic checks against S1 steady-state flux, not independent validation and not fitted model results.",
+            "Raw mw is nonmonotonic in multiple transient traces; cumulative-mass and tail-slope flux comparisons are disabled until source measurement/reset semantics are verified.",
         ],
         "transformation_policy": [
             "All raw time-series values and source row locators are preserved; no smoothing or interpolation is applied.",
-            "Time is retained in source minutes; cumulative distillate mass is retained in kg.",
-            "Circulation flow FR is not relabeled as distillate production.",
+            "Time is retained in source minutes; raw mw readings are retained in kg with no cumulative-mass interpretation until verified.",
+            "FR is retained as a raw source field; its role relative to nominal circulation flow is not inferred.",
             "Temperature-only rows without timestamps remain in the ledger but are excluded from time-domain fitting.",
             "Source hashes are pinned; changed source bytes require manual provenance review before extraction.",
         ],
