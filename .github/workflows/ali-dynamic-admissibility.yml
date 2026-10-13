@@ -1,0 +1,33 @@
+name: Ali dynamic-model admissibility audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/ai_water/ali_dynamic_model.py"
+      - "scripts/audit_ali_dynamic_admissibility.py"
+      - ".github/workflows/ali-dynamic-admissibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  admissibility-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install analysis dependencies
+        run: python -m pip install -e ".[analysis]"
+      - name: Run physical-admissibility matrix
+        run: python scripts/audit_ali_dynamic_admissibility.py
+      - name: Upload diagnostic matrix
+        uses: actions/upload-artifact@v4
+        with:
+          name: ali-dynamic-admissibility-matrix
+          path: artifacts/ali_dynamic_admissibility/*
+          if-no-files-found: error
+          retention-days: 90
