@@ -3,6 +3,7 @@ import pytest
 
 from ai_water.ali_dynamic_model import (
     AliDynamicConfig,
+    _integrate_piecewise_input_trace,
     _piecewise_linear_derivative,
     interface_state,
     membrane_mass_transfer_coefficient_s_m,
@@ -43,6 +44,21 @@ def test_interface_solver_returns_positive_flux_for_hot_feed() -> None:
     assert state.hot_membrane_k > state.cold_membrane_k
     assert state.iterations <= 100
     assert state.membrane_coefficient_s_m > 0
+
+
+def test_piecewise_integrator_stops_at_each_input_knot() -> None:
+    config = AliDynamicConfig()
+    times_s = np.array([0.0, 1.0, 2.0])
+    active_segment = [0]
+
+    def rhs(time_s: float, state: np.ndarray) -> np.ndarray:
+        del time_s
+        return np.asarray([float(active_segment[0] + 1)])
+
+    states = _integrate_piecewise_input_trace(
+        rhs, times_s, np.asarray([0.0]), config, 1e-9, active_segment
+    )
+    np.testing.assert_allclose(states[:, 0], [0.0, 1.0, 3.0], atol=1e-8)
 
 
 def test_piecewise_linear_input_derivative_uses_measured_ramp() -> None:
