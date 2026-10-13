@@ -135,7 +135,6 @@ def export_workbooks(input_dir: Path, output_dir: Path) -> dict[str, object]:
             "Blank rows are omitted; source worksheet and one-based Excel row locator are retained for every exported row.",
             "These data are not treated as held-out validation until source methods, condition mappings, model-input availability, and leakage risks are audited.",
         ],
-        "workbooks": workbook_manifest,
     }
     manifest_path.write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
