@@ -234,11 +234,11 @@ def run(output_dir: Path) -> dict[str, object]:
                     "total_effect_abs_delta": abs(
                         next(
                             r["total_effect"] for r in sobol_runs[output_name]
-                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 256
+                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 512
                         )
                         - next(
                             r["total_effect"] for r in sobol_runs[output_name]
-                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 1024
+                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 2048
                         )
                     ),
                 }
