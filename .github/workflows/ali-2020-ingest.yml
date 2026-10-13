@@ -86,7 +86,8 @@ jobs:
           assert outputs["temperature_only_no_timestamp_rows"] == 548, outputs
           assert outputs["other_incomplete_rows"] == 0, outputs
           assert outputs["steady_state_rows"] == 16, outputs
-          assert outputs["tail_flux_check_rows"] == 34, outputs
+          assert outputs["tail_flux_check_rows"] == 0, outputs
+          assert outputs["mw_semantics_audit_rows"] == 18, outputs
           assert len(manifest["files"]) == 5, manifest
           print("Verified observation ledger:", json.dumps(outputs, indent=2))
           PY
