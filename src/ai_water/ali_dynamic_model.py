@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Callable
+from functools import lru_cache
 from dataclasses import dataclass
 
 import numpy as np
@@ -119,15 +120,8 @@ class AliDynamicResult:
     solver_message: str
 
 
-def water_properties(temperature_k: float) -> WaterProperties:
-    """Return IAPWS95 pure-water properties at 0.101325 MPa.
-
-    IAPWS95 reports cp in kJ/(kg K); convert it to J/(kg K). This is a
-    documented reconstruction closure, not a claim that the original paper
-    used exactly the same property implementation.
-    """
-    if not math.isfinite(temperature_k) or not 273.15 <= temperature_k <= 373.15:
-        raise ValueError("water-property temperature must be in 273.15–373.15 K")
+@lru_cache(maxsize=1001)
+def _water_properties_on_grid(temperature_k: float) -> WaterProperties:
     state = IAPWS95(T=temperature_k, P=0.101325)
     return WaterProperties(
         density_kg_m3=float(state.rho),
@@ -135,6 +129,19 @@ def water_properties(temperature_k: float) -> WaterProperties:
         viscosity_pa_s=float(state.mu),
         conductivity_w_m_k=float(state.k),
     )
+
+
+def water_properties(temperature_k: float) -> WaterProperties:
+    """Return IAPWS95 pure-water properties on a cached 0.1 K grid.
+
+    IAPWS95 reports cp in kJ/(kg K); convert it to J/(kg K). Grid quantization
+    is bounded to 0.05 K and is a performance optimization, not a source-paper
+    property assumption. This remains a documented reconstruction closure.
+    """
+    if not math.isfinite(temperature_k) or not 273.15 <= temperature_k <= 373.15:
+        raise ValueError("water-property temperature must be in 273.15–373.15 K")
+    grid_temperature_k = 273.15 + round((temperature_k - 273.15) * 10.0) / 10.0
+    return _water_properties_on_grid(grid_temperature_k)
 
 
 def vapor_enthalpy_j_kg(temperature_k: float) -> float:
