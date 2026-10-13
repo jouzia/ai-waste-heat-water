@@ -37,33 +37,55 @@ def sha256_file(path: Path) -> str:
 def retrieve_image(target: Path) -> dict[str, object]:
     target.parent.mkdir(parents=True, exist_ok=True)
     temporary = target.with_suffix(target.suffix + ".part")
+    source_copy = target.with_name(target.stem + "_source_payload.bin")
+    source_temporary = source_copy.with_suffix(source_copy.suffix + ".part")
     request = Request(
         FIGURE_URL,
-        headers={"User-Agent": "ai-waste-heat-water/1.0 (reproducible figure audit)"},
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; ai-waste-heat-water/1.0)",
+            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+        },
     )
     last_error: Exception | None = None
     for attempt in range(4):
         try:
-            with urlopen(request, timeout=90) as response, temporary.open("wb") as output:
-                while chunk := response.read(1024 * 1024):
-                    output.write(chunk)
-            with temporary.open("rb") as stream:
-                signature = stream.read(8)
-            if signature != b"\x89PNG\r\n\x1a\n":
-                raise ValueError("Springer endpoint did not return a PNG image")
-            from PIL import Image
+            from PIL import Image, UnidentifiedImageError
 
-            with Image.open(temporary) as image:
-                image.verify()
+            with urlopen(request, timeout=90) as response:
+                content_type = response.headers.get("Content-Type", "")
+                response_url = response.geturl()
+                payload = response.read()
+            source_temporary.write_bytes(payload)
+            try:
+                with Image.open(source_temporary) as source_image:
+                    source_format = source_image.format or "unknown"
+                    source_image.verify()
+                with Image.open(source_temporary) as source_image:
+                    width, height = source_image.size
+                    mode = source_image.mode
+                    normalized_mode = "RGBA" if mode in ("RGBA", "LA") else "RGB"
+                    source_image.convert(normalized_mode).save(
+                        temporary, format="PNG", optimize=False
+                    )
+            except (UnidentifiedImageError, OSError) as exc:
+                prefix = payload[:100].decode("utf-8", errors="replace")
+                raise ValueError(
+                    f"Endpoint did not return a recognizable image; "
+                    f"content_type={content_type!r}, bytes={len(payload)}, prefix={prefix!r}"
+                ) from exc
             temporary.replace(target)
-            with Image.open(target) as image:
-                width, height = image.size
-                mode = image.mode
+            source_temporary.replace(source_copy)
             return {
                 "status": "retrieved_and_image_verified",
                 "file_name": target.name,
                 "size_bytes": target.stat().st_size,
                 "sha256": sha256_file(target),
+                "source_payload_file": source_copy.name,
+                "source_payload_size_bytes": source_copy.stat().st_size,
+                "source_payload_sha256": sha256_file(source_copy),
+                "source_payload_content_type": content_type,
+                "source_payload_format": source_format,
+                "response_url": response_url,
                 "width_px": width,
                 "height_px": height,
                 "mode": mode,
@@ -71,10 +93,10 @@ def retrieve_image(target: Path) -> dict[str, object]:
         except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
             last_error = exc
             temporary.unlink(missing_ok=True)
+            source_temporary.unlink(missing_ok=True)
             if attempt < 3:
                 time.sleep(min(2**attempt, 20))
     raise RuntimeError(f"Figure retrieval failed: {last_error}") from last_error
-
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
