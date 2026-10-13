@@ -1,6 +1,6 @@
 source_id: MD-DCMD-CHANNEL-2020
 figure: "Figure 3"
-status: source_image_accessible_primary_geometry_verified_pending_marker_extraction
+status: secondary_figure_metadata_verified_local_retrieval_blocked_marker_extraction_pending
 license: "CC BY 4.0 for the Keshavarzzadeh article; experimental observations trace to Martínez-Díez and Vázquez-González (1999)"
 source_image_url: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-020-73964-7/MediaObjects/41598_2020_73964_Fig3_HTML.png"
 image_source_note: "Full-size Figure 3 image was accessed from the Springer Nature media endpoint on 2026-09-30. No experimental observations are entered from visual inspection alone until calibrated extraction and repeatability checks are archived."
@@ -44,3 +44,10 @@ extraction_rules:
   - "do not round extracted observations before analysis"
   - "do not fit a curve to the digitized observations before the first unfitted model run"
 observations: []
+retrieval_audit_2026_10_13:
+  status: blocked
+  workflow_runs: [38438187768, 38438322469, 38438434964, 38438535230, 38438571303, 38438595862, 38438747994, 38438776671]
+  observed_failures:
+    - "Springer media endpoint returned text/html rather than image bytes to the automated runner."
+    - "The PMC /bin/ image path returned HTTP 404; the Europe PMC image path returned HTTP 403."
+  policy: "Do not invent or manually approximate pixel coordinates. Keep observations empty until an actual source image is retrieved and archived with checksum."
