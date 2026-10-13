@@ -54,3 +54,19 @@ def test_countercurrent_energy_balance_closes_at_32_cells() -> None:
     assert result.hot_side_thermal_demand_kwh_th == pytest.approx(
         accounted_heat, rel=1e-6, abs=1e-8
     )
+
+
+def test_countercurrent_permeate_outlet_is_at_first_feed_coordinate_cell() -> None:
+    config = _countercurrent_config(cells=16)
+    result = simulate_dcmd_channel(
+        config=config,
+        feed_in_temperature_c=40.6,
+        permeate_in_temperature_c=19.9,
+    )
+
+    assert result.permeate_out_temperature_c == pytest.approx(
+        result.cells[0].permeate_bulk_temperature_c, abs=1e-10
+    )
+    assert result.permeate_out_mass_kg_h - config.permeate_mass_flow_kg_h == pytest.approx(
+        result.freshwater_produced_kg, rel=1e-6, abs=1e-8
+    )
