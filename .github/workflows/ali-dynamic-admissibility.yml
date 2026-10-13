@@ -52,5 +52,7 @@ jobs:
             artifacts/ali_dynamic_admissibility/*
             artifacts/ali_source_trace_validation/*
             artifacts/provenance/ali_2020_supporting_data_manifest.json
+            artifacts/ali_2020_exports/ali_2020_transient_observation_ledger.csv
+            artifacts/ali_2020_exports/ali_2020_observation_ledger_manifest.json
           if-no-files-found: error
           retention-days: 90
