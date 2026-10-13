@@ -550,7 +550,11 @@ def simulate_lumped_transient(
     ):
         raise RuntimeError(
             "Ali lumped transient produced an outlet outside the inlet-temperature "
-            f"envelope [{lower_bound_c:.3f}, {upper_bound_c:.3f}] °C; the selected "
+            f"envelope [{lower_bound_c:.3f}, {upper_bound_c:.3f}] °C; predicted "
+            f"hot outlet range [{np.min(hot_outlet_values_c):.3f}, "
+            f"{np.max(hot_outlet_values_c):.3f}] °C and cold outlet range "
+            f"[{np.min(cold_outlet_values_c):.3f}, "
+            f"{np.max(cold_outlet_values_c):.3f}] °C. The selected "
             "geometry/flow/property closure is physically inadmissible for this trace."
         )
 
@@ -825,7 +829,11 @@ def simulate_spatial_transient(
     ):
         raise RuntimeError(
             "Ali spatial transient produced an outlet outside the inlet-temperature "
-            f"envelope [{lower_bound_c:.3f}, {upper_bound_c:.3f}] °C."
+            f"envelope [{lower_bound_c:.3f}, {upper_bound_c:.3f}] °C; predicted "
+            f"hot outlet range [{np.min(hot_outlet_values_c):.3f}, "
+            f"{np.max(hot_outlet_values_c):.3f}] °C and cold outlet range "
+            f"[{np.min(cold_outlet_values_c):.3f}, "
+            f"{np.max(cold_outlet_values_c):.3f}] °C."
         )
 
     flux_by_time: list[float] = []
