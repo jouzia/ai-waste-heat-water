@@ -21,6 +21,12 @@ Both unrefitted lumped-model cases were rejected by the physical envelope guard:
 
 The admissible envelope for this trace was [18.750, 61.290] °C. The predicted hot outlet falls more than 13 °C below the minimum measured inlet/initial-outlet temperature. This is a clear physical-admissibility failure on measured source inputs, not merely the earlier synthetic cold-start stress test. Artifact ID `11831163647`, ZIP SHA-256 `6d6bf926b0aadee377d7175ab67dd64bf4d31c6a8e38bb5894675df7c2064459`, retained through 2027-01-11.
 
+The 3-cell coarse spatial model was then evaluated on the same 181-row warm-up subset in [workflow run #26](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38434956718). It improved the magnitude of the violation but did not pass the physical guard:
+- No correction: hot-outlet range [17.802, 19.819] °C; cold-outlet range [18.873, 48.361] °C.
+- Published spatial correction (0.15): hot-outlet range [17.362, 19.610] °C; cold-outlet range [18.878, 46.104] °C.
+
+Both predictions still fall below the 18.750 °C lower envelope. The coarse spatial model is closer than the lumped model, consistent with counter-current axial gradients mattering, but the 3-cell result is not a converged discretization. Artifact ID `11832214020`, ZIP SHA-256 `5b2491e459b950967193d6717b9207a3bce2c14e0b3e0452e67f9b1d2e2f3100`; the artifact includes the exact extracted transient ledger and source workbook hash manifest. This run used an exploratory relative tolerance of 1e-4 and trapezoidal mass-state integration at the 10-second input knots; numerical time-grid convergence remains required.
+
 The trace is a 30-minute warm-up subset, not the full experimental run and not a held-out validation result. The next step is to compare the 10-cell spatial model against the same exact trace and independently audit the source model's bulk-temperature and energy-balance equations. Do not fit heat-loss or membrane parameters to hide this failure.
 
 ## Additional implementation corrections
