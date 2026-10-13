@@ -34,6 +34,10 @@ The workflow now exports `artifacts/gdr_villa_exports/observation_ledger.csv` wi
 5. Calculated a Newey–West/HAC slope standard error with a Bartlett kernel and lag (L=lfloor4(n/100)^{2/9}floor), bounded to the available sample. The approximate 95% interval in the summary CSV is a time-series regression interval only; it is **not** measurement uncertainty or replicate-to-replicate uncertainty.
 6. Preserved worksheet row ranges, time span, cumulative-volume endpoints, actual average inlet/outlet temperatures, fit diagnostics, source checksum, and a separate cross-check against the `Theoretical` sheet.
 
+## Recomputed ledger-to-summary consistency check
+
+After the row-level artifact was generated, a separate calculation recomputed an ordinary-least-squares slope of cumulative distillate volume versus runtime for each of the 12 worksheets, divided by the documented 0.23088 m² membrane area, and compared the result with the committed condition-level summary. All 12 values matched to within **4.82 × 10⁻⁹ L m⁻² h⁻¹** absolute difference. This confirms arithmetic consistency between the row-level CSV and the summary extraction; it is not an independent measurement, replicate check, or model validation because both are derived from the same workbook.
+
 ## Findings and anomalies requiring explicit treatment
 
 - The 12 worksheets contain 20–129 time points each, with zero nonzero alarm flags in the selected time-series rows.
