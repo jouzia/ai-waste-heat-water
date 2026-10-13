@@ -2,7 +2,7 @@
 
 ## Status snapshot
 
-This remains a planning estimate, not a completion claim. The hard publication gate has **9 of 18 gates true and 9 false**. Software correctness, open-source data access, primary-observation extraction, cooling-architecture scenario execution, time-varying workload coupling, global-sensitivity execution, counterfactual water accounting, and exploratory multi-objective execution have reproducible artifacts. The publication gate still correctly returns incomplete.
+This remains a planning estimate, not a completion claim. The hard publication gate has **10 of 18 gates true and 8 false**. Software correctness, open-source data access, primary-observation extraction, cooling-architecture scenario execution, time-varying workload coupling, global-sensitivity execution, counterfactual water accounting, and exploratory multi-objective execution have reproducible artifacts. The publication gate still correctly returns incomplete.
 
 The Ali et al. (2020) source data have now been acquired, checksummed, and extracted into source-linked raw, transient, and steady-state ledgers. A 20,000-draw scenario-only Monte Carlo and a 512/2,048-point Sobol study run reproducibly, but the lower-tail estimate and freshwater-production sensitivity indices need more convergence work. A 1,440-row cooling/water/energy/carbon scenario sweep now emits a Pareto set, and a 5,184-combination break-even envelope plus 25,920-row displacement sweep execute reproducibly. Their architecture, grid, and model ranges are illustrative rather than measured, so neither result is publication-grade.
 
