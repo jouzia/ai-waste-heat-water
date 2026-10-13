@@ -498,6 +498,32 @@ def simulate_lumped_transient(
         raise RuntimeError(f"Ali transient ODE failed: {solution.message}")
 
     predicted_states = solution.y.T
+    # A passive DCMD module cannot drive either outlet outside the global
+    # inlet-temperature envelope without an external heat source/sink. Reject
+    # such trajectories instead of returning numerically converged but
+    # thermodynamically inadmissible outlet states.
+    all_inlet_c = np.concatenate((hot_values_c, cold_values_c))
+    if initial_hot_outlet_c is not None:
+        all_inlet_c = np.append(all_inlet_c, initial_hot_outlet_c)
+    if initial_cold_outlet_c is not None:
+        all_inlet_c = np.append(all_inlet_c, initial_cold_outlet_c)
+    lower_bound_c = float(np.min(all_inlet_c))
+    upper_bound_c = float(np.max(all_inlet_c))
+    outlet_tolerance_c = 1e-3
+    hot_outlet_values_c = predicted_states[:, 0] - 273.15
+    cold_outlet_values_c = predicted_states[:, 1] - 273.15
+    if (
+        np.any(hot_outlet_values_c < lower_bound_c - outlet_tolerance_c)
+        or np.any(hot_outlet_values_c > upper_bound_c + outlet_tolerance_c)
+        or np.any(cold_outlet_values_c < lower_bound_c - outlet_tolerance_c)
+        or np.any(cold_outlet_values_c > upper_bound_c + outlet_tolerance_c)
+    ):
+        raise RuntimeError(
+            "Ali lumped transient produced an outlet outside the inlet-temperature "
+            f"envelope [{lower_bound_c:.3f}, {upper_bound_c:.3f}] °C; the selected "
+            "geometry/flow/property closure is physically inadmissible for this trace."
+        )
+
     fluxes: list[float] = []
     hot_membrane_c: list[float] = []
     cold_membrane_c: list[float] = []
@@ -520,8 +546,8 @@ def simulate_lumped_transient(
         time_min=time_values.copy(),
         hot_inlet_c=hot_values_c.copy(),
         cold_inlet_c=cold_values_c.copy(),
-        hot_outlet_c=predicted_states[:, 0] - 273.15,
-        cold_outlet_c=predicted_states[:, 1] - 273.15,
+        hot_outlet_c=hot_outlet_values_c,
+        cold_outlet_c=cold_outlet_values_c,
         mass_rate_kg_h=predicted_states[:, 2] * 3600.0,
         accumulated_mass_kg=predicted_states[:, 3],
         membrane_flux_kg_m2_h=np.asarray(fluxes),
