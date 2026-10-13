@@ -28,3 +28,10 @@ The zero-production mass in the Monte Carlo output is an important failure-regim
 2. Keep the Monte Carlo convergence gate **false** until lower-tail and sign estimates meet a predeclared tolerance across larger independent seeds/sample sizes.
 3. Keep unfitted validation, held-out validation, break-even envelope, and publication readiness **false**.
 4. Before interpreting these outputs physically, source and justify distributions, validate membrane heat transfer and interface temperatures against experiments, and couple realistic cooling architecture and workload traces.
+
+
+## Independent-seed convergence follow-up (2026-10-13)
+
+The first independent-seed convergence phase failed two predeclared tolerances, so the thresholds were not relaxed; sample sizes were increased. The phase-two audit used three independent 50,000-draw runs (seeds 20261017–20261019) and one 100,000-draw run (seed 20261020). All four acceptance checks passed: net-water P05 relative spread 4.58% (limit 5%), negative-sign probability spread 0.131 percentage points (limit 0.5 points), net-water P95 relative spread 0.437% (limit 2%), and freshwater-output P95 spread 0.337 L (limit 0.5 L). Full methods and run-specific estimates are in `docs/MONTE_CARLO_CONVERGENCE_RESULTS_2026-10-13.md`; workflow run #4 artifact ID 11833574566.
+
+This allows the **Monte Carlo numerical-convergence gate** to pass under the declared scenario ranges only. It does not make the input distributions empirical, validate the MD model, or turn the modeled sign fraction into a real-world probability. The freshwater-output Sobol ranking remains unstable and must not be reported as a definitive sensitivity ranking.
