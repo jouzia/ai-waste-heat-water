@@ -322,6 +322,15 @@ def simulate_dcmd_channel(
                 f"mass-flow residual={error_m:.3e} kg/h)"
             )
         feed_out, permeate_out, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile, mass_profile)
+        # The permeate flows opposite to the feed: its outlet is therefore at
+        # the first feed-coordinate cell, not the final cell visited by march().
+        # The profile stores each cell's permeate inlet state; cell 0's recorded
+        # bulk temperature and its inlet mass plus local product give the true
+        # permeate outlet state.
+        permeate_out = cells[0].permeate_bulk_temperature_c
+        permeate_mass = (
+            mass_profile[0] + cells[0].product_water_kg / config.duration_h
+        )
 
     product_total = sum(c.product_water_kg for c in cells)
     latent_total = sum(c.membrane_latent_heat_kw for c in cells) * config.duration_h
