@@ -34,8 +34,8 @@ from ai_water.study_analysis import convergence_curve, summarize_net_water
 from ai_water.uncertainty import DistributionSpec
 
 SEED = 20261013
-MC_SAMPLES = 5000
-SOBOL_SIZES = (256, 1024)
+MC_SAMPLES = 20000
+SOBOL_SIZES = (512, 2048)
 
 # Broad engineering scenario ranges, intentionally not labelled empirical.
 # Each range must be replaced or narrowed using a source/measurement prior
@@ -180,7 +180,7 @@ def run(output_dir: Path) -> dict[str, object]:
     convergence = [
         point.__dict__
         for point in convergence_curve(
-            net_values, sample_counts=(500, 1000, 2500, 5000)
+            net_values, sample_counts=(1000, 5000, 10000, 20000)
         )
     ]
     write_csv(output_dir / "monte_carlo_convergence.csv", convergence)
@@ -219,16 +219,16 @@ def run(output_dir: Path) -> dict[str, object]:
             sobol_runs[output_name].extend(rows)
         sobol_results[output_name] = {
             "sample_sizes_per_matrix": list(SOBOL_SIZES),
-            "index_change_256_to_1024": {
+            "index_change_512_to_2048": {
                 parameter: {
                     "first_order_abs_delta": abs(
                         next(
                             r["first_order"] for r in sobol_runs[output_name]
-                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 256
+                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 512
                         )
                         - next(
                             r["first_order"] for r in sobol_runs[output_name]
-                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 1024
+                            if r["parameter"] == parameter and r["sample_size_per_matrix"] == 2048
                         )
                     ),
                     "total_effect_abs_delta": abs(
