@@ -12,10 +12,8 @@ from statistics import median
 import numpy as np
 
 from ai_water.ali_dynamic_model import (
-    PUBLISHED_FLOS_LUMPED,
     PUBLISHED_FLOS_SPATIAL,
     AliDynamicConfig,
-    simulate_lumped_transient,
     simulate_spatial_transient,
 )
 
@@ -89,11 +87,7 @@ def run_case(
         "metrics": None,
     }
     try:
-        model_function = (
-            simulate_lumped_transient
-            if model_kind == "lumped"
-            else simulate_spatial_transient
-        )
+        model_function = simulate_spatial_transient
         model_kwargs: dict[str, object] = {
             "time_min": time_min,
             "hot_inlet_c": hot_in,
@@ -108,8 +102,7 @@ def run_case(
                 absolute_tolerance_temperature_k=1e-4,
             ),
         }
-        if model_kind.startswith("spatial"):
-            model_kwargs["n_cells"] = n_cells
+        model_kwargs["n_cells"] = n_cells
         predicted = model_function(**model_kwargs)
         mass_rate_nonnegative = bool(np.all(predicted.mass_rate_kg_h >= -1e-9))
         mass_monotonic = bool(
@@ -193,28 +186,16 @@ def main() -> None:
         run_case(
             rows,
             correction=0.0,
-            case_id="lumped_unfitted_no_correction",
-            model_kind="lumped",
-        ),
-        run_case(
-            rows,
-            correction=PUBLISHED_FLOS_LUMPED[flow],
-            case_id="lumped_published_source_correction_not_refitted",
-            model_kind="lumped",
-        ),
-        run_case(
-            rows,
-            correction=0.0,
-            case_id="spatial_3_cell_coarse_unfitted_no_correction",
-            model_kind="spatial_3_cell_coarse",
-            n_cells=3,
+            case_id="spatial_10_cell_unfitted_no_correction",
+            model_kind="spatial_10_cell",
+            n_cells=10,
         ),
         run_case(
             rows,
             correction=PUBLISHED_FLOS_SPATIAL[flow],
-            case_id="spatial_3_cell_coarse_published_source_correction_not_refitted",
-            model_kind="spatial_3_cell_coarse",
-            n_cells=3,
+            case_id="spatial_10_cell_published_source_correction_not_refitted",
+            model_kind="spatial_10_cell",
+            n_cells=10,
         ),
     ]
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -244,7 +225,7 @@ def main() -> None:
             "The published heat-loss correction is a separate source-reproduction case, not a newly estimated physical heat-loss coefficient.",
             "Any physical-admissibility rejection is a failed model case, not a missing result.",
             "The source trace includes warm-up; measured input and initial outlet temperatures are used rather than an artificial instantaneous 60 C step.",
-            "Lumped and 3-cell coarse spatial model forms are compared without fitting any parameter to this trace; the coarse spatial result is not a converged discretization.",
+            "This run evaluates the 10-cell spatial model without fitting any parameter to this trace. The earlier 3-cell coarse spatial screen is archived in workflow run 26, artifact 11832214020; its result is not a converged discretization.",
             "The tolerance profile is relaxed for exploratory runtime; a tighter-versus-looser convergence comparison is required before quantitative validation.",
         ],
     }
