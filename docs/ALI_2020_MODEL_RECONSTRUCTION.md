@@ -29,6 +29,8 @@ Therefore, the project must not claim the first dynamic DCMD mass-production mod
 
 The main text does not fully specify every property correlation and membrane parameter required by Appendix B. Any adopted value for membrane tortuosity, solid/gas thermal conductivity, water-property correlations, or pressure-diffusivity product must be traced to its cited source or labeled as an engineering closure. Do not call such a reconstruction exact until those items are resolved.
 
+The transient implementation currently uses IAPWS95 pure-water properties cached on a 0.1 K temperature grid (maximum temperature quantization 0.05 K) for runtime. Regression tests compare density, heat capacity, viscosity, and conductivity with direct IAPWS95 evaluations at four temperatures and enforce less than 0.2% relative difference. This is a numerical acceleration only; it does not resolve the missing source-paper property correlations or make the reconstruction source-exact.
+
 ## Published equations to reproduce
 
 For the lumped model, the state includes the hot outlet temperature, cold outlet temperature, membrane mass-production rate, and accumulated distillate mass. The source defines the instantaneous mass-production rate through the membrane vapor-pressure difference:
