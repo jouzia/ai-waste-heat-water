@@ -68,7 +68,7 @@ def discover_figure_urls() -> list[str]:
                                 ]
                             )
     except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError, StopIteration) as exc:
-        print(f\"Europe PMC figure discovery unavailable: {exc}\")
+        print(f"Europe PMC figure discovery unavailable: {exc}")
     if not candidates:
         # NCBI's PMC API is an independent route if Europe PMC search is unavailable.
         try:
@@ -111,7 +111,7 @@ def discover_figure_urls() -> list[str]:
                                     ]
                                 )
         except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError) as exc:
-            print(f\"NCBI PMC figure discovery unavailable: {exc}\")
+            print(f"NCBI PMC figure discovery unavailable: {exc}")
     candidates.append(FIGURE_URL)
     # Preserve order while avoiding duplicate candidate URLs.
     return list(dict.fromkeys(candidates))
