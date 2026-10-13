@@ -1,0 +1,71 @@
+name: Cooling architecture water energy carbon trade-offs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/run_cooling_tradeoff_sweep.py"
+      - "src/ai_water/break_even.py"
+      - "src/ai_water/cooling_scenarios.py"
+      - ".github/workflows/cooling-tradeoffs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cooling-tradeoffs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install research package
+        run: python -m pip install -e .
+
+      - name: Run cooling/water/energy/carbon scenario sweep
+        run: python scripts/run_cooling_tradeoff_sweep.py --output-dir artifacts/cooling_tradeoffs
+
+      - name: Verify scenario coverage and output checksums
+        run: |
+          python - <<'PY'
+          import csv
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path("artifacts/cooling_tradeoffs")
+          manifest = json.loads((root / "manifest.json").read_text())
+          assert manifest["scenario_count"] == 1440, manifest
+          assert manifest["architecture_count"] == 6, manifest
+          assert manifest["pareto_point_count"] > 0, manifest
+          for filename, expected in (
+              ("cooling_water_energy_carbon_tradeoffs.csv", manifest["output_sha256"]),
+              ("pareto_front.csv", manifest["pareto_front_sha256"]),
+          ):
+              actual = hashlib.sha256((root / filename).read_bytes()).hexdigest()
+              assert actual == expected, (filename, expected, actual)
+          with (root / "cooling_water_energy_carbon_tradeoffs.csv").open(encoding="utf-8", newline="") as stream:
+              rows = list(csv.DictReader(stream))
+          assert len(rows) == 1440
+          assert {row["architecture"] for row in rows} == {
+              "air_cooled", "evaporative", "direct_liquid",
+              "rear_door_heat_exchanger", "hybrid", "immersion"
+          }
+          print(f"Verified {len(rows)} scenario rows and {manifest['pareto_point_count']} Pareto rows.")
+          print("All architecture factors are illustrative assumptions; this is not validation.")
+          PY
+
+      - name: Upload reproducible trade-off outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: cooling-water-energy-carbon-tradeoffs
+          path: artifacts/cooling_tradeoffs/*
+          if-no-files-found: error
+          retention-days: 90
