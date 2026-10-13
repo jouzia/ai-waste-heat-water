@@ -49,6 +49,11 @@ The repository's current main MD model is not dynamically coupled to this transi
 
 ## New model-form diagnostic and transient admissibility finding (2026-10-13)
 
-The source-linked S1 steady-state ledger now drives a train/held-out-flow flux-law comparison. Training uses nominal 50, 100, and 200 L/h; the entire 300 L/h flow is held out. Fixed TPC=0.8 underpredicts the held-out flux strongly (MAE 0.828, RMSE 0.861 kg m⁻² h⁻¹). A three-parameter flow-dependent TPC alternative reduces held-out error (MAE 0.181, RMSE 0.214 under the stated 0.5% salinity interpretation), but it is a fitted within-source diagnostic and not independent validation. The TDS-proxy interpretation pushes fitted permeance to the configured upper bound, so salinity/property ambiguity remains material.
+The source-linked S1 steady-state ledger drives a train/held-out-flow flux-law comparison. Training uses nominal 50, 100, and 200 L/h; the entire 300 L/h flow is held out. Fixed TPC=0.8 underpredicts the held-out flux strongly (MAE 0.828, RMSE 0.861 kg m⁻² h⁻¹). A three-parameter flow-dependent TPC alternative reduces held-out error (MAE 0.181, RMSE 0.214 under the stated 0.5% salinity interpretation), but it is a fitted within-source diagnostic and not independent validation. The TDS-proxy interpretation pushes fitted permeance to the configured upper bound, so salinity/property ambiguity remains material.
 
 The separate transient reconstruction also exposed a physically inadmissible default 10 m², 50 L/h trajectory: the numerical solver returned a hot outlet below the global inlet-temperature envelope. The model now rejects this trajectory rather than silently accepting it. This is evidence of an unresolved model-form/parameter mismatch; it is not a validation success. The source-reconstruction and held-out-validation gates remain false.
+
+
+## Raw mass-field semantic restriction (2026-10-13)
+
+The latest source-linked audit covers 19 complete timed worksheet traces, of which 14 have nonmonotonic raw `mw` readings. Prior tail-slope comparisons that assumed cumulative mass are withdrawn and disabled. No transient mass/flux error is valid until the `mw` measurement/reset semantics are established. The raw values remain preserved without reinterpretation.
