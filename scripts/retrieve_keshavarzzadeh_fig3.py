@@ -10,7 +10,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import time
 from datetime import UTC, datetime
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -68,8 +67,8 @@ def discover_figure_urls() -> list[str]:
                                     f"https://pmc.ncbi.nlm.nih.gov/articles/{pmcid}/bin/{href}",
                                 ]
                             )
-    except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError, StopIteration):
-        pass
+    except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError, StopIteration) as exc:
+        print(f\"Europe PMC figure discovery unavailable: {exc}\")
     if not candidates:
         # NCBI's PMC API is an independent route if Europe PMC search is unavailable.
         try:
@@ -111,8 +110,8 @@ def discover_figure_urls() -> list[str]:
                                         f"https://europepmc.org/articles/{pmcid}/bin/{href}",
                                     ]
                                 )
-        except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError):
-            pass
+        except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError) as exc:
+            print(f\"NCBI PMC figure discovery unavailable: {exc}\")
     candidates.append(FIGURE_URL)
     # Preserve order while avoiding duplicate candidate URLs.
     return list(dict.fromkeys(candidates))
