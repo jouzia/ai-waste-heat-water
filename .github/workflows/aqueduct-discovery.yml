@@ -7,6 +7,8 @@ on:
       - "scripts/discover_aqueduct_assets.py"
       - "scripts/inspect_aqueduct_zip_directory.py"
       - "scripts/inspect_aqueduct_geodatabase.py"
+      - "scripts/sample_aqueduct_site_water_stress.py"
+      - "data/geography/site_proxies.csv"
       - "docs/GEOGRAPHIC_LAYER.md"
       - "configs/geography.yaml"
       - ".github/workflows/aqueduct-discovery.yml"
@@ -29,7 +31,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install GDAL vector reader
-        run: python -m pip install pyogrio
+        run: python -m pip install geopandas pyogrio
 
       - name: Discover official WRI landing-page assets
         run: python scripts/discover_aqueduct_assets.py --output artifacts/aqueduct_discovery/aqueduct_asset_discovery.json
@@ -39,6 +41,9 @@ jobs:
 
       - name: Inspect Aqueduct geodatabase layer schemas via remote GDAL
         run: python scripts/inspect_aqueduct_geodatabase.py --output artifacts/aqueduct_discovery/aqueduct_geodatabase_layers.json
+
+      - name: Sample baseline and future basin indicators at illustrative city proxies
+        run: python scripts/sample_aqueduct_site_water_stress.py --sites data/geography/site_proxies.csv --output-dir artifacts/aqueduct_sites
 
       - name: Verify source-page provenance record
         run: |
@@ -58,6 +63,10 @@ jobs:
           geodata = json.loads(Path("artifacts/aqueduct_discovery/aqueduct_geodatabase_layers.json").read_text())
           assert geodata["layer_count"] > 0, geodata
           assert any("metadata_error" not in layer for layer in geodata["layers"]), geodata
+          sites = json.loads(Path("artifacts/aqueduct_sites/manifest.json").read_text())
+          assert sites["site_count"] == 6, sites
+          assert sites["baseline_matched_count"] == 6, sites
+          assert sites["future_matched_count"] == 6, sites
           print("ZIP directory inventory verified; full archive not downloaded.")
           PY
 
@@ -66,5 +75,6 @@ jobs:
         with:
           name: aqueduct-asset-discovery
           path: artifacts/aqueduct_discovery/*.json
+            artifacts/aqueduct_sites/*
           if-no-files-found: error
           retention-days: 90
