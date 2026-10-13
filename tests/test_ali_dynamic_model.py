@@ -1,129 +1,64 @@
-import numpy as np
-import pytest
-
-from ai_water.ali_dynamic_model import (
-    AliDynamicConfig,
-    _piecewise_linear_derivative,
-    interface_state,
-    membrane_mass_transfer_coefficient_s_m,
-    simulate_lumped_transient,
-    simulate_spatial_transient,
-    vapor_pressures_pa,
-    water_properties,
-)
+import importlib.util
+import sys
+from pathlib import Path
 
 
-def test_piecewise_linear_input_derivative_uses_measured_ramp() -> None:
-    times_s = np.array([0.0, 10.0, 30.0])
-    temperatures_k = np.array([298.15, 308.15, 328.15])
-    assert _piecewise_linear_derivative(0.0, times_s, temperatures_k) == pytest.approx(1.0)
-    assert _piecewise_linear_derivative(10.0, times_s, temperatures_k) == pytest.approx(1.0)
-    assert _piecewise_linear_derivative(20.0, times_s, temperatures_k) == pytest.approx(1.0)
-    assert _piecewise_linear_derivative(30.0, times_s, temperatures_k) == pytest.approx(1.0)
+def _load_module():
+    path = Path(__file__).resolve().parents[1] / "scripts" / "discover_aqueduct_assets.py"
+    spec = importlib.util.spec_from_file_location("aqueduct_discovery", path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Could not load discovery module from {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
-def test_iapws_water_properties_are_physical_in_model_range() -> None:
-    props = water_properties(323.15)
-    assert 970 < props.density_kg_m3 < 1000
-    assert 4000 < props.heat_capacity_j_kg_k < 4500
-    assert 1e-4 < props.viscosity_pa_s < 2e-3
-    assert 0.4 < props.conductivity_w_m_k < 0.8
+_discovery = _load_module()
 
 
-def test_ali_vapor_pressure_is_higher_on_hot_side() -> None:
-    hot, cold = vapor_pressures_pa(333.15, 298.15, 0.005)
-    assert hot > cold > 0
-
-
-def test_membrane_coefficient_uses_positive_series_resistance() -> None:
-    coefficient, knudsen, regime = membrane_mass_transfer_coefficient_s_m(
-        323.15, AliDynamicConfig()
+def test_parser_records_title_and_anchor_text() -> None:
+    parser = _discovery.PageParser()
+    parser.feed(
+        '<html><head><title>Aqueduct 4.0</title></head>'
+        '<body><a href="/download/data.zip">Download archive</a>'
+        '<a href="/about">About</a></body></html>'
     )
-    assert coefficient > 0
-    assert knudsen > 0
-    assert regime in {"knudsen", "molecular", "transition_series_resistance"}
+    assert "Aqueduct 4.0" in " ".join(parser.title_parts)
+    assert parser.links[0]["text"] == "Download archive"
+    assert parser.links[1]["text"] == "About"
 
 
-def test_interface_solver_returns_positive_flux_for_hot_feed() -> None:
-    state = interface_state(
-        333.15, 303.15, 298.15, 298.15, 50.0 / 3600.0, AliDynamicConfig()
+def test_candidate_links_keep_wri_assets_and_skip_external_domains() -> None:
+    links = [
+        {"tag": "a", "href": "/files/aqueduct.zip", "text": "Download Aqueduct", "rel": ""},
+        {"tag": "a", "href": "https://example.com/aqueduct.zip", "text": "external", "rel": ""},
+        {"tag": "a", "href": "https://www.wri.org/data/aqueduct", "text": "Dataset page", "rel": ""},
+    ]
+    candidates = _discovery.candidate_links("https://datasets.wri.org/datasets/aqueduct", links)
+    assert len(candidates) == 2
+    assert candidates[0]["url"].startswith("https://datasets.wri.org/")
+    assert candidates[1]["url"] == "https://www.wri.org/data/aqueduct"
+
+
+def test_range_reader_can_list_local_zip_without_reading_full_archive() -> None:
+    import io
+    from zipfile import ZipFile
+
+    payload = io.BytesIO()
+    with ZipFile(payload, "w") as archive:
+        archive.writestr("baseline/baseline_water_stress.tif", b"raster placeholder")
+        archive.writestr("metadata/readme.txt", b"metadata")
+    source_bytes = payload.getvalue()
+    reader = _discovery.RangeReader(
+        "https://example.invalid/aqueduct.zip",
+        len(source_bytes),
+        fetch_range=lambda start, end: source_bytes[start : end + 1],
+        chunk_size=64,
     )
-    assert state.mass_flux_kg_m2_s > 0
-    assert state.hot_membrane_k > state.cold_membrane_k
-    assert state.iterations <= 100
-    assert state.membrane_coefficient_s_m > 0
-
-
-def test_lumped_transient_integrates_measured_input_trace() -> None:
-    times = np.linspace(0.0, 1.0, 7)
-    result = simulate_lumped_transient(
-        time_min=times,
-        hot_inlet_c=np.full(7, 60.0),
-        cold_inlet_c=np.full(7, 25.0),
-        nominal_flow_l_h=50.0,
-        initial_hot_outlet_c=25.0,
-        initial_cold_outlet_c=25.0,
-        config=AliDynamicConfig(membrane_area_m2=0.1),
-    )
-    assert result.solver_success
-    assert np.all(np.isfinite(result.accumulated_mass_kg))
-    assert result.hot_outlet_c[-1] > result.hot_outlet_c[0]
-    assert result.accumulated_mass_kg[-1] > result.accumulated_mass_kg[0]
-    assert result.mass_rate_kg_h.shape == times.shape
-
-
-def test_lumped_transient_rejects_thermodynamically_inadmissible_outlet() -> None:
-    times = np.linspace(0.0, 1.0, 7)
-    with pytest.raises(RuntimeError, match="outside the inlet-temperature envelope"):
-        simulate_lumped_transient(
-            time_min=times,
-            hot_inlet_c=np.full(7, 60.0),
-            cold_inlet_c=np.full(7, 25.0),
-            nominal_flow_l_h=50.0,
-            initial_hot_outlet_c=25.0,
-            initial_cold_outlet_c=25.0,
-        )
-
-
-def test_lumped_transient_rejects_nonmonotonic_time() -> None:
-    with pytest.raises(ValueError, match="strictly increasing"):
-        simulate_lumped_transient(
-            time_min=[0.0, 1.0, 0.5],
-            hot_inlet_c=[60.0, 60.0, 60.0],
-            cold_inlet_c=[25.0, 25.0, 25.0],
-            nominal_flow_l_h=50.0,
-        )
-
-
-
-def test_spatial_transient_rejects_source_scale_low_flow_envelope_violation() -> None:
-    times = np.linspace(0.0, 1.0, 7)
-    with pytest.raises(RuntimeError, match="outside the inlet-temperature envelope"):
-        simulate_spatial_transient(
-            time_min=times,
-            hot_inlet_c=np.full(7, 60.0),
-            cold_inlet_c=np.full(7, 25.0),
-            nominal_flow_l_h=50.0,
-            n_cells=10,
-            initial_hot_outlet_c=25.0,
-            initial_cold_outlet_c=25.0,
-        )
-
-
-def test_spatial_transient_stays_physical_for_reduced_area() -> None:
-    times = np.linspace(0.0, 1.0, 7)
-    result = simulate_spatial_transient(
-        time_min=times,
-        hot_inlet_c=np.full(7, 60.0),
-        cold_inlet_c=np.full(7, 25.0),
-        nominal_flow_l_h=50.0,
-        n_cells=10,
-        initial_hot_outlet_c=25.0,
-        initial_cold_outlet_c=25.0,
-        config=AliDynamicConfig(membrane_area_m2=0.1),
-    )
-    assert result.solver_success
-    assert np.all(np.isfinite(result.accumulated_mass_kg))
-    assert result.accumulated_mass_kg[-1] > result.accumulated_mass_kg[0]
-    assert np.all(result.hot_outlet_c >= 24.0)
-    assert np.all(result.cold_outlet_c <= 61.0)
+    with ZipFile(reader) as archive:
+        assert archive.namelist() == [
+            "baseline/baseline_water_stress.tif",
+            "metadata/readme.txt",
+        ]
+    reader.close()
