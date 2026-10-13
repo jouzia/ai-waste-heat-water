@@ -14,7 +14,7 @@ gates:
   time_varying_workload_coupling: true
   monte_carlo_convergence: false
   global_sensitivity_execution: true
-  break_even_failure_envelope: false
+  break_even_failure_envelope: true
   geographic_integration: false
   counterfactual_net_water_accounting: true
   multi_objective_analysis: true
