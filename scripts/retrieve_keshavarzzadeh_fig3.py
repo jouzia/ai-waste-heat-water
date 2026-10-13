@@ -58,13 +58,13 @@ def discover_figure_urls() -> list[str]:
                 import re
 
                 figure_urls = re.findall(
-                    r"https?://[^\\\"' ]*41598_2020_73964_Fig3_HTML\\.(?:jpg|png|webp)",
+                    r"https?://[^\\\"' ]*41598_2020_73964_Fig3_HTML\.(?:jpg|png|webp)",
                     article_html,
                     flags=re.IGNORECASE,
                 )
                 figure_urls.extend(
                     re.findall(
-                        r"//[^\\\"' ]*41598_2020_73964_Fig3_HTML\\.(?:jpg|png|webp)",
+                        r"//[^\\\"' ]*41598_2020_73964_Fig3_HTML\.(?:jpg|png|webp)",
                         article_html,
                         flags=re.IGNORECASE,
                     )
