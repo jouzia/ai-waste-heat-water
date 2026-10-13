@@ -58,8 +58,6 @@ class AliDynamicConfig:
     max_step_s: float = 10.0
     relative_tolerance: float = 1e-6
     absolute_tolerance_temperature_k: float = 1e-5
-    absolute_tolerance_mass_rate_kg_s: float = 1e-10
-    absolute_tolerance_mass_kg: float = 1e-7
 
     @property
     def channel_volume_m3(self) -> float:
