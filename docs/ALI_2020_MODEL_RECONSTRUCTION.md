@@ -74,7 +74,7 @@ V\rho C_p\frac{dT_{c,out}}{dt}=
 +h_mA(T_{hm}-T_{cm})+j_wAH_v.
 \]
 
-The thermal ODE now integrates separately over each measured-input knot, using the interval's derivative consistently at its right endpoint. This avoids adaptive RK stages stepping across a derivative discontinuity in the piecewise-linear input. Because the mass-rate state does not feed back into the thermal states, thermal integration is decoupled from the mass-rate and accumulated-mass states; those mass states are advanced by trapezoidal quadrature at the measured-input knots. Regression tests verify interval-boundary integration and mass conservation. This is an explicit numerical discretization, not a source-paper claim; a tighter time-grid/solver-tolerance convergence study remains required before quantitative validation.
+The thermal ODE now integrates separately over each measured-input knot, using the interval's derivative consistently at its right endpoint. This avoids adaptive RK stages stepping across a derivative discontinuity in the piecewise-linear input. Because the mass-rate state does not feed back into the thermal states, thermal integration is decoupled from the mass-rate and accumulated-mass states; those mass states are advanced by trapezoidal quadrature at the measured-input knots. Regression tests verify interval-boundary integration and mass conservation. This is an explicit numerical discretization, not a source-paper claim; a five-case 5/10/20-cell and 1e-4/1e-6 solver-tolerance study is archived in `docs/ALI_2020_SPATIAL_GRID_TOLERANCE_CONVERGENCE_2026-10-13.md`. Numerical differences are small for outlet temperatures at 10 vs 20 cells, but the cold-outlet empirical RMSE remains about 5 °C and raw mass semantics remain unresolved.
 
 For measured, piecewise-linear inlet-temperature histories, the derivative chain rule also includes inlet-temperature derivatives. In the spatial model, each cell's bulk-temperature derivative includes the neighboring upstream/downstream cell derivative (or the boundary-input derivative at the module edge). Omitting these terms is only defensible under constant boundary inputs; it is not consistent with a fluctuating measured-input trace.
 
@@ -133,11 +133,11 @@ Reproducing the tuned errors is a source-reconstruction check, not independent v
 The source XLSX files S1–S5 are available from the publisher under CC BY 4.0. Their SHA-256 values are pinned in scripts/extract_ali_2020_observations.py and 01_literature/derived/ali_2020_supplementary_acquisition_ledger.csv.
 
 - Raw nonblank worksheet-row ledger: 17,430 rows.
-- Structured transient ledger: 17,385 records, of which 16,837 have both time and cumulative mass.
+- Structured transient ledger: 17,385 records, of which 16,837 have complete timestamps and a raw `mw` reading; the cumulative-mass field is intentionally unset pending source measurement/reset semantics.
 - 548 temperature-only rows in S5 50/60/70 sheets have no timestamps; they are preserved but excluded from time-domain fitting.
 - Steady-state table: 16 valid flow/temperature observations.
 - Two non-condition S1 rows are preserved in a separate exclusion ledger.
-- The derived 25%/10% tail-slope comparison contains 34 rows and is a within-paper consistency diagnostic only.
+- A previous 34-row 25%/10% tail-slope comparison is **withdrawn**: it assumed raw `mw` was cumulative mass. The current extraction preserves raw readings and disables all mass-derived tail-flux comparisons until source semantics are verified.
 
 The current 90-day artifact and per-file/ledger checksums are recorded in 04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020_observations.yaml and docs/ALI_2020_SUPPORTING_DATA_AUDIT_2026-10-13.md.
 
