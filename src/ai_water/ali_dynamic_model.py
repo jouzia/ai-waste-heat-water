@@ -11,6 +11,7 @@ documented in docs/ALI_2020_MODEL_RECONSTRUCTION.md.
 from __future__ import annotations
 
 import math
+from collections.abc import Callable
 from dataclasses import dataclass
 
 import numpy as np
@@ -345,16 +346,55 @@ def _piecewise_linear_derivative(
     time_s: float,
     sample_times_s: np.ndarray,
     sample_values: np.ndarray,
+    segment_index: int | None = None,
 ) -> float:
     """Derivative of the piecewise-linear input interpolation, in value units/s."""
     if len(sample_times_s) != len(sample_values) or len(sample_times_s) < 2:
         raise ValueError("input derivative requires equally sized arrays with at least 2 points")
-    index = int(np.searchsorted(sample_times_s, time_s, side="right") - 1)
-    index = min(max(index, 0), len(sample_times_s) - 2)
+    if segment_index is None:
+        index = int(np.searchsorted(sample_times_s, time_s, side="right") - 1)
+        index = min(max(index, 0), len(sample_times_s) - 2)
+    else:
+        if segment_index < 0 or segment_index >= len(sample_times_s) - 1:
+            raise ValueError("segment_index is outside the input trace")
+        index = segment_index
     return float(
         (sample_values[index + 1] - sample_values[index])
         / (sample_times_s[index + 1] - sample_times_s[index])
     )
+
+
+def _integrate_piecewise_input_trace(
+    rhs: Callable[[float, np.ndarray], np.ndarray | list[float]],
+    time_seconds: np.ndarray,
+    initial_state: np.ndarray,
+    config: AliDynamicConfig,
+    absolute_tolerance: float | list[float] | np.ndarray,
+    active_segment: list[int],
+) -> np.ndarray:
+    """Integrate separately over input knots to honor derivative discontinuities."""
+    states = np.empty((len(time_seconds), len(initial_state)), dtype=float)
+    states[0] = initial_state
+    for index in range(len(time_seconds) - 1):
+        active_segment[0] = index
+        start_s = float(time_seconds[index])
+        end_s = float(time_seconds[index + 1])
+        solution = solve_ivp(
+            rhs,
+            (start_s, end_s),
+            states[index],
+            method="RK45",
+            t_eval=[end_s],
+            max_step=min(config.max_step_s, end_s - start_s),
+            rtol=config.relative_tolerance,
+            atol=absolute_tolerance,
+        )
+        if not solution.success:
+            raise RuntimeError(
+                f"Ali transient ODE failed on input interval {index}: {solution.message}"
+            )
+        states[index + 1] = solution.y[:, -1]
+    return states
 
 
 def simulate_lumped_transient(
@@ -424,10 +464,16 @@ def simulate_lumped_transient(
             float(np.interp(t_s, time_seconds, cold_values_k)),
         )
 
+    active_segment = [0]
+
     def input_derivative_at(t_s: float) -> tuple[float, float]:
         return (
-            _piecewise_linear_derivative(t_s, time_seconds, hot_values_k),
-            _piecewise_linear_derivative(t_s, time_seconds, cold_values_k),
+            _piecewise_linear_derivative(
+                t_s, time_seconds, hot_values_k, active_segment[0]
+            ),
+            _piecewise_linear_derivative(
+                t_s, time_seconds, cold_values_k, active_segment[0]
+            ),
         )
 
     def rhs(t_s: float, state: np.ndarray) -> list[float]:
@@ -509,25 +555,19 @@ def simulate_lumped_transient(
         )
         return [d_hot_out_dt, d_cold_out_dt, d_mass_rate_dt, mass_rate_kg_s]
 
-    solution = solve_ivp(
+    predicted_states = _integrate_piecewise_input_trace(
         rhs,
-        (float(time_seconds[0]), float(time_seconds[-1])),
+        time_seconds,
         np.asarray(initial_state, dtype=float),
-        method="RK45",
-        t_eval=time_seconds,
-        max_step=cfg.max_step_s,
-        rtol=cfg.relative_tolerance,
-        atol=[
+        cfg,
+        [
             cfg.absolute_tolerance_temperature_k,
             cfg.absolute_tolerance_temperature_k,
             cfg.absolute_tolerance_mass_rate_kg_s,
             cfg.absolute_tolerance_mass_kg,
         ],
+        active_segment,
     )
-    if not solution.success:
-        raise RuntimeError(f"Ali transient ODE failed: {solution.message}")
-
-    predicted_states = solution.y.T
     # A passive DCMD module cannot drive either outlet outside the global
     # inlet-temperature envelope without an external heat source/sink. Reject
     # such trajectories instead of returning numerically converged but
@@ -587,8 +627,8 @@ def simulate_lumped_transient(
         membrane_flux_kg_m2_h=np.asarray(fluxes),
         hot_membrane_c=np.asarray(hot_membrane_c),
         cold_membrane_c=np.asarray(cold_membrane_c),
-        solver_success=bool(solution.success),
-        solver_message=str(solution.message),
+        solver_success=True,
+        solver_message="Integrated separately at each measured-input interval.",
     )
 
 
@@ -675,10 +715,16 @@ def simulate_spatial_transient(
             float(np.interp(t_s, time_seconds, cold_values_k)),
         )
 
+    active_segment = [0]
+
     def input_derivative_at(t_s: float) -> tuple[float, float]:
         return (
-            _piecewise_linear_derivative(t_s, time_seconds, hot_values_k),
-            _piecewise_linear_derivative(t_s, time_seconds, cold_values_k),
+            _piecewise_linear_derivative(
+                t_s, time_seconds, hot_values_k, active_segment[0]
+            ),
+            _piecewise_linear_derivative(
+                t_s, time_seconds, cold_values_k, active_segment[0]
+            ),
         )
 
     def rhs(t_s: float, state: np.ndarray) -> np.ndarray:
@@ -789,26 +835,20 @@ def simulate_spatial_transient(
         total_mass_rate = float(np.mean(mass_rates))
         return np.concatenate((d_hot, d_cold, d_mass_rates, [total_mass_rate]))
 
-    solution = solve_ivp(
+    states = _integrate_piecewise_input_trace(
         rhs,
-        (float(time_seconds[0]), float(time_seconds[-1])),
+        time_seconds,
         initial_state,
-        method="RK45",
-        t_eval=time_seconds,
-        max_step=cfg.max_step_s,
-        rtol=cfg.relative_tolerance,
-        atol=np.concatenate(
+        cfg,
+        np.concatenate(
             (
                 np.full(2 * n_cells, cfg.absolute_tolerance_temperature_k),
                 np.full(n_cells, cfg.absolute_tolerance_mass_rate_kg_s),
                 np.asarray([cfg.absolute_tolerance_mass_kg]),
             )
         ),
+        active_segment,
     )
-    if not solution.success:
-        raise RuntimeError(f"Ali spatial transient ODE failed: {solution.message}")
-
-    states = solution.y.T
     hot_cells = states[:, :n_cells]
     cold_cells = states[:, n_cells : 2 * n_cells]
     mass_rates = states[:, 2 * n_cells : 3 * n_cells]
