@@ -5,6 +5,7 @@
 | Saturation pressure | Pure-water vapor pressure | NIST SRD 69 | Implemented; CI regression required |
 | Seawater activity | Standard-seawater chemical potential/activity | IAPWS R13-08 | Implemented; independent numeric checks required |
 | Single-pass concentration | Salt-retention mass balance | Conservation equation | Implemented |
+| Open-data flux model-form diagnostic | GDR/NREL Villa et al. (2018), 12 condition-level flux summaries | Four transfer-correlation/geometry combinations; held-out conditions within the same workbook | Diagnostic complete; flow/geometry/property assumptions unresolved; not independent validation |
 | DCMD axial energy balance | Feed/permeate temperature evolution | Keshavarzzadeh (2020) | Source-matched benchmark registered |
 | Heat-transfer correlations | h_f/h_p sensitivity | MD literature + WaterTAP | Implemented as selectable primitives; source-range validation pending |
 | Concentration polarization | CPC/interface salinity | MD CP literature | Implemented as selectable reduced-order model; experimental validation pending |
