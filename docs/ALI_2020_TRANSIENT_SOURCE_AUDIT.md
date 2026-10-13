@@ -1,6 +1,8 @@
 # Audit of the Ali–Orfi–Najib (2020) transient DCMD benchmark
 
-Audit date: 2026-10-11
+Audit date: 2026-10-13
+
+**Status update:** The five publisher XLSX files have now been downloaded, hashed, inspected, and extracted through the reproducible GitHub Actions workflow. See `docs/ALI_2020_SUPPORTING_DATA_AUDIT_2026-10-13.md` for the detailed counts, artifact locator, checksum, and quantitative tail-consistency diagnostics.
 
 ## Source and reuse
 
@@ -40,4 +42,6 @@ The publisher labels the article open access under CC BY 4.0 and states that rel
 
 ## Current status
 
-**Source identified; quantitative extraction and model validation remain pending.** The published article provides enough provenance to prioritize this dataset for a transient validation pathway, but this audit does not claim that the XLSX contents have been downloaded or extracted. The repository's time-resolved workload module is currently only a tested integration primitive; it is not yet a dynamically coupled, experimentally validated MD system.
+**Source-linked extraction is complete; model validation remains pending.** The five publisher XLSX supplements are stored in a 90-day workflow artifact with checksums. The raw ledger contains 17,430 nonempty source rows; the structured extraction contains 17,385 transient records, of which 16,837 have complete timestamps, plus 16 steady-state observations and 34 tail-slope consistency diagnostics. 548 temperature-only rows without timestamps and two invalid steady-state rows are explicitly flagged/excluded from the relevant analyses. See `docs/ALI_2020_SUPPORTING_DATA_AUDIT_2026-10-13.md`.
+
+The repository's current main MD model is not dynamically coupled to this transient dataset. No transient validation, source-parameter fitting, or independent validation claim is made. The repository's time-resolved workload module is currently only a tested integration primitive; it is not yet a dynamically coupled, experimentally validated MD system.
