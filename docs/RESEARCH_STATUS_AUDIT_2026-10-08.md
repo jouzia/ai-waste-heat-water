@@ -1,53 +1,47 @@
-# Research status audit — 2026-10-08
+# Research status audit — 2026-10-13
 
 **Project:** From AI Waste Heat to Water: A Net-Water-Impact Framework for Sustainable AI Infrastructure  
-**Status:** INCOMPLETE. The research infrastructure is substantial, but the core empirical study and publication package are not finished.
+**Status:** INCOMPLETE. Software and accounting infrastructure are substantial, and one open experimental workbook has now been extracted and used for a diagnostic model-form comparison. The core empirical study, independent validation, and publication package are not finished.
 
-## What is implemented
+## Verified progress
 
-- Baseline energy/water accounting with explicit counterfactual avoided-water term.
-- Reduced-order membrane-distillation thermal, mass-transfer and hydraulic components, plus a source-structured counter-current runner.
-- Cooling-burden fields and cooling-architecture taxonomy/interface.
-- Piecewise-constant workload-profile integration and a workload-to-scenario coupling layer.
-- Monte Carlo sampling utilities, Sobol estimator utilities, study-summary/convergence helpers, break-even and Pareto primitives.
-- Benchmark registry, validation matrix, data-acquisition manifest, extraction inventory utility, protocols, manuscript outline and reproducibility plan.
-- A provenance-labelled transcription of the source-reported model–plant error summary in Ali, Orfi & Najib (2020), Table 1, saved as `01_literature/derived/ali_2020_table1_model_errors.csv` with its limits documented in `docs/ALI_2020_TABLE1_EXTRACTION.md`. This is summary evidence only—not raw observations or validation of this repository's model.
-- Automated software tests and CI configuration.
+- CI passed on commit `35615f22cf2735fb2ba69960ad7b568700527885`: 94 tests passed; Ruff passed.
+- GDR/NREL open-data source: Villa et al. (2018), DOI 10.15121/1452747. The original 3M counter-current DCMD workbook was downloaded in a workflow artifact, SHA-256 recorded, and 12 condition-level cumulative-volume traces were extracted into `04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv`. See `docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md`.
+- A reproducible four-way comparison of Graetz–Lévêque/WaterTAP transfer correlations and smooth-channel/spacer-porosity assumptions was run with a 20 °C development group and a 30 °C within-workbook held-out group. Results are recorded in `docs/GDR_3M_MODEL_FORM_COMPARISON_2026-10-11.md` and the GitHub Actions artifact. This is diagnostic evidence, not independent validation.
+- A counter-current permeate outlet-state bug was corrected; a regression test checks the correct outlet temperature/mass state. A separate duration-invariance defect in steady-state channel temperatures was corrected and tested.
+- The primary source-structured Keshavarzzadeh (2020) runner remains separate from the modern model. Its eight source cases are still blocked by missing exact primary boundary conditions and the Figure 3 citation mismatch.
+- The model has explicit baseline/counterfactual water accounting, cooling burden, workload coupling, uncertainty utilities, sensitivity utilities, break-even/Pareto primitives, geographic schemas, and manuscript plans. These are not equivalent to executed scientific analyses.
 
-These are code capabilities or protocols; they do not themselves demonstrate physical accuracy or complete the corresponding study analyses.
+## Validation interpretation
 
-## Still unfinished — publication-critical
+The GDR model-form comparison shows substantial sensitivity to transfer correlation and geometry. The Graetz–Lévêque fits reach the upper membrane-permeance search bound; the WaterTAP variants have lower flux errors in this small split but do not achieve uniformly best held-out metrics. Outlet-temperature residuals remain non-negligible. Because the held-out cases come from the same workbook, flow channels are inconsistent, and geometry/transport properties remain engineering assumptions, the run cannot support a claim of experimentally validated predictive accuracy.
 
-1. Download and preserve original experimental files; record source, retrieval time, filenames, sizes and SHA-256.
-2. Extract measurements into source-linked observation ledgers with sheet/range, units, missingness and transformation records. The available PDF supports transcription of Table 1 summary errors only; it does not replace the five supporting XLSX files.
-3. Independently check extraction and freeze development/held-out partitions by experimental configuration/source.
-4. Run unfitted source-matched validation and publish residuals and appropriate error metrics.
-5. Complete genuinely held-out validation and model-form comparison.
-6. Execute comparative cooling-architecture scenarios with sourced parameter values.
-7. Run an end-to-end measured-workload case through heat availability, recovery, MD and cooling.
-8. Execute source-linked Monte Carlo uncertainty with convergence diagnostics.
-9. Execute global sensitivity analysis using frozen, justified parameter ranges.
-10. Generate break-even/failure-envelope results and Pareto analyses.
-11. Integrate versioned geographic water-stress and electricity-water data.
-12. Produce study-derived figures/tables, complete manuscript and supplement, reproducibility archive, and final claim audit.
+The source model has not yet been validated against the primary 1999 Martínez-Díez and Vázquez-González observations. The 2020 Keshavarzzadeh Figure 3 markers remain secondary reproduced data because its caption cites an unrelated ground-source heat-exchanger paper.
 
-## Immediate blocker and lawful path
+## Updated prior-art risk
 
-The official public sources are identified:
-- Villa et al. 2018, DOE/NREL GDR: https://gdr.openei.org/submissions/1016 (seven XLS workbooks, about 95.97 MB).
-- Ali, Orfi & Najib 2020, PLOS ONE: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0230207 (five linked supporting XLSX files).
+The literature review now records direct overlap from:
+- Kanbur, Wu, and Duan (2020): data-center immersion-cooling waste heat coupled to DCMD with thermoeconomic optimization.
+- Wyon (2025): open-access thesis modeling a 1.5 MW direct-to-chip data center coupled to DCMD, heat exchanger, and pumps, with several distillate-use cases.
+- Chen et al. (2026): CPU-waste-heat-driven MD experimental system (official journal abstract and metadata verified).
+- Yang et al. (2026): data-center waste heat coupled to RO feedwater preheating with planning/operation co-optimization.
+- Katakam et al. (2026, online ahead of print): system-scale data-center desalination and the SWUI water-stress metric.
 
-The execution environment has not successfully retrieved the binary workbooks. No experimental observations have therefore been fabricated or promoted to validation. The highest-value next step is to obtain the original Ali XLSX files first, then Villa XLS files, and feed them through the repository's inventory/extraction pipeline. If a user can upload the original files, that directly unblocks this step; payment is not required.
+The project must not claim that data-center-to-MD integration, waste-heat-driven MD, thermoeconomic optimization, or water-stress assessment is novel by itself. The potential contribution must be narrower and proven: independently validated transport plus boundary-consistent, counterfactual net operational blue-water accounting and uncertainty. A full-text comparison with Kanbur (2020) and Wyon (2025) remains necessary before claiming that gap.
 
-## Recommended order
+## Remaining publication-critical work
 
-A. Acquire and hash source files.  
-B. Inventory workbooks and build audited observation ledgers.  
-C. Run unfitted validation before any tuning.  
-D. Diagnose errors, revise only with documented rationale, and evaluate held-out cases.  
-E. Run cooling/workload, uncertainty, sensitivity, break-even, geographic and multi-objective studies.  
-F. Generate the manuscript and supplement from reproducible outputs, rerun checks, and audit every claim.
+1. Acquire and hash Ali, Orfi & Najib (2020) supporting XLSX data and inspect their source data; binary acquisition is not yet complete.
+2. Obtain or lawfully reconstruct primary 1999 MD observations and exact operating boundary conditions; digitization must include pixel coordinates, axis calibration, uncertainty, and repeat extraction.
+3. Resolve GDR flow-sensor/sign issues and source-match the 3M channel geometry before treating the GDR run as a physical validation case.
+4. Complete unfitted validation and independent study-level held-out validation.
+5. Finish source-model comparison, cooling-architecture scenarios, measured workload/time coupling, Monte Carlo convergence, global sensitivity, break-even/failure envelope, geography/electricity-water integration, and multi-objective analysis.
+6. Generate manuscript figures and tables only from frozen, reproducible outputs; complete manuscript, supplement, artifact archive, and final claim audit.
+
+## Current hard gate
+
+`05_validation/FINAL_GATE_STATUS.yaml` is the authoritative release gate. It records five of eighteen gates as true: software correctness, open-data access verification, GDR primary-observation extraction, workload-coupling infrastructure, and counterfactual net-water accounting. It intentionally leaves independent validation, uncertainty/sensitivity execution, geographic analysis, manuscript, and publication audit incomplete.
 
 ## Completion rule
 
-Do not claim publication readiness or a positive net-water benefit until all relevant data, assumptions, code revisions, validation outputs, uncertainty results and figures are traceable. A green software CI result is not experimental validation.
+Do not claim publication readiness or a positive net-water benefit until all relevant data, assumptions, code revisions, validation outputs, uncertainty results, and figures are traceable. Green software CI is not experimental validation.
