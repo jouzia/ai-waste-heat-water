@@ -168,6 +168,8 @@ def extract_ledger(
         "extracted_at_utc": datetime.now(UTC).isoformat(),
         "output_csv": output_path.name,
         "output_row_count": len(records),
+        "row_count_matches_audited_source": len(records) == EXPECTED_LEDGER_ROWS,
+        "source_checksum_matches_audited_version": source_sha == EXPECTED_SOURCE_SHA256,
         "row_count_by_worksheet": counts,
         "selected_worksheets": list(CONDITION_SHEETS),
         "excluded_worksheet": "Theoretical",
