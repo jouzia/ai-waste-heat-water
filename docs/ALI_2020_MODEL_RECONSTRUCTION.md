@@ -72,6 +72,8 @@ V\rho C_p\frac{dT_{c,out}}{dt}=
 +h_mA(T_{hm}-T_{cm})+j_wAH_v.
 \]
 
+For measured, piecewise-linear inlet-temperature histories, the derivative chain rule also includes inlet-temperature derivatives. In the spatial model, each cell's bulk-temperature derivative includes the neighboring upstream/downstream cell derivative (or the boundary-input derivative at the module edge). Omitting these terms is only defensible under constant boundary inputs; it is not consistent with a fluctuating measured-input trace.
+
 The accumulated mass is the integral of the mass-production rate. The dynamic equation for the mass-production rate follows the paper's Eq. (1)/Appendix A Eq. (A.27); it depends on the derivatives of both outlet temperatures and the temperature derivatives of the membrane vapor pressures. The implementation must not replace this state equation with a purely steady-state \(j_w A\) calculation and then claim to reproduce the published transient model.
 
 Appendix B specifies the following submodels:
