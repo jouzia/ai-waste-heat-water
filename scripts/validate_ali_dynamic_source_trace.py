@@ -58,9 +58,8 @@ def run_case(
     cold_in = np.asarray([float(row["cold_inlet_temperature_c"]) for row in rows])
     hot_out_observed = np.asarray([float(row["hot_outlet_temperature_c"]) for row in rows])
     cold_out_observed = np.asarray([float(row["cold_outlet_temperature_c"]) for row in rows])
-    mass_observed = np.asarray(
-        [float(row["cumulative_distillate_mass_kg"]) for row in rows]
-    )
+    mw_raw = np.asarray([float(row["mw_raw_reading_kg"]) for row in rows])
+    mw_differences = np.diff(mw_raw)
     first = rows[0]
     flow = float(first["nominal_flow_l_h"])
     result: dict[str, object] = {
@@ -81,8 +80,13 @@ def run_case(
         "measured_cold_inlet_max_c": float(np.max(cold_in)),
         "measured_hot_outlet_start_c": float(hot_out_observed[0]),
         "measured_cold_outlet_start_c": float(cold_out_observed[0]),
-        "measured_mass_start_kg": float(mass_observed[0]),
-        "measured_mass_end_kg": float(mass_observed[-1]),
+        "mw_raw_start_kg": float(mw_raw[0]),
+        "mw_raw_end_kg": float(mw_raw[-1]),
+        "mw_raw_min_kg": float(np.min(mw_raw)),
+        "mw_raw_max_kg": float(np.max(mw_raw)),
+        "mw_raw_negative_step_count": int(np.sum(mw_differences < 0.0)),
+        "mw_raw_monotonic": bool(np.all(mw_differences >= 0.0)),
+        "mw_semantics_status": "unverified_raw_mw_not_used_as_cumulative_mass",
         "error": "",
         "metrics": None,
     }
@@ -96,7 +100,7 @@ def run_case(
             "heat_loss_correction": correction,
             "initial_hot_outlet_c": float(hot_out_observed[0]),
             "initial_cold_outlet_c": float(cold_out_observed[0]),
-            "initial_accumulated_mass_kg": float(mass_observed[0]),
+            "initial_accumulated_mass_kg": 0.0,
             "config": AliDynamicConfig(
                 relative_tolerance=1e-4,
                 absolute_tolerance_temperature_k=1e-4,
@@ -136,12 +140,13 @@ def run_case(
                 "cold_outlet_residual_c": float(
                     predicted.cold_outlet_c[index] - cold_out_observed[index]
                 ),
-                "accumulated_mass_measured_kg": float(mass_observed[index]),
+                "source_mw_raw_reading_kg": float(mw_raw[index]),
+                "source_mw_raw_delta_kg": float(
+                    mw_raw[index] - mw_raw[index - 1] if index else mw_raw[index]
+                ),
+                "source_mw_semantics_status": row["mw_semantics_status"],
                 "accumulated_mass_predicted_kg": float(
                     predicted.accumulated_mass_kg[index]
-                ),
-                "mass_residual_kg": float(
-                    predicted.accumulated_mass_kg[index] - mass_observed[index]
                 ),
                 "mass_rate_predicted_kg_h": float(predicted.mass_rate_kg_h[index]),
                 "flux_predicted_kg_m2_h": float(predicted.membrane_flux_kg_m2_h[index]),
@@ -158,10 +163,10 @@ def run_case(
             "cold_outlet_temperature_c": error_metrics(
                 predicted.cold_outlet_c, cold_out_observed
             ),
-            "accumulated_distillate_mass_kg": error_metrics(
-                predicted.accumulated_mass_kg, mass_observed
+            "mass_comparison_status": "not_comparable_raw_mw_semantics_unverified",
+            "predicted_cumulative_mass_end_kg_model_output_only": float(
+                predicted.accumulated_mass_kg[-1]
             ),
-            "predicted_mass_end_kg": float(predicted.accumulated_mass_kg[-1]),
             "predicted_mass_rate_end_kg_h": float(predicted.mass_rate_kg_h[-1]),
             "predicted_flux_end_kg_m2_h": float(predicted.membrane_flux_kg_m2_h[-1]),
         }
@@ -211,7 +216,7 @@ def main() -> None:
             "hot_outlet_temperature_c",
             "cold_inlet_temperature_c",
             "cold_outlet_temperature_c",
-            "cumulative_distillate_mass_kg",
+            "mw_raw_reading_kg",
         )
     ):
         raise ValueError("Selected source trace contains non-finite required values")
@@ -251,6 +256,7 @@ def main() -> None:
             "measured_input_histories_used": True,
         },
         "purpose": "Unfitted source-reconstruction diagnostic, not independent validation",
+        "mass_observation_policy": "Raw mw is nonmonotonic in multiple sheets; no cumulative-mass error metrics are computed until source measurement/reset semantics are verified.",
         "numerical_tolerance_profile": {
             "relative_tolerance": 1e-4,
             "absolute_temperature_tolerance_k": 1e-4,
@@ -305,9 +311,10 @@ def main() -> None:
         "cold_outlet_measured_c",
         "cold_outlet_predicted_c",
         "cold_outlet_residual_c",
-        "accumulated_mass_measured_kg",
+        "source_mw_raw_reading_kg",
+        "source_mw_raw_delta_kg",
+        "source_mw_semantics_status",
         "accumulated_mass_predicted_kg",
-        "mass_residual_kg",
         "mass_rate_predicted_kg_h",
         "flux_predicted_kg_m2_h",
     ]
