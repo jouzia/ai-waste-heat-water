@@ -67,3 +67,19 @@ The embedded geodatabase `Aqueduct40_waterrisk_download_Y2023M07D05/GDB/Aq40_Y20
 - `future_annual`: 16,395 multipolygons; includes source-native `bau`, `opt`, and `pes` future water-stress fields for 2030/2050/2080.
 
 The repository now has a reproducible remote-GDAL sampling script and six clearly labeled **city-centroid proxies** in `data/geography/site_proxies.csv`. They are not actual data-centre locations. Baseline and future layer basin IDs are recorded separately because the layers have different feature counts and must not be assumed to share identical geometry/resolution. Water stress remains contextual metadata, not a multiplier on water volume. Electricity-water factors and a defensible facility-site dataset remain missing; the geographic publication gate stays false until the site-sampling artifact, future-field semantics, and grid-water/carbon data are reviewed.
+
+
+## First reproducible city-proxy sample (2026-10-13)
+
+The workflow [Aqueduct discovery run #7](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38431293877) sampled both `baseline_annual` and `future_annual` through GDAL's remote ZIP access. Artifact ID `11830717527`, SHA-256 `ab2d0d47095c6dd7b9f18dfe02054511157d2f2181fb0b47d0e030c829d63699`, expires 2027-01-11. All six illustrative city-centroid proxies matched a polygon in both layers. The CSV output SHA-256 is `6ebdd18ecad452411dbac87fecd8fe1df274345f043fb3fc1a4221a796d66d23`.
+
+| City proxy | Baseline BWS score | Source label | Baseline BWD label | Future annual BAU labels (2030/2050/2080) |
+|---|---:|---|---|---|
+| Barcelona | 4.544 | Extremely High (>80%) | Medium–High (25–50%) | Extremely high (>80%) / Extremely high (>80%) / Extremely high (>80%) |
+| Chennai | 4.943 | Extremely High (>80%) | High (50–75%) | Extremely high (>80%) / Extremely high (>80%) / Extremely high (>80%) |
+| Hyderabad | 5.000 | Extremely High (>80%) | Extremely High (>75%) | Extremely high (>80%) / Extremely high (>80%) / Extremely high (>80%) |
+| Phoenix | 5.000 | Extremely High (>80%) | High (50–75%) | Extremely high (>80%) / Extremely high (>80%) / Extremely high (>80%) |
+| Singapore | 0.000 | Low (<10%) | Low (<5%) | Low (<10%) / Low (<10%) / Low (<10%) |
+| Frankfurt | 3.453 | High (40–80%) | Low–Medium (5–25%) | High (40–80%) / High (40–80%) / High (40–80%) |
+
+These are basin indicators at **approximate city-centre points**, not facility locations. They are not multiplied into water volumes. The sample demonstrates the spatial extraction pipeline and variation in basin context, not that a real data centre at any city would experience the listed value. Future-field names were checked against source labels, but future scenario assumptions still need a complete README-backed semantic crosswalk before publication. The geographic gate remains false because site coordinates are illustrative and the electricity-water/carbon factors are not yet joined.
