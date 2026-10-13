@@ -167,6 +167,13 @@ def main() -> None:
         f"Cases={summary['cases']}; admissible={summary['admissible_cases']}; "
         f"rejected={summary['rejected_cases']}"
     )
+    for case in cases:
+        print(
+            f"{case['case_id']}: {case['status']}; "
+            f"hot=[{case['hot_outlet_min_c']}, {case['hot_outlet_max_c']}]; "
+            f"cold=[{case['cold_outlet_min_c']}, {case['cold_outlet_max_c']}]; "
+            f"error={case['error']}"
+        )
 
 
 if __name__ == "__main__":
