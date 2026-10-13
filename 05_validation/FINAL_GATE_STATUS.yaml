@@ -1,12 +1,12 @@
 version: "1.0"
 status: "INCOMPLETE"
-as_of: "2026-10-08"
+as_of: "2026-10-13"
 
 gates:
   software_correctness: true
   open_data_access_verified: true
   source_reconstruction: false
-  primary_observation_extraction: false
+  primary_observation_extraction: true
   unfitted_validation: false
   held_out_validation: false
   model_form_comparison: false
@@ -25,4 +25,4 @@ gates:
 claim_policy:
   quantitative_validation_claims: false
   publication_ready_claim: false
-  note: "This file is a hard status declaration. No gate may be marked true without a reproducible artifact and provenance record."
+  note: "This file is a hard status declaration. No gate may be marked true without a reproducible artifact and provenance record. Primary-observation extraction is true only for the 12-condition GDR/NREL Villa et al. 3M workbook summary; the separate 1999 Martínez-Díez source benchmark remains unextracted. The GDR transfer-correlation/geometry run is a within-workbook diagnostic and does not satisfy independent held-out validation or the final validation-grade model-form gate. The newly discovered Kanbur (2020), Wyon (2025), Chen (2026), Yang (2026), and Katakam et al. (2026 online-ahead-of-print) literature materially narrows the novelty claim."
