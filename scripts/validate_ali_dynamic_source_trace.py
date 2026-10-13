@@ -105,8 +105,19 @@ def run_case(
         if model_kind == "spatial":
             model_kwargs["n_cells"] = 10
         predicted = model_function(**model_kwargs)
-        result["status"] = "completed_unfitted_comparison"
+        mass_rate_nonnegative = bool(np.all(predicted.mass_rate_kg_h >= -1e-9))
+        mass_monotonic = bool(
+            np.all(np.diff(predicted.accumulated_mass_kg) >= -1e-9)
+        )
+        result["status"] = (
+            "completed_unfitted_comparison"
+            if mass_rate_nonnegative and mass_monotonic
+            else "completed_but_mass_state_nonphysical"
+        )
         result["metrics"] = {
+            "mass_rate_nonnegative": mass_rate_nonnegative,
+            "accumulated_mass_monotonic": mass_monotonic,
+            "minimum_mass_rate_kg_h": float(np.min(predicted.mass_rate_kg_h)),
             "hot_outlet_temperature_c": error_metrics(
                 predicted.hot_outlet_c, hot_out_observed
             ),
@@ -228,7 +239,7 @@ def main() -> None:
     with csv_path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(
             stream,
-            fieldnames=["case_id", "status", "heat_loss_correction", "rows", "error", "metrics"],
+            fieldnames=["case_id", "model_kind", "status", "heat_loss_correction", "rows", "error", "metrics"],
         )
         writer.writeheader()
         for case in cases:
