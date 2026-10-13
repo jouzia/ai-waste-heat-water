@@ -11,6 +11,18 @@ The completed diagnostic, [workflow run #6](https://github.com/jouzia/ai-waste-h
 
 The temperature overshoot is large, not a small tolerance issue. It indicates a serious inconsistency in the current lumped source reconstruction—likely in the coupling between bulk/interface heat transfer and the module's counter-current dynamics, not something that can be fixed by selecting one of the tested parameter variants. Do not fit parameters to force this smoke trace into the envelope.
 
+## Measured source-trace check
+
+The reproducible source-trace workflow [run #14](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38432821521) evaluated the first 30 minutes of the S2 Data workbook, worksheet `50` (50 L/h nominal flow, 50 °C target), using the measured inlet histories and measured initial outlet temperatures. The extracted trace contains 181 observations at a median 10-second interval. Measured hot inlet rises from 18.77 °C to 48.72 °C; measured cold inlet ranges from 18.92 to 19.25 °C. Both measured cumulative-distillate observations remain zero through this 30-minute segment.
+
+Both unrefitted lumped-model cases were rejected by the physical envelope guard:
+- No heat-loss correction: predicted hot-outlet minimum 4.987 °C and cold-outlet maximum 44.650 °C.
+- Published 50 L/h correction (0.077): predicted hot-outlet minimum 4.557 °C and cold-outlet maximum 43.662 °C.
+
+The admissible envelope for this trace was [18.750, 61.290] °C. The predicted hot outlet falls more than 13 °C below the minimum measured inlet/initial-outlet temperature. This is a clear physical-admissibility failure on measured source inputs, not merely the earlier synthetic cold-start stress test. Artifact ID `11831163647`, ZIP SHA-256 `6d6bf926b0aadee377d7175ab67dd64bf4d31c6a8e38bb5894675df7c2064459`, retained through 2027-01-11.
+
+The trace is a 30-minute warm-up subset, not the full experimental run and not a held-out validation result. The next step is to compare the 10-cell spatial model against the same exact trace and independently audit the source model's bulk-temperature and energy-balance equations. Do not fit heat-loss or membrane parameters to hide this failure.
+
 ## Additional implementation corrections
 
 1. **Measured-input derivatives.** The mass-production-rate ODE now applies the chain rule to piecewise-linear inlet-temperature histories. In the spatial model, bulk-temperature derivatives include adjacent cell derivatives and the boundary derivative at the module edge. This is necessary when the model is driven by fluctuating measured inputs; the prior implementation included only outlet-temperature derivatives. A unit test checks the piecewise-linear derivative primitive.
