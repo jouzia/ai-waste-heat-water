@@ -15,6 +15,7 @@ from ai_water.ali_dynamic_model import (
     PUBLISHED_FLOS_LUMPED,
     AliDynamicConfig,
     simulate_lumped_transient,
+    simulate_spatial_transient,
 )
 
 
@@ -50,6 +51,7 @@ def run_case(
     *,
     correction: float,
     case_id: str,
+    model_kind: str,
 ) -> dict[str, object]:
     time_min = np.asarray([float(row["time_min"]) for row in rows])
     hot_in = np.asarray([float(row["hot_inlet_temperature_c"]) for row in rows])
@@ -63,6 +65,7 @@ def run_case(
     flow = float(first["nominal_flow_l_h"])
     result: dict[str, object] = {
         "case_id": case_id,
+        "model_kind": model_kind,
         "status": "not_run",
         "heat_loss_correction": correction,
         "rows": len(rows),
@@ -83,17 +86,25 @@ def run_case(
         "metrics": None,
     }
     try:
-        predicted = simulate_lumped_transient(
-            time_min=time_min,
-            hot_inlet_c=hot_in,
-            cold_inlet_c=cold_in,
-            nominal_flow_l_h=flow,
-            heat_loss_correction=correction,
-            initial_hot_outlet_c=float(hot_out_observed[0]),
-            initial_cold_outlet_c=float(cold_out_observed[0]),
-            initial_accumulated_mass_kg=float(mass_observed[0]),
-            config=AliDynamicConfig(),
+        model_function = (
+            simulate_lumped_transient
+            if model_kind == "lumped"
+            else simulate_spatial_transient
         )
+        model_kwargs: dict[str, object] = {
+            "time_min": time_min,
+            "hot_inlet_c": hot_in,
+            "cold_inlet_c": cold_in,
+            "nominal_flow_l_h": flow,
+            "heat_loss_correction": correction,
+            "initial_hot_outlet_c": float(hot_out_observed[0]),
+            "initial_cold_outlet_c": float(cold_out_observed[0]),
+            "initial_accumulated_mass_kg": float(mass_observed[0]),
+            "config": AliDynamicConfig(),
+        }
+        if model_kind == "spatial":
+            model_kwargs["n_cells"] = 10
+        predicted = model_function(**model_kwargs)
         result["status"] = "completed_unfitted_comparison"
         result["metrics"] = {
             "hot_outlet_temperature_c": error_metrics(
@@ -162,11 +173,29 @@ def main() -> None:
 
     flow = int(float(rows[0]["nominal_flow_l_h"]))
     cases = [
-        run_case(rows, correction=0.0, case_id="unfitted_no_correction"),
+        run_case(
+            rows,
+            correction=0.0,
+            case_id="lumped_unfitted_no_correction",
+            model_kind="lumped",
+        ),
         run_case(
             rows,
             correction=PUBLISHED_FLOS_LUMPED[flow],
-            case_id="published_source_correction_not_refitted",
+            case_id="lumped_published_source_correction_not_refitted",
+            model_kind="lumped",
+        ),
+        run_case(
+            rows,
+            correction=0.0,
+            case_id="spatial_unfitted_no_correction",
+            model_kind="spatial",
+        ),
+        run_case(
+            rows,
+            correction=PUBLISHED_FLOS_LUMPED[flow],
+            case_id="spatial_published_source_correction_not_refitted",
+            model_kind="spatial",
         ),
     ]
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -190,6 +219,7 @@ def main() -> None:
             "The published heat-loss correction is a separate source-reproduction case, not a newly estimated physical heat-loss coefficient.",
             "Any physical-admissibility rejection is a failed model case, not a missing result.",
             "The source trace includes warm-up; measured input and initial outlet temperatures are used rather than an artificial instantaneous 60 C step.",
+            "Lumped and 10-cell spatial model forms are compared without fitting any parameter to this trace.",
         ],
     }
     json_path = args.output_dir / "ali_source_trace_validation.json"
