@@ -34,23 +34,65 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def discover_figure_urls() -> list[str]:
+    """Find the Fig. 3 asset in Europe PMC's JATS record, then try public mirrors."""
+    import xml.etree.ElementTree as ET
+
+    candidates: list[str] = []
+    search_url = (
+        "https://www.ebi.ac.uk/europepmc/webservices/rest/search"
+        "?query=EXT_ID%3A10.1038%2Fs41598-020-73964-7&format=json"
+    )
+    try:
+        with urlopen(Request(search_url, headers={"User-Agent": "ai-waste-heat-water/1.0"}), timeout=45) as response:
+            search_data = json.loads(response.read().decode("utf-8"))
+        results = search_data.get("resultList", {}).get("result", [])
+        pmcid = next((item.get("pmcid") for item in results if item.get("pmcid")), None)
+        if pmcid:
+            xml_url = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{pmcid}/fullTextXML"
+            with urlopen(Request(xml_url, headers={"User-Agent": "ai-waste-heat-water/1.0"}), timeout=45) as response:
+                root = ET.fromstring(response.read())
+            for figure in root.findall(".//{*}fig"):
+                figure_id = figure.attrib.get("id", "")
+                label = " ".join((node.text or "") for node in figure.findall(".//{*}label"))
+                if figure_id.lower().endswith("fig3") or "fig 3" in label.lower() or "figure 3" in label.lower():
+                    for graphic in figure.findall(".//{*}graphic"):
+                        href = next(
+                            (value for key, value in graphic.attrib.items() if key.endswith("href")),
+                            None,
+                        )
+                        if href:
+                            candidates.extend(
+                                [
+                                    f"https://europepmc.org/articles/{pmcid}/bin/{href}",
+                                    f"https://pmc.ncbi.nlm.nih.gov/articles/{pmcid}/bin/{href}",
+                                ]
+                            )
+    except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError, StopIteration):
+        pass
+    candidates.append(FIGURE_URL)
+    # Preserve order while avoiding duplicate candidate URLs.
+    return list(dict.fromkeys(candidates))
+
+
 def retrieve_image(target: Path) -> dict[str, object]:
     target.parent.mkdir(parents=True, exist_ok=True)
-    temporary = target.with_suffix(target.suffix + ".part")
     source_copy = target.with_name(target.stem + "_source_payload.bin")
-    source_temporary = source_copy.with_suffix(source_copy.suffix + ".part")
-    request = Request(
-        FIGURE_URL,
-        headers={
-            "User-Agent": "Mozilla/5.0 (compatible; ai-waste-heat-water/1.0)",
-            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-        },
-    )
     last_error: Exception | None = None
-    for attempt in range(4):
-        try:
-            from PIL import Image, UnidentifiedImageError
+    attempts: list[dict[str, object]] = []
+    from PIL import Image, UnidentifiedImageError
 
+    for candidate_url in discover_figure_urls():
+        temporary = target.with_suffix(target.suffix + ".part")
+        source_temporary = source_copy.with_suffix(source_copy.suffix + ".part")
+        request = Request(
+            candidate_url,
+            headers={
+                "User-Agent": "Mozilla/5.0 (compatible; ai-waste-heat-water/1.0)",
+                "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            },
+        )
+        try:
             with urlopen(request, timeout=90) as response:
                 content_type = response.headers.get("Content-Type", "")
                 response_url = response.geturl()
@@ -69,10 +111,16 @@ def retrieve_image(target: Path) -> dict[str, object]:
                     )
             except (UnidentifiedImageError, OSError) as exc:
                 prefix = payload[:100].decode("utf-8", errors="replace")
-                raise ValueError(
-                    f"Endpoint did not return a recognizable image; "
-                    f"content_type={content_type!r}, bytes={len(payload)}, prefix={prefix!r}"
-                ) from exc
+                attempts.append({
+                    "url": candidate_url,
+                    "content_type": content_type,
+                    "bytes": len(payload),
+                    "error": f"not an image: {prefix!r}",
+                })
+                last_error = exc
+                temporary.unlink(missing_ok=True)
+                source_temporary.unlink(missing_ok=True)
+                continue
             temporary.replace(target)
             source_temporary.replace(source_copy)
             return {
@@ -86,17 +134,20 @@ def retrieve_image(target: Path) -> dict[str, object]:
                 "source_payload_content_type": content_type,
                 "source_payload_format": source_format,
                 "response_url": response_url,
+                "candidate_url": candidate_url,
+                "attempts_before_success": attempts,
                 "width_px": width,
                 "height_px": height,
                 "mode": mode,
             }
         except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
             last_error = exc
+            attempts.append({"url": candidate_url, "error": str(exc)})
             temporary.unlink(missing_ok=True)
             source_temporary.unlink(missing_ok=True)
-            if attempt < 3:
-                time.sleep(min(2**attempt, 20))
-    raise RuntimeError(f"Figure retrieval failed: {last_error}") from last_error
+    raise RuntimeError(
+        f"Figure retrieval failed for all candidate URLs; attempts={attempts}; last_error={last_error}"
+    ) from last_error
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
