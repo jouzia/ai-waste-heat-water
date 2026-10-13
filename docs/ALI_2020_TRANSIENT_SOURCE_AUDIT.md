@@ -57,3 +57,8 @@ The separate transient reconstruction also exposed a physically inadmissible def
 ## Raw mass-field semantic restriction (2026-10-13)
 
 The latest source-linked audit covers 19 complete timed worksheet traces, of which 14 have nonmonotonic raw `mw` readings. Prior tail-slope comparisons that assumed cumulative mass are withdrawn and disabled. No transient mass/flux error is valid until the `mw` measurement/reset semantics are established. The raw values remain preserved without reinterpretation.
+
+
+## Spatial-grid and ODE-tolerance convergence (2026-10-13)
+
+A five-case unfitted convergence audit now compares 5/10/20 spatial cells and relative/absolute tolerances of 1e-4/1e-6 on the full 1,662-row S2/50 measured trace. The 10-cell 1e-4 run differs from the 20-cell 1e-6 numerical reference by hot-outlet RMSE 0.00315 °C, cold-outlet RMSE 0.0722 °C, mass-rate RMSE 0.0485 kg/h, and model-predicted accumulated-mass RMSE 0.0314 kg. Tightening tolerance at fixed 20 cells changes cold-outlet temperature by only 5.94e-5 °C RMSE, so spatial discretization dominates the tested numerical difference. However, 10- and 20-cell model-to-measurement cold-outlet RMSE remain about 4.98 and 5.01 °C respectively. This is numerical convergence evidence, not source reconstruction or validation. See `docs/ALI_2020_SPATIAL_GRID_TOLERANCE_CONVERGENCE_2026-10-13.md` and workflow run #1.
