@@ -248,7 +248,6 @@ def simulate_dcmd_channel(
                 config.membrane_thermal_conductivity_w_m_k / config.membrane_thickness_m
                 * (tfm - tpm) * cell_area
             )
-            feed_heat_kwh = q_feed_w / 1000.0 * config.duration_h
             # Channel temperatures are steady-state bulk states. Their changes
             # depend on heat-transfer rate (kJ/h) divided by mass-flow rate
             # (kg/h), not on the arbitrary integration/reporting duration.
