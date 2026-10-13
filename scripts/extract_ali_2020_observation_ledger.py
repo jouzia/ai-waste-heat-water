@@ -12,7 +12,6 @@ import csv
 import hashlib
 import json
 import math
-from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -127,7 +126,6 @@ def export_workbooks(input_dir: Path, output_dir: Path) -> dict[str, object]:
         "csv_filename": csv_path.name,
         "csv_sha256": sha256_file(csv_path),
         "total_nonempty_rows_exported": len(records),
-        "workbooks": workbook_manifest,
         "sheets": sheet_manifest,
         "interpretation_policy": [
             "Values are preserved as source strings inside raw_cells_json; no unit conversions or imputations are performed.",
