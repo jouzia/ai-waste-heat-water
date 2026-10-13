@@ -18,8 +18,38 @@ def _load(path: str):
     return yaml.safe_load((root / path).read_text(encoding="utf-8"))
 
 
+def _status_failures(status: dict) -> list[str]:
+    """Return hard-gate failures; protocol presence alone is never readiness."""
+    failures: list[str] = []
+    if status.get("status") != "COMPLETE":
+        failures.append(
+            f"final gate status is {status.get('status')!r}, expected 'COMPLETE'"
+        )
+    gates = status.get("gates")
+    if not isinstance(gates, dict) or not gates:
+        failures.append("final gate status has no scientific gate mapping")
+    else:
+        incomplete = sorted(name for name, value in gates.items() if value is not True)
+        if incomplete:
+            failures.append(
+                "unmet scientific gates: " + ", ".join(incomplete)
+            )
+    claim_policy = status.get("claim_policy", {})
+    if claim_policy.get("publication_ready_claim") is True and (
+        status.get("status") != "COMPLETE"
+        or not isinstance(gates, dict)
+        or any(value is not True for value in gates.values())
+    ):
+        failures.append(
+            "publication_ready_claim cannot be true while any scientific gate is unmet"
+        )
+    return failures
+
+
 def main() -> int:
     failures: list[str] = []
+    final_status = _load("05_validation/FINAL_GATE_STATUS.yaml")
+    failures.extend(_status_failures(final_status))
 
     registry = _load("04_experiments/BENCHMARK_REGISTRY.yaml")
     matrix = _load("04_experiments/VALIDATION_MATRIX.yaml")
