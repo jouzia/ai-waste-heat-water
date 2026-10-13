@@ -1,0 +1,54 @@
+name: Independent-seed Monte Carlo convergence audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/audit_monte_carlo_convergence.py"
+      - "scripts/run_scenario_uncertainty_study.py"
+      - "src/ai_water/monte_carlo.py"
+      - "src/ai_water/engine.py"
+      - ".github/workflows/monte-carlo-convergence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  convergence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install research package
+        run: python -m pip install -e .
+      - name: Run independent-seed and larger-sample Monte Carlo study
+        run: python scripts/audit_monte_carlo_convergence.py --output-dir artifacts/monte_carlo_convergence
+      - name: Verify sample design, acceptance checks, and checksums
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          root = Path("artifacts/monte_carlo_convergence")
+          summary = json.loads((root / "independent_seed_monte_carlo_summary.json").read_text())
+          manifest = json.loads((root / "manifest.json").read_text())
+          assert [item["sample_size"] for item in summary["designs"]] == [20000, 20000, 20000, 50000]
+          assert len(summary["per_run_summaries"]) == 4
+          for name, expected in manifest.items():
+              actual = hashlib.sha256((root / ("independent_seed_monte_carlo_summary.json" if name == "summary_sha256" else "independent_seed_monte_carlo_summary.csv")).read_bytes()).hexdigest()
+              assert actual == expected, (name, expected, actual)
+          print("Acceptance checks:", json.dumps(summary["acceptance_checks"], indent=2))
+          print("Numerical convergence:", summary["numerically_converged_under_declared_scenario_ranges"])
+          print("This is scenario-only numerical convergence, not empirical uncertainty calibration.")
+          PY
+      - name: Upload independent-seed convergence results
+        uses: actions/upload-artifact@v4
+        with:
+          name: independent-seed-monte-carlo-convergence
+          path: artifacts/monte_carlo_convergence/*
+          if-no-files-found: error
+          retention-days: 90
