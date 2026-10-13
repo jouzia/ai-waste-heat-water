@@ -38,11 +38,13 @@ def _synthetic_rows():
 
 
 def test_flux_law_diagnostic_holds_out_entire_300_l_h_flow() -> None:
-    _, predictions, summary = _evaluator.fit_and_score(
+    _, predictions, summary, flow_predictions = _evaluator.fit_and_score(
         _synthetic_rows(), "reported_0p5_percent_feed_salinity"
     )
     assert len(predictions) == 16
+    assert len(flow_predictions) == 16
     assert summary["training_metrics"]["n"] == 12
     assert summary["held_out_metrics"]["n"] == 4
     assert summary["held_out_flow_l_h"] == 300.0
     assert summary["fitted_permeance_kg_m2_h_bar"] > 0
+    assert summary["flow_dependent_tpc_model"]["held_out_metrics"]["n"] == 4
