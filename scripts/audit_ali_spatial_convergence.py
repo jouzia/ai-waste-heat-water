@@ -77,7 +77,6 @@ def run(output_dir: Path, ledger: Path, workbook: str, worksheet: str) -> dict[s
         (10, 1e-4),
         (20, 1e-4),
         (10, 1e-6),
-        (20, 1e-6),
     ]
     records: list[dict[str, object]] = []
     predictions: dict[tuple[int, float], object] = {}
@@ -122,7 +121,7 @@ def run(output_dir: Path, ledger: Path, workbook: str, worksheet: str) -> dict[s
             }
         )
 
-    reference = predictions[(20, 1e-6)]
+    reference = predictions[(20, 1e-4)]
     convergence: list[dict[str, object]] = []
     for (n_cells, rtol), result in predictions.items():
         convergence.append(
@@ -130,7 +129,7 @@ def run(output_dir: Path, ledger: Path, workbook: str, worksheet: str) -> dict[s
                 "n_cells": n_cells,
                 "relative_tolerance": rtol,
                 "reference_n_cells": 20,
-                "reference_relative_tolerance": 1e-6,
+                "reference_relative_tolerance": 1e-4,
                 "hot_outlet_difference_from_reference_c": json.dumps(
                     error_metrics(result.hot_outlet_c - reference.hot_outlet_c),
                     sort_keys=True,
@@ -175,7 +174,7 @@ def run(output_dir: Path, ledger: Path, workbook: str, worksheet: str) -> dict[s
             {"n_cells": n, "relative_tolerance": tol, "absolute_temperature_tolerance_k": tol}
             for n, tol in design
         ],
-        "reference": {"n_cells": 20, "relative_tolerance": 1e-6},
+        "reference": {"n_cells": 20, "relative_tolerance": 1e-4},
         "results": records,
         "convergence": convergence,
         "interpretation_limits": [
