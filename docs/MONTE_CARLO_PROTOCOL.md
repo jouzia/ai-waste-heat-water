@@ -38,3 +38,10 @@ At minimum, report:
 - negative outcomes and failure regimes.
 
 A Monte Carlo probability is not a real-world probability unless the model structure, parameter distributions, dependencies, and counterfactual are defensible. The first implementation is a reproducible execution primitive, not evidence that any distribution is empirically calibrated.
+
+
+## First executed scenario study (2026-10-13)
+
+The repository now runs `scripts/run_scenario_uncertainty_study.py` through [GitHub Actions run #8](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38428133917). The archived artifact is `scenario-only-uncertainty-study` (ID `11829716834`, SHA-256 `f8d4380906e0fe45ad5f377c828339b7f0eb06b08b516ebf8be63d114a4e7faf`, retained through 2027-01-11). It contains 20,000 Monte Carlo records, prefix convergence diagnostics, 512/2,048-point Sobol indices for two outputs, and output checksums.
+
+These are explicitly illustrative independent-uniform scenario ranges, not empirical parameter distributions. The run is useful as an execution and failure-regime diagnostic only. The median modeled freshwater output is zero under this scenario design, and the Sobol indices for freshwater production remain unstable between sample sizes; do not rank physical parameters or claim empirical uncertainty convergence from this run. The publication gate remains incomplete.
