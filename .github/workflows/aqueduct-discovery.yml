@@ -1,0 +1,52 @@
+name: Aqueduct 4.0 source asset discovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/discover_aqueduct_assets.py"
+      - "docs/GEOGRAPHIC_LAYER.md"
+      - "configs/geography.yaml"
+      - ".github/workflows/aqueduct-discovery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover-official-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Discover official WRI landing-page assets
+        run: python scripts/discover_aqueduct_assets.py --output artifacts/aqueduct_discovery/aqueduct_asset_discovery.json
+
+      - name: Verify source-page provenance record
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("artifacts/aqueduct_discovery/aqueduct_asset_discovery.json")
+          manifest = json.loads(path.read_text())
+          assert manifest["dataset"] == "WRI Aqueduct Global Maps 4.0"
+          assert manifest["pages"], manifest
+          assert all(page["page_sha256"] for page in manifest["pages"]), manifest
+          print(f"Retrieved {len(manifest['pages'])} official landing page(s); candidate asset links: {manifest['candidate_asset_url_count']}.")
+          print("No geospatial layer has been downloaded or interpreted by this discovery step.")
+          PY
+
+      - name: Upload Aqueduct discovery metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: aqueduct-asset-discovery
+          path: artifacts/aqueduct_discovery/aqueduct_asset_discovery.json
+          if-no-files-found: error
+          retention-days: 90
