@@ -70,3 +70,26 @@ def test_countercurrent_permeate_outlet_is_at_first_feed_coordinate_cell() -> No
     assert result.permeate_out_mass_kg_h - config.permeate_mass_flow_kg_h == pytest.approx(
         result.freshwater_produced_kg, rel=1e-6, abs=1e-8
     )
+
+
+def test_steady_channel_temperatures_do_not_depend_on_reporting_duration() -> None:
+    base = _countercurrent_config(cells=16)
+    long_duration = ChannelConfig(
+        **{**base.__dict__, "duration_h": 2.0}
+    )
+    first = simulate_dcmd_channel(
+        config=base, feed_in_temperature_c=40.6, permeate_in_temperature_c=19.9
+    )
+    second = simulate_dcmd_channel(
+        config=long_duration, feed_in_temperature_c=40.6, permeate_in_temperature_c=19.9
+    )
+
+    assert second.freshwater_produced_kg == pytest.approx(
+        2.0 * first.freshwater_produced_kg, rel=1e-6
+    )
+    assert second.feed_out_temperature_c == pytest.approx(
+        first.feed_out_temperature_c, abs=1e-6
+    )
+    assert second.permeate_out_temperature_c == pytest.approx(
+        first.permeate_out_temperature_c, abs=1e-6
+    )
