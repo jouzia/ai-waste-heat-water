@@ -1,0 +1,7 @@
+site_id,city_proxy,country,latitude,longitude,coordinate_provenance,site_status
+barcelona,Barcelona,Spain,41.3874,2.1686,"Approximate city-centre coordinate; Wyon (2025) is a prior-art city case, but this is not an actual data-centre coordinate",illustrative_proxy
+chennai,Chennai,India,13.0827,80.2707,"Approximate city-centre coordinate; no specific facility is claimed",illustrative_proxy
+hyderabad,Hyderabad,India,17.3850,78.4867,"Approximate city-centre coordinate; no specific facility is claimed",illustrative_proxy
+phoenix,Phoenix,United States,33.4484,-112.0740,"Approximate city-centre coordinate; no specific facility is claimed",illustrative_proxy
+singapore,Singapore,Singapore,1.3521,103.8198,"Approximate city-centre coordinate; no specific facility is claimed",illustrative_proxy
+frankfurt,Frankfurt,Germany,50.1109,8.6821,"Approximate city-centre coordinate; no specific facility is claimed",illustrative_proxy
