@@ -70,6 +70,49 @@ def discover_figure_urls() -> list[str]:
                             )
     except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError, StopIteration):
         pass
+    if not candidates:
+        # NCBI's PMC API is an independent route if Europe PMC search is unavailable.
+        try:
+            esearch_url = (
+                "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
+                "?db=pmc&term=10.1038%2Fs41598-020-73964-7&retmode=json"
+            )
+            with urlopen(
+                Request(esearch_url, headers={"User-Agent": "ai-waste-heat-water/1.0"}),
+                timeout=45,
+            ) as response:
+                search_data = json.loads(response.read().decode("utf-8"))
+            ids = search_data.get("esearchresult", {}).get("idlist", [])
+            if ids:
+                pmc_number = ids[0]
+                pmcid = f"PMC{pmc_number}"
+                xml_url = (
+                    "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+                    f"?db=pmc&id={pmc_number}"
+                )
+                with urlopen(
+                    Request(xml_url, headers={"User-Agent": "ai-waste-heat-water/1.0"}),
+                    timeout=45,
+                ) as response:
+                    root = ET.fromstring(response.read())
+                for figure in root.findall(".//{*}fig"):
+                    figure_id = figure.attrib.get("id", "")
+                    label = " ".join((node.text or "") for node in figure.findall(".//{*}label"))
+                    if figure_id.lower().endswith("fig3") or "fig 3" in label.lower() or "figure 3" in label.lower():
+                        for graphic in figure.findall(".//{*}graphic"):
+                            href = next(
+                                (value for key, value in graphic.attrib.items() if key.endswith("href")),
+                                None,
+                            )
+                            if href:
+                                candidates.extend(
+                                    [
+                                        f"https://pmc.ncbi.nlm.nih.gov/articles/{pmcid}/bin/{href}",
+                                        f"https://europepmc.org/articles/{pmcid}/bin/{href}",
+                                    ]
+                                )
+        except (HTTPError, URLError, TimeoutError, OSError, ValueError, ET.ParseError):
+            pass
     candidates.append(FIGURE_URL)
     # Preserve order while avoiding duplicate candidate URLs.
     return list(dict.fromkeys(candidates))
