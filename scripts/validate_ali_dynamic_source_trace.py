@@ -31,7 +31,7 @@ def read_trace(path: Path, workbook: str, worksheet: str) -> list[dict[str, str]
     if len(rows) < 3:
         raise ValueError(f"Expected at least 3 complete observations, got {len(rows)}")
     times = [float(row["time_min"]) for row in rows]
-    if any(right <= left for left, right in zip(times, times[1:])):
+    if np.any(np.diff(times) <= 0):
         raise ValueError("Source trace time values must be strictly increasing")
     return rows
 
