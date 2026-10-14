@@ -24,3 +24,15 @@ The module src/ai_water/global_sensitivity.py implements Saltelli covariance fir
 7. Do not report these synthetic estimator tests as sensitivity results for the physical research question.
 
 An exploratory execution was completed on 2026-10-13 with 512 and 2,048 samples per Sobol matrix for net water-consumption change and freshwater production. The run is archived in [GitHub Actions run #8](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38428133917). Net-water index differences between sample sizes were generally smaller than those for freshwater production; freshwater-output index differences reached about 0.10 in total-effect estimates. This is not adequate to declare the freshwater sensitivity ranking converged. All bounds are illustrative scenario assumptions and water activity is fixed at 0.995, so the results are execution diagnostics, not evidence-calibrated physical sensitivities.
+
+
+## Higher-resolution convergence audit (2026-10-14)
+
+A follow-up nested Sobol comparison was run at 4,096 and 8,192 samples per matrix with the same seed (20261023), using the same 15 independent-uniform scenario ranges and the two outputs used in the earlier exploratory run. Reproducible outputs are in [workflow run #1](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38595867645), artifact ID `11908833471`, SHA-256 `d2a14213799c49bfbb1d92fa425feb43722b3422d50c0cc8b9340491000003bf`, retained until 2027-01-12.
+
+- **Net-water output:** maximum absolute change in total-effect index was 0.00182; maximum rank shift was 1 position.
+- **Freshwater-output:** maximum absolute change in total-effect index was 0.02885; maximum rank shift was 0 positions. The top-five total-effect ranking was identical at 4,096 and 8,192.
+- Freshwater production's top five were recoverable-heat fraction, IT power, TPC, recovery efficiency, and heat-exchanger effectiveness. These are conditional rankings under the current model and bounds, not general truths about data centres.
+- The 4,096/8,192 comparison improves the numerical stability evidence relative to the earlier 512/2,048 run, but the largest freshwater total-effect index shift is still about 0.029. Treat rank order as stable for this nested sequence while retaining uncertainty about individual index magnitudes and any inference beyond the chosen ranges.
+
+The result is **numerical sensitivity convergence under illustrative assumptions only**. It does not repair the model's lack of empirical validation, calibrate input distributions, justify a real-world probability, or complete the geographic and source-validation gates.
