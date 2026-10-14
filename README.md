@@ -30,7 +30,7 @@ AI workload -> IT energy -> heat generation -> cooling architecture -> recoverab
 
 ## Key evidence anchors
 
-Lei et al. (2025) demonstrate that workload-level data-center water use is highly sensitive to server efficiency, grid water factors, utilization, cooling technology, infrastructure efficiency, climate, and refresh cycle. Malaguti et al. (2026) show that MD cooling demand can approach the heating burden in some configurations and that pumping can be material at low single-pass recovery. NIST SRD 69 provides the water vapor-pressure coefficients used by the current pure-water transport primitive. Herrera et al. (2025) provides a probabilistic framework for AI-infrastructure water-footprint uncertainty.
+Lei et al. (2025) demonstrate that workload-level data-center water use is highly sensitive to server efficiency, grid water factors, utilization, cooling technology, infrastructure efficiency, climate, and refresh cycle. Malaguti et al. (2026) show that MD cooling demand can approach the heating burden in some configurations and that pumping can be material at low single-pass recovery. Katakam et al. (online 2026; DOI 10.1016/j.watres.2026.126748) analyze system-scale desalination options for data-centre water demand and introduce a water-stress-linked metric; Wang et al. (2026; DOI 10.1016/j.ese.2026.100702) analyze global data-centre/WWTP water and heat symbiosis. These studies narrow the novelty claim; see `docs/PRIOR_ART_GAP_AUDIT_2026-10-14.md`. NIST SRD 69 provides the water vapor-pressure coefficients used by the current pure-water transport primitive. Herrera et al. (2025) provides a probabilistic framework for AI-infrastructure water-footprint uncertainty.
 
 ## Model layers added
 
