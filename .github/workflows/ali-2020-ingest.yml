@@ -7,6 +7,7 @@ on:
       - "scripts/download_ali_2020_data.py"
       - "scripts/extract_ali_2020_observations.py"
       - "scripts/extract_ali_2020_observation_ledger.py"
+      - "scripts/audit_ali_mass_series.py"
       - "scripts/evaluate_ali_steady_state_flux_holdout.py"
       - ".github/workflows/ali-2020-ingest.yml"
   workflow_dispatch:
@@ -73,6 +74,26 @@ jobs:
           python scripts/extract_ali_2020_observations.py \
             --input-dir data/raw/ali_2020 \
             --output-dir artifacts/ali_2020_exports
+
+      - name: Audit raw mw series without semantic reinterpretation
+        run: |
+          python scripts/audit_ali_mass_series.py \
+            --input-dir data/raw/ali_2020 \
+            --output-dir artifacts/ali_2020_exports
+
+      - name: Verify mass-series quality audit
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("artifacts/ali_2020_exports/ali_2020_mw_series_quality_audit_manifest.json")
+          report = json.loads(p.read_text())
+          assert report["timed_mw_worksheet_count"] == 19, report
+          assert report["nonmonotonic_worksheet_count"] == 14, report
+          assert report["monotonic_worksheet_count"] == 5, report
+          assert report["output_sha256"]
+          print("Verified raw mw quality audit: 14/19 nonmonotonic; no values repaired or reinterpreted.")
+          PY
 
       - name: Verify observation ledger row counts and data-quality flags
         run: |
