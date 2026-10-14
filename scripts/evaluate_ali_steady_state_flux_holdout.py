@@ -358,6 +358,7 @@ def leave_one_flow_out(
             fixed_rows.append({
                 **row,
                 "model_form": "fixed_tpc_single_permeance",
+                "split": f"held_out_flow_{held_out_flow:g}_l_h",
                 "fold_held_out_flow_l_h": held_out_flow,
                 "fold_training_flows_l_h": ";".join(f"{flow:g}" for flow in training_flows),
                 "fitted_permeance_kg_m2_h_bar": fixed_permeance,
