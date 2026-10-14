@@ -474,7 +474,8 @@ def run(input_path: Path, output_dir: Path) -> dict[str, object]:
 
     cv_predictions_path = output_dir / "ali_2020_flux_law_leave_one_flow_out_predictions.csv"
     with cv_predictions_path.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(cv_predictions[0]))
+        fieldnames = list(dict.fromkeys(key for row in cv_predictions for key in row))
+        writer = csv.DictWriter(stream, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(cv_predictions)
     cv_summary = {
