@@ -319,9 +319,20 @@ def leave_one_flow_out(
     source_rows: list[dict[str, str]], salinity_case: str
 ) -> tuple[list[dict[str, object]], dict[str, object]]:
     """Group-wise CV: hold out each complete flow level, never individual rows."""
-    flows = tuple(sorted({parse_float(row, "nominal_flow_l_h") for row in source_rows}))
+    observed_flows = [parse_float(row, "nominal_flow_l_h") for row in source_rows]
+    canonical_flows = (50.0, 100.0, 200.0, 300.0)
+    unmatched = [
+        flow for flow in observed_flows
+        if not any(abs(flow - target) < 0.1 for target in canonical_flows)
+    ]
+    if unmatched:
+        raise ValueError(f"Unmapped nominal flow values in source ledger: {sorted(set(unmatched))}")
+    flows = tuple(
+        target for target in canonical_flows
+        if any(abs(flow - target) < 0.1 for flow in observed_flows)
+    )
     if len(flows) != 4:
-        raise ValueError(f"Expected exactly four distinct source flow levels, got {flows}")
+        raise ValueError(f"Expected four canonical source flow levels, got {flows}")
     all_predictions: list[dict[str, object]] = []
     fold_summaries: list[dict[str, object]] = []
 
