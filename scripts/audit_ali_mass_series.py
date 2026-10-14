@@ -34,7 +34,7 @@ def summarize_series(values: Sequence[float]) -> dict[str, object]:
         raise ValueError("At least two finite raw readings are required")
     if not all(math.isfinite(value) for value in values):
         raise ValueError("Raw readings must be finite numbers")
-    steps = [right - left for left, right in zip(values, values[1:], strict=True)]
+    steps = [right - left for left, right in zip(values[:-1], values[1:], strict=True)]
     negative = [step for step in steps if step < 0.0]
     net_change = values[-1] - values[0]
     total_negative_variation = -sum(negative)
@@ -120,7 +120,7 @@ def audit_workbooks(input_dir: Path, output_dir: Path) -> dict[str, object]:
                     "time_start_raw": times[0],
                     "time_end_raw": times[-1],
                     "time_strictly_increasing": all(
-                        right > left for left, right in zip(times, times[1:], strict=True)
+                        right > left for left, right in zip(times[:-1], times[1:], strict=True)
                     ),
                 }
             )
