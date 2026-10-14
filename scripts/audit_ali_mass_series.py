@@ -11,12 +11,12 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
-from itertools import pairwise
 import json
 import math
-from datetime import UTC, datetime
-from pathlib import Path
 from collections.abc import Sequence
+from datetime import UTC, datetime
+from itertools import pairwise
+from pathlib import Path
 
 SOURCE_DOI = "10.1371/journal.pone.0230207"
 
