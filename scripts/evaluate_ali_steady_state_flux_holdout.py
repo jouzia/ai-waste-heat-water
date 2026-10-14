@@ -101,20 +101,25 @@ def prepare_observation(row: dict[str, str], salinity_case: str) -> dict[str, ob
 
 
 def fit_flow_dependent_tpc(
-    rows: list[dict[str, str]], salinity_case: str
+    rows: list[dict[str, str]],
+    salinity_case: str,
+    training_flows_l_h: tuple[float, ...] = TRAIN_FLOWS_L_H,
+    held_out_flow_l_h: float = HELD_OUT_FLOW_L_H,
 ) -> tuple[list[dict[str, object]], dict[str, object]]:
-    """Fit permeance plus a bounded log-flow TPC curve on training flows only."""
+    """Fit permeance plus bounded log-flow TPC on specified training flows only."""
     training = [
         row for row in rows
-        if any(abs(parse_float(row, "nominal_flow_l_h") - target) < 0.1 for target in TRAIN_FLOWS_L_H)
+        if any(abs(parse_float(row, "nominal_flow_l_h") - target) < 0.1 for target in training_flows_l_h)
     ]
     held_out = [
         row for row in rows
-        if abs(parse_float(row, "nominal_flow_l_h") - HELD_OUT_FLOW_L_H) < 0.1
+        if abs(parse_float(row, "nominal_flow_l_h") - held_out_flow_l_h) < 0.1
     ]
-    if len(training) != 12 or len(held_out) != 4:
+    expected_training = 4 * len(training_flows_l_h)
+    if len(training) != expected_training or len(held_out) != 4:
         raise ValueError(
-            f"Expected 12 training and 4 held-out rows for flow-dependent TPC, got {len(training)} and {len(held_out)}"
+            f"Expected {expected_training} training and 4 held-out rows for flow-dependent TPC, "
+            f"got {len(training)} and {len(held_out)}"
         )
 
     def evaluate_one(row: dict[str, str], params: np.ndarray) -> tuple[float, float, float]:
@@ -180,7 +185,7 @@ def fit_flow_dependent_tpc(
                 "flow_l_h": flow,
                 "salinity_case": salinity_case,
                 "model_form": "flow_dependent_logistic_tpc",
-                "split": "train" if any(abs(flow - target) < 0.1 for target in TRAIN_FLOWS_L_H) else "held_out_flow_300_l_h",
+                "split": "train" if any(abs(flow - target) < 0.1 for target in training_flows_l_h) else f"held_out_flow_{held_out_flow_l_h:g}_l_h",
                 "fitted_permeance_kg_m2_h_bar": math.exp(float(fitted.x[0])),
                 "fitted_tpc": tpc,
                 "vapor_pressure_difference_bar": delta_p,
@@ -213,11 +218,14 @@ def fit_flow_dependent_tpc(
         "fitted_permeance_kg_m2_h_bar": math.exp(float(fitted.x[0])),
         "fitted_tpc_logistic_intercept": float(fitted.x[1]),
         "fitted_tpc_log_flow_slope": float(fitted.x[2]),
+        "training_flows_l_h": list(training_flows_l_h),
+        "held_out_flow_l_h": held_out_flow_l_h,
         "training_metrics": metrics(train_predictions),
         "held_out_metrics": metrics(holdout_predictions),
         "interpretation": (
-            "Exploratory three-parameter flow-dependent TPC alternative fitted on 50/100/200 L/h only; "
-            "300 L/h remains held out. This is model-form exploration within one source study, not independent validation."
+            "Exploratory three-parameter flow-dependent TPC alternative fitted only on the declared training flows; "
+            "the declared held-out flow is not used for fitting. This is model-form exploration within one source study, "
+            "not independent validation."
         ),
     }
     return prediction_rows, summary
@@ -289,6 +297,120 @@ def fit_and_score(rows: list[dict[str, str]], salinity_case: str) -> tuple[float
     return fitted_permeance, prepared, summary, flow_predictions
 
 
+def _metrics_for_rows(rows: list[dict[str, object]]) -> dict[str, float | int]:
+    if not rows:
+        raise ValueError("Cannot calculate metrics for an empty prediction set")
+    observed = np.asarray([float(row["measured_flux_kg_m2_h"]) for row in rows])
+    predicted = np.asarray([float(row["predicted_flux_kg_m2_h"]) for row in rows])
+    residual = predicted - observed
+    return {
+        "n": len(rows),
+        "mae_kg_m2_h": float(np.mean(np.abs(residual))),
+        "rmse_kg_m2_h": float(np.sqrt(np.mean(residual**2))),
+        "bias_predicted_minus_measured_kg_m2_h": float(np.mean(residual)),
+        "mean_absolute_relative_error_percent": float(np.mean(np.abs(residual) / observed) * 100.0),
+    }
+
+
+def leave_one_flow_out(
+    source_rows: list[dict[str, str]], salinity_case: str
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    """Group-wise CV: hold out each complete flow level, never individual rows."""
+    flows = tuple(sorted({parse_float(row, "nominal_flow_l_h") for row in source_rows}))
+    if len(flows) != 4:
+        raise ValueError(f"Expected exactly four distinct source flow levels, got {flows}")
+    all_predictions: list[dict[str, object]] = []
+    fold_summaries: list[dict[str, object]] = []
+
+    for held_out_flow in flows:
+        training_flows = tuple(flow for flow in flows if flow != held_out_flow)
+        prepared = [prepare_observation(row, salinity_case) for row in source_rows]
+        training_prepared = [
+            row for row in prepared
+            if any(abs(float(row["flow_l_h"]) - flow) < 0.1 for flow in training_flows)
+        ]
+        held_prepared = [
+            row for row in prepared if abs(float(row["flow_l_h"]) - held_out_flow) < 0.1
+        ]
+        if len(training_prepared) != 12 or len(held_prepared) != 4:
+            raise ValueError(
+                f"Fold {held_out_flow:g} L/h expected 12 train/4 held-out observations; "
+                f"got {len(training_prepared)}/{len(held_prepared)}"
+            )
+
+        dp_train = np.asarray(
+            [float(row["vapor_pressure_difference_bar"]) for row in training_prepared]
+        )
+        flux_train = np.asarray(
+            [float(row["measured_flux_kg_m2_h"]) for row in training_prepared]
+        )
+        denominator = float(np.dot(dp_train, dp_train))
+        if denominator <= 0:
+            raise ValueError(f"Fold {held_out_flow:g} L/h has zero training driving-force norm")
+        fixed_permeance = float(np.dot(dp_train, flux_train) / denominator)
+
+        fixed_rows: list[dict[str, object]] = []
+        for row in held_prepared:
+            predicted = fixed_permeance * float(row["vapor_pressure_difference_bar"])
+            fixed_rows.append({
+                **row,
+                "model_form": "fixed_tpc_single_permeance",
+                "fold_held_out_flow_l_h": held_out_flow,
+                "fold_training_flows_l_h": ";".join(f"{flow:g}" for flow in training_flows),
+                "fitted_permeance_kg_m2_h_bar": fixed_permeance,
+                "predicted_flux_kg_m2_h": predicted,
+                "residual_predicted_minus_measured": predicted - float(row["measured_flux_kg_m2_h"]),
+                "absolute_error_kg_m2_h": abs(predicted - float(row["measured_flux_kg_m2_h"])),
+            })
+        flow_rows, flow_summary = fit_flow_dependent_tpc(
+            source_rows,
+            salinity_case,
+            training_flows_l_h=training_flows,
+            held_out_flow_l_h=held_out_flow,
+        )
+        flow_holdout_rows = [
+            {
+                **row,
+                "fold_held_out_flow_l_h": held_out_flow,
+                "fold_training_flows_l_h": ";".join(f"{flow:g}" for flow in training_flows),
+            }
+            for row in flow_rows
+            if row["split"] == f"held_out_flow_{held_out_flow:g}_l_h"
+        ]
+        for row in fixed_rows:
+            row["salinity_case"] = salinity_case
+        all_predictions.extend(fixed_rows)
+        all_predictions.extend(flow_holdout_rows)
+        fold_summaries.append({
+            "held_out_flow_l_h": held_out_flow,
+            "training_flows_l_h": list(training_flows),
+            "fixed_tpc_single_permeance": _metrics_for_rows(fixed_rows),
+            "flow_dependent_tpc": _metrics_for_rows(flow_holdout_rows),
+            "flow_dependent_tpc_fit": {
+                "fitted_permeance_kg_m2_h_bar": flow_summary["fitted_permeance_kg_m2_h_bar"],
+                "fitted_tpc_logistic_intercept": flow_summary["fitted_tpc_logistic_intercept"],
+                "fitted_tpc_log_flow_slope": flow_summary["fitted_tpc_log_flow_slope"],
+                "training_metrics": flow_summary["training_metrics"],
+            },
+        })
+
+    model_summaries: dict[str, object] = {}
+    for model_form in ("fixed_tpc_single_permeance", "flow_dependent_logistic_tpc"):
+        model_rows = [row for row in all_predictions if row["model_form"] == model_form]
+        model_summaries[model_form] = _metrics_for_rows(model_rows)
+    return all_predictions, {
+        "design": "four-fold leave-one-flow-level-out; all four observations at each flow held out together",
+        "salinity_case": salinity_case,
+        "folds": fold_summaries,
+        "out_of_fold_metrics": model_summaries,
+        "interpretation": (
+            "Internal grouped cross-validation over four flow levels in one source study. "
+            "It tests flow-level generalization more broadly than a single 300 L/h holdout, "
+            "but is not independent external validation and does not validate the coupled dynamic model."
+        ),
+    }
+
+
 def run(input_path: Path, output_dir: Path) -> dict[str, object]:
     output_dir.mkdir(parents=True, exist_ok=True)
     with input_path.open(encoding="utf-8", newline="") as stream:
@@ -339,6 +461,40 @@ def run(input_path: Path, output_dir: Path) -> dict[str, object]:
             "A poor held-out result indicates the single-permeance/fixed-TPC flux form does not generalize under this boundary-temperature reconstruction; it does not invalidate the source measurements.",
         ],
     }
+    cv_predictions: list[dict[str, object]] = []
+    cv_cases: dict[str, object] = {}
+    for salinity_case in SALINITY_CASES:
+        fold_rows, fold_summary = leave_one_flow_out(source_rows, salinity_case)
+        cv_predictions.extend(fold_rows)
+        cv_cases[salinity_case] = fold_summary
+
+    cv_predictions_path = output_dir / "ali_2020_flux_law_leave_one_flow_out_predictions.csv"
+    with cv_predictions_path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(cv_predictions[0]))
+        writer.writeheader()
+        writer.writerows(cv_predictions)
+    cv_summary = {
+        "experiment_id": "ALI-2020-FLUX-LAW-LEAVE-ONE-FLOW-OUT-2026-10-14",
+        "generated_at_utc": datetime.now(UTC).isoformat(),
+        "source_doi": SOURCE_DOI,
+        "input_ledger": str(input_path),
+        "input_ledger_sha256": sha256_file(input_path),
+        "prediction_rows": len(cv_predictions),
+        "cases": cv_cases,
+        "claim_limits": [
+            "Each fold holds out a complete nominal flow level, not random serial rows.",
+            "This is within-source model-form diagnostics only; all folds share the same experiment and source assumptions.",
+            "The three-parameter flow-dependent TPC alternative is more flexible and may overfit; compare its out-of-fold error and parameter stability rather than selecting by training fit.",
+            "The flux-law comparison does not validate transient mass accumulation, energy balances, cooling, electricity-water factors, or net freshwater benefit.",
+            "Salinity interpretations are kept separate because the paper's stated 0.5% feed salinity and S1 TDS_E values are inconsistent.",
+        ],
+    }
+    cv_summary_path = output_dir / "ali_2020_flux_law_leave_one_flow_out_summary.json"
+    cv_summary_path.write_text(
+        json.dumps(cv_summary, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+
     summary_path = output_dir / "ali_2020_flux_law_holdout_summary.json"
     summary_path.write_text(
         json.dumps(summary, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
@@ -348,6 +504,10 @@ def run(input_path: Path, output_dir: Path) -> dict[str, object]:
         "summary_file": summary_path.name,
         "predictions_file": predictions_path.name,
         "flow_dependent_tpc_predictions_file": flow_predictions_path.name,
+        "leave_one_flow_out_summary_file": cv_summary_path.name,
+        "leave_one_flow_out_predictions_file": cv_predictions_path.name,
+        "leave_one_flow_out_summary_sha256": sha256_file(cv_summary_path),
+        "leave_one_flow_out_predictions_sha256": sha256_file(cv_predictions_path),
         "summary_sha256": sha256_file(summary_path),
         "predictions_sha256": sha256_file(predictions_path),
         "flow_dependent_tpc_predictions_sha256": sha256_file(flow_predictions_path),
