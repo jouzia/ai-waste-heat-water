@@ -210,7 +210,10 @@ def fit_flow_dependent_tpc(
         }
 
     train_predictions = [row for row in prediction_rows if row["split"] == "train"]
-    holdout_predictions = [row for row in prediction_rows if row["split"] == "held_out_flow_300_l_h"]
+    holdout_predictions = [
+        row for row in prediction_rows
+        if row["split"] == f"held_out_flow_{held_out_flow_l_h:g}_l_h"
+    ]
     summary = {
         "model_form": "flow_dependent_logistic_tpc",
         "tpc_function": "0.5 + 0.5 * logistic(intercept + slope * ln(flow_l_h / 100))",
