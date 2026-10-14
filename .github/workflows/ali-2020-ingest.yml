@@ -144,6 +144,33 @@ jobs:
           print("Verified 32 fixed-TPC and 32 flow-dependent-TPC predictions across two salinity interpretations; 300 L/h held out.")
           PY
 
+      - name: Verify grouped leave-one-flow-out model-form comparison
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+          root = Path("artifacts/ali_2020_flux_holdout")
+          summary = json.loads((root / "ali_2020_flux_law_leave_one_flow_out_summary.json").read_text())
+          with (root / "ali_2020_flux_law_leave_one_flow_out_predictions.csv").open(encoding="utf-8", newline="") as stream:
+              rows = list(csv.DictReader(stream))
+          assert len(rows) == 64, len(rows)
+          assert set(summary["cases"]) == {
+              "reported_0p5_percent_feed_salinity", "measured_TDS_E_proxy"
+          }
+          for case in summary["cases"].values():
+              assert len(case["folds"]) == 4
+              assert set(case["out_of_fold_metrics"]) == {
+                  "fixed_tpc_single_permeance", "flow_dependent_logistic_tpc"
+              }
+              for fold in case["folds"]:
+                  assert len(fold["training_flows_l_h"]) == 3
+                  assert fold["held_out_flow_l_h"] not in fold["training_flows_l_h"]
+                  assert fold["fixed_tpc_single_permeance"]["n"] == 4
+                  assert fold["flow_dependent_tpc"]["n"] == 4
+          print("Verified 64 out-of-fold predictions: four complete flow-level holdouts, two model forms, two salinity interpretations.")
+          PY
+
       - name: Upload raw supporting files, observation ledgers, and provenance
         uses: actions/upload-artifact@v4
         with:
