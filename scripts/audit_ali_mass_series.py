@@ -15,7 +15,7 @@ import json
 import math
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 
 SOURCE_DOI = "10.1371/journal.pone.0230207"
 
