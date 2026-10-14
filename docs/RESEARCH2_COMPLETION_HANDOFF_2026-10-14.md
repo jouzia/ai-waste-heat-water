@@ -24,6 +24,14 @@ At 4,096 versus 8,192 Sobol samples per matrix, the top-five freshwater-output t
 
 The Ali et al. (2020) source audit reports material outlet-temperature errors and unresolved semantics for the raw `mw (kg)` measurement field. The field is nonmonotonic in 14 of 19 complete timed worksheet traces, so prior mass-error metrics and tail-slope flux comparisons remain withdrawn/disabled. Do not reinstate them without resolving the source measurement semantics. Within-source held-out temperature results are diagnostics, not independent validation.
 
+## Additional completion work — 2026-10-14
+
+- Added a targeted prior-art audit at `docs/PRIOR_ART_GAP_AUDIT_2026-10-14.md`.
+- Added recent direct-overlap studies to `01_literature/literature_matrix.csv`: Katakam et al. (online 2026; DOI 10.1016/j.watres.2026.126748) and Wang et al. (2026; DOI 10.1016/j.ese.2026.100702). The manuscript and README now reflect that these studies narrow the novelty claim.
+- Updated the working manuscript to avoid broad “first” claims and added verified reference metadata for Malaguti et al. (2026), Katakam et al. (online 2026 / issue 2027), and Wang et al. (2026). Wyon (2025), Chen et al. (2026), and Yang et al. (2026) still need full bibliographic verification and a source-by-source comparison.
+- Rechecked the primary 1999 source route. A publisher record/abstract is accessible, but a verified legally accessible full text or machine-readable experimental table was not found in this pass. The primary observation ledger remains intentionally empty. `docs/PRIMARY_SOURCE_VALIDATION_GATE.md` now records the blocker and the exact optional user assistance needed.
+- Refreshed the hard-gate status date without changing any scientific gate. Status remains **INCOMPLETE**; documentation work does not count as validation.
+
 ## Required completion sequence
 
 1. **Resolve source reconstruction and measurement semantics.**
