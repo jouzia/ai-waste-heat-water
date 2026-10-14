@@ -54,3 +54,22 @@ Primary source
 ```
 
 This sequence prevents the common failure mode of treating a published model-to-data agreement as evidence that a new implementation is validated.
+
+## Access recovery attempt (2026-10-14)
+
+A fresh search reconfirmed the publisher landing page and abstract for the 1999 article, including the TF200 PTFE membrane description, but did not surface a verified legally accessible full-text copy or a publisher-provided machine-readable observation table. Search results include secondary descriptions and the open-access 2020 reproduction; neither is a substitute for primary-source observations. The observation ledger therefore remains empty, and this gate remains blocked rather than being populated from a secondary model figure.
+
+### Owner assistance required if institutional access is available
+
+Please provide **one** of the following, only if you can access it legally:
+1. the publisher PDF for Martínez-Díez & Vázquez-González (1999), DOI 10.1016/S0376-7388(98)00349-4; or
+2. clear screenshots of the experimental results figures/tables plus the pages stating each corresponding operating condition.
+
+Do not purchase the article just for this project if that is unaffordable. We can still complete a transparently downgraded methods/scenario paper if the primary data remain inaccessible, but it cannot be described as independently validated. If you upload a PDF, I can extract the relevant tables/figures, preserve page/figure locators, and build the observation ledger; you should not manually transcribe numerical values unless asked.
+
+### Sources checked
+
+- Publisher record and abstract: https://www.sciencedirect.com/science/article/pii/S0376738898003494
+- Secondary open-access model/reproduction to be cross-walked, not substituted for primary data: https://doi.org/10.1038/s41598-020-73964-7
+- University of Málaga researcher publication record: https://portaldelainvestigacion.uma.es/unidades/19959/colaboracion/investigador/4323908?lang=en
+
