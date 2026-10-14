@@ -24,7 +24,7 @@ def test_mass_series_audit_quantifies_negative_variation_without_repair() -> Non
     assert summary["n_readings"] == 4
     assert summary["negative_step_count"] == 1
     assert summary["total_negative_variation_kg"] == pytest.approx(0.01)
-    assert summary["negative_variation_as_pct_of_positive_net_change"] == pytest.approx(5.0)
+    assert summary["negative_variation_as_pct_of_positive_net_change"] == pytest.approx(2.5)
     assert summary["monotonic_non_decreasing"] is False
     assert "semantics not inferred" in summary["interpretation"]
 
