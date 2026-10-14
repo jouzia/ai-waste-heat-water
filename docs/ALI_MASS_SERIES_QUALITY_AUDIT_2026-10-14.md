@@ -2,7 +2,7 @@
 
 **Audit date:** 2026-10-14  
 **Source:** Ali, Orfi & Najib (2020), *PLOS ONE* 15(3), e0230207, DOI [10.1371/journal.pone.0230207](https://doi.org/10.1371/journal.pone.0230207), CC BY 4.0.  
-**Reproducible implementation:** `scripts/audit_ali_mass_series.py`; automated ingestion workflow `.github/workflows/ali-2020-ingest.yml`.
+**Reproducible implementation:** `scripts/audit_ali_mass_series.py`; automated ingestion workflow `.github/workflows/ali-2020-ingest.yml`. The workflow passed as [run #25](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38594771813) on commit `023185044b9e6b1e72fe9304020de5038d604ba8`. Its 90-day source artifact is [artifact 11909251785](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38594771813), SHA-256 `26777e3037635d741f516aaa29d7ad1e40b61ba3449142ff9094546cb30899b2`, retained until 2027-01-12. The workflow verified 19 timed `mw` worksheets and 14 nonmonotonic traces without changing raw values.
 
 ## Question and scope
 
