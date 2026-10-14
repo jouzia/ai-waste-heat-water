@@ -2,7 +2,7 @@
 
 Working title: **From AI Waste Heat to Water: A Net-Water-Impact Framework for Sustainable AI Infrastructure**
 
-## Current evidence status — 2026-10-13
+## Current evidence status — 2026-10-14
 
 This plan remains intentionally provisional. Current executable evidence is:
 - Source-linked primary observation ledgers exist for the 12-condition GDR/NREL 3M workbook and the five Ali et al. (2020) supporting workbooks.
@@ -12,7 +12,7 @@ This plan remains intentionally provisional. Current executable evidence is:
 - Cooling architecture Pareto sweep and break-even/failure envelope execute reproducibly, but their architecture/grid/model ranges are illustrative, not source-backed empirical priors.
 - Geographic Aqueduct/electricity-water integration, primary Martínez-Díez figure extraction, unfitted source-matched validation, independent external validation, final manuscript, and publication audit remain incomplete.
 
-Do not transfer any scenario-only number into the manuscript's principal results as if it were an empirical finding. The hard gate remains INCOMPLETE (9/18 gates true).
+Do not transfer any scenario-only number into the manuscript's principal results as if it were an empirical finding. The authoritative hard gate remains INCOMPLETE (10/18 gates true; see `05_validation/FINAL_GATE_STATUS.yaml`).
 
 ## Publication status
 
@@ -86,3 +86,20 @@ No statement that the intervention “saves water,” is “net positive,” or 
 - [ ] Net water accounting audited against counterfactual.
 - [ ] Manuscript figures/tables generated from frozen, reproducible outputs.
 - [ ] Final limitations and publication-readiness audit completed.
+
+
+## Evidence update — 2026-10-14
+
+The latest repository audit records the following additional evidence and limits:
+
+- **Steady-state flow-level comparison:** four leave-one-flow-level-out folds all favor a three-parameter flow-dependent temperature-polarization model over the fixed-coefficient form. Aggregate out-of-fold MAE is 0.116 versus 0.571 kg m^-2 h^-1 (RMSE 0.144 versus 0.688), conditional on the documented 0.5% salinity interpretation and 16 observations from one source. This is within-source cross-validation only; it does not establish independent validation or satisfy the final model-form gate. See `docs/ALI_2020_LEAVE_ONE_FLOW_OUT_2026-10-14.md`.
+- **Sobol numerical convergence:** increasing samples per matrix from 4,096 to 8,192 leaves the top-five freshwater-output total-effect ranking unchanged, with maximum total-effect index change about 0.029. This establishes numerical stability only under the current illustrative independent-uniform ranges. It does not calibrate the input distributions or validate the physical model.
+- **Transient mass series:** the raw `mw (kg)` field is nonmonotonic in 14 of 19 complete timed worksheet traces. Cumulative-mass interpretation remains unresolved; prior mass-error results remain withdrawn, and predicted cumulative mass must not be compared with the ambiguous raw field.
+- **Transient temperature performance:** the 10-cell spatial model is numerically admissible for the audited S2/50 trace, but cold-side outlet RMSE remains material. The pre-registered S3/60 trace is within-source holdout evidence, not independent validation. Do not describe either as a validation pass.
+- **Geography:** the existing Aqueduct sample uses approximate city-centre proxies, not facility coordinates. No site-specific electricity-water factor has yet been joined. Aqueduct is a basin-level screening context and must not be converted into a water-volume multiplier.
+
+These results should be included in a manuscript only as scoped diagnostics with source links, code revision, experiment manifest, and archived outputs. The primary 1999 Martínez-Díez experimental flux observations and exact boundary conditions remain unextracted; unfitted source-matched validation, independent validation, geographic integration, the complete reproducibility package, manuscript/supplement, and final publication audit remain open.
+
+## Publication decision rule
+
+The manuscript is not submission-ready while any mandatory gate is false. If a source cannot be recovered or a measurement cannot be interpreted, report the resulting limitation and narrow the paper's claims; do not replace missing evidence with illustrative defaults. A defensible final paper may ultimately be a validated methods-and-accounting framework with explicitly bounded evidence, but it cannot claim physical validation or net freshwater benefit without the corresponding data.
