@@ -1,0 +1,53 @@
+benchmark_id: MD-DCMD-MARTINEZ-1999-SECONDARY-FIG3
+status: extraction_template_only
+purpose: >
+  Separate ledger for digitization of experimental symbols attributed to
+  Martínez-Díez & Vázquez-González (1999), as reproduced in Fig. 3 of
+  Keshavarzzadeh (2020). This is secondary-source-derived data, not direct
+  extraction from the 1999 primary paper.
+source:
+  primary_attributed_source:
+    citation: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273"
+    doi: "10.1016/S0376-7388(98)00349-4"
+    directly_inspected: false
+  digitization_source:
+    citation: "Keshavarzzadeh (2020), Scientific Reports 10, 16790"
+    doi: "10.1038/s41598-020-73964-7"
+    url: "https://www.nature.com/articles/s41598-020-73964-7"
+    figure: "Fig. 3, panels (a) and (b)"
+    license: "CC BY 4.0, subject to attribution and applicable terms"
+    provenance_level: secondary_source_figure_digitization
+  figure_description_from_text:
+    recirculation_rates_cm3_s: [7, 11]
+    feed_concentrations_m: [0.0, 0.55, 1.15, 1.67]
+    x_axis: "Average bulk temperature of feed saltwater; exact axis calibration must be recorded"
+    y_axis: "Water mass flux; units and axis calibration must be verified against the figure"
+observations: []
+observation_schema:
+  id: "unique identifier for each digitized experimental symbol"
+  panel: "a|b"
+  recirculation_rate_cm3_s: "panel-matched value"
+  feed_concentration_m: "legend-matched value"
+  average_feed_temperature_c: "digitized x value; units and axis calibration verified"
+  flux_kg_m2_h: "digitized y value after verified unit conversion"
+  extraction_source: "secondary_figure_digitization"
+  source_locator: "Keshavarzzadeh (2020), Fig. 3, panel and symbol/series"
+  digitization:
+    tool_and_version: null
+    source_image_sha256: null
+    raw_pixel_coordinates_archived: false
+    axis_calibration_points: []
+    independent_repeat_extraction: false
+    digitization_uncertainty_temperature_c: null
+    digitization_uncertainty_flux_kg_m2_h: null
+  transformations: []
+validation_rules:
+  - "Never label these values as directly extracted from the 1999 primary paper."
+  - "Digitize experimental symbols only; never digitize the model curves as observations."
+  - "Archive the exact figure image and its checksum before extracting points."
+  - "Record axis calibration points, pixel coordinates, series mapping, and software version."
+  - "Repeat a predeclared subset independently and report disagreement."
+  - "Keep this ledger separate from MD-DCMD-MARTINEZ-1999_observations.yaml."
+  - "Do not fit parameters before the frozen unfitted comparison."
+  - "Do not infer unshown boundary conditions or replace them with repository defaults."
+  - "Report this benchmark as secondary-source-derived; do not claim primary-source validation."
