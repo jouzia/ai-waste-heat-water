@@ -78,3 +78,12 @@ The repository supports a reproducible accounting/modeling framework and prelimi
 - WRI guidance for water use embedded in purchased electricity: https://www.wri.org/data/dataset-guidance-calculating-water-use-embedded-purchased-electricity
 
 These references do not replace recording the exact downloaded version, source factors, transformations, and analysis artifacts used in the final run.
+
+
+## Follow-up source audit — 2026-10-15
+
+- Located and inspected the text of the open-access Keshavarzzadeh (2020) PDF: https://www.nature.com/articles/s41598-020-73964-7.pdf. The text confirms that Fig. 3 compares experimental symbols with the 2020 model curves for recirculation rates 7 and 11 cm³/s, NaCl concentrations 0, 0.55, 1.15 and 1.67 M, and x-variable (T_{b1}) defined as the average of feed inlet/outlet bulk temperature.
+- Recorded a dedicated source audit at `docs/SECONDARY_BENCHMARK_FIG3_SOURCE_AUDIT_2026-10-15.md`.
+- Identified unresolved source-integrity issues before any digitization: the 2020 article text says nominal pore size 0.2 mm, while the indexed 1999 source description says 0.2 μm; the extracted Fig. 3 caption cites “experimental data25” while the validation paragraph points to the original 1999 paper as reference 37; and the plotted flux-axis units/ticks are not exposed in the accessible text extraction.
+- Added a separate secondary-source figure ledger template, but deliberately left its observations empty. The original-primary observation ledger also remains empty.
+- **No empirical validation gate has been passed.** Next technical step is visual inspection of the actual Figure 3 image, verification of axis units and symbol series, digitization with pixel/axis provenance, and independent repeat extraction. If the figure image cannot be rendered from the available research interface, a freely accessible copy of the 2020 PDF must be uploaded to the working session; no paid paper is needed.
