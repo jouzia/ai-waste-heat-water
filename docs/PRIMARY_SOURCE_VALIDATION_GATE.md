@@ -87,3 +87,13 @@ A fresh web search found the publisher's indexed article page with the abstract 
 
 No gate is passed by this fallback plan. This is a project-side task; the researcher does not need to find or pay for the paper.
 
+
+
+## Additional access-route audit (2026-10-15)
+
+The follow-up search did not establish a verified free full-text copy of the exact 1999 article. It did identify:
+- The University of Málaga publication record listing the 1999 article, but no verified full-text file on the surfaced record.
+- A ResearchGate page for a related 2000 article, *Study of Polarization Phenomena in Membrane Distillation of Aqueous Salt Solutions*, with an author-request option. This is a related publication, not proof that the 1999 observations are identical or that it can replace the 1999 source.
+- The publisher-indexed 1999 article text provides selected setup details and descriptive claims, but no verified complete observation table or figure set suitable for source-audited digitization.
+
+Accordingly, the source-recovery track remains open and the primary observation ledger remains empty. The parallel fallback scope is documented in [RESEARCH2_SCOPE_DECISION_PRIMARY_ACCESS_2026-10-15.md](RESEARCH2_SCOPE_DECISION_PRIMARY_ACCESS_2026-10-15.md). The study may proceed as a reproducible methods/scenario analysis only if its remaining gates pass; it must not be described as independently empirically validated without a defensible validation dataset.
