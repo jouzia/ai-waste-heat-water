@@ -97,3 +97,14 @@ The follow-up search did not establish a verified free full-text copy of the exa
 - The publisher-indexed 1999 article text provides selected setup details and descriptive claims, but no verified complete observation table or figure set suitable for source-audited digitization.
 
 Accordingly, the source-recovery track remains open and the primary observation ledger remains empty. The parallel fallback scope is documented in [RESEARCH2_SCOPE_DECISION_PRIMARY_ACCESS_2026-10-15.md](RESEARCH2_SCOPE_DECISION_PRIMARY_ACCESS_2026-10-15.md). The study may proceed as a reproducible methods/scenario analysis only if its remaining gates pass; it must not be described as independently empirically validated without a defensible validation dataset.
+
+
+## Secondary-figure extraction route identified (2026-10-15)
+
+A full open-access article is available at https://www.nature.com/articles/s41598-020-73964-7 and its PubMed Central record https://pmc.ncbi.nlm.nih.gov/articles/PMC7545101/. Keshavarzzadeh (2020), *Scientific Reports* 10, 16790, explicitly states that its Fig. 3 compares model curves with experimental symbols attributed to Martínez-Díez & Vázquez-González (1999), for feed concentrations 0, 0.55, 1.15 and 1.67 M NaCl and recirculation rates of 7 and 11 cm³/s. This is a concrete, lawful secondary-source figure route, even though it is not the primary article.
+
+**Permitted next step:** digitize the experimental symbols from the open-access secondary paper's Fig. 3 into a separate ledger, named and tagged as *secondary-source-derived digitization of data attributed to Martínez-Díez & Vázquez-González (1999)*. Archive the figure image, exact panel, axis calibration points, pixel coordinates, digitization software/version, extraction uncertainty, and an independent repeat extraction. Cross-check figure axes, temperature definition, concentrations, and flow rates against the primary publisher text. Keep this ledger separate from the empty primary-source ledger.
+
+**Not permitted:** silently relabel secondary-digitized points as directly extracted primary data; infer missing operating conditions; treat the 2020 model curve as experimental data; claim that this route resolves all primary-source questions; or fit model parameters before the frozen unfitted comparison.
+
+This improves the fallback evidence route but does not by itself pass the primary-source, independent-validation, or publication gate.
