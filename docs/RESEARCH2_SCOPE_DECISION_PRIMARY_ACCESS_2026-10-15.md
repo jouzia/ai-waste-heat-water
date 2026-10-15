@@ -42,3 +42,10 @@ Do not hold all remaining work hostage to institutional access, and do not manuf
 ## Exit criteria
 
 The paper can be prepared for a methods/scenario-oriented submission only after its own reproducibility, source audit, accounting, prior-art, and manuscript-package gates are complete. It must be described as **not independently empirically validated** unless a defensible empirical validation route is completed. The project-level hard gate in `05_validation/FINAL_GATE_STATUS.yaml` remains authoritative and must not be manually forced to complete.
+
+
+## New actionable source route found (2026-10-15)
+
+The open-access Keshavarzzadeh (2020) article is available at https://www.nature.com/articles/s41598-020-73964-7 (also indexed at https://pmc.ncbi.nlm.nih.gov/articles/PMC7545101/). Its validation section explicitly says Fig. 3 compares model curves with experimental data attributed to Martínez-Díez & Vázquez-González (1999), with panels for 7 and 11 cm³/s and concentrations 0, 0.55, 1.15 and 1.67 M NaCl. This means the next source-recovery action is not merely a scenario-only pivot: digitize only the experimental symbols in that open-access figure into a separate secondary-source-derived ledger, preserve figure/axis/pixel provenance, and perform an independent repeat extraction. The model lines must not be treated as experimental observations.
+
+This route can support a transparent **secondary-source-derived benchmark comparison**, not a claim that the original 1999 primary paper was directly inspected. The empty primary ledger and independent-validation gate stay unchanged until the primary evidence and boundary conditions are independently resolved.
