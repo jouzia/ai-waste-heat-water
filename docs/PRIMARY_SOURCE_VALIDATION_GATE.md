@@ -73,3 +73,17 @@ Do not purchase the article just for this project if that is unaffordable. We ca
 - Secondary open-access model/reproduction to be cross-walked, not substituted for primary data: https://doi.org/10.1038/s41598-020-73964-7
 - University of Málaga researcher publication record: https://portaldelainvestigacion.uma.es/unidades/19959/colaboracion/investigador/4323908?lang=en
 
+## Owner access unavailable — fallback route (2026-10-15)
+
+The researcher reports that their college is not listed for institutional access. No paid access is required and no purchase is requested.
+
+A fresh web search found the publisher's indexed article page with the abstract and portions of the article text (including the experimental setup description), but this is not equivalent to verified access to the complete paper and its figures/tables. The next work should proceed without asking the researcher to solve institutional access:
+
+1. Extract only explicitly visible, source-attributed textual facts from the publisher-indexed page, recording the exact URL and section; do not infer unseen table values.
+2. Search for a legally shared author manuscript or repository copy, and send a concise, polite request to the corresponding author if a public contact address can be verified.
+3. Check whether a legally accessible secondary paper reports a clearly identified digitization or transcription of the same original experimental data. If so, label those values as **secondary-source-derived**, retain page/figure/table locators, and keep them separate from primary observations.
+4. Continue the existing open-source GDR/NREL and Ali et al. analyses as separate evidence tracks. They can support a transparently downgraded paper, but they cannot be relabelled as validation against Martínez-Díez et al. (1999).
+5. If the primary figures cannot be legally obtained, replace the planned primary-source validation claim with a limitation and a reproducible model-verification/scenario analysis. The publication gate must remain blocked for any claim requiring independent empirical validation.
+
+No gate is passed by this fallback plan. This is a project-side task; the researcher does not need to find or pay for the paper.
+
