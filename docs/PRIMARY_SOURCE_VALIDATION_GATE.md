@@ -108,3 +108,11 @@ A full open-access article is available at https://www.nature.com/articles/s4159
 **Not permitted:** silently relabel secondary-digitized points as directly extracted primary data; infer missing operating conditions; treat the 2020 model curve as experimental data; claim that this route resolves all primary-source questions; or fit model parameters before the frozen unfitted comparison.
 
 This improves the fallback evidence route but does not by itself pass the primary-source, independent-validation, or publication gate.
+
+## Secondary-source figure audit findings (2026-10-15)
+
+The open-access Keshavarzzadeh (2020) PDF text confirms Fig. 3 panels for 7 and 11 cm³/s and NaCl concentrations 0, 0.55, 1.15 and 1.67 M; the plotted x-variable is average feed bulk temperature, defined as the mean of feed inlet and outlet bulk temperatures. This confirms a candidate source route, not numerical observations.
+
+The audit found two material unresolved discrepancies before digitization: (1) the 2020 validation paragraph says nominal pore size 0.2 **mm**, while the indexed 1999 source description says 0.2 **μm** (a factor of 1,000); and (2) the Figure 3 caption's extracted superscript citation appears as reference 25, while the validation paragraph cites the 1999 source as reference 37. The plot's flux-axis units and calibration also remain unverified from text alone. These discrepancies are documented in [SECONDARY_BENCHMARK_FIG3_SOURCE_AUDIT_2026-10-15.md](SECONDARY_BENCHMARK_FIG3_SOURCE_AUDIT_2026-10-15.md).
+
+**Current decision:** do not populate either observation ledger yet. Numerical digitization requires visual inspection of the actual Figure 3 image, confirmation of its axis units and symbol-series mapping, and a documented independent repeat. Do not configure the model using the disputed pore-size value.
