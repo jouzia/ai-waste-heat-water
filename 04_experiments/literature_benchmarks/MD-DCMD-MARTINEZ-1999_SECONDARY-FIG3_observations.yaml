@@ -1,10 +1,8 @@
 benchmark_id: MD-DCMD-MARTINEZ-1999-SECONDARY-FIG3
-status: extraction_template_only
+status: first_pass_provisional_digitization
 purpose: >
-  Separate ledger for digitization of experimental symbols attributed to
-  Martínez-Díez & Vázquez-González (1999), as reproduced in Fig. 3 of
-  Keshavarzzadeh (2020). This is secondary-source-derived data, not direct
-  extraction from the 1999 primary paper.
+  Secondary-source-derived first-pass estimates from experimental symbols in
+  Keshavarzzadeh (2020) Figure 3. Not direct observations from the 1999 paper.
 source:
   primary_attributed_source:
     citation: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273"
@@ -15,39 +13,34 @@ source:
     doi: "10.1038/s41598-020-73964-7"
     url: "https://www.nature.com/articles/s41598-020-73964-7"
     figure: "Fig. 3, panels (a) and (b)"
-    license: "CC BY 4.0, subject to attribution and applicable terms"
+    license: "CC BY 4.0, subject to article terms"
     provenance_level: secondary_source_figure_digitization
-  figure_description_from_text:
-    recirculation_rates_cm3_s: [7, 11]
-    feed_concentrations_m: [0.0, 0.55, 1.15, 1.67]
-    x_axis: "Average bulk temperature of feed saltwater; exact axis calibration must be recorded"
-    y_axis: "Water mass flux; units and axis calibration must be verified against the figure"
-observations: []
-observation_schema:
-  id: "unique identifier for each digitized experimental symbol"
-  panel: "a|b"
-  recirculation_rate_cm3_s: "panel-matched value"
-  feed_concentration_m: "legend-matched value"
-  average_feed_temperature_c: "digitized x value; units and axis calibration verified"
-  flux_kg_m2_h: "digitized y value after verified unit conversion"
-  extraction_source: "secondary_figure_digitization"
-  source_locator: "Keshavarzzadeh (2020), Fig. 3, panel and symbol/series"
-  digitization:
-    tool_and_version: null
-    source_image_sha256: null
-    raw_pixel_coordinates_archived: false
-    axis_calibration_points: []
-    independent_repeat_extraction: false
-    digitization_uncertainty_temperature_c: null
-    digitization_uncertainty_flux_kg_m2_h: null
-  transformations: []
+    figure_crop_sha256: "f351ce4ea1f7cd27aea435926a6e17c0feac6d383f37793327235304a452c2d"
+figure_description:
+  recirculation_rates_cm3_s: [7, 11]
+  feed_concentrations_m: [0.0, 0.55, 1.15, 1.67]
+  x_axis: "Average feed bulk temperature, T_b1, K"
+  y_axis: "Water mass flux; provisional reading: plotted value corresponds to 10^3 times SI flux"
+observation_data_file: "MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_first_pass.csv"
+observation_count: 40
+observation_data_status: "provisional; first pass only; not independently repeated"
+digitization:
+  method: "Manual marker-center estimates from a 3x PDF raster and linear axis calibration"
+  raw_pixel_coordinates_archived: true
+  digitization_uncertainty_temperature_K_est: 0.7
+  digitization_uncertainty_flux_plot_value_est: 0.06
+  independent_repeat_extraction: false
+  series_mapping_reviewed: false
+  flux_unit_interpretation_verified: false
+  known_issue: >
+    Some symbols overlap or are small, especially the 0.55 M and 1.15 M series.
+    Do not use these points for fitting or scoring until independently repeated.
 validation_rules:
-  - "Never label these values as directly extracted from the 1999 primary paper."
-  - "Digitize experimental symbols only; never digitize the model curves as observations."
-  - "Archive the exact figure image and its checksum before extracting points."
-  - "Record axis calibration points, pixel coordinates, series mapping, and software version."
-  - "Repeat a predeclared subset independently and report disagreement."
-  - "Keep this ledger separate from MD-DCMD-MARTINEZ-1999_observations.yaml."
-  - "Do not fit parameters before the frozen unfitted comparison."
-  - "Do not infer unshown boundary conditions or replace them with repository defaults."
-  - "Report this benchmark as secondary-source-derived; do not claim primary-source validation."
+  - "Do not label these as direct observations from the 1999 primary paper."
+  - "Digitize experimental symbols only, not model curves."
+  - "Keep this CSV as the first-pass audit trail; save any correction as a new version."
+  - "Repeat the extraction independently and report pointwise disagreement."
+  - "Verify flux-axis multiplier and SI conversion before use."
+  - "Keep separate from MD-DCMD-MARTINEZ-1999_observations.yaml."
+  - "Do not infer unreported boundary conditions."
+  - "Do not claim primary-source validation."
