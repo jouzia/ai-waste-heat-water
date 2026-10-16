@@ -80,13 +80,13 @@ The repository supports a reproducible accounting/modeling framework and prelimi
 These references do not replace recording the exact downloaded version, source factors, transformations, and analysis artifacts used in the final run.
 
 
-## Follow-up source audit and first-pass digitization — 2026-10-16
+## Follow-up source audit and provisional digitization — 2026-10-16
 
-- Inspected the user-uploaded open-access Keshavarzzadeh (2020) PDF, including the actual Figure 3 raster, rather than relying only on extracted text.
-- Figure 3 shows symbols labelled as experimental observations and model curves. Panels are recirculation rates 7 and 11 cm³/s; concentrations are 0, 0.55, 1.15, and 1.67 M; x-axis is average feed bulk temperature in K.
-- Added a 40-point first-pass marker-centre digitization CSV: `04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_first_pass.csv`. Each row preserves pixel coordinates, calibrated temperature, plotted flux value, provisional SI conversion, and estimated uncertainty.
-- Updated `04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_observations.yaml` to point to the CSV and record the provenance. This remains explicitly provisional; series mapping and flux-axis conversion have not been independently verified.
-- Updated `docs/SECONDARY_BENCHMARK_FIG3_SOURCE_AUDIT_2026-10-15.md`. Visual inspection confirms the Figure 3 caption itself cites reference 25 for experimental data, whereas the validation paragraph attributes the data to reference 37. The reference list identifies 25 as a ground-source heat-exchanger paper and 37 as the 1999 membrane-distillation paper; treat this as a genuine caption citation mismatch.
-- The 0.2 mm versus 0.2 μm nominal pore-size discrepancy remains unresolved. The plotted flux multiplier and the close/overlapping 0.55 M and 1.15 M markers require independent review before scoring.
-- **No physical-validation gate has passed.** This is a draft secondary-source digitization, not direct primary-source data and not independent validation. Do not fit model parameters or report model skill against it yet.
-- Next actions: independently digitize all 40 points; reconcile series mapping and axis conversion; then compare against the 1999 primary source if access can be obtained. Keep the original-primary ledger separate and empty.
+- Inspected the user-uploaded open-access Keshavarzzadeh (2020) PDF, including the actual Figure 3 raster.
+- Figure 3 shows experimental symbols and model curves. Panels are recirculation rates 7 and 11 cm³/s; concentrations are 0, 0.55, 1.15, and 1.67 M; x-axis is average feed bulk temperature in K.
+- Created a 40-point first-pass CSV and retained it as an audit trail: `04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_first_pass.csv`.
+- Created a color-assisted review-pass CSV with approximate marker coordinates: `04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_review_pass.csv`. It is a review pass, not an independent extraction. The ledger now points to this review pass.
+- Updated `docs/SECONDARY_BENCHMARK_FIG3_SOURCE_AUDIT_2026-10-15.md`. Visual inspection confirms the Figure 3 caption cites reference 25 for experimental data, whereas the validation paragraph attributes the data to reference 37. Reference 25 is a ground-source heat-exchanger paper and reference 37 is the 1999 membrane-distillation paper; this appears to be a genuine caption citation mismatch.
+- The 0.2 mm versus 0.2 μm nominal pore-size discrepancy remains unresolved. The plotted flux multiplier and close/overlapping 0.55 M and 1.15 M markers require independent review before scoring.
+- **No physical-validation gate has passed.** Both CSVs are provisional secondary-source digitizations, not direct primary-source data and not independent validation. Do not fit model parameters or report model skill against them yet.
+- Next actions: independently digitize all 40 points with a separate tool/workflow; reconcile series mapping and axis conversion; then compare against the 1999 primary source if access can be obtained. Keep the original-primary ledger separate and empty.
