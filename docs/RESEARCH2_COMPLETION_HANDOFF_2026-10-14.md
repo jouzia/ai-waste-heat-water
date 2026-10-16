@@ -80,10 +80,13 @@ The repository supports a reproducible accounting/modeling framework and prelimi
 These references do not replace recording the exact downloaded version, source factors, transformations, and analysis artifacts used in the final run.
 
 
-## Follow-up source audit — 2026-10-15
+## Follow-up source audit and first-pass digitization — 2026-10-16
 
-- Located and inspected the text of the open-access Keshavarzzadeh (2020) PDF: https://www.nature.com/articles/s41598-020-73964-7.pdf. The text confirms that Fig. 3 compares experimental symbols with the 2020 model curves for recirculation rates 7 and 11 cm³/s, NaCl concentrations 0, 0.55, 1.15 and 1.67 M, and x-variable (T_{b1}) defined as the average of feed inlet/outlet bulk temperature.
-- Recorded a dedicated source audit at `docs/SECONDARY_BENCHMARK_FIG3_SOURCE_AUDIT_2026-10-15.md`.
-- Identified unresolved source-integrity issues before any digitization: the 2020 article text says nominal pore size 0.2 mm, while the indexed 1999 source description says 0.2 μm; the extracted Fig. 3 caption cites “experimental data25” while the validation paragraph points to the original 1999 paper as reference 37; and the plotted flux-axis units/ticks are not exposed in the accessible text extraction.
-- Added a separate secondary-source figure ledger template, but deliberately left its observations empty. The original-primary observation ledger also remains empty.
-- **No empirical validation gate has been passed.** Next technical step is visual inspection of the actual Figure 3 image, verification of axis units and symbol series, digitization with pixel/axis provenance, and independent repeat extraction. If the figure image cannot be rendered from the available research interface, a freely accessible copy of the 2020 PDF must be uploaded to the working session; no paid paper is needed.
+- Inspected the user-uploaded open-access Keshavarzzadeh (2020) PDF, including the actual Figure 3 raster, rather than relying only on extracted text.
+- Figure 3 shows symbols labelled as experimental observations and model curves. Panels are recirculation rates 7 and 11 cm³/s; concentrations are 0, 0.55, 1.15, and 1.67 M; x-axis is average feed bulk temperature in K.
+- Added a 40-point first-pass marker-centre digitization CSV: `04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_first_pass.csv`. Each row preserves pixel coordinates, calibrated temperature, plotted flux value, provisional SI conversion, and estimated uncertainty.
+- Updated `04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_observations.yaml` to point to the CSV and record the provenance. This remains explicitly provisional; series mapping and flux-axis conversion have not been independently verified.
+- Updated `docs/SECONDARY_BENCHMARK_FIG3_SOURCE_AUDIT_2026-10-15.md`. Visual inspection confirms the Figure 3 caption itself cites reference 25 for experimental data, whereas the validation paragraph attributes the data to reference 37. The reference list identifies 25 as a ground-source heat-exchanger paper and 37 as the 1999 membrane-distillation paper; treat this as a genuine caption citation mismatch.
+- The 0.2 mm versus 0.2 μm nominal pore-size discrepancy remains unresolved. The plotted flux multiplier and the close/overlapping 0.55 M and 1.15 M markers require independent review before scoring.
+- **No physical-validation gate has passed.** This is a draft secondary-source digitization, not direct primary-source data and not independent validation. Do not fit model parameters or report model skill against it yet.
+- Next actions: independently digitize all 40 points; reconcile series mapping and axis conversion; then compare against the 1999 primary source if access can be obtained. Keep the original-primary ledger separate and empty.
