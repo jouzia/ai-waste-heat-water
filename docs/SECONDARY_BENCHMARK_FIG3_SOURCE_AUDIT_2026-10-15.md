@@ -47,3 +47,14 @@ Before using this benchmark for fitting or validation:
 ## Decision
 
 Figure 3 can support a *provisional secondary-source benchmark candidate*, not independent validation of the project's model. The project's overall final gate remains INCOMPLETE.
+
+
+## Color-assisted review pass — 2026-10-16
+
+A second *review pass* was generated from the raster using color-separated marker detections plus manual review of the plotted symbols. It is not an independent extraction because it uses the same figure image and same analyst workflow.
+
+- Review CSV: `04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_review_pass.csv`
+- First pass retained as audit trail: `04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_first_pass.csv`
+- The review pass contains 40 approximate marker centres and pixel coordinates. Its flux values remain in plotted-axis units; do not interpret them as final SI observations.
+- This review exposed that several first-pass series assignments were too rough. The review CSV is the current provisional extraction, but close marker overlap—especially between the 0.55 M and 1.15 M series—still requires independent extraction.
+- No fit, model score, or physical-validation claim is admissible from either CSV at this stage.
