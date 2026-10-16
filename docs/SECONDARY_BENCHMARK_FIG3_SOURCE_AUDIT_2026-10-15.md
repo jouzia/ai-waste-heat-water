@@ -58,3 +58,8 @@ A second *review pass* was generated from the raster using color-separated marke
 - The review pass contains 40 approximate marker centres and pixel coordinates. Its flux values remain in plotted-axis units; do not interpret them as final SI observations.
 - This review exposed that several first-pass series assignments were too rough. The review CSV is the current provisional extraction, but close marker overlap—especially between the 0.55 M and 1.15 M series—still requires independent extraction.
 - No fit, model score, or physical-validation claim is admissible from either CSV at this stage.
+
+
+### First-pass versus color-assisted review comparison
+
+A programmatic row-by-row comparison of the two 40-point files shows that the 0.55 M series assignments differ materially: maximum absolute temperature difference is about 1.08 K in panel (a) and 0.90 K in panel (b); plotted-flux differences reach about 0.35 and 0.25, respectively. This is evidence that the initial manual assignments were not reliable enough. The review pass is a better provisional mapping, but it is still not independent and must not be treated as a final data freeze.
