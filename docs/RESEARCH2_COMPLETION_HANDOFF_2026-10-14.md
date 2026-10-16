@@ -90,3 +90,5 @@ These references do not replace recording the exact downloaded version, source f
 - The 0.2 mm versus 0.2 μm nominal pore-size discrepancy remains unresolved. The plotted flux multiplier and close/overlapping 0.55 M and 1.15 M markers require independent review before scoring.
 - **No physical-validation gate has passed.** Both CSVs are provisional secondary-source digitizations, not direct primary-source data and not independent validation. Do not fit model parameters or report model skill against them yet.
 - Next actions: independently digitize all 40 points with a separate tool/workflow; reconcile series mapping and axis conversion; then compare against the 1999 primary source if access can be obtained. Keep the original-primary ledger separate and empty.
+
+- A row-by-row comparison between the first and review passes found material differences in the 0.55 M series (maximum absolute temperature shifts ~1.08 K in panel a and ~0.90 K in panel b; plotted-flux differences up to ~0.35 and ~0.25). This confirms that neither file should be used for fitting or validation until an independent digitization is completed.
