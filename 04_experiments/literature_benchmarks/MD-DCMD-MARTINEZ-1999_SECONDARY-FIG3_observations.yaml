@@ -21,16 +21,17 @@ figure_description:
   feed_concentrations_m: [0.0, 0.55, 1.15, 1.67]
   x_axis: "Average feed bulk temperature, T_b1, K"
   y_axis: "Water mass flux; provisional reading: plotted value corresponds to 10^3 times SI flux"
-observation_data_file: "MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_first_pass.csv"
+first_pass_archive: "MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_first_pass.csv"
+observation_data_file: "MD-DCMD-MARTINEZ-1999_SECONDARY-FIG3_review_pass.csv"
 observation_count: 40
-observation_data_status: "provisional; first pass only; not independently repeated"
+observation_data_status: "provisional color-assisted review pass; not independently repeated"
 digitization:
   method: "Manual marker-center estimates from a 3x PDF raster and linear axis calibration"
   raw_pixel_coordinates_archived: true
   digitization_uncertainty_temperature_K_est: 0.7
   digitization_uncertainty_flux_plot_value_est: 0.06
   independent_repeat_extraction: false
-  series_mapping_reviewed: false
+  series_mapping_reviewed: "provisionally rechecked by color segmentation; still requires independent review"
   flux_unit_interpretation_verified: false
   known_issue: >
     Some symbols overlap or are small, especially the 0.55 M and 1.15 M series.
