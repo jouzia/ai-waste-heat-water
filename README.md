@@ -1,6 +1,6 @@
 # From AI Waste Heat to Water
 **Research 2 — AI infrastructure waste-heat recovery for thermal desalination and net freshwater impact**
-
+ 
 ## Research question
 
 Under what combinations of AI workload intensity, thermal conditions, waste-heat recovery efficiency, membrane-distillation operation, cooling burden, electricity-water intensity, and geographic water stress can waste-heat recovery produce a positive net freshwater benefit?
