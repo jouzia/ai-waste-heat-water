@@ -83,3 +83,8 @@ The workflow [Aqueduct discovery run #7](https://github.com/jouzia/ai-waste-heat
 | Frankfurt | 3.453 | High (40–80%) | Low–Medium (5–25%) | High (40–80%) / High (40–80%) / High (40–80%) |
 
 These are basin indicators at **approximate city-centre points**, not facility locations. They are not multiplied into water volumes. The sample demonstrates the spatial extraction pipeline and variation in basin context, not that a real data centre at any city would experience the listed value. Future-field names were checked against source labels, but future scenario assumptions still need a complete README-backed semantic crosswalk before publication. The geographic gate remains false because site coordinates are illustrative and the electricity-water/carbon factors are not yet joined.
+
+
+## Electricity–water factor audit (2026-10-22)
+
+The factor-source review is recorded in [GEOGRAPHIC_ELECTRICITY_WATER_FACTOR_AUDIT_2026-10-22.md](GEOGRAPHIC_ELECTRICITY_WATER_FACTOR_AUDIT_2026-10-22.md). The key decision is that the openly available NREL/OpenEI technology factors are U.S.-scope and cannot be assigned as primary values to the non-U.S. city proxies. India-specific CEA reporting and peer-reviewed India water-for-electricity modeling are identified as candidate sources, but a compatible factor join has not been executed. Direct data-centre WUE, electricity-generation water intensity, and Aqueduct risk remain separate quantities. The geographic gate remains false.
