@@ -49,7 +49,7 @@
         "properties": {
           "applicability_note": {
             "type": "string",
-            "pattern": "(?i)(limit|compliance|threshold|not an observed average)"
+            "pattern": "(limit|Limit|LIMIT|compliance|Compliance|threshold|Threshold|not an observed average|Not an observed average)"
           }
         }
       }
