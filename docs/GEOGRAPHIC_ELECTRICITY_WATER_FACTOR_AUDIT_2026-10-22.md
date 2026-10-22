@@ -87,3 +87,8 @@ with compatible kWh and L/kWh units and the water metric stated. Apply the same 
 - Ministry of Power, Government of India, “Steps being taken to reduce water consumption in thermal power plants” (23 December 2023): https://www.pib.gov.in/PressReleasePage.aspx?PRID=1989804&lang=2&reg=48
 - Srinivasan, S. et al. (2018), *Applied Energy*, 210, 673–684: https://doi.org/10.1016/j.apenergy.2017.04.079
 - Lei, N. et al. (2025), *Resources, Conservation and Recycling*, 219, 108310: https://doi.org/10.1016/j.resconrec.2025.108310
+
+
+## Source-access checkpoint (2026-10-22)
+
+Follow-up verification is recorded in [GEOGRAPHIC_FACTOR_SOURCE_ACCESS_CHECKPOINT_2026-10-22.md](GEOGRAPHIC_FACTOR_SOURCE_ACCESS_CHECKPOINT_2026-10-22.md). The official CEA page indexes annual and monthly reporting formats, but one current official URL redirected to a login page during this review; no public observed plant-level dataset was extracted. The Open Government Data station-generation catalog is a possible denominator source, not a factor by itself. The India multi-model paper remains suitable only for source-cited scenario analysis after table-level extraction. The factor ledger therefore remains intentionally empty and the geographic gate remains false.
