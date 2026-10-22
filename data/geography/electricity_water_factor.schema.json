@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jouzia/ai-waste-heat-water/blob/main/data/geography/electricity_water_factor.schema.json",
+  "title": "Electricity-generation water factor record",
+  "description": "Provenance-first schema. Values must be source-backed; this schema intentionally does not supply default numeric factors.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "factor_id", "geography", "country_or_grid_region", "year_or_period",
+    "water_metric", "value", "unit", "denominator", "source_title",
+    "source_url", "source_type", "system_boundary", "retrieval_date",
+    "applicability_note"
+  ],
+  "properties": {
+    "factor_id": { "type": "string", "minLength": 1 },
+    "geography": { "type": "string", "minLength": 1 },
+    "country_or_grid_region": { "type": "string", "minLength": 1 },
+    "year_or_period": { "type": "string", "minLength": 1 },
+    "generation_technology": { "type": ["string", "null"] },
+    "grid_mix_scope": { "type": ["string", "null"] },
+    "water_metric": { "enum": ["consumption", "withdrawal"] },
+    "value": { "type": "number", "minimum": 0 },
+    "unit": { "type": "string", "minLength": 1 },
+    "denominator": { "type": "string", "minLength": 1 },
+    "source_title": { "type": "string", "minLength": 1 },
+    "source_url": { "type": "string", "format": "uri" },
+    "doi_or_report_id": { "type": ["string", "null"] },
+    "table_or_page": { "type": ["string", "null"] },
+    "source_type": {
+      "enum": ["measured", "reported", "modeled", "regulatory_limit", "scenario"]
+    },
+    "cooling_technology": { "type": ["string", "null"] },
+    "fuel": { "type": ["string", "null"] },
+    "system_boundary": { "type": "string", "minLength": 1 },
+    "transformation": { "type": ["string", "null"] },
+    "generation_mix_weights": { "type": ["string", "null"] },
+    "uncertainty": { "type": ["string", "null"] },
+    "retrieval_date": { "type": "string", "format": "date" },
+    "dataset_version": { "type": ["string", "null"] },
+    "license": { "type": ["string", "null"] },
+    "checksum": { "type": ["string", "null"] },
+    "applicability_note": { "type": "string", "minLength": 1 },
+    "exclusion_reason": { "type": ["string", "null"] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "source_type": { "const": "regulatory_limit" } } },
+      "then": {
+        "properties": {
+          "applicability_note": {
+            "type": "string",
+            "pattern": "(?i)(limit|compliance|threshold|not an observed average)"
+          }
+        }
+      }
+    }
+  ]
+}
