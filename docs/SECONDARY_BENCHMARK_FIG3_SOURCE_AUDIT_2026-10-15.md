@@ -70,3 +70,8 @@ A programmatic row-by-row comparison of the two 40-point files shows that the 0.
 A targeted publisher-page search found indexed text for the 1999 primary article beyond its abstract: https://www.sciencedirect.com/science/article/abs/pii/S0376738898003494. Its Experimental section snippet identifies the membrane as Gelman TF200 PTFE, 80% void fraction, 60 μm thickness, and 0.2 μm nominal pore size. This is strong evidence that the secondary article's “0.2 mm” statement is likely a typographical/transcription error. However, the primary PDF and complete experimental table have not been directly inspected, so the discrepancy remains documented and the parameter is not yet treated as primary-PDF-verified.
 
 This recovery does not change the admissibility of either digitization CSV: independent point extraction, flux-axis verification, and series mapping are still required before any model fitting or scoring. See [PRIMARY_SOURCE_RECOVERY_UPDATE_2026-10-16.md](PRIMARY_SOURCE_RECOVERY_UPDATE_2026-10-16.md).
+
+
+## Independent digitization protocol — 2026-10-22
+
+A predeclared protocol has been added at [INDEPENDENT_DIGITIZATION_PROTOCOL_2026-10-22.md](INDEPENDENT_DIGITIZATION_PROTOCOL_2026-10-22.md). It requires a fresh tool project, separately calibrated panels, preserved pixel coordinates and project metadata, extraction of symbols only, and agreement diagnostics after the new extraction is frozen. The protocol explicitly says the extraction has **not yet been executed**; no independent data or validation claim is being asserted.
