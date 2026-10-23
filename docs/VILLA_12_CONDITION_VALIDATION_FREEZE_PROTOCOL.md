@@ -8,6 +8,10 @@ Source: https://gdr.openei.org/submissions/1016
 
 **Status: protocol specified; execution and numerical results are not asserted by this document.**
 
+## Geometry and flow provenance audit (2026-10-23)
+
+The exported raw traces and Specifications sheet have now been audited for geometry, flow-channel sign/finite-value issues, condition-sheet labels, temperature-channel semantics, and the 3M versus CLARCOR identity conflict. See [VILLA_GEOMETRY_FLOW_PROVENANCE_AUDIT_2026-10-23.md](VILLA_GEOMETRY_FLOW_PROVENANCE_AUDIT_2026-10-23.md). The audit quantifies the raw channel problems but does not resolve them: MD-side flow remains unknown/nominal, active membrane area remains workbook-stated rather than independently verified, and primary documentation is still required. Do not repair signs or impute flow values silently.
+
 ## Newly identified blocking issue (2026-10-23)
 
 A code review found observed-outlet target leakage in the prior held-out evaluation. The prediction path used measured outlet temperatures to calculate fluid properties/heat-transfer coefficients and to convert predicted flux. The code path has been corrected, but all prior held-out metrics are superseded pending a corrected rerun. See [VILLA_HELDOUT_TARGET_LEAKAGE_AUDIT_2026-10-23.md](VILLA_HELDOUT_TARGET_LEAKAGE_AUDIT_2026-10-23.md). Do not quote the previous comparison as clean held-out validation evidence.
