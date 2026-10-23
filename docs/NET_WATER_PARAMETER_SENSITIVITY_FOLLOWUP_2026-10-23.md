@@ -3,7 +3,7 @@
 Date: 2026-10-23
 
 ## Status
-This is a predeclared analysis plan, not a claim that the additional numerical experiment has been executed.
+The membrane-conductivity stress test has now been implemented and executed successfully in GitHub Actions. The flow-multiplier study remains blocked pending source-backed nominal flow data.
 
 ## Evidence boundary
 The existing break-even envelope varies membrane area, permeance, temperature-polarization coefficient, recoverable-heat fraction, grid-water factor, cooling-water intensity, incremental electricity, and freshwater displacement. It holds membrane thermal conductivity at 0.03 W m-1 K-1 and thickness at 0.2 mm. The top-level screening model does not explicitly sweep feed/permeate flow.
@@ -29,3 +29,29 @@ For each executable scenario preserve Git SHA, model version, inputs, solver sta
 3. Flow sensitivity remains unparameterized until source-backed nominal feed/permeate flow is available.
 4. The next implementation should expose conductivity as a parameter in the break-even runner and produce a manifest and full scenario table before interpreting results.
 5. Independent MD validation and geographic electricity-water factors remain open publication gates.
+
+
+## Executed conductivity stress test — 2026-10-23
+
+Implementation commit: `b31ae0b6c88d7f0d1c6a10e3467d46a68b12bf21`
+
+Workflow: [Break-even and failure envelope, run 6](https://github.com/jouzia/ai-waste-heat-water/actions/runs/39988586088) — **success**.
+
+Artifact: `break-even-failure-envelope`, SHA-256 `2b7fcbd38d5de036ece2b18569454fb8c61d0dd5429c2dfb32e645a4468325ac`. It contains the manifest, `break_even_failure_envelope.csv`, and `net_water_by_displacement.csv`. The workflow verified file checksums and coverage of 15,552 envelope rows and 77,760 displacement-sweep rows.
+
+| Membrane thermal conductivity (W m⁻¹ K⁻¹) | Break-even possible at displacement ≤ 1 | Break-even impossible even at full displacement | No freshwater production |
+|---:|---:|---:|---:|
+| 0.015 | 1,177 / 5,184 (22.7%) | 2,279 / 5,184 (44.0%) | 1,728 / 5,184 (33.3%) |
+| 0.030 | 646 / 5,184 (12.5%) | 1,730 / 5,184 (33.4%) | 2,808 / 5,184 (54.2%) |
+| 0.060 | 270 / 5,184 (5.2%) | 1,242 / 5,184 (24.0%) | 3,672 / 5,184 (70.8%) |
+
+These percentages are **fractions of the deliberately constructed scenario grid only**, not probabilities, likelihoods, or estimates of real-world occurrence. As conductivity increases across this illustrative stress test, the number of grid cells classified as break-even possible falls from 1,177 to 270, while no-production cells rise from 1,728 to 3,672. This demonstrates that conclusions depend materially on this model parameterization; it does not establish that higher conductivity physically causes these changes in a real membrane system.
+
+The model's full-displacement net-consumption change spans −27.33 to +66.75 L at conductivity 0.015, −17.31 to +73.50 L at 0.030, and −11.76 to +87.00 L at 0.060 across the remaining scenario factors. Negative values occur in 1,177, 646, and 270 grid cells, respectively. Because the model is reduced-order and the parameter ranges are illustrative, these values are conditional model outputs, not field predictions or evidence of a net-water benefit.
+
+### Interpretation and remaining limits
+
+- The conductivity sweep is complete; the predeclared area sensitivity (0.8×–1.2× of 0.23088 m²) has **not** been added as a separate Villa-specific sweep in this run.
+- Flow sensitivity remains unexecuted: do not infer flow baselines from the Villa workbook's negative/Inf channels.
+- These are model screening scenarios, not empirical uncertainty distributions; grid-cell counts must not be presented as probability.
+- Source reconstruction, independent/unfitted validation, model-form comparison, geographic integration, and publication-package gates remain open. No positive net-water-benefit conclusion is supported.
