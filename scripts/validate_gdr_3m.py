@@ -294,7 +294,9 @@ def run_comparison(
                 for o, p in zip(_observed_train, predicted, strict=True)
             )
 
-        log_grid = [-2.0 + 0.25 * index for index in range(21)]
+        # Extend the upper bound by one decade after two model forms hit the prior ceiling.
+        # This is a boundary diagnostic, not evidence that the fitted parameter is physically identified.
+        log_grid = [-2.0 + 0.25 * index for index in range(25)]
         scored = [(objective(log_value), log_value) for log_value in log_grid]
         best_objective, best_log_permeance = min(scored)
         fitted_permeance = 10.0**best_log_permeance
@@ -353,7 +355,7 @@ def run_comparison(
             "optimization_method": "coarse_log_grid_0.25_decades",
             "permeance_fit_at_search_boundary": bool(fit_at_boundary),
             "permeance_search_min_kg_m2_h_bar": 0.01,
-            "permeance_search_max_kg_m2_h_bar": 1000.0,
+            "permeance_search_max_kg_m2_h_bar": 10000.0,
             "cells": cells,
             "water_activity_model": "Keshavarzzadeh-style NaCl activity at 4 g/L, approximate density conversion",
             "latent_heat_model": "IAPWS97 saturated liquid-vapor enthalpy difference at mean bulk temperature",
