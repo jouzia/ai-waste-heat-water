@@ -262,6 +262,7 @@ def run_comparison(
     ]
     detail_rows: list[dict[str, object]] = []
     model_summaries: list[dict[str, object]] = []
+    permeance_profile_rows: list[dict[str, object]] = []
 
     for correlation, geometry in variants:
         train = [row for row in rows if str(row["condition_id"]).startswith("20-")]
@@ -298,9 +299,21 @@ def run_comparison(
         # This is a boundary diagnostic, not evidence that the fitted parameter is physically identified.
         log_grid = [-2.0 + 0.25 * index for index in range(25)]
         scored = [(objective(log_value), log_value) for log_value in log_grid]
-        best_objective, best_log_permeance = min(scored)
+        scored.sort(key=lambda item: item[1])
+        for objective_value, log_value in scored:
+            permeance_profile_rows.append({
+                "model_form": f"{correlation}__{geometry}",
+                "log10_permeance": log_value,
+                "permeance_kg_m2_h_bar": 10.0**log_value,
+                "training_objective_log_relative_sse": objective_value,
+            })
+        best_objective, best_log_permeance = min(scored, key=lambda item: item[0])
         fitted_permeance = 10.0**best_log_permeance
         fit_at_boundary = best_log_permeance in (log_grid[0], log_grid[-1])
+        upper_edge_objective = next(value for value, log_value in scored if log_value == log_grid[-1])
+        previous_edge_objective = next(value for value, log_value in scored if log_value == log_grid[-2])
+        lower_edge_objective = next(value for value, log_value in scored if log_value == log_grid[0])
+        next_lower_objective = next(value for value, log_value in scored if log_value == log_grid[1])
         all_predictions = []
         metadata_for_variant = None
         for row in rows:
@@ -354,6 +367,11 @@ def run_comparison(
             "optimization_success": bool(best_objective < 1e11),
             "optimization_method": "coarse_log_grid_0.25_decades",
             "permeance_fit_at_search_boundary": bool(fit_at_boundary),
+            "permeance_profile_best_log10": best_log_permeance,
+            "upper_edge_objective": float(upper_edge_objective),
+            "previous_to_upper_edge_objective_change": float(upper_edge_objective - previous_edge_objective),
+            "lower_edge_objective": float(lower_edge_objective),
+            "next_to_lower_edge_objective_change": float(next_lower_objective - lower_edge_objective),
             "permeance_search_min_kg_m2_h_bar": 0.01,
             "permeance_search_max_kg_m2_h_bar": 10000.0,
             "cells": cells,
@@ -378,6 +396,13 @@ def run_comparison(
         model_summaries.append(summary_record)
 
     output_dir.mkdir(parents=True, exist_ok=True)
+    profile_fields = list(dict.fromkeys(key for row in permeance_profile_rows for key in row))
+    with (output_dir / "permeance_objective_profile.csv").open(
+        "w", newline="", encoding="utf-8"
+    ) as stream:
+        writer = csv.DictWriter(stream, fieldnames=profile_fields)
+        writer.writeheader()
+        writer.writerows(permeance_profile_rows)
     detail_fields = list(dict.fromkeys(key for row in detail_rows for key in row))
     with (output_dir / "model_form_comparison.csv").open(
         "w", newline="", encoding="utf-8"
