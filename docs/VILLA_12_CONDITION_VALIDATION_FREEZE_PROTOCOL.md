@@ -8,6 +8,10 @@ Source: https://gdr.openei.org/submissions/1016
 
 **Status: protocol specified; execution and numerical results are not asserted by this document.**
 
+## Newly identified blocking issue (2026-10-23)
+
+A code review found observed-outlet target leakage in the prior held-out evaluation. The prediction path used measured outlet temperatures to calculate fluid properties/heat-transfer coefficients and to convert predicted flux. The code path has been corrected, but all prior held-out metrics are superseded pending a corrected rerun. See [VILLA_HELDOUT_TARGET_LEAKAGE_AUDIT_2026-10-23.md](VILLA_HELDOUT_TARGET_LEAKAGE_AUDIT_2026-10-23.md). Do not quote the previous comparison as clean held-out validation evidence.
+
 ## Why the benchmark is not yet a clean validation result
 
 The repository's prior audit identifies the following risks that must be resolved before calculating or interpreting a validation score:
