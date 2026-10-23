@@ -42,8 +42,8 @@ jobs:
 
           root = Path("artifacts/break_even_envelope")
           manifest = json.loads((root / "manifest.json").read_text())
-          assert manifest["base_parameter_combinations"] == 5184, manifest
-          assert manifest["displacement_sweep_rows"] == 25920, manifest
+          assert manifest["base_parameter_combinations"] == 15552, manifest
+          assert manifest["displacement_sweep_rows"] == 77760, manifest
           assert sum(manifest["failure_class_counts"].values()) == 5184, manifest
           for filename, expected in manifest["files"].items():
               actual = hashlib.sha256((root / filename).read_bytes()).hexdigest()
@@ -58,7 +58,7 @@ jobs:
               "break_even_impossible_at_full_displacement",
               "break_even_possible_with_sufficient_displacement",
           }
-          print("Verified 5,184 break-even cases and 25,920 displacement-sweep rows.")
+          print("Verified 15,552 break-even cases and 77,760 displacement-sweep rows.")
           print("All ranges are illustrative; the result is not a real-world probability.")
           PY
 
