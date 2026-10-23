@@ -44,7 +44,7 @@ jobs:
           manifest = json.loads((root / "manifest.json").read_text())
           assert manifest["base_parameter_combinations"] == 15552, manifest
           assert manifest["displacement_sweep_rows"] == 77760, manifest
-          assert sum(manifest["failure_class_counts"].values()) == 5184, manifest
+          assert sum(manifest["failure_class_counts"].values()) == 15552, manifest
           for filename, expected in manifest["files"].items():
               actual = hashlib.sha256((root / filename).read_bytes()).hexdigest()
               assert actual == expected, (filename, expected, actual)
@@ -52,7 +52,7 @@ jobs:
               envelope = list(csv.DictReader(stream))
           with (root / "net_water_by_displacement.csv").open(encoding="utf-8", newline="") as stream:
               sweep = list(csv.DictReader(stream))
-          assert len(envelope) == 5184 and len(sweep) == 25920
+          assert len(envelope) == 15552 and len(sweep) == 77760
           assert {row["failure_class"] for row in envelope} <= {
               "no_freshwater_production",
               "break_even_impossible_at_full_displacement",
