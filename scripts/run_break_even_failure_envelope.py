@@ -171,6 +171,7 @@ def run(output_dir: Path) -> dict[str, object]:
                                             tpc=tpc,
                                             permeance=permeance,
                                             area_m2=area,
+                                            membrane_thermal_conductivity_w_m_k=conductivity,
                                             grid_water_factor=grid_water,
                                             cooling_water_intensity=cooling_water,
                                             incremental_facility_electricity_kwh=incremental_electricity,
