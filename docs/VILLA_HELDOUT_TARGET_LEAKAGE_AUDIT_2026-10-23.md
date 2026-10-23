@@ -31,8 +31,8 @@ The benchmark remains within-workbook validation. The target flux is an OLS slop
 ## Status
 
 - [x] Code path corrected for the identified observed-outlet leakage.
-- [ ] Corrected workflow rerun and artifacts reviewed.
-- [ ] Regression test added to prevent observed-outlet leakage from returning.
+- [ ] Corrected workflow rerun and artifacts reviewed. The GDR ingestion workflow now runs the targeted regression tests and corrected four-form comparison, then uploads generated artifacts. This environment could not independently query the resulting GitHub Actions run status.
+- [x] Regression tests added in `tests/test_villa_prediction_no_target_leakage.py` for inlet-only property selection and prediction-temperature flux conversion.
 - [ ] Scientific validation gates reviewed using corrected artifacts.
 
 Until the rerun is complete, do not quote the earlier held-out metrics as validation evidence.
