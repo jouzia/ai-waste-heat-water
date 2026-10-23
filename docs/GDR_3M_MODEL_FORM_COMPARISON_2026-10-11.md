@@ -1,5 +1,7 @@
 # GDR Villa 3M DCMD model-form comparison
 
+> **Superseded historical results (2026-10-23):** The metrics in this document predate the observed-outlet target-leakage correction and must not be cited as clean held-out performance. See the corrected rerun, objective-profile analysis, and current within-workbook metrics in [the 2026-10-23 Villa leakage audit](VILLA_HELDOUT_TARGET_LEAKAGE_AUDIT_2026-10-23.md). The corrected run still finds both Graetz–Lévêque permeance fits at the expanded upper bound; this remains an unresolved identifiability/model-form limitation.
+
 Date: 2026-10-13 (updated after counter-current outlet-state and duration-invariance corrections)  
 Workflow commit: `35615f22cf2735fb2ba69960ad7b568700527885`  
 Workflow run: [GDR DCMD model validation #9](https://github.com/jouzia/ai-waste-heat-water/actions/runs/38424450187)  
