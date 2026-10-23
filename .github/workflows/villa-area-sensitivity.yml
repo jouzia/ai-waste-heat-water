@@ -1,0 +1,50 @@
+name: Villa nominal-area sensitivity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/run_villa_area_sensitivity.py"
+      - "scripts/run_break_even_failure_envelope.py"
+      - "src/ai_water/**"
+      - ".github/workflows/villa-area-sensitivity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  villa-area-sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e .
+      - run: python scripts/run_villa_area_sensitivity.py --output-dir artifacts/villa_area_sensitivity
+      - name: Verify artifact
+        run: |
+          python - <<'PY'
+          import csv, hashlib, json
+          from pathlib import Path
+          root = Path('artifacts/villa_area_sensitivity')
+          manifest = json.loads((root / 'manifest.json').read_text())
+          assert manifest['row_count'] == 15, manifest
+          assert manifest['nominal_area_m2'] == 0.23088, manifest
+          assert manifest['area_multipliers'] == [0.8, 0.9, 1.0, 1.1, 1.2], manifest
+          assert manifest['conductivity_values_w_m_k'] == [0.015, 0.03, 0.06], manifest
+          for name, expected in manifest['files'].items():
+              assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected
+          with (root / 'villa_area_sensitivity.csv').open(newline='') as stream:
+              rows = list(csv.DictReader(stream))
+          assert len(rows) == 15
+          print('Verified 15 Villa area/conductivity combinations.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: villa-area-sensitivity
+          path: artifacts/villa_area_sensitivity/*
+          if-no-files-found: error
+          retention-days: 90
