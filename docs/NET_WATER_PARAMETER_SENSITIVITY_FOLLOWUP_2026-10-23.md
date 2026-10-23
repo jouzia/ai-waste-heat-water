@@ -55,3 +55,35 @@ The model's full-displacement net-consumption change spans −27.33 to +66.75 L 
 - Flow sensitivity remains unexecuted: do not infer flow baselines from the Villa workbook's negative/Inf channels.
 - These are model screening scenarios, not empirical uncertainty distributions; grid-cell counts must not be presented as probability.
 - Source reconstruction, independent/unfitted validation, model-form comparison, geographic integration, and publication-package gates remain open. No positive net-water-benefit conclusion is supported.
+
+
+## Executed Villa-area sensitivity — 2026-10-23
+
+Implementation: [`scripts/run_villa_area_sensitivity.py`](https://github.com/jouzia/ai-waste-heat-water/blob/main/scripts/run_villa_area_sensitivity.py), commit `217e3f70542608fcf87c810eb82fcdbbe6bcfdc0`.
+
+Workflow: [Villa nominal-area sensitivity run](https://github.com/jouzia/ai-waste-heat-water/actions/runs/39988934418) — the script, artifact checks, and upload steps completed successfully.
+
+Artifact: `villa-area-sensitivity`, SHA-256 `10f7a826135a3b8d8c31967f8547a7c31e09d0cb84dc06bb950d3b6e6c87da30`. The artifact includes `villa_area_sensitivity.csv` and `manifest.json`; 15 area/conductivity combinations were verified.
+
+### Fixed reference case
+
+The sweep crosses five area multipliers (0.8×–1.2× of the workbook's nominal 0.23088 m²) with conductivity values 0.015, 0.03, and 0.06 W m⁻¹ K⁻¹. Other inputs are held fixed at recoverable heat fraction 0.5, TPC 0.8, permeance 15 kg m⁻² h⁻¹ bar⁻¹, grid-water factor 0.5 L/kWh, cooling-water intensity 0.2 L/kWh-facility, and incremental facility electricity 10 kWh. These fixed inputs define a reference scenario, not a calibrated or independently validated Villa reconstruction.
+
+| Area multiplier | Area (m²) | Freshwater produced (L) | Net-consumption change at full displacement (L), across conductivity values | Break-even threshold (displacement fraction), across conductivity values |
+|---:|---:|---:|---:|---:|
+| 0.8× | 0.184704 | 0.4262 | +6.6146 to +6.6847 | 16.5201 to 16.5750 |
+| 0.9× | 0.207792 | 0.4795 | +6.5664 to +6.6453 | 14.6952 to 14.8597 |
+| 1.0× | 0.230880 | 0.5327 | +6.5183 to +6.6059 | 13.2352 to 13.3998 |
+| 1.1× | 0.253968 | 0.5860 | +6.4701 to +6.5665 | 12.0407 to 12.2053 |
+| 1.2× | 0.277056 | 0.6393 | +6.4219 to +6.5271 | 11.0453 to 11.2099 |
+
+Across all 15 grid cells, the break-even threshold is greater than 1 and the full-displacement net-consumption change is positive. Under this fixed reference case, modeled freshwater displacement is therefore insufficient to offset modeled additional water consumption. Increasing area raises modeled freshwater production and reduces the break-even threshold, but does not reach break-even within this tested area range. Conductivity has a comparatively smaller effect on these outputs than the area multiplier in this particular reference case.
+
+These are conditional model outputs for the stated fixed settings, not evidence that a real Villa/3M/CLARCOR device would produce these volumes. The unresolved membrane identity, active-area definition, and source/flow provenance remain material limitations. The area multipliers are deterministic stress-test points, not a probability distribution.
+
+### Status update
+
+- Conductivity grid: executed and artifact checks passed.
+- Villa nominal-area grid: executed and artifact checks passed.
+- Flow-multiplier sensitivity: still blocked pending a source-backed nominal flow baseline.
+- No positive net-water-benefit conclusion is supported by these two sensitivity experiments.
