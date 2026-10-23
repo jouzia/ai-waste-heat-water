@@ -121,10 +121,10 @@ def _make_config(
 ) -> tuple[ChannelConfig, dict[str, float]]:
     feed_in = _number(row["feed_inlet_mean_c"])
     perm_in = _number(row["distillate_inlet_mean_c"])
-    feed_out_measured = _number(row["feed_outlet_mean_c"])
-    perm_out_measured = _number(row["distillate_outlet_mean_c"])
-    feed_mean = (feed_in + feed_out_measured) / 2.0
-    perm_mean = (perm_in + perm_out_measured) / 2.0
+    # Use inlet measurements only for properties and transfer coefficients.
+    # Measured outlet temperatures are model targets and must not enter predictions.
+    feed_mean = feed_in
+    perm_mean = perm_in
 
     if geometry == "smooth_channel":
         hydraulic_diameter = SOURCE_DH_SMOOTH_M
@@ -218,13 +218,12 @@ def _predict(
         feed_in_temperature_c=_number(row["feed_inlet_mean_c"]),
         permeate_in_temperature_c=_number(row["distillate_inlet_mean_c"]),
     )
-    # Convert model mass flux to volumetric flux using pure-water density at
-    # the mean permeate bulk temperature. The source observation is L/m2/h.
-    perm_mean = (
-        _number(row["distillate_inlet_mean_c"])
-        + _number(row["distillate_outlet_mean_c"])
+    # Convert using density at the model-predicted mean permeate temperature.
+    # Never use the observed outlet temperature in a prediction/scoring path.
+    predicted_perm_mean = (
+        _number(row["distillate_inlet_mean_c"]) + result.permeate_out_temperature_c
     ) / 2.0
-    rho_distillate = _water_properties(perm_mean)["rho"]
+    rho_distillate = _water_properties(predicted_perm_mean)["rho"]
     mass_flux_kg_m2_h = result.freshwater_produced_kg / (config.membrane_area_m2 * config.duration_h)
     predicted_l_m2_h = mass_flux_kg_m2_h / (rho_distillate / 1000.0)
     return (
