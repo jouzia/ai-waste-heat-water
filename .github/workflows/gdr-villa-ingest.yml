@@ -170,7 +170,7 @@ jobs:
       - name: Rerun corrected four-form model comparison
         run: >-
           python scripts/validate_gdr_3m.py
-          --summary 04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv
+          --summary artifacts/gdr_villa_exports/recreated_flux_summary.csv
           --output-dir artifacts/gdr_villa_exports/corrected_model_comparison
 
       - name: Upload raw workbook and inspection artifact
