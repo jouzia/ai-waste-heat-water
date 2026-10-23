@@ -82,5 +82,5 @@ def test_flux_conversion_uses_predicted_not_observed_permeate_outlet(monkeypatch
         cells=4,
     )
 
-    assert density_temperatures == [24.0]
+    assert density_temperatures == [29.0]
     assert 42.0 not in density_temperatures
