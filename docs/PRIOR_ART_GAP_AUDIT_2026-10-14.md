@@ -83,3 +83,37 @@ The defensible candidate contribution remains narrow and conditional: an evidenc
 - [ ] Add full-text extraction for Chen et al. (2026), including whether the freshwater output is directly coupled to cooling and how net energy/water effects are counted.
 - [ ] Compare both papers against the implemented model, not just the abstract; cite page/section numbers in the final comparison.
 - [ ] Do not change scientific gates to true based on this literature update.
+
+### Full-text / publisher-record extraction — 2026-10-24
+
+#### Malaguti et al. (2026): full article text available on publisher page
+
+The publisher page exposes the article text, so this comparison goes beyond the abstract. The study is a **lumped thermodynamic screening framework** for three representative membrane-distillation configurations: (1) DCMD with open feed and closed distillate circuits, (2) DCMD with external heat recovery, and (3) AGMD with internal heat recovery. It derives specific thermal energy requirement (STEC), specific cooling requirement (SCR), single-pass recovery, and pumping-energy estimates. It then maps those requirements to indicative actual energy consumption under selected heating and cooling technologies.
+
+Relevant methodological details from the article:
+- SCR is defined as cooling energy removed per unit distillate production; the article explicitly argues that the cold-side heat sink is a system constraint, not a free implicit resource.
+- The model considers heating options including waste heat, solar thermal, resistive heating, natural gas, and heat pumps; cooling options include surface water, ambient air, and a cooling heat pump.
+- Pumping energy is linked to module pressure drop, pump efficiency, and single-pass recovery. At a stated 300 mbar pressure drop, the reported illustrative pumping penalties are approximately 0.2–0.5 kWh/m³; typical single-pass recovery in the analyzed cases is low (roughly 2–6%).
+- In some open-loop configurations, cooling demand approaches 80–100% of heating duty. The article stresses that theoretical energy requirements and actual energy consumption are different quantities.
+- The authors describe the framework as a rapid screening/conceptual-design tool and note that the selected technology parameters are illustrative, not prescriptive design values.
+
+**Direct comparison with this repository:** the current project already includes conditional net-water accounting, a cooling-water-intensity factor, incremental facility electricity, heat-recovery assumptions, and break-even/failure envelopes. However, those scenario inputs are not equivalent to the article's configuration-resolved SCR/STEC and hydraulic pressure-drop model. The current project should not imply that it has reproduced the article's MD thermal/hydraulic physics unless an explicit, tested implementation is added. In particular, a single cooling-water-intensity coefficient does not by itself resolve cooling duty, cooling technology, heat-sink temperature, or pump pressure drop. Conversely, the candidate project-level question is different: whether any water benefit remains after translating the desalination output and additional facility/electricity burdens into an explicit counterfactual operational water ledger. That distinction is a *candidate scope distinction*, not yet a demonstrated novelty claim.
+
+Publisher source: https://www.sciencedirect.com/science/article/pii/S0011916426001955 (retrieved 2026-10-24).
+
+#### Chen et al. (2026): publisher abstract and bibliographic record inspected; full text not extracted
+
+Publisher record: **“A dual-purpose seawater evaporation system for data center cooling and freshwater production: design and performance analysis,” *Applied Thermal Engineering* 287, article 129458 (February 2026)**. The abstract describes a seawater-evaporation-based system that uses low-pressure phase-change absorption of data-centre waste heat, produces salt-free vapour that is condensed into freshwater, and co-generates refrigeration. The publisher highlights report two system configurations with power decreases of 41.5% and 40.0% and freshwater outputs of 10,004 and 10,744 t/day, respectively. These are publisher-reported abstract claims; their basis, assumptions, scale, and validation have not yet been checked against the full text.
+
+**Comparison boundary:** this is direct prior art for coupling data-centre cooling and freshwater production with waste heat. It may differ materially from the present project in desalination mechanism, plant scale, energy integration, and evaluation objective, but those distinctions cannot be asserted as established until the full paper and supplement are reviewed. Do not compare its headline production values numerically with the present reduced-order screening outputs; the systems and boundaries have not been normalized.
+
+Publisher source: https://www.sciencedirect.com/science/article/abs/pii/S1359431125040505 (retrieved 2026-10-24).
+
+#### Updated evidence-based conclusion
+
+The targeted review now establishes two things with different evidence strength:
+
+1. **Established overlap:** MD cooling and pumping burdens are explicitly modeled in Malaguti et al.; dual-purpose data-centre cooling and freshwater generation from waste heat are explicitly described by Chen et al. Therefore, neither concept alone is a defensible novelty claim.
+2. **Unresolved candidate contribution:** this repository's potential distinction is the explicit counterfactual *net operational blue-water* ledger and its evidence/failure accounting. Whether that combination is sufficiently distinct, correctly implemented, and useful is still unproven. Chen full-text extraction, equation-level model audit, source reconstruction, and independent validation remain outstanding.
+
+No publication or scientific-validation gate is changed by this addendum.
