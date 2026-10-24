@@ -166,3 +166,16 @@ These values can anchor a recovery/pumping test once supplementary definitions (
 
 ### Time estimate, scoped
 Planning estimate: **6–10 focused hours** if the supplement is accessible and sufficiently complete; allow **another 2–4 hours** if retrieval or interpretation is difficult. This covers source reconstruction, reference calculations, tests, and one optional configuration—not remaining publication work or empirical validation.
+
+
+## 8. Equation evaluator added (2026-10-24)
+
+Two code artifacts have now been added:
+- `src/ai_water/md_thermodynamics.py`: explicit equation-level STEC/SCR evaluators for the three published configurations when the outlet temperature difference and fluid properties are supplied, plus the pressure-drop/recovery/pump-efficiency pumping equation.
+- `tests/test_md_thermodynamics.py`: unit and invalid-input tests for equation selection, required configuration inputs, physical bounds, and pressure-unit conversion.
+
+This is deliberately a **partial equation evaluator**, not a full implementation of Malaguti's thermodynamic model. It does not derive `delta_t_h_out_k`, single-pass recovery, temperature-dependent seawater properties, or heat-sink feasibility. The code accepts these required values explicitly and labels the outlet temperature difference as requiring an independent source or validated calculation. It is not connected to the project's main simulation engine or net-water ledger.
+
+The pumping test uses 300 mbar = 30,000 Pa, recovery 0.03, and pump efficiency 0.75, yielding 0.37037 kWh/m³ from the published expression. This is a dimensional/unit-conversion test, not an empirical measurement or a reproduction of a complete paper operating point.
+
+**Verification caveat:** both files were fetched back from the default branch after creation. This confirms repository contents, not successful test execution. The repository CI workflow runs pytest and Ruff on pushes; a passing run must be checked before the implementation is described as tested. The supplementary equations and exact benchmark reconstruction remain open gates.
