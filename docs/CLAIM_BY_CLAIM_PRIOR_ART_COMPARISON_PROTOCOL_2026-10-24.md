@@ -119,3 +119,32 @@ Next actions, in order:
 - Malaguti et al. (2026), *Desalination* 628, 120039. https://doi.org/10.1016/j.desal.2026.120039
 - Chen et al. (2026), *Applied Thermal Engineering* 287, 129458. https://doi.org/10.1016/j.applthermaleng.2025.129458
 - Existing project audit: [PRIOR_ART_GAP_AUDIT_2026-10-14.md](PRIOR_ART_GAP_AUDIT_2026-10-14.md)
+
+
+## 9. Publisher-page methods extraction — Chen et al. (retrieved 2026-10-24)
+
+**Evidence boundary:** the publisher's HTML page exposes the abstract, introduction, system description/methodology headings, assumptions, results overview, conclusion, and bibliographic information. This is a meaningful extension beyond abstract-only review, but it is **not** a complete supplementary-material audit or independent reproduction. The paper's full equations, detailed tables, and supplement still need extraction.
+
+### System and comparison design reported by the publisher
+
+- Proposed configurations: seawater evaporation-driven system for data-centre cooling and freshwater production (SEFDS), and a water-injection heat-exchange variant (SEFDS-WI).
+- Core mechanism: low-pressure seawater phase change absorbs data-centre waste heat; the generated salt-free vapour is compressed and then integrated with multi-effect distillation (MED) to recover condensation heat and increase freshwater output.
+- Comparison systems named in the publisher page: an indirect evaporative cooling system for data centres (IECS) and a mechanical-vapour-compression / multi-effect-distillation system (MVC-MED).
+- Method stated: thermodynamic and thermoeconomic analysis of the two proposed systems and the comparison systems.
+- Simplifying assumptions visible on the publisher page: each component is modelled at steady state; components are treated as adiabatic; throttling is isenthalpic. The page begins a statement about pump/compressor operation but the complete assumption list was not available in the extracted passage, so no further assumptions are inferred here.
+- Software/property calculation stated: MATLAB for the system model and REFPROP 9.1 for working-fluid thermodynamic properties. The publisher says these are used for validation of the MVC-MED, IECS, SEFDS, and SEFDS-WI systems; the exact validation datasets and error statistics must be extracted from the full paper before assessing validation strength.
+- Reported headline results: SEFDS, 10,004.20 t/day freshwater at 6,095.49 kW and 41.5% lower power than its stated standalone comparison; SEFDS-WI, 10,744.12 t/day at 6,349.08 kW and 40.0% lower power. The abstract also reports economic and CO2 outcomes. These remain author-reported simulated/system-analysis results, not independently reproduced estimates and not directly comparable to this repository's illustrative 100 kW, one-hour screening case.
+
+### What this establishes—and what it does not
+
+**Established from the publisher page:** the study is a coupled cooling/freshwater system analysis with thermodynamic and thermoeconomic comparisons; it includes both seawater evaporation and MED heat recovery, compares against named standalone system baselines, and reports large plant-scale simulated production/power outcomes. Thus the broad proposition that data-centre waste heat can be integrated with a cooling/freshwater production system is already prior art.
+
+**Not established from this extraction:** whether its accounting uses the same operational blue-water consumption boundary as this repository; whether it separates withdrawal from consumption; how it treats seawater intake, cooling-water losses, brine handling, grid-water factors, source-water displacement, uncertainty intervals, time-varying workload, or geographic water stress; whether its validation is independent; and whether the full equations can be mapped to the current MD engine. Those questions require full-text tables/equations and any supplementary material. The absence of those details from this extraction must not be interpreted as evidence that the paper omits them.
+
+### Updated comparison decision
+
+Chen's paper uses a materially different named process architecture from the repository's membrane-distillation screening path. This is a **technology distinction**, not proof of a novel research contribution. Do not add Chen's system equations to the present engine unless the research question is deliberately broadened to compare desalination technologies and the inputs/boundaries can be normalized. For the current project, finish the MD-specific equation mapping against Malaguti first, then decide whether a single MD configuration extension is both necessary and testable.
+
+### Source
+
+Chen et al. (2026), “A dual-purpose seawater evaporation system for data center cooling and freshwater production: design and performance analysis,” *Applied Thermal Engineering* 287, article 129458. Publisher HTML: https://www.sciencedirect.com/science/article/pii/S1359431125040505. Retrieved 2026-10-24.
