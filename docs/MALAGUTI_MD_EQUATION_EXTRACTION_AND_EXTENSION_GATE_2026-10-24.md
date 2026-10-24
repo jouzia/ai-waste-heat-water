@@ -1,0 +1,143 @@
+# Malaguti MD thermodynamic equations and model-extension gate — 2026-10-24
+
+**Status:** Literature-derived equation extraction and implementation specification. No equations in this document have yet been implemented or independently reproduced in this repository. This is not a validation result or a novelty claim.
+
+## 1. Primary source
+
+Malaguti, M. et al. (2026), “Waste heat won't make membrane distillation cool: Thermodynamic analysis of cooling and pumping burdens,” *Desalination* 628, 120039. DOI: [10.1016/j.desal.2026.120039](https://doi.org/10.1016/j.desal.2026.120039). The publisher record states that the theoretical derivation and variable definitions are in the Supplementary Information. The accessible article text includes the equations below.
+
+Related prior art: Chen, L. et al. (2026), “A dual-purpose seawater evaporation system for data center cooling and freshwater production: design and performance analysis,” *Applied Thermal Engineering* 287, 129458. DOI: [10.1016/j.applthermaleng.2025.129458](https://doi.org/10.1016/j.applthermaleng.2025.129458). This establishes that coupling data-centre cooling and freshwater production is already proposed in a different seawater low-pressure evaporation/compression/MED architecture.
+
+## 2. Definitions and equations transcribed from Malaguti et al.
+
+The article defines specific thermal energy consumption as a **thermal requirement**, not necessarily the final energy consumption of the plant:
+
+- \(STEC = \dot Q_h / \dot m_d\)
+- \(SCR = \dot Q_c / \dot m_d\)
+
+Here \(\dot m_d\) is distillate production rate; \(\dot Q_h\) is heating duty and \(\dot Q_c\) is cooling duty. The article reports three configurations:
+
+1. DCMD with open feed and closed distillate.
+2. DCMD with external heat recovery.
+3. AGMD with internal heat recovery.
+
+Let \(h_{vap}\) denote latent heat of vaporization, \(\eta\) vaporization efficiency, \(\Delta T = T_{h,in}-T_{c,in}\), \(\Delta T_{h,in}=T_{h,in}-T_{c,out}\), \(\Delta T_{h,out}=T_{h,out}-T_{c,in}\), and \(\Delta T_{HX}\) the temperature difference across the heat exchanger. The article states the cold-stream inlet is fixed at 20 °C and sets \(\Delta T_{h,in}=\Delta T_{HX}=5\ ^\circ C\) for the paper's explored conditions; these are paper-specific assumptions, not universal constants.
+
+### Configuration 1
+
+\[
+SCR_1 = \frac{h_{vap}}{\eta}
+\frac{\Delta T-\Delta T_{h,in}}{\Delta T-\Delta T_{h,out}}
+\]
+
+\[
+STEC_1 = \frac{h_{vap}}{\eta}
+\frac{\Delta T}{\Delta T-\Delta T_{h,out}}
+\]
+
+### Configuration 2
+
+\[
+SCR_2 = \frac{h_{vap}}{\eta}
+\frac{\Delta T_{HX}}{\Delta T-\Delta T_{h,out}}
+\]
+
+\[
+STEC_2 = \frac{h_{vap}}{\eta}
+\frac{\Delta T_{h,in}+\Delta T_{HX}}
+{\Delta T-\Delta T_{h,out}}
+\]
+
+### Configuration 3
+
+\[
+SCR_3 = \frac{h_{vap}c_c}{\eta c_h}
+\frac{\Delta T_{h,out}}{\Delta T-\Delta T_{h,out}}
+\]
+
+\[
+STEC_3 = \frac{h_{vap}}{\eta}
+\frac{\Delta T_{h,in}}{\Delta T-\Delta T_{h,out}}
+\]
+
+The article gives specific module pumping energy as:
+
+\[
+E_{pump,module} = \frac{\Delta P}{R\,\eta_{pump}}
+\]
+
+where \(\Delta P\) is module pressure drop, \(\eta_{pump}\) is pump efficiency and \(R=\dot m_d/\dot m_{feed}\) is single-pass water recovery. Unit conversion and consistency checks are required before comparing this expression with kWh/m³ outputs. Do not assume the formula can be inserted unchanged without confirming the article's unit conventions and the code's basis.
+
+### Translating thermal requirements into system electricity
+
+The article separates auxiliary circulation pumping from module pumping. Its equations are:
+
+\[
+\dot w_h = \dot w_{h,pump} + STEC/\tau_h
+\qquad
+\dot w_{h,net}=k_{h1}\dot w_{h,pump}
++k_{h2}STEC/\tau_h
+\]
+
+\[
+\dot w_c = \dot w_{c,pump} + SCR/\tau_c
+\qquad
+\dot w_{c,net}=k_{c1}\dot w_{c,pump}
++k_{c2}SCR/\tau_c
+\]
+
+Here \(\tau_h\) and \(\tau_c\) represent heating/cooling conversion efficiencies, while the \(k\) factors represent the share supplied by paid energy carriers. Exact symbols, units, assumptions, and the full derivation must be checked against the Supplementary Information before implementing this layer. These are not water-intensity factors: converting energy consumption into water burden requires separately sourced, geographically appropriate water-intensity factors and explicit accounting boundaries.
+
+## 3. Required inputs and provenance checklist
+
+| Input | Unit / basis | Evidence needed before model implementation |
+|---|---|---|
+| Configuration | categorical | Explicitly select one of the three configurations; do not mix equations across configurations |
+| Hot/cold inlet temperatures | °C or K differences | Published benchmark or documented scenario; retain source and operating boundary |
+| \(\Delta T_{h,in}\), \(\Delta T_{HX}\) | K or °C difference | Source values or explicit sensitivity ranges; avoid treating paper settings as universal |
+| \(h_{vap}\) | J/kg or equivalent | Temperature-dependent property source and stated evaluation temperature |
+| Vaporization efficiency \(\eta\) | dimensionless | Published range or calibration with independent data; never silently fit to validation targets |
+| \(c_h,c_c\) | J/(kg K) | Fluid identity, salinity/temperature basis, and property source |
+| \(R\) | fraction | Derived by the specified configuration equations or independent measurements; not an arbitrary constant if pump burden is coupled to recovery |
+| Module pressure drop \(\Delta P\) | Pa | Measured or documented hydraulic model, including operating flow |
+| Pump efficiency \(\eta_{pump}\) | fraction | Pump curve or cited assumption and sensitivity range |
+| Auxiliary loop pumping | kWh/m³ product or consistent specific basis | Separate circuit and calculation; do not merge with membrane-module pumping |
+| \(\tau_h,\tau_c\) | dimensionless | Technology-specific efficiencies/COPs and clear energy-carrier boundary |
+| \(k_{h1},k_{h2},k_{c1},k_{c2}\) | fractions | Explicitly documented energy-source shares; sum/interpretation checked against source |
+| Cooling-sink feasibility | temperatures, duty, flow/capacity | Evidence that a real sink can reject the calculated load at the assumed temperature |
+| Water-intensity factors | L/kWh or m³/MWh | Source, geography, time period, and whether withdrawal or consumption |
+| Avoided-water counterfactual | L or m³ per functional unit | Explicit displaced source/process and displacement fraction, with a justified boundary |
+
+## 4. What the current project can and cannot claim
+
+The existing scenario runner's fixed MD cooling-to-heating ratio, fixed cooling electricity/water factors, and default fixed pumping factor are useful for **screening conditional scenarios**. They do not reproduce the three configuration-specific equations above, derive single-pass recovery from temperature and efficiency, or jointly resolve pressure drop, pump efficiency, cooling-sink availability, and technology-dependent conversion efficiencies.
+
+The current net-water ledger remains a counterfactual accounting calculation conditional on its inputs. A computed positive or negative result is not evidence of real-world water savings unless the water boundary, displaced supply, operational feasibility, and input factors are defensible.
+
+## 5. Minimum benchmark and implementation gate
+
+Do not implement all three configurations at once. Proceed only after obtaining and recording the supplementary derivation and a benchmark table with, at minimum:
+
+1. A source-defined case and exact configuration.
+2. Every input and its units, including property evaluation conventions.
+3. Reported intermediate values where available (STEC, SCR, recovery, module pumping).
+4. Reported tolerance/rounding and a documented independent hand calculation or second implementation.
+5. Dimensional checks and limiting-case tests.
+6. A clear distinction between equation verification and empirical validation.
+
+A comparison against the same equations used by the implementation is an analytical verification, not independent empirical validation. If the paper does not provide a reproducible numeric benchmark for a quantity, mark that benchmark unavailable rather than inventing a target.
+
+### Proposed first extension
+
+If the supplement and benchmark support it, implement **one** configuration (preferably the one whose required inputs can be documented most completely) as an optional module, leaving the existing screening baseline unchanged. Add tests for units, physically invalid temperature differences, efficiencies outside (0, 1], recovery bounds, and positive pressure drop. Compare outputs against a separately transcribed reference table before coupling results into the net-water ledger.
+
+## 6. Current status
+
+- Prior art for coupled cooling and freshwater production: established.
+- Malaguti equations transcribed from accessible article text: yes, preliminary extraction.
+- Supplementary Information independently audited: not yet.
+- Published numeric benchmark fully reconstructed: not yet.
+- Configuration-resolved model implemented: no.
+- Independent empirical validation: no.
+- Novelty established: no.
+- Net-water benefit demonstrated: no.
