@@ -60,3 +60,26 @@ Do not use “first”, “novel global framework”, “validated”, “net wa
 - Lei et al., *The water use of data center workloads*: https://doi.org/10.1016/j.resconrec.2025.108310
 - Herrera et al., *Sustainable AI infrastructure: A scenario-based forecast of water footprint under uncertainty*: https://doi.org/10.1016/j.jclepro.2025.146528
 - Martínez-Díez & Vázquez-González (1999): https://doi.org/10.1016/S0376-7388(98)00349-4
+
+## Addendum — targeted literature update (2026-10-24)
+
+This addendum updates the targeted screen; it does not convert the review into a systematic review or establish novelty.
+
+### Newly surfaced direct-overlap source
+
+**Malaguti et al. (2026), “Waste heat won't make membrane distillation cool: Thermodynamic analysis of cooling and pumping burdens,” *Desalination* 628, article 120039. DOI: [10.1016/j.desal.2026.120039](https://doi.org/10.1016/j.desal.2026.120039).** The publisher record reports cooling loads reaching 80–100% of heating duty in some open-loop configurations, single-pass recovery typically around 2–6% (and below about 10% across the studied configurations), and pumping penalties of 0.2–0.5 kWh/m³ for stated pressure-loss conditions. It explicitly distinguishes theoretical thermal requirements from actual system energy consumption and treats cooling availability as a feasibility constraint. Source: publisher record and abstract, accessed 2026-10-24.
+
+**Implication for this project:** cooling/pumping accounting and the warning that “free” heat alone does not guarantee feasibility are not novel contributions in isolation. The project must compare its actual equations and boundaries against this paper, including how it maps cooling duty to facility water consumption, whether pumping is represented, how heat eligibility and intermittent workload affect the system, and how electricity-related water impacts and freshwater displacement are counted. Do not claim that the current model fully captures these burdens unless the code and evidence demonstrate it.
+
+A second close source is **Chen et al. (2026), “A dual-purpose seawater evaporation system for data center cooling and freshwater production: design and performance analysis,” *Applied Thermal Engineering*, article 129458**. The publisher abstract describes a coupled seawater-evaporation system that provides cooling and co-generates freshwater using data-centre waste heat. This is direct overlap with the broad dual-purpose cooling/freshwater concept. The current project must not claim that coupling data-centre cooling with freshwater generation is itself new. Full-text equation-by-equation comparison remains required.
+
+### Updated research decision
+
+The defensible candidate contribution remains narrow and conditional: an evidence-labelled counterfactual operational blue-water accounting framework that makes unresolved source data, model failure states, and break-even conditions explicit. This candidate is **not yet established as novel or empirically validated**. The primary source reconstruction, independent/unfitted validation, geographic integration, and final publication gates remain open. The new sources reinforce the need to prioritize full-text comparison and model-boundary auditing rather than adding more illustrative parameter sweeps.
+
+### Follow-up checklist
+
+- [ ] Add full-text extraction for Malaguti et al. (2026), including equations, configurations, cooling/pumping assumptions, and system boundary.
+- [ ] Add full-text extraction for Chen et al. (2026), including whether the freshwater output is directly coupled to cooling and how net energy/water effects are counted.
+- [ ] Compare both papers against the implemented model, not just the abstract; cite page/section numbers in the final comparison.
+- [ ] Do not change scientific gates to true based on this literature update.
