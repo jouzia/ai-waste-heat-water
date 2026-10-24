@@ -1,7 +1,7 @@
 # Villa Primary-Source Clarification Response Log
 
 **Created:** 2026-10-24  
-**Status:** Awaiting external clarification; no response received or contact sent by this repository automation.  
+**Status:** Researcher reported that the clarification email was sent on 2026-10-24; awaiting external response. Delivery has not been independently verified.  
 **Dataset:** Villa et al., *Membrane Specifications for Multi-Configuration Membrane Distillation Model*, GDR submission 1016, DOI 10.15121/1452747.  
 **Repository:** `jouzia/ai-waste-heat-water`
 
@@ -11,8 +11,8 @@ Maintain a traceable record of unresolved source questions before changing any V
 
 ## Contact state
 
-- [ ] Verify the current contact route on the official GDR landing page.
-- [ ] Researcher reviews and sends the email draft, if appropriate.
+- [x] Verify the dataset record and use the official GDR support route.
+- [x] Researcher reported sending the clarification request to `GDR.Help@nlr.gov` on 2026-10-24.
 - [ ] Record sent date, recipient/official route, and message copy in a private research record; do not publish private correspondence without permission.
 - [ ] Record any response date and the source of the response.
 - [ ] Link any public correction, workbook revision, manufacturer document, or author-approved clarification.
@@ -46,4 +46,5 @@ Existing audit: [VILLA_GEOMETRY_FLOW_PROVENANCE_AUDIT_2026-10-23.md](VILLA_GEOME
 
 ## Change log
 
-- 2026-10-24: Initial log created. No source-author response is documented; no email has been sent by this workflow.
+- 2026-10-24: Initial log created.
+- 2026-10-24: Researcher reported sending the clarification request to `GDR.Help@nlr.gov`. This is not independent delivery verification. No external response is documented.
