@@ -1,6 +1,6 @@
 # Malaguti MD thermodynamic equations and model-extension gate — 2026-10-24
 
-**Status:** Literature-derived equation extraction and implementation specification. No equations in this document have yet been implemented or independently reproduced in this repository. This is not a validation result or a novelty claim.
+**Status:** Literature-derived equation extraction plus a partial equation evaluator. The STEC/SCR equations and module-pumping expression have been transcribed into an optional helper module, but the complete supplementary derivation, independent numeric reproduction, empirical validation, and novelty assessment remain incomplete. This is not a validation result or a novelty claim.
 
 ## 1. Primary source
 
@@ -137,7 +137,7 @@ If the supplement and benchmark support it, implement **one** configuration (pre
 - Malaguti equations transcribed from accessible article text: yes, preliminary extraction.
 - Supplementary Information independently audited: not yet.
 - Published numeric benchmark fully reconstructed: not yet.
-- Configuration-resolved model implemented: no.
+- Partial configuration-specific STEC/SCR equation evaluator implemented: yes; full model with derived outlet temperature/recovery and coupled energy/water accounting: no.
 - Independent empirical validation: no.
 - Novelty established: no.
 - Net-water benefit demonstrated: no.
