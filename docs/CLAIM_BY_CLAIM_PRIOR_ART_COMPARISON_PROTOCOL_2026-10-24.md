@@ -148,3 +148,27 @@ Chen's paper uses a materially different named process architecture from the rep
 ### Source
 
 Chen et al. (2026), “A dual-purpose seawater evaporation system for data center cooling and freshwater production: design and performance analysis,” *Applied Thermal Engineering* 287, article 129458. Publisher HTML: https://www.sciencedirect.com/science/article/pii/S1359431125040505. Retrieved 2026-10-24.
+
+
+## 10. Term-by-term mapping: Malaguti framework versus current code
+
+**Basis:** Malaguti mapping below is based on the publisher article description/available article text and the implementation cross-check already recorded in `PRIOR_ART_GAP_AUDIT_2026-10-14.md`. It is a structural mapping, not a claim that the article's equations have been numerically reproduced. Exact equation numbers, assumptions, and supplementary definitions should be added during a full equation extraction.
+
+| Malaguti quantity or constraint | Meaning in the article | Closest current-code representation | Gap / action |
+|---|---|---|---|
+| STEC (specific thermal energy consumption) | Thermal energy requirement per unit distillate for a specified MD configuration | Modelled thermal demand/heat recovery terms in the reduced-order engine | Not a configuration-resolved reproduction of the article's DCMD/AGMD equations. Select one configuration and map the exact balance terms before implementing. |
+| SCR (specific cooling requirement) | Cooling duty removed per unit distillate | Fixed `md_cooling_to_heating_ratio` (0.5 in the cited scenario runner), plus cooling electricity and cooling-water coefficients | Ratio-based approximation does not resolve configuration-specific cooling duty, sink conditions, or cooling technology. Keep labelled as an assumption; do not call it SCR calculated from MD physics. |
+| Single-pass recovery | Fraction of feed converted to distillate in a pass | No demonstrated default-envelope coupling between a configuration-resolved recovery calculation and all cooling/pumping burdens | Do not import the article's 2–6% examples as a default constant. Add recovery only with a sourced definition and explicit feed/distillate flow boundary. |
+| Pressure drop and pump efficiency | Hydraulic burden used to estimate pumping energy | Optional pressure-drop/pump-efficiency path in the engine; default scenario runner uses fixed 0.4 kWh/m³ | Default envelope does not sweep pressure drop, pump efficiency, and recovery jointly. Add a tested, optional path only after parameter provenance is documented. |
+| Heat-recovery configuration | Internal/external recovery changes thermal duty and system performance | Fixed heat-recovery fraction 0.5 and heat-exchanger effectiveness 0.8 in the scenario runner | These are illustrative scalar assumptions, not an explicit model of the three configurations compared in Malaguti. |
+| Cooling heat sink / cooling technology | Feasibility and actual energy depend on sink availability/effectiveness and selected cooling technology | Fixed cooling-electricity and cooling-water factors; ambient/cold-side temperature is a scenario value | No default explicit sink-availability constraint or technology selection. Avoid claims of heat-sink feasibility until implemented and tested. |
+| Theoretical requirement to actual consumption | Article distinguishes energy requirement from actual use under specific heating/cooling technologies | Fixed electricity coefficients and facility/grid water factors | The present model's mapping is simplified and conditional. Document factor provenance and avoid double counting process and facility cooling. |
+| Net water impact | Not equivalent to MD thermal/hydraulic performance alone | Avoided-water term based on freshwater output and a selected displacement fraction, minus modelled incremental operational burdens | This is the repository's accounting layer, but its validity depends on consistent boundaries, source-water definitions, displacement evidence, and avoiding overlap between water factors. It is a candidate contribution, not a novelty result. |
+
+### Minimum viable extension if justified
+
+The first candidate should be a **single-configuration thermal/cooling calculation**, not an all-configurations implementation. Before coding, archive (i) exact equation numbers and definitions from Malaguti, (ii) all required inputs and their provenance, (iii) unit tests for limiting cases and dimensional consistency, and (iv) a small benchmark table reproducing selected published results within a stated tolerance. Keep the current reduced-order path as a baseline so the extension can be compared against it. Do not tune the new model to the Villa observations until target leakage controls and source-data identity issues are resolved.
+
+### Decision after this mapping
+
+The structural gap is now specific enough to guide implementation, but **implementation is not yet justified solely by prior art**. First complete equation-level extraction (including supplement) and the source/input inventory. If the necessary configuration parameters are unavailable or not independently testable, preserve the current model and narrow claims rather than filling gaps with guessed values.
