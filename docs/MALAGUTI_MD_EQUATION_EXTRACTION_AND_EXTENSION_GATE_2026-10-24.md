@@ -141,3 +141,28 @@ If the supplement and benchmark support it, implement **one** configuration (pre
 - Independent empirical validation: no.
 - Novelty established: no.
 - Net-water benefit demonstrated: no.
+
+
+## 7. Full-text numeric anchors extracted on 2026-10-24
+
+A full-text version-of-record PDF was accessible through the Politecnico di Torino institutional repository. This improves on the earlier publisher-page-only extraction, but it does **not** mean the supplementary PDF was independently audited.
+
+Source: [institutional repository PDF](https://iris.polito.it/retrieve/handle/11583/3009010/c2612a47-ce66-4dfc-9742-367e56ec3f6d/1-s2.0-S0011916426001955-main.pdf). The article states that generated data are included in the article and supplementary information.
+
+Published reference anchors (not a complete benchmark table):
+- For configuration 3 (AGMD with internal heat recovery), at vaporization efficiency η=0.5, reported single-pass recovery is 2.2% at ΔT=30 °C and 3.9% at ΔT=50 °C.
+- At η=0.7, reported recovery is 3.0% at ΔT=30 °C and 5.6% at ΔT=50 °C.
+- Figure 4 evaluates module pressure-drop cases of 100, 300, and 1000 mbar. The article reports typical pumping penalties around 0.2–0.5 kWh/m³ at 300 mbar and low single-pass recovery (typically 2–6%).
+- Cold-stream inlet temperature is fixed at 20 °C; ΔT_h,in=5 °C and ΔT_HX=5 °C for the explored cases. Technology conversion values are illustrative, not prescriptive.
+
+These values can anchor a recovery/pumping test once supplementary definitions (especially equations deriving ΔT_h,out and R) are transcribed exactly. They do not independently verify STEC/SCR, and graph-read values must not be presented with source-table precision.
+
+### Revised next gate
+1. Retrieve and audit the supplementary PDF, including equations S1 onward and variable conventions.
+2. Transcribe exact equations deriving ΔT_h,out and recovery R.
+3. Build a reference table for the four recovery anchors and available pumping values; distinguish article text from graph-read estimates.
+4. Independently implement the equations in a test-only reference script with dimensional checks.
+5. Port equations to the production model only after the reference script reproduces source anchors within stated precision.
+
+### Time estimate, scoped
+Planning estimate: **6–10 focused hours** if the supplement is accessible and sufficiently complete; allow **another 2–4 hours** if retrieval or interpretation is difficult. This covers source reconstruction, reference calculations, tests, and one optional configuration—not remaining publication work or empirical validation.
