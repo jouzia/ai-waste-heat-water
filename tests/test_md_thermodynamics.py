@@ -77,6 +77,7 @@ def test_configuration_three_requires_heat_capacities():
         {"vaporization_efficiency": 1.1},
         {"delta_t_k": 0.0},
         {"delta_t_h_out_k": 30.0},
+        {"delta_t_h_out_k": 6.0},
         {"delta_t_h_in_k": 30.0},
     ],
 )
