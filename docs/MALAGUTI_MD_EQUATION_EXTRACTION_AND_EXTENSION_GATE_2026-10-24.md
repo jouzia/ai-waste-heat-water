@@ -188,3 +188,10 @@ The equation tests were strengthened to compare each configuration's returned ST
 They are **not** an independent implementation of the supplementary model and are **not** empirical or published-output validation: the expected values are calculated from the same published equations, with illustrative inputs. The 4 recovery anchors (η = 0.5 and 0.7 at ΔT = 30 °C and 50 °C) remain un-reproduced because the supplementary derivation of ΔT_h,out and R has not been obtained. No test execution or passing CI run is claimed here.
 
 The supplementary file is listed by the publisher as a 618 KB PDF, but direct retrieval through the currently available web route was blocked. The accessible article text confirms that Eq. S8 constrains ΔT_h,out and that recovery depends on η and ΔT; it does not provide the full algebra needed to reconstruct that dependency in this audit. Do not back-solve the equation from the four plotted anchors and then present the result as source-derived.
+
+
+## 10. Physical-domain guard added (2026-10-25)
+
+The partial evaluator now rejects `delta_t_h_out_k > delta_t_h_in_k`. The article's discussion of configuration 3 describes the outlet temperature difference as bounded by the imposed inlet temperature difference and a minimum terminal difference; the code guard prevents a supplied input from exceeding that upper bound. A regression case was added for an outlet difference of 6 K when the inlet difference is 5 K.
+
+This is a conservative input-domain check based on the article's stated thermodynamic bound; it does **not** derive the correct outlet difference from efficiency and inlet conditions, nor does it reproduce Eq. S8. The evaluator still requires an externally validated or source-reconstructed outlet value. The tests have been updated in the repository, but execution and CI status remain unverified in this audit.
