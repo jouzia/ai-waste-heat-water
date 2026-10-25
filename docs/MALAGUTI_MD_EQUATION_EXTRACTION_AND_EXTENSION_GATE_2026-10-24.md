@@ -179,3 +179,12 @@ This is deliberately a **partial equation evaluator**, not a full implementation
 The pumping test uses 300 mbar = 30,000 Pa, recovery 0.03, and pump efficiency 0.75, yielding 0.37037 kWh/m³ from the published expression. This is a dimensional/unit-conversion test, not an empirical measurement or a reproduction of a complete paper operating point.
 
 **Verification caveat:** both files were fetched back from the default branch after creation. This confirms repository contents, not successful test execution. The repository CI workflow runs pytest and Ruff on pushes; a passing run must be checked before the implementation is described as tested. The supplementary equations and exact benchmark reconstruction remain open gates.
+
+
+## 9. Equation-level test strengthening (2026-10-25)
+
+The equation tests were strengthened to compare each configuration's returned STEC/SCR values against separately expanded numerical expressions using the same documented equations, plus an explicit pumping-expression conversion check. These are useful implementation-regression and unit-conversion checks.
+
+They are **not** an independent implementation of the supplementary model and are **not** empirical or published-output validation: the expected values are calculated from the same published equations, with illustrative inputs. The 4 recovery anchors (η = 0.5 and 0.7 at ΔT = 30 °C and 50 °C) remain un-reproduced because the supplementary derivation of ΔT_h,out and R has not been obtained. No test execution or passing CI run is claimed here.
+
+The supplementary file is listed by the publisher as a 618 KB PDF, but direct retrieval through the currently available web route was blocked. The accessible article text confirms that Eq. S8 constrains ΔT_h,out and that recovery depends on η and ΔT; it does not provide the full algebra needed to reconstruct that dependency in this audit. Do not back-solve the equation from the four plotted anchors and then present the result as source-derived.
