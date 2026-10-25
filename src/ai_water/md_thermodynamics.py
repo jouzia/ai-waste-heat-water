@@ -62,6 +62,8 @@ def evaluate_requirements(
         raise ValueError("delta_t_k must exceed delta_t_h_out_k")
     if delta_t_h_in_k >= delta_t_k:
         raise ValueError("delta_t_h_in_k must be smaller than delta_t_k")
+    if delta_t_h_out_k > delta_t_h_in_k:
+        raise ValueError("delta_t_h_out_k must not exceed delta_t_h_in_k")
 
     eta = vaporization_efficiency
     if configuration == 1:
