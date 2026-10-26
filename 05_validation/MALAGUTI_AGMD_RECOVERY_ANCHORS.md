@@ -30,3 +30,12 @@ The article's stated reference conditions include \(\Delta T_{h,in}=5\ ^\circ C\
 - The separate 618 KB Supplementary Information PDF was not present among the files in that ZIP.
 - The current helper `src/ai_water/md_thermodynamics.py` evaluates STEC/SCR only when \(\Delta T_{h,out}\) is supplied; it does not derive \(\Delta T_{h,out}\) or recovery.
 - **Benchmark execution status: BLOCKED** until the supplementary derivation is available and transcribed.
+
+
+## Machine-readable benchmark and CI record (2026-10-26)
+
+The four source-reported anchors are also stored in `05_validation/data/malaguti_2026_agmd_recovery_anchors.csv`. The CSV labels them as reported values and explicitly records that independent reproduction is blocked; it contains no model-generated predictions or fitted values.
+
+GitHub Actions run [40357047055](https://github.com/jouzia/ai-waste-heat-water/actions/runs/40357047055) completed successfully: test and Ruff steps passed for the documentation/source-audit change. This confirms software checks for that commit, not reproduction of the Malaguti recovery model.
+
+The next scientific dependency remains the supplementary PDF (or a reliable full-text transcription of the relevant supplementary equations). Until it is available, no prediction-error table can be computed honestly.
