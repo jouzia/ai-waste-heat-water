@@ -2,7 +2,6 @@ import pytest
 
 from ai_water.md_thermodynamics import evaluate_requirements, module_pumping_kwh_m3
 
-
 BASE = {
     "delta_t_k": 30.0,
     "delta_t_h_in_k": 5.0,
