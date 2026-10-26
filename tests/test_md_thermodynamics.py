@@ -1,6 +1,6 @@
-import pytest
-
 from ai_water.md_thermodynamics import evaluate_requirements, module_pumping_kwh_m3
+
+import pytest
 
 
 BASE = {
