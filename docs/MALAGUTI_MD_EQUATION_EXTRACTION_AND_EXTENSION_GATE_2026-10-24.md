@@ -178,14 +178,14 @@ This is deliberately a **partial equation evaluator**, not a full implementation
 
 The pumping test uses 300 mbar = 30,000 Pa, recovery 0.03, and pump efficiency 0.75, yielding 0.37037 kWh/m³ from the published expression. This is a dimensional/unit-conversion test, not an empirical measurement or a reproduction of a complete paper operating point.
 
-**Verification caveat:** both files were fetched back from the default branch after creation. This confirms repository contents, not successful test execution. The repository CI workflow runs pytest and Ruff on pushes; a passing run must be checked before the implementation is described as tested. The supplementary equations and exact benchmark reconstruction remain open gates.
+**Verification note (superseded by Section 11):** repository contents were confirmed after creation. At the time of writing, CI had not yet been verified; see Section 11 for the later passing run. The supplementary equations and exact benchmark reconstruction remain open gates.
 
 
 ## 9. Equation-level test strengthening (2026-10-25)
 
 The equation tests were strengthened to compare each configuration's returned STEC/SCR values against separately expanded numerical expressions using the same documented equations, plus an explicit pumping-expression conversion check. These are useful implementation-regression and unit-conversion checks.
 
-They are **not** an independent implementation of the supplementary model and are **not** empirical or published-output validation: the expected values are calculated from the same published equations, with illustrative inputs. The 4 recovery anchors (η = 0.5 and 0.7 at ΔT = 30 °C and 50 °C) remain un-reproduced because the supplementary derivation of ΔT_h,out and R has not been obtained. No test execution or passing CI run is claimed here.
+They are **not** an independent implementation of the supplementary model and are **not** empirical or published-output validation: the expected values are calculated from the same published equations, with illustrative inputs. The 4 recovery anchors (η = 0.5 and 0.7 at ΔT = 30 °C and 50 °C) remain un-reproduced because the supplementary derivation of ΔT_h,out and R has not been obtained. CI status was not verified when this section was written; see Section 11 for the later passing run.
 
 The supplementary file is listed by the publisher as a 618 KB PDF, but direct retrieval through the currently available web route was blocked. The accessible article text confirms that Eq. S8 constrains ΔT_h,out and that recovery depends on η and ΔT; it does not provide the full algebra needed to reconstruct that dependency in this audit. Do not back-solve the equation from the four plotted anchors and then present the result as source-derived.
 
@@ -194,4 +194,28 @@ The supplementary file is listed by the publisher as a 618 KB PDF, but direct re
 
 The partial evaluator now rejects `delta_t_h_out_k > delta_t_h_in_k`. The article's discussion of configuration 3 describes the outlet temperature difference as bounded by the imposed inlet temperature difference and a minimum terminal difference; the code guard prevents a supplied input from exceeding that upper bound. A regression case was added for an outlet difference of 6 K when the inlet difference is 5 K.
 
-This is a conservative input-domain check based on the article's stated thermodynamic bound; it does **not** derive the correct outlet difference from efficiency and inlet conditions, nor does it reproduce Eq. S8. The evaluator still requires an externally validated or source-reconstructed outlet value. The tests have been updated in the repository, but execution and CI status remain unverified in this audit.
+This is a conservative input-domain check based on the article's stated thermodynamic bound; it does **not** derive the correct outlet difference from efficiency and inlet conditions, nor does it reproduce Eq. S8. The evaluator still requires an externally validated or source-reconstructed outlet value. The tests have been updated in the repository. CI status was unverified when this section was written; see Section 11 for the later passing run.
+
+
+## 11. Follow-up verification and source-access audit (2026-10-26)
+
+### Software verification
+
+GitHub Actions run [40342751834](https://github.com/jouzia/ai-waste-heat-water/actions/runs/40342751834) completed successfully on commit `c78232180a8b9e4a8e1d717e9e463e83daf38ddc`. Both the test and Ruff steps passed. The final correction removed an excess blank line in `tests/test_md_thermodynamics.py`; it did not change the thermodynamic equations. Earlier successful test runs reported 159 passed and 1 skipped; the linked run is the authoritative CI pass for the repository state at that commit.
+
+### Primary-source access update
+
+The full article text was re-accessed through the publisher/institutional repository. It confirms that the supplementary information contains the full lumped-model derivation and variable definitions, and specifically identifies Eq. S8 as the constraint governing `delta_t_h_out` and recovery. The article reports four AGMD recovery anchors: at efficiency 0.5, recovery is 2.2% at ΔT = 30 °C and 3.9% at 50 °C; at efficiency 0.7, recovery is 3.0% at 30 °C and 5.6% at 50 °C. These remain source-reported targets, not reproduced outputs from this repository.
+
+The supplementary PDF is listed as a 618 KB attachment on the publisher record, but the available access route in this audit exposed the main article and not the supplement's contents. Therefore, Eq. S8 and the related Eq. S14/S15 have **not** been transcribed or independently checked. No recovery equation has been inferred from the plotted anchors. The exact source-reconstruction gate remains blocked on obtaining the supplement itself or an independently accessible full-text transcription of those equations.
+
+### Gate decision
+
+- Software tests and lint: **PASS** for the linked commit.
+- Published STEC/SCR formula transcription: **partial**, as documented above.
+- Outlet-temperature/recovery derivation: **BLOCKED / not reproduced**.
+- Four recovery anchors: **not reproduced**.
+- Independent empirical validation and net-water-benefit claim: **not established**.
+- Novelty: **not established**; the article itself is prior art for thermodynamic cooling/pumping burdens in membrane distillation, while the wider project contribution still needs a claim-by-claim comparison and independent evidence.
+
+The next valid action is to acquire the supplementary file and transcribe its equations with units and variable definitions, then build a separate reference implementation before connecting recovery to the main water ledger. Do not relax the validation gate merely because CI is green.
