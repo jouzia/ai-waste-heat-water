@@ -39,3 +39,10 @@ The four source-reported anchors are also stored in `05_validation/data/malaguti
 GitHub Actions run [40357047055](https://github.com/jouzia/ai-waste-heat-water/actions/runs/40357047055) completed successfully: test and Ruff steps passed for the documentation/source-audit change. This confirms software checks for that commit, not reproduction of the Malaguti recovery model.
 
 The next scientific dependency remains the supplementary PDF (or a reliable full-text transcription of the relevant supplementary equations). Until it is available, no prediction-error table can be computed honestly.
+
+
+## Provenance integrity test (2026-10-26)
+
+Added `tests/test_malaguti_recovery_anchors.py` to check that the machine-readable table has exactly four unique operating points, retains the four values transcribed from the main article, and keeps every row labelled as a source-reported target whose independent reproduction is blocked. These tests guard against accidental edits or relabelling; they are **not** a thermodynamic reproduction, source-equation verification, or empirical validation.
+
+The new test commit is `3a5b90779caf7cda7798157f52eeb963f9f7d283`. CI must complete before treating this change as software-verified.
