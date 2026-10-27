@@ -5,11 +5,11 @@ import pytest
 from ai_water.malaguti_agmd_reference import solve_agmd_reference
 
 
-# Explicitly provisional values used only to test the equation solver.
-# They are NOT verified Sharqawy property outputs and do not constitute reproduction.
+# Provisional numerical smoke-test inputs only; NOT verified Sharqawy outputs.
+# The cold channel is saline water in AGMD, not pure distillate water.
 PROVISIONAL_PROPERTIES = {
     "cp_hot_j_kg_k": 4000.0,
-    "cp_cold_j_kg_k": 4180.0,
+    "cp_cold_j_kg_k": 4000.0,
     "cp_distillate_j_kg_k": 4180.0,
     "latent_heat_j_kg": 2_400_000.0,
     "delta_t_h_in_c": 5.0,
@@ -20,10 +20,10 @@ PROVISIONAL_PROPERTIES = {
 @pytest.mark.parametrize(
     ("eta", "delta_t", "expected_recovery"),
     [
-        (0.5, 30.0, 0.0220442059),
-        (0.5, 50.0, 0.0400589065),
-        (0.7, 30.0, 0.0310200661),
-        (0.7, 50.0, 0.0566002175),
+        (0.5, 30.0, 0.0210851568),
+        (0.5, 50.0, 0.0383010174),
+        (0.7, 30.0, 0.0296647349),
+        (0.7, 50.0, 0.0540961566),
     ],
 )
 def test_solver_residuals_and_physical_domain(eta, delta_t, expected_recovery):
