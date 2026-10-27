@@ -1,5 +1,5 @@
 configuration,configuration_name,vaporization_efficiency,delta_t_c,recovery_percent,source_status,evidence_location,independent_reproduction_status
-3,AGMD_internal_heat_recovery,0.5,30,2.2,reported_in_main_article,Section 3.3 Figure 4B,blocked_missing_supplementary_equations
-3,AGMD_internal_heat_recovery,0.5,50,3.9,reported_in_main_article,Section 3.3 Figure 4B,blocked_missing_supplementary_equations
-3,AGMD_internal_heat_recovery,0.7,30,3.0,reported_in_main_article,Section 3.3 Figure 4B,blocked_missing_supplementary_equations
-3,AGMD_internal_heat_recovery,0.7,50,5.6,reported_in_main_article,Section 3.3 Figure 4B,blocked_missing_supplementary_equations
+3,AGMD_internal_heat_recovery,0.5,30,2.2,reported_in_main_article,Section 3.3 Figure 4B,supplement_available_property_model_unverified
+3,AGMD_internal_heat_recovery,0.5,50,3.9,reported_in_main_article,Section 3.3 Figure 4B,supplement_available_property_model_unverified
+3,AGMD_internal_heat_recovery,0.7,30,3.0,reported_in_main_article,Section 3.3 Figure 4B,supplement_available_property_model_unverified
+3,AGMD_internal_heat_recovery,0.7,50,5.6,reported_in_main_article,Section 3.3 Figure 4B,supplement_available_property_model_unverified
