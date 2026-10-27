@@ -219,3 +219,29 @@ The supplementary PDF is listed as a 618 KB attachment on the publisher record, 
 - Novelty: **not established**; the article itself is prior art for thermodynamic cooling/pumping burdens in membrane distillation, while the wider project contribution still needs a claim-by-claim comparison and independent evidence.
 
 The next valid action is to acquire the supplementary file and transcribe its equations with units and variable definitions, then build a separate reference implementation before connecting recovery to the main water ledger. Do not relax the validation gate merely because CI is green.
+
+
+## 12. Supplementary Information received and audit reopened (2026-10-27)
+
+The publisher's 9-page supplementary PDF was supplied for this audit. This supersedes the earlier access note in Sections 7 and 11 that the supplement could not be obtained. It does **not** by itself establish successful numerical reproduction.
+
+### Source facts and unresolved transcription issues
+
+- The supplement supplies equations S1–S8, including coupled relations for AGMD configuration 3, outlet temperature difference, distillate temperature, and recovery.
+- The main article explicitly states that the cold-stream inlet is 20 °C and that the input terminal difference \(\Delta T_{h,in}=5\ ^\circ C\). The supplement's printed constraint in the S5/S8 material appears to use \(0.5\ ^\circ C\) for \(\Delta T_{h,in}\), while also discussing a minimum outlet difference of 0.5 °C. This is an apparent source inconsistency and must not be silently reconciled. Use 5 °C only when reproducing the main article's declared operating conditions, and record the discrepancy in any benchmark.
+- The supplement states pump efficiency \(\eta_{pump}=0.8\). This differs from the 0.75 value used in an earlier unit-test example in Section 8; the earlier example is only a unit-conversion test and must not be represented as the source's reference assumption.
+- The AGMD recovery values 2.2%, 3.9%, 3.0%, and 5.6% remain reported targets extracted from Figure 4B. No independent solver output has yet been verified against these targets.
+
+### Property-model gate
+
+The main article says the physical properties are based on temperature- and salinity-dependent correlations from Sharqawy et al. The MIT seawater library documents its property functions, their validity ranges, and a correction to the Jamieson specific-heat correlation. The implementation should use the official library/code or an independently checked transcription, with explicit units, salinity basis, pressure assumption, and temperature convention. Do not use the previous exploratory numerical calculations: their property transcription was not reliable.
+
+### Current gate decision
+
+- Supplementary PDF obtained: **yes**.
+- Supplementary equations transcribed at a preliminary level: **yes**.
+- Exact equation/property implementation independently verified: **no**.
+- Four AGMD recovery anchors reproduced by an independently tested solver: **no**.
+- Independent empirical validation, net-water benefit, and novelty: **not established**.
+
+Next: verify the equations against the rendered supplement pages, retrieve the official MIT seawater library files, build a standalone reference implementation with residual and physical-domain checks, and only then update production code. Until those checks pass, the anchor status remains unverified.
