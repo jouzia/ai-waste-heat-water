@@ -68,6 +68,6 @@ def test_malaguti_anchor_values_remain_source_targets_not_model_predictions() ->
     assert all(row["source_status"] == "reported_in_main_article" for row in rows)
     assert all(
         row["independent_reproduction_status"]
-        == "blocked_missing_supplementary_equations"
+        == "supplement_available_property_model_unverified"
         for row in rows
     )
