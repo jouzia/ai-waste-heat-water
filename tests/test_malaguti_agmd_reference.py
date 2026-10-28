@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import pytest
-
 from ai_water.malaguti_agmd_reference import solve_agmd_reference
+import pytest
 
 
 # Provisional numerical smoke-test inputs only; NOT verified Sharqawy outputs.
