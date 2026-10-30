@@ -24,3 +24,4 @@ src = ["src"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["ai_water"]
+known-third-party = ["pytest"]
