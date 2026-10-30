@@ -12,15 +12,15 @@ Reviewed `src/ai_water/malaguti_agmd_reference.py` and `tests/test_malaguti_agmd
 - It rejects non-finite and non-positive inputs and requires exactly one root under its current admissibility filter.
 - The test fixture clearly labels the property values as provisional and distinguishes saline cold-channel water from pure distillate.
 
-## Finding: root upper bound is not yet source-justified
+## Finding: root upper bound was not source-justified — addressed in this branch
 
-The solver accepts only roots satisfying:
+The initial solver accepted only roots satisfying:
 
 `minimum_delta_t_h_out_c <= delta_t_h_out <= delta_t_h_in_c`.
 
 The SI text available in this audit specifies a minimum outlet terminal difference of 0.5 °C. It does not clearly establish the upper bound `delta_t_h_out <= delta_t_h_in` as a general mathematical constraint. The bound may be an intended operating-domain restriction, but it must not be encoded as a source-derived universal constraint without further textual evidence.
 
-Recommendation: expose the admissibility interval as an explicit caller-supplied/model-policy choice or remove the upper bound from the generic solver. If retaining it for a specific Figure 4B case, label it as a case-specific assumption and test its effect.
+The solver has now been changed so the generic admissibility interval applies the documented minimum only. An optional `maximum_delta_t_h_out_c` argument allows a caller to impose an additional upper limit explicitly as a model-policy assumption. A regression test exercises a valid algebraic root above `delta_t_h,in`, and a companion test verifies that an explicitly supplied cap is enforced. These tests demonstrate the code-path distinction; they do not establish that such a root is physically realized in the paper's operating regime.
 
 ## Finding: current tests are regression checks, not independent validation
 
