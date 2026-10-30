@@ -48,30 +48,30 @@ def test_rejects_inlet_difference_not_below_overall_difference():
 
 def test_outlet_difference_can_exceed_inlet_without_optional_policy_cap():
     result = solve_agmd_reference(
-        vaporization_efficiency=0.6973894314192178,
-        delta_t_c=91.75565385125267,
-        delta_t_h_in_c=6.56277877653812,
-        cold_inlet_c=11.463104474916047,
-        cp_hot_j_kg_k=4431.63491923573,
-        cp_cold_j_kg_k=3184.019355313946,
+        vaporization_efficiency=0.7480277753658483,
+        delta_t_c=44.1125971862735,
+        delta_t_h_in_c=4.4198898005722835,
+        cold_inlet_c=20.0,
+        cp_hot_j_kg_k=4023.7871741005165,
+        cp_cold_j_kg_k=3575.9758914073695,
         cp_distillate_j_kg_k=4180.0,
-        latent_heat_j_kg=2456547.51341516,
+        latent_heat_j_kg=2467075.614008491,
     )
-    assert result.delta_t_h_out_c > 6.56277877653812
+    assert result.delta_t_h_out_c > 4.4198898005722835
     assert result.recovery_fraction > 0.0
 
 
 def test_optional_outlet_upper_bound_is_enforced_when_supplied():
     with pytest.raises(ValueError, match="exactly one"):
         solve_agmd_reference(
-            vaporization_efficiency=0.6973894314192178,
-            delta_t_c=91.75565385125267,
-            delta_t_h_in_c=6.56277877653812,
-            cold_inlet_c=11.463104474916047,
-            cp_hot_j_kg_k=4431.63491923573,
-            cp_cold_j_kg_k=3184.019355313946,
+            vaporization_efficiency=0.7480277753658483,
+            delta_t_c=44.1125971862735,
+            delta_t_h_in_c=4.4198898005722835,
+            cold_inlet_c=20.0,
+            cp_hot_j_kg_k=4023.7871741005165,
+            cp_cold_j_kg_k=3575.9758914073695,
             cp_distillate_j_kg_k=4180.0,
-            latent_heat_j_kg=2456547.51341516,
-            maximum_delta_t_h_out_c=6.56277877653812,
+            latent_heat_j_kg=2467075.614008491,
+            maximum_delta_t_h_out_c=4.4198898005722835,
         )
 
