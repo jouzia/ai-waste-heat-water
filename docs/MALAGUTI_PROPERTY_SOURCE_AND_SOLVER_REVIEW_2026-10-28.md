@@ -22,6 +22,21 @@ This independently confirms that the official library exists, identifies functio
 
 The official library's specific-heat function takes pressure, while the latent-heat function does not. A defensible property adapter therefore needs to preserve each function's distinct input contract instead of forcing both through one generic interface.
 
+
+## Source-state constraints confirmed from the published article
+
+The accessible main article states that seawater is the feed, salt rejection is complete, and the produced distillate is pure water. It fixes the cold-stream inlet at 20 °C and the hot-inlet terminal difference at 5 °C. It says density, latent heat, and specific heat are evaluated from temperature- and salinity-dependent Sharqawy correlations.
+
+However, the accessible article text does not provide a numerical feed salinity or fully specify the property evaluation temperature for each stream-specific heat capacity and latent heat. Those omissions prevent a defensible numerical property adapter from being selected solely from the main article. Do not assume 35 g/kg or evaluate every property at a single arbitrary temperature without a source-backed convention or a clearly separated sensitivity analysis.
+
+The official MIT library page distinguishes the function contracts: `SW_SpcHeat(T, S, P)` includes pressure, whereas `SW_LatentHeat(T, S)` uses the library's defined reference-pressure convention. The official download is labelled code version 3.1.5 (7 August 2024), but the separately published property-table PDF is labelled library version 3.1.3 (with table updates through 9 December 2023). The latter is not a version-matched substitute for validating the v3.1.5 implementation.
+
+References:
+- Malaguti et al. (2026), main article: https://doi.org/10.1016/j.desal.2026.120039
+- MIT seawater library and function ranges: https://web.mit.edu/seawater/
+- MIT v3.1.5 version history: https://web.mit.edu/seawater/Version_History_07Aug24-pdf-3a.pdf
+- MIT property tables (v3.1.3, updated 9 December 2023): https://web.mit.edu/seawater/2017_MIT_Seawater_Property_Tables_r2b_2023c.pdf
+
 ## Code-review findings for the audit-only solver
 
 The current reference solver correctly keeps the property values explicit and does not silently call the project production thermodynamics. Its tests verify algebraic residuals and expected smoke-test outputs for the selected provisional values. Those tests are regression tests for the implementation under those inputs, not independent physical validation.
