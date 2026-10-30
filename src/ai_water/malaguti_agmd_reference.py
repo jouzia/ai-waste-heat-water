@@ -34,6 +34,7 @@ def solve_agmd_reference(
     cp_distillate_j_kg_k: float,
     latent_heat_j_kg: float,
     minimum_delta_t_h_out_c: float = 0.5,
+    maximum_delta_t_h_out_c: float | None = None,
 ) -> AGMDReferenceResult:
     """Solve S2/S8 for AGMD using caller-supplied properties and SI units.
 
@@ -61,6 +62,8 @@ def solve_agmd_reference(
     for name, value in values.items():
         if not isfinite(value):
             raise ValueError(f"{name} must be finite")
+    if maximum_delta_t_h_out_c is not None and not isfinite(maximum_delta_t_h_out_c):
+        raise ValueError("maximum_delta_t_h_out_c must be finite when supplied")
     if not 0 < vaporization_efficiency <= 1:
         raise ValueError("vaporization_efficiency must be in (0, 1]")
     for name in (
@@ -76,8 +79,11 @@ def solve_agmd_reference(
             raise ValueError(f"{name} must be > 0")
     if delta_t_h_in_c >= delta_t_c:
         raise ValueError("delta_t_h_in_c must be smaller than delta_t_c")
-    if minimum_delta_t_h_out_c > delta_t_h_in_c:
-        raise ValueError("minimum outlet difference cannot exceed inlet difference")
+    if maximum_delta_t_h_out_c is not None:
+        if maximum_delta_t_h_out_c <= 0:
+            raise ValueError("maximum_delta_t_h_out_c must be > 0")
+        if maximum_delta_t_h_out_c < minimum_delta_t_h_out_c:
+            raise ValueError("maximum outlet difference cannot be below the minimum")
 
     hot_inlet_c = cold_inlet_c + delta_t_c
     # From S2: R = eta * c_h * (delta_T - delta_T_h,out) / h_vap.
@@ -104,7 +110,8 @@ def solve_agmd_reference(
         delta_t_h_out = float(root.real)
         recovery_value = recovery_per_kelvin * (delta_t_c - delta_t_h_out)
         if (
-            minimum_delta_t_h_out_c - 1e-9 <= delta_t_h_out <= delta_t_h_in_c + 1e-9
+            minimum_delta_t_h_out_c - 1e-9 <= delta_t_h_out
+            and (maximum_delta_t_h_out_c is None or delta_t_h_out <= maximum_delta_t_h_out_c + 1e-9)
             and 0.0 < recovery_value <= 1.0
         ):
             candidates.append((delta_t_h_out, recovery_value))
