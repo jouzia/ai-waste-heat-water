@@ -4,7 +4,6 @@ import pytest
 
 from ai_water.malaguti_agmd_reference import solve_agmd_reference
 
-
 # Provisional numerical smoke-test inputs only; NOT verified Sharqawy outputs.
 # The cold channel is saline water in AGMD, not pure distillate water.
 PROVISIONAL_PROPERTIES = {
