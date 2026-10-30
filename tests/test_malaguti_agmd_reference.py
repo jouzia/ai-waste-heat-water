@@ -45,3 +45,33 @@ def test_rejects_inlet_difference_not_below_overall_difference():
             delta_t_c=5.0,
             **PROVISIONAL_PROPERTIES,
         )
+
+def test_outlet_difference_can_exceed_inlet_without_optional_policy_cap():
+    result = solve_agmd_reference(
+        vaporization_efficiency=0.6973894314192178,
+        delta_t_c=91.75565385125267,
+        delta_t_h_in_c=6.56277877653812,
+        cold_inlet_c=11.463104474916047,
+        cp_hot_j_kg_k=4431.63491923573,
+        cp_cold_j_kg_k=3184.019355313946,
+        cp_distillate_j_kg_k=4180.0,
+        latent_heat_j_kg=2456547.51341516,
+    )
+    assert result.delta_t_h_out_c > 6.56277877653812
+    assert result.recovery_fraction > 0.0
+
+
+def test_optional_outlet_upper_bound_is_enforced_when_supplied():
+    with pytest.raises(ValueError, match="exactly one"):
+        solve_agmd_reference(
+            vaporization_efficiency=0.6973894314192178,
+            delta_t_c=91.75565385125267,
+            delta_t_h_in_c=6.56277877653812,
+            cold_inlet_c=11.463104474916047,
+            cp_hot_j_kg_k=4431.63491923573,
+            cp_cold_j_kg_k=3184.019355313946,
+            cp_distillate_j_kg_k=4180.0,
+            latent_heat_j_kg=2456547.51341516,
+            maximum_delta_t_h_out_c=6.56277877653812,
+        )
+
