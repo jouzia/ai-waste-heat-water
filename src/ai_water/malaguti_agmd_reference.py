@@ -7,7 +7,7 @@ must be supplied by the caller before this is treated as a paper reproduction.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import isfinite
+from math import copysign, isfinite, sqrt
 
 import numpy as np
 
@@ -21,6 +21,34 @@ class AGMDReferenceResult:
     distillate_outlet_c: float
     equation_s2_residual: float
     equation_s8_residual_w_per_kg_k: float
+
+
+def _real_polynomial_roots(polynomial: np.polynomial.Polynomial) -> list[float]:
+    """Return distinct real roots, treating a roundoff-level zero discriminant robustly."""
+    coefficients = np.asarray(polynomial.coef, dtype=float)
+    degree = len(coefficients) - 1
+    if degree == 0:
+        return []
+    if degree == 1:
+        return [-float(coefficients[0] / coefficients[1])]
+    if degree != 2:
+        raise ValueError("AGMD balance is expected to be at most quadratic")
+
+    constant, linear, quadratic = coefficients
+    discriminant = linear * linear - 4.0 * quadratic * constant
+    scale = linear * linear + abs(4.0 * quadratic * constant)
+    tolerance = 64.0 * np.finfo(float).eps * scale
+
+    if abs(discriminant) <= tolerance:
+        return [-float(linear / (2.0 * quadratic))]
+    if discriminant < 0.0:
+        return []
+
+    sqrt_discriminant = sqrt(discriminant)
+    q = -0.5 * (linear + copysign(sqrt_discriminant, linear))
+    if q == 0.0:
+        return [-float(linear / (2.0 * quadratic))]
+    return [float(q / quadratic), float(constant / q)]
 
 
 def solve_agmd_reference(
@@ -108,10 +136,7 @@ def solve_agmd_reference(
         + cp_cold_j_kg_k * (delta_t_h_in_c + cold_inlet_c)
     )
     candidates: list[tuple[float, float]] = []
-    for root in balance.roots():
-        if abs(float(root.imag)) > 1e-8:
-            continue
-        delta_t_h_out = float(root.real)
+    for delta_t_h_out in _real_polynomial_roots(balance):
         recovery_value = recovery_per_kelvin * (delta_t_c - delta_t_h_out)
         if (
             minimum_delta_t_h_out_c - 1e-9 <= delta_t_h_out
