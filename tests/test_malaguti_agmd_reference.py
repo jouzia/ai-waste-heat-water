@@ -46,6 +46,7 @@ def test_rejects_inlet_difference_not_below_overall_difference():
             **PROVISIONAL_PROPERTIES,
         )
 
+
 def test_outlet_difference_can_exceed_inlet_without_optional_policy_cap():
     result = solve_agmd_reference(
         vaporization_efficiency=0.7480277753658483,
@@ -74,6 +75,7 @@ def test_optional_outlet_upper_bound_is_enforced_when_supplied():
             latent_heat_j_kg=2467075.614008491,
             maximum_delta_t_h_out_c=4.4198898005722835,
         )
+
 
 def test_solver_reports_zero_admissible_roots():
     # Synthetic algebraic stress case, not a seawater-property scenario.
@@ -104,3 +106,22 @@ def test_solver_rejects_multiple_admissible_roots():
             cp_distillate_j_kg_k=6357.43391115901,
             latent_heat_j_kg=275894.7824005884,
         )
+
+
+def test_solver_handles_roundoff_around_a_repeated_real_root():
+    # Synthetic near-tangent quadratic. NumPy's generic polynomial root
+    # routine splits this repeated real root into a complex pair (~5e-7j).
+    # The coefficients are not claimed to represent a seawater operating case.
+    result = solve_agmd_reference(
+        vaporization_efficiency=0.926512030865986,
+        delta_t_c=46.74428555946179,
+        delta_t_h_in_c=42.062024979760835,
+        cold_inlet_c=19.181269097273844,
+        cp_hot_j_kg_k=3971.080236734126,
+        cp_cold_j_kg_k=3013.028444127959,
+        cp_distillate_j_kg_k=5711.888077413806,
+        latent_heat_j_kg=153858.61896472232,
+    )
+    assert result.delta_t_h_out_c == pytest.approx(23.743297041565786, abs=1e-8)
+    assert result.recovery_fraction == pytest.approx(0.5500274909487988, abs=1e-8)
+    assert result.equation_s8_residual_w_per_kg_k == pytest.approx(0.0, abs=1e-7)
