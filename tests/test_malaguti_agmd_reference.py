@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from numpy.polynomial import Polynomial
-
 import pytest
+from numpy.polynomial import Polynomial
 
 from ai_water.malaguti_agmd_reference import (
     _real_polynomial_roots,
