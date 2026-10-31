@@ -36,7 +36,7 @@ def solve_agmd_reference(
     minimum_delta_t_h_out_c: float = 0.5,
     maximum_delta_t_h_out_c: float | None = None,
 ) -> AGMDReferenceResult:
-    """Solve S2/S8 for AGMD using caller-supplied properties and SI units.
+    """Solve S2/S8 using caller-supplied properties and algebraic constraints.
 
     Temperatures are in °C and temperature differences in K/°C differences.
     Heat capacities are in J/(kg K); latent heat is in J/kg. The supplementary
@@ -47,6 +47,10 @@ def solve_agmd_reference(
     prose and the main article state that delta_T_h,in is fixed at 5 °C and
     delta_T_h,out >= 0.5 °C. This function does not hard-code delta_T_h,in;
     callers must choose and document the case being evaluated.
+
+    Root admissibility here is limited to the supplied algebraic bounds and
+    0 < recovery <= 1. Passing this filter is not physical validation of the
+    assumed properties, operating state, or the paper's experimental regime.
     """
     values = {
         "vaporization_efficiency": vaporization_efficiency,
@@ -118,8 +122,8 @@ def solve_agmd_reference(
 
     if len(candidates) != 1:
         raise ValueError(
-            "Expected exactly one physically admissible real root; "
-            f"found {len(candidates)}. Check property inputs and source assumptions."
+            "Expected exactly one model-admissible real root under the supplied "
+            f"constraints; found {len(candidates)}. Check property inputs and source assumptions."
         )
 
     delta_t_h_out, recovery_value = candidates[0]
