@@ -26,7 +26,7 @@ The solver has now been changed so the generic admissibility interval applies th
 
 The four expected recovery values are generated from the same provisional property set and the implementation's equations. These tests are useful to detect accidental code changes, but they do not independently validate the equation transcription, property values, or paper reproduction.
 
-Recommendation: add independent algebra checks with hand-constructed inputs, direct residual substitution, and tests that distinguish no root, one admissible root, and multiple admissible roots. Keep figure-read anchor comparisons in a separate validation layer with digitization uncertainty.
+Regression coverage now includes the existing one-root smoke cases plus synthetic zero-admissible-root and two-admissible-root stress cases. The two-root fixture deliberately uses coefficients outside any claimed seawater-property scenario; it exercises ambiguity handling only. These tests distinguish solver outcomes but do not independently validate the equation transcription or establish the frequency of multiple roots in the paper's operating domain. Further domain-wide analysis must use source-backed property states. Keep figure-read anchor comparisons in a separate validation layer with digitization uncertainty.
 
 ## Finding: no alternate-initial-guess test is applicable to the current algorithm
 
@@ -43,4 +43,4 @@ Official references:
 
 ## Decision
 
-The isolated solver is a useful algebraic diagnostic. The unjustified universal upper-root bound has been removed and replaced with an optional caller-supplied policy cap; the synthetic regression test covers both behaviors. The tests remain implementation-level checks rather than independent physical validation. No production thermodynamics changes are warranted. The reproduction gate remains open.
+The isolated solver is a useful algebraic diagnostic. The unjustified universal upper-root bound has been removed and replaced with an optional caller-supplied policy cap. Tests now cover zero, one, and multiple admissible-root outcomes, but the multiple-root stress fixture is intentionally nonphysical and must not be interpreted as an AGMD operating case. All tests remain implementation-level checks rather than independent physical validation. No production thermodynamics changes are warranted. The reproduction gate remains open.
