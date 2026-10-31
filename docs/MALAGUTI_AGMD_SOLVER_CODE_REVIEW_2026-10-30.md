@@ -43,4 +43,4 @@ Official references:
 
 ## Decision
 
-The isolated solver is a useful algebraic diagnostic, but the current admissible-root upper bound and regression-test interpretation require clarification. No production thermodynamics changes are warranted. The reproduction gate remains open.
+The isolated solver is a useful algebraic diagnostic. The unjustified universal upper-root bound has been removed and replaced with an optional caller-supplied policy cap; the synthetic regression test covers both behaviors. The tests remain implementation-level checks rather than independent physical validation. No production thermodynamics changes are warranted. The reproduction gate remains open.
