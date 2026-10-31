@@ -117,3 +117,19 @@ def test_real_polynomial_roots_returns_one_exact_repeated_root():
     # directly without claiming the coefficients are a seawater operating case.
     roots = _real_polynomial_roots(Polynomial([4.0, -4.0, 1.0]))
     assert roots == pytest.approx([2.0], abs=1e-14)
+
+
+@pytest.mark.parametrize("coefficient_scale", [1e-200, 1.0, 1e200])
+def test_real_polynomial_roots_are_invariant_to_coefficient_scale(coefficient_scale):
+    # The polynomial has roots 1 and 2; scaling every coefficient must not
+    # change the roots or turn a distinct-root case into a repeated root.
+    polynomial = Polynomial(
+        [2.0 * coefficient_scale, -3.0 * coefficient_scale, coefficient_scale]
+    )
+    roots = sorted(_real_polynomial_roots(polynomial))
+    assert roots == pytest.approx([1.0, 2.0], abs=1e-12)
+
+
+def test_real_polynomial_roots_reject_nonfinite_coefficients():
+    with pytest.raises(ValueError, match="finite"):
+        _real_polynomial_roots(Polynomial([1.0, float("inf"), 1.0]))
