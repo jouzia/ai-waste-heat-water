@@ -41,13 +41,13 @@ References:
 
 The current reference solver correctly keeps the property values explicit and does not silently call the project production thermodynamics. Its tests verify algebraic residuals and expected smoke-test outputs for the selected provisional values. Those tests are regression tests for the implementation under those inputs, not independent physical validation.
 
-One domain restriction needs further source confirmation before broader use: the solver currently requires `minimum_delta_t_h_out_c <= delta_t_h_in_c` and selects roots only within that interval. The SI explicitly gives a minimum `delta_T_h,out >= 0.5 °C`; it does not, in the accessible equation text, establish `delta_T_h,out <= delta_T_h,in` as a universal mathematical constraint. This upper bound may be appropriate for the plotted operating cases but must not be presented as a source-stated general constraint without additional evidence.
+The root-domain policy has been revised after code review. The generic solver now enforces the explicitly reported minimum `delta_T_h,out >= 0.5 °C` and the algebraic recovery domain, but does not impose `delta_T_h,out <= delta_T_h,in` as a universal source constraint. Callers may supply `maximum_delta_t_h_out_c` when they intentionally want to test that additional cap as a policy assumption. A synthetic regression test confirms that a root above the inlet terminal difference is not rejected by default; a companion test confirms that the optional cap is enforced. These tests verify software behavior, not physical realizability.
 
 ## Next verification steps
 
 1. Obtain and checksum the official v3.1.5 archive, or transcribe the exact equations from the official code files and compare them line-by-line against the mirror.
 2. Implement a property adapter only after that source comparison, with independent explicit inputs for temperature, salinity, and pressure as required by each function.
-3. Remove or justify the upper-root bound against the SI definitions, and test for multiple admissible roots rather than presuming uniqueness.
+3. The generic upper-root bound has been removed; the optional cap is explicitly caller-controlled. Continue testing multiple-root and no-root cases across a documented input domain rather than presuming uniqueness.
 4. Add tests for input units, function domains, non-finite values, and the two distinct source interpretations of the inlet temperature difference (0.5 °C printed constraint vs 5 °C prose/main text).
 5. Keep all anchor comparisons unfitted and labeled as figure-read targets with rounding uncertainty.
 
