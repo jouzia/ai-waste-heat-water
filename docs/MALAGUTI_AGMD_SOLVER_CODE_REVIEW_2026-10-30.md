@@ -36,6 +36,12 @@ The solver's root filter checks real-valued roots against the caller-supplied ou
 
 The implementation uses polynomial root calculation, not an iterative nonlinear solver initialized from a starting guess. Therefore a “multiple initial guesses converge” test is not meaningful for this implementation. The relevant robustness test is enumeration and classification of all real roots, followed by model-admissibility filtering and explicit handling of zero, one, or multiple roots under the supplied constraints.
 
+## Numerical robustness follow-up (2026-10-31)
+
+A second numerical review identified a scale-sensitivity risk in direct quadratic discriminant evaluation. Although finite polynomial coefficients can be valid at very small or very large common scales, squaring unnormalized coefficients can underflow or overflow. The root helper now normalizes coefficients by their maximum absolute magnitude before discriminant arithmetic and rejects non-finite coefficient arrays explicitly.
+
+Regression tests cover a polynomial with distinct roots 1 and 2 at common coefficient scales of `1e-200`, `1`, and `1e200`, as well as rejection of a non-finite coefficient. These tests verify numerical implementation robustness only; they do not expand the physical operating domain or validate any seawater-property assumptions.
+
 ## Property-source update
 
 The official MIT page confirms code version 3.1.5 dated 2024-08-07, while the publicly indexed property tables identify library version 3.1.3. The table PDF is therefore suitable only for carefully matched spot checks; it is not a version-matched validation oracle for v3.1.5. The official source page describes the separate function contracts: specific heat takes temperature, salinity, and pressure; latent heat takes temperature and salinity. Do not collapse these into a single generic property call.
@@ -47,4 +53,4 @@ Official references:
 
 ## Decision
 
-The isolated solver is a useful algebraic diagnostic. The unjustified universal upper-root bound has been removed and replaced with an optional caller-supplied policy cap. Tests now cover zero, one, and multiple model-admissible root outcomes, but the multiple-root stress fixture is intentionally nonphysical and must not be interpreted as an AGMD operating case. All tests remain implementation-level checks rather than independent physical validation. No production thermodynamics changes are warranted. The reproduction gate remains open.
+The isolated solver is a useful algebraic diagnostic. The unjustified universal upper-root bound has been removed and replaced with an optional caller-supplied policy cap. Tests now cover zero, one, and multiple model-admissible root outcomes, plus common coefficient-scale invariance and non-finite coefficient rejection. The multiple-root stress fixture is intentionally nonphysical and must not be interpreted as an AGMD operating case. All tests remain implementation-level checks rather than independent physical validation. No production thermodynamics changes are warranted. The reproduction gate remains open.
