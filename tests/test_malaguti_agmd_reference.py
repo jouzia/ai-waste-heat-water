@@ -75,3 +75,32 @@ def test_optional_outlet_upper_bound_is_enforced_when_supplied():
             maximum_delta_t_h_out_c=4.4198898005722835,
         )
 
+def test_solver_reports_zero_admissible_roots():
+    # Synthetic algebraic stress case, not a seawater-property scenario.
+    with pytest.raises(ValueError, match="found 0"):
+        solve_agmd_reference(
+            vaporization_efficiency=0.5185918434982489,
+            delta_t_c=38.73108980068479,
+            delta_t_h_in_c=4.885763869707903,
+            cold_inlet_c=26.987148929512614,
+            cp_hot_j_kg_k=3699.8278157839345,
+            cp_cold_j_kg_k=4486.426816194942,
+            cp_distillate_j_kg_k=4180.0,
+            latent_heat_j_kg=2128002.144351397,
+        )
+
+
+def test_solver_rejects_multiple_admissible_roots():
+    # Deliberately adversarial coefficients exercise ambiguity handling only.
+    # These values are not claimed to represent seawater or the paper's regime.
+    with pytest.raises(ValueError, match="found 2"):
+        solve_agmd_reference(
+            vaporization_efficiency=0.7134154568880409,
+            delta_t_c=81.35000948376,
+            delta_t_h_in_c=62.95142695184112,
+            cold_inlet_c=50.192339608335175,
+            cp_hot_j_kg_k=5142.442031919776,
+            cp_cold_j_kg_k=4668.8795856819725,
+            cp_distillate_j_kg_k=6357.43391115901,
+            latent_heat_j_kg=275894.7824005884,
+        )
