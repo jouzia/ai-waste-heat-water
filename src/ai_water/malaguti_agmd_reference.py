@@ -24,11 +24,23 @@ class AGMDReferenceResult:
 
 
 def _real_polynomial_roots(polynomial: np.polynomial.Polynomial) -> list[float]:
-    """Return distinct real roots, treating a roundoff-level zero discriminant robustly."""
+    """Return distinct real roots with scale-stable quadratic arithmetic."""
     coefficients = np.asarray(polynomial.coef, dtype=float)
+    if not np.all(np.isfinite(coefficients)):
+        raise ValueError("polynomial coefficients must be finite")
+
     degree = len(coefficients) - 1
     if degree == 0:
         return []
+
+    # Polynomial roots are invariant to a common coefficient scale. Normalize
+    # before discriminant arithmetic to avoid overflow/underflow at extreme
+    # but finite coefficient magnitudes.
+    coefficient_scale = float(np.max(np.abs(coefficients)))
+    if coefficient_scale == 0.0:
+        return []
+    coefficients = coefficients / coefficient_scale
+
     if degree == 1:
         return [-float(coefficients[0] / coefficients[1])]
     if degree != 2:
