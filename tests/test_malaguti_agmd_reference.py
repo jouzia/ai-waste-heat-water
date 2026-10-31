@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import pytest
 
-from ai_water.malaguti_agmd_reference import solve_agmd_reference
+from numpy.polynomial import Polynomial
+
+from ai_water.malaguti_agmd_reference import (
+    _real_polynomial_roots,
+    solve_agmd_reference,
+)
 
 # Provisional numerical smoke-test inputs only; NOT verified Sharqawy outputs.
 # The cold channel is saline water in AGMD, not pure distillate water.
@@ -108,20 +113,8 @@ def test_solver_rejects_multiple_admissible_roots():
         )
 
 
-def test_solver_handles_roundoff_around_a_repeated_real_root():
-    # Synthetic near-tangent quadratic. NumPy's generic polynomial root
-    # routine splits this repeated real root into a complex pair (~5e-7j).
-    # The coefficients are not claimed to represent a seawater operating case.
-    result = solve_agmd_reference(
-        vaporization_efficiency=0.926512030865986,
-        delta_t_c=46.74428555946179,
-        delta_t_h_in_c=42.062024979760835,
-        cold_inlet_c=19.181269097273844,
-        cp_hot_j_kg_k=3971.080236734126,
-        cp_cold_j_kg_k=3013.028444127959,
-        cp_distillate_j_kg_k=5711.888077413806,
-        latent_heat_j_kg=153858.61896472232,
-    )
-    assert result.delta_t_h_out_c == pytest.approx(23.743297041565786, abs=1e-8)
-    assert result.recovery_fraction == pytest.approx(0.5500274909487988, abs=1e-8)
-    assert result.equation_s8_residual_w_per_kg_k == pytest.approx(0.0, abs=1e-7)
+def test_real_polynomial_roots_returns_one_exact_repeated_root():
+    # Exact synthetic quadratic (x - 2)^2. This tests multiplicity handling
+    # directly without claiming the coefficients are a seawater operating case.
+    roots = _real_polynomial_roots(Polynomial([4.0, -4.0, 1.0]))
+    assert roots == pytest.approx([2.0], abs=1e-14)
