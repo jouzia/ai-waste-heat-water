@@ -97,8 +97,9 @@ def solve_agmd_reference(
     Set enforce_config3_terminal_order=True to apply that stricter, provisional
     interpretation for sensitivity comparisons. Passing the algebraic/model
     filters is not full physical validation of the assumed properties or
-    source-matched operating state; the supplementary information remains
-    necessary to complete the equation and constraint audit.
+    source-matched operating state; the supplementary equations have been
+    transcribed from the publisher SI, but its printed inlet-difference
+    constraint contains an unresolved 0.5 °C versus 5 °C inconsistency.
     """
     values = {
         "vaporization_efficiency": vaporization_efficiency,
