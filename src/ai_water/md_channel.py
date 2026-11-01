@@ -14,6 +14,7 @@ outside this layer.
 """
 
 from dataclasses import dataclass
+from typing import Literal
 
 from .channel_transport import concentration_polarization_coefficient, interface_salinity_g_kg
 from .md import seawater_water_activity, vapor_pressure_driving_force_bar
@@ -38,6 +39,11 @@ class ChannelConfig:
     water_activity_override: float | None = None
     salt_mass_transfer_coefficient_m_s: float | None = None
     solvent_density_kg_m3: float | None = None
+    flow_arrangement: Literal["co_current", "counter_current"] = "co_current"
+    counter_current_max_iterations: int = 500
+    counter_current_relaxation: float = 0.5
+    counter_current_temperature_tolerance_c: float = 1e-6
+    counter_current_mass_tolerance_relative: float = 1e-6
 
 
 @dataclass(frozen=True)
@@ -129,7 +135,7 @@ def simulate_dcmd_channel(
     feed_in_temperature_c: float,
     permeate_in_temperature_c: float,
 ) -> ChannelResult:
-    """Simulate a co-current DCMD module with explicit axial control volumes."""
+    """Simulate co-current or counter-current DCMD with explicit axial control volumes."""
     if config.membrane_area_m2 <= 0 or config.cells <= 0:
         raise ValueError("membrane area and cells must be positive")
     if config.duration_h <= 0:
@@ -149,126 +155,206 @@ def simulate_dcmd_channel(
             raise ValueError("solvent density is required when CP is enabled")
     if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_k <= 0:
         raise ValueError("heat capacities must be positive")
+    if config.counter_current_max_iterations <= 0:
+        raise ValueError("counter-current iteration limit must be positive")
+    if not 0 < config.counter_current_relaxation <= 1:
+        raise ValueError("counter-current relaxation must be in (0, 1]")
+    if config.counter_current_temperature_tolerance_c <= 0:
+        raise ValueError("counter-current temperature tolerance must be positive")
+    if config.counter_current_mass_tolerance_relative <= 0:
+        raise ValueError("counter-current mass tolerance must be positive")
     if not 0 <= config.feed_salinity_g_kg <= 120:
         raise ValueError("feed salinity must remain within the IAPWS-08 range")
     if config.water_activity_override is not None and not 0 < config.water_activity_override <= 1:
         raise ValueError("water activity override must be in (0,1]")
 
     cell_area = config.membrane_area_m2 / config.cells
-    feed_temperature = feed_in_temperature_c
-    permeate_temperature = permeate_in_temperature_c
-    feed_mass_flow = config.feed_mass_flow_kg_h
-    permeate_mass_flow = config.permeate_mass_flow_kg_h
-    salt_mass_flow = feed_mass_flow * config.feed_salinity_g_kg / 1000.0
-    cells: list[ChannelCellResult] = []
 
-    for index in range(config.cells):
-        feed_salinity = salt_mass_flow / feed_mass_flow * 1000.0
-        if config.water_activity_override is not None:
-            activity = config.water_activity_override
-        elif feed_salinity > 0:
-            activity = seawater_water_activity(feed_temperature, feed_salinity)
-        else:
-            activity = 1.0
-
-        tfm, tpm, flux = _cell_interfaces(
-            feed_bulk_c=feed_temperature,
-            permeate_bulk_c=permeate_temperature,
-            feed_h=config.feed_heat_transfer_coefficient_w_m2_k,
-            permeate_h=config.permeate_heat_transfer_coefficient_w_m2_k,
-            membrane_k=config.membrane_thermal_conductivity_w_m_k,
-            membrane_thickness_m=config.membrane_thickness_m,
-            latent_heat_kwh_per_kg=config.latent_heat_kwh_th_per_kg,
-            permeance=config.membrane_permeance_kg_m2_h_bar,
-            water_activity=activity,
+    def march(permeate_temperatures: list[float] | None = None, permeate_mass_flows: list[float] | None = None):
+        feed_temperature = feed_in_temperature_c
+        permeate_temperature = (
+            permeate_in_temperature_c if permeate_temperatures is None else permeate_temperatures[0]
         )
-        if config.salt_mass_transfer_coefficient_m_s is not None and feed_salinity > 0:
-            previous_flux = flux
-            for _ in range(30):
+        feed_mass_flow = config.feed_mass_flow_kg_h
+        permeate_mass_flow = config.permeate_mass_flow_kg_h
+        salt_mass_flow = feed_mass_flow * config.feed_salinity_g_kg / 1000.0
+        cells: list[ChannelCellResult] = []
+
+        for index in range(config.cells):
+            if permeate_temperatures is not None:
+                permeate_temperature = permeate_temperatures[index]
+            if permeate_mass_flows is not None:
+                permeate_mass_flow = permeate_mass_flows[index]
+            feed_salinity = salt_mass_flow / feed_mass_flow * 1000.0
+            activity = (
+                config.water_activity_override
+                if config.water_activity_override is not None
+                else (seawater_water_activity(feed_temperature, feed_salinity) if feed_salinity > 0 else 1.0)
+            )
+            tfm, tpm, flux = _cell_interfaces(
+                feed_bulk_c=feed_temperature,
+                permeate_bulk_c=permeate_temperature,
+                feed_h=config.feed_heat_transfer_coefficient_w_m2_k,
+                permeate_h=config.permeate_heat_transfer_coefficient_w_m2_k,
+                membrane_k=config.membrane_thermal_conductivity_w_m_k,
+                membrane_thickness_m=config.membrane_thickness_m,
+                latent_heat_kwh_per_kg=config.latent_heat_kwh_th_per_kg,
+                permeance=config.membrane_permeance_kg_m2_h_bar,
+                water_activity=activity,
+            )
+            if config.salt_mass_transfer_coefficient_m_s is not None and feed_salinity > 0:
+                previous_flux = flux
+                for _ in range(30):
+                    cpc = concentration_polarization_coefficient(
+                        flux_kg_m2_s=flux / 3600.0,
+                        mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
+                        solvent_density_kg_m3=config.solvent_density_kg_m3,
+                    )
+                    interface_salinity = interface_salinity_g_kg(feed_salinity, cpc)
+                    activity = (
+                        seawater_water_activity(tfm, interface_salinity)
+                        if config.water_activity_override is None
+                        else config.water_activity_override
+                    )
+                    tfm, tpm, flux = _cell_interfaces(
+                        feed_bulk_c=feed_temperature,
+                        permeate_bulk_c=permeate_temperature,
+                        feed_h=config.feed_heat_transfer_coefficient_w_m2_k,
+                        permeate_h=config.permeate_heat_transfer_coefficient_w_m2_k,
+                        membrane_k=config.membrane_thermal_conductivity_w_m_k,
+                        membrane_thickness_m=config.membrane_thickness_m,
+                        latent_heat_kwh_per_kg=config.latent_heat_kwh_th_per_kg,
+                        permeance=config.membrane_permeance_kg_m2_h_bar,
+                        water_activity=activity,
+                    )
+                    if abs(flux - previous_flux) < 1e-8:
+                        break
+                    previous_flux = flux
                 cpc = concentration_polarization_coefficient(
                     flux_kg_m2_s=flux / 3600.0,
                     mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
                     solvent_density_kg_m3=config.solvent_density_kg_m3,
                 )
                 interface_salinity = interface_salinity_g_kg(feed_salinity, cpc)
-                activity = (
-                    seawater_water_activity(tfm, interface_salinity)
-                    if config.water_activity_override is None
-                    else config.water_activity_override
-                )
-                tfm, tpm, flux = _cell_interfaces(
-                    feed_bulk_c=feed_temperature,
-                    permeate_bulk_c=permeate_temperature,
-                    feed_h=config.feed_heat_transfer_coefficient_w_m2_k,
-                    permeate_h=config.permeate_heat_transfer_coefficient_w_m2_k,
-                    membrane_k=config.membrane_thermal_conductivity_w_m_k,
-                    membrane_thickness_m=config.membrane_thickness_m,
-                    latent_heat_kwh_per_kg=config.latent_heat_kwh_th_per_kg,
-                    permeance=config.membrane_permeance_kg_m2_h_bar,
-                    water_activity=activity,
-                )
-                if abs(flux - previous_flux) < 1e-8:
-                    break
-                previous_flux = flux
-            cpc = concentration_polarization_coefficient(
-                flux_kg_m2_s=flux / 3600.0,
-                mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
-                solvent_density_kg_m3=1000.0,
-            )
-            interface_salinity = interface_salinity_g_kg(feed_salinity, cpc)
-        else:
-            cpc = 1.0
-            interface_salinity = feed_salinity
+            else:
+                cpc = 1.0
+                interface_salinity = feed_salinity
 
-        product_rate = flux * cell_area
-        product_kg = product_rate * config.duration_h
-        q_feed_w = config.feed_heat_transfer_coefficient_w_m2_k * (feed_temperature - tfm) * cell_area
-        q_latent_w = product_rate * config.latent_heat_kwh_th_per_kg * 1000.0
-        q_conductive_w = (
-            config.membrane_thermal_conductivity_w_m_k
-            / config.membrane_thickness_m
-            * (tfm - tpm)
-            * cell_area
+            product_rate = flux * cell_area
+            product_kg = product_rate * config.duration_h
+            q_feed_w = config.feed_heat_transfer_coefficient_w_m2_k * (feed_temperature - tfm) * cell_area
+            q_latent_w = product_rate * config.latent_heat_kwh_th_per_kg * 1000.0
+            q_conductive_w = (
+                config.membrane_thermal_conductivity_w_m_k / config.membrane_thickness_m
+                * (tfm - tpm) * cell_area
+            )
+            # Channel temperatures are steady-state bulk states. Their changes
+            # depend on heat-transfer rate (kJ/h) divided by mass-flow rate
+            # (kg/h), not on the arbitrary integration/reporting duration.
+            feed_temperature -= (
+                q_feed_w / 1000.0 * 3600.0
+                / (feed_mass_flow * config.feed_cp_kj_kg_k)
+            )
+            permeate_temperature += (
+                q_feed_w / 1000.0 * 3600.0
+                / (permeate_mass_flow * config.permeate_cp_kj_kg_k)
+            )
+            feed_mass_flow -= product_rate
+            permeate_mass_flow += product_rate
+            if feed_mass_flow <= 0:
+                raise ValueError("feed flow was exhausted inside the module")
+
+            cells.append(
+                ChannelCellResult(
+                    cell=index + 1,
+                    feed_bulk_temperature_c=feed_temperature,
+                    permeate_bulk_temperature_c=permeate_temperature,
+                    feed_interface_temperature_c=tfm,
+                    permeate_interface_temperature_c=tpm,
+                    feed_salinity_g_kg=feed_salinity,
+                    interface_salinity_g_kg=interface_salinity,
+                    concentration_polarization_coefficient=cpc,
+                    flux_kg_m2_h=flux,
+                    product_water_kg=product_kg,
+                    feed_heat_kw=q_feed_w / 1000.0,
+                    membrane_latent_heat_kw=q_latent_w / 1000.0,
+                    membrane_conductive_heat_kw=q_conductive_w / 1000.0,
+                )
+            )
+        return feed_temperature, permeate_temperature, feed_mass_flow, permeate_mass_flow, cells, salt_mass_flow
+
+    if config.flow_arrangement == "co_current":
+        feed_out, permeate_out, feed_mass, permeate_mass, cells, salt_mass_flow = march()
+    else:
+        # Counter-current operation is a two-point boundary-value problem.
+        # Solve it by fixed-point iteration on the permeate bulk-temperature profile.
+        profile = [permeate_in_temperature_c] * config.cells
+        mass_profile = [config.permeate_mass_flow_kg_h] * config.cells
+        mass_tolerance = (
+            config.counter_current_mass_tolerance_relative
+            * max(config.permeate_mass_flow_kg_h, 1.0)
         )
-
-        feed_heat_kwh = q_feed_w / 1000.0 * config.duration_h
-        feed_temperature -= feed_heat_kwh * 3600.0 / (feed_mass_flow * config.feed_cp_kj_kg_k)
-        permeate_temperature += feed_heat_kwh * 3600.0 / (permeate_mass_flow * config.permeate_cp_kj_kg_k)
-        feed_mass_flow -= product_rate
-        permeate_mass_flow += product_rate
-        if feed_mass_flow <= 0:
-            raise ValueError("feed flow was exhausted inside the module")
-
-        cells.append(
-            ChannelCellResult(
-                cell=index + 1,
-                feed_bulk_temperature_c=feed_temperature,
-                permeate_bulk_temperature_c=permeate_temperature,
-                feed_interface_temperature_c=tfm,
-                permeate_interface_temperature_c=tpm,
-                feed_salinity_g_kg=feed_salinity,
-                interface_salinity_g_kg=interface_salinity,
-                concentration_polarization_coefficient=cpc,
-                flux_kg_m2_h=flux,
-                product_water_kg=product_kg,
-                feed_heat_kw=q_feed_w / 1000.0,
-                membrane_latent_heat_kw=q_latent_w / 1000.0,
-                membrane_conductive_heat_kw=q_conductive_w / 1000.0,
+        for _ in range(config.counter_current_max_iterations):
+            feed_out, _, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile, mass_profile)
+            candidate_t = [permeate_in_temperature_c] * config.cells
+            candidate_m = [config.permeate_mass_flow_kg_h] * config.cells
+            for i in range(config.cells - 1, -1, -1):
+                if i == config.cells - 1:
+                    candidate_t[i] = permeate_in_temperature_c
+                    candidate_m[i] = config.permeate_mass_flow_kg_h
+                else:
+                    downstream = cells[i + 1]
+                    candidate_t[i] = downstream.permeate_bulk_temperature_c
+                    candidate_m[i] = mass_profile[i + 1] + downstream.product_water_kg / config.duration_h
+            error_t = max(abs(a - b) for a, b in zip(profile, candidate_t))
+            error_m = max(abs(a - b) for a, b in zip(mass_profile, candidate_m))
+            relaxation = config.counter_current_relaxation
+            profile = [
+                (1.0 - relaxation) * a + relaxation * b
+                for a, b in zip(profile, candidate_t)
+            ]
+            mass_profile = [
+                (1.0 - relaxation) * a + relaxation * b
+                for a, b in zip(mass_profile, candidate_m)
+            ]
+            if (
+                error_t < config.counter_current_temperature_tolerance_c
+                and error_m < mass_tolerance
+            ):
+                break
+        else:
+            raise RuntimeError(
+                "counter-current temperature coupling did not converge after "
+                f"{config.counter_current_max_iterations} iterations "
+                f"(temperature residual={error_t:.3e} C; "
+                f"mass-flow residual={error_m:.3e} kg/h)"
             )
+        feed_out, permeate_out, feed_mass, permeate_mass, cells, salt_mass_flow = march(profile, mass_profile)
+        # The permeate flows opposite to the feed: its outlet is therefore at
+        # the first feed-coordinate cell, not the final cell visited by march().
+        # The profile stores each cell's permeate inlet state; cell 0's recorded
+        # bulk temperature and its inlet mass plus local product give the true
+        # permeate outlet state.
+        permeate_out = cells[0].permeate_bulk_temperature_c
+        permeate_mass = (
+            mass_profile[0] + cells[0].product_water_kg / config.duration_h
         )
 
     product_total = sum(c.product_water_kg for c in cells)
     latent_total = sum(c.membrane_latent_heat_kw for c in cells) * config.duration_h
     conductive_total = sum(c.membrane_conductive_heat_kw for c in cells) * config.duration_h
+    hot_side_total = sum(c.feed_heat_kw for c in cells) * config.duration_h
+    concentrate_salinity = salt_mass_flow / feed_mass * 1000.0
+
     return ChannelResult(
         cells=tuple(cells),
-        feed_out_temperature_c=feed_temperature,
-        permeate_out_temperature_c=permeate_temperature,
-        feed_out_mass_kg_h=feed_mass_flow,
-        permeate_out_mass_kg_h=permeate_mass_flow,
-        concentrate_salinity_g_kg=salt_mass_flow / feed_mass_flow * 1000.0,
+        feed_out_temperature_c=feed_out,
+        permeate_out_temperature_c=permeate_out,
+        feed_out_mass_kg_h=feed_mass,
+        permeate_out_mass_kg_h=permeate_mass,
+        concentrate_salinity_g_kg=concentrate_salinity,
         freshwater_produced_kg=product_total,
-        hot_side_thermal_demand_kwh_th=latent_total + conductive_total,
+        hot_side_thermal_demand_kwh_th=hot_side_total,
         conductive_heat_leak_kwh_th=conductive_total,
         latent_duty_kwh_th=latent_total,
     )

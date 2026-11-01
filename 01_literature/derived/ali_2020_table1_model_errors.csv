@@ -1,0 +1,6 @@
+source_id,case_flow_rate_l_h,reported_scope,relative_error_percent_lumped_without_tuning,relative_error_percent_spatial_without_tuning,relative_error_percent_lumped_with_tuning,relative_error_percent_spatial_with_tuning,relative_error_percent_lumped_without_tuning_terminal_temperature
+ALI_ORFI_NAJIB_2020_TABLE1,50,per-flow-rate model-plant mismatch,7.78,14.00,3.08,3.04,49.08
+ALI_ORFI_NAJIB_2020_TABLE1,100,per-flow-rate model-plant mismatch,10.01,15.97,3.78,2.90,46.46
+ALI_ORFI_NAJIB_2020_TABLE1,200,per-flow-rate model-plant mismatch,9.31,18.92,3.29,3.54,53.19
+ALI_ORFI_NAJIB_2020_TABLE1,300,per-flow-rate model-plant mismatch,16.99,25.19,2.71,3.51,56.51
+ALI_ORFI_NAJIB_2020_TABLE1,NA,overall mean across flow rates,11.02,18.52,3.22,3.25,51.31

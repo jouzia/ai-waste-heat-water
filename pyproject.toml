@@ -10,13 +10,16 @@ requires-python = ">=3.11"
 dependencies = ["numpy>=1.26", "pydantic>=2.7", "pyyaml>=6.0", "iapws>=1.5.4"]
 
 [project.optional-dependencies]
-analysis = ["pandas>=2.2", "scipy>=1.13", "matplotlib>=3.8", "SALib>=1.5"]
+analysis = ["pandas>=2.2", "scipy>=1.13", "matplotlib>=3.8", "SALib>=1.5", "xlrd>=2.0.1"]
 dev = ["pytest>=8.0", "ruff>=0.6"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = [".", "src"]
 
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ruff.lint.isort]
+known-first-party = ["ai_water"]

@@ -1,0 +1,59 @@
+# Open experimental DCMD dataset: Villa et al. (2018), GDR/NREL
+
+source_id: MD-OEDI-VILLA-2018
+citation: "Villa, D., Vanneste, J., Cath, T., Turchi, C., & Akar, S. (2018). Membrane Specifications for Multi-Configuration Membrane Distillation Model. Geothermal Data Repository, National Renewable Energy Laboratory."
+doi: "10.15121/1452747"
+source_url: "https://gdr.openei.org/submissions/1016"
+status: partial_condition_level_summary_extracted_row_level_ledger_pending
+observation_ledger: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_observations.yaml"
+reproducible_retrieval:
+  downloader_script: "scripts/download_gdr_villa.py"
+  extraction_script: "scripts/extract_gdr_villa_flux_summary.py"
+  ingestion_workflow: ".github/workflows/gdr-villa-ingest.yml"
+  selected_workbook: "3M 0.2 Micron Plate and Frame Countercurrent DCMD.xls"
+  derived_summary: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
+  source_workbook_sha256: "5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb"
+  extraction_scope: "12 condition-level flux summaries derived from cumulative distillate volume versus runtime; row-level source observations remain in the reproducible workbook."
+  caveats: "Theoretical-sheet flux is a non-independent cross-check; conflicting CLARCOR label and invalid flux/flow channels are documented in docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md."
+access: publicly_accessible
+license_status: "The GDR submission links to the Creative Commons Attribution 4.0 International deed (CC BY 4.0); provide attribution, link the licence, and identify changes."
+dataset_size: "95.97 MB; 7 resources"
+dataset_description: "Experimental data and membrane/module specifications for CLARCOR, 3M, and Aquastill membranes in counter-current DCMD, co-current DCMD, and air-gap MD configurations. The GDR landing page describes generic Data and Theoretical worksheets; the selected 3M workbook actually contains 12 temperature-condition time-series sheets plus Specifications and Theoretical, with no worksheet literally named Data."
+experimental_provenance:
+  organization: "Colorado School of Mines, Advanced Water Technology Center; National Renewable Energy Laboratory / Sandia National Laboratories dataset authors"
+  dataset_date: "2018-03-01"
+  membrane_configurations:
+    - "3M 0.2 micron plate-and-frame counter-current DCMD"
+    - "Aquastill 0.3 micron plate-and-frame counter-current DCMD"
+    - "Aquastill 0.3 micron spiral-wound counter-current DCMD"
+    - "Aquastill polyethylene spiral-wound counter-current DCMD"
+    - "CLARCOR QL822 flat-sheet co-current DCMD"
+    - "CLARCOR QL822 flat-sheet counter-current DCMD"
+    - "CLARCOR QL822 flat-sheet air-gap MD"
+  reported_base_conditions:
+    salinity_g_l_nacl: 4.0
+    selected_flow_rates: "configuration-specific; see individual workbook specification sheets"
+    membrane_area_m2: "configuration-specific; see individual workbook specification sheets"
+  files:
+    - "3M 0.2 Micron Plate and Frame Countercurrent DCMD.xls"
+    - "Aquastill 0.3 Micron Plate and Frame Counter-Current DCMD .xls"
+    - "Aquastill 0.3 Micron Spiral Wound Countercurrent DCMD .xls"
+    - "Aquastill Polyethylene Spiral Wound Countercurrent DCMD.xls"
+    - "CLARCOR QL822 Flat Sheet Cocurrent DCMD.xls"
+    - "CLARCOR QL822 Flat Sheet Counter-Current DCMD.xls"
+    - "CLARCOR QL822 Flat Sheet Air-Gap MD.xls"
+extraction_rules:
+  - "Retrieve a single workbook with `python scripts/download_gdr_villa.py --dataset clarcor-countercurrent`; use `--dataset all` for all seven files. The script writes a SHA-256 manifest and stores raw files locally under the git-ignored data/raw directory."
+  - "Extract measured experimental observations only; never treat theoretical/model worksheets as observations."
+  - "Keep each workbook and configuration as a separate source case."
+  - "Record worksheet name, row/cell locator, units, and original column headings for every extracted value."
+  - "Preserve raw workbook, checksum, retrieval date, and licence metadata in the private/reproducibility manifest; do not commit the full 96 MB archive without a storage/legal review."
+  - "Convert units in a separate transformation layer; never overwrite raw values."
+  - "Do not calibrate membrane coefficients against held-out cases."
+  - "Split development and held-out configurations before parameter fitting."
+  - "Report whether operating conditions and membrane geometry fall inside the model's applicability domain."
+  - "Attribute the dataset under CC BY 4.0, link the licence, and state changes. Keep measured Data-sheet values separate from calculated values in Theoretical sheets."
+validation_use:
+  intended: "Candidate independent experimental benchmark for the modern 1-D DCMD model and heat/mass-transfer correlation comparison."
+  not_intended: "Not direct validation of the Keshavarzzadeh 2020 source-specific implementation unless geometry, membrane, salinity, and boundary conditions are reconstructed to match."
+  quantitative_status: "No model-vs-data results yet; extraction and source-condition crosswalk pending."

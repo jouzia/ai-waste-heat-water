@@ -6,6 +6,7 @@ value remains available for legacy/reproduction cases.
 """
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class PumpingResult:
     feed_flow_m3_h: float

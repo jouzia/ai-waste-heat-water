@@ -1,0 +1,60 @@
+# Observation ledger for Villa et al. (2018), GDR/NREL dataset
+source_id: MD-OEDI-VILLA-2018
+source_doi: "10.15121/1452747"
+status: row_level_observation_ledger_extracted_and_archived
+observations: []
+row_level_ledger:
+  artifact_name: "gdr-villa-3m-countercurrent"
+  workflow_run_id: 38426375700
+  artifact_id: 11829345287
+  artifact_sha256: "4589fe2907e751a80316dcafd0c4fdfe8d2c8aa4703e185afb800a37ab7fb956"
+  row_level_ledger_file: "artifacts/gdr_villa_exports/observation_ledger.csv"
+  manifest_file: "artifacts/gdr_villa_exports/observation_ledger_manifest.json"
+  row_count: 631
+  expires_at_utc: "2027-01-11T15:56:47Z"
+  generated_by: "scripts/extract_gdr_villa_observation_ledger.py"
+derived_summary_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
+source_audit: "docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md"
+source_workbook_sha256: "5b80da45f991a8572a8a77372535cf0ba3dc40eb46a3c32c58e09e9d608dd8bb"
+source_workbook_storage: "Reproducibly retrieved by scripts/download_gdr_villa.py; raw XLS and derived row-level ledger retained in GitHub Actions artifact (14-day retention), not committed to repository"
+extraction_note: "Twelve condition-level flux summaries are derived by OLS on raw cumulative distillate volume versus runtime. A separate script now exports 631 source-linked rows across the 12 condition sheets to observation_ledger.csv, with one-based Excel row locators and source SHA-256. Theoretical-sheet flux is included only as a non-independent cross-check. The row-level CSV and raw XLS are reproducibly generated in the GDR ingestion workflow artifact, not committed to the repository."
+
+required_fields:
+  - observation_id
+  - workbook_filename
+  - worksheet_name
+  - worksheet_cell_or_row_range
+  - configuration
+  - membrane_manufacturer_and_model
+  - membrane_material
+  - membrane_area_m2
+  - membrane_thickness_m
+  - pore_size_m
+  - porosity
+  - channel_geometry
+  - feed_salinity_g_l
+  - feed_inlet_temperature_c
+  - feed_outlet_temperature_c
+  - permeate_inlet_temperature_c
+  - permeate_outlet_temperature_c
+  - feed_flow_rate_value
+  - feed_flow_rate_unit
+  - permeate_flow_rate_value
+  - permeate_flow_rate_unit
+  - observed_flux_value
+  - observed_flux_unit
+  - measurement_uncertainty
+  - extraction_type
+  - unit_transformations
+  - source_file_checksum
+
+rules:
+  - "Keep the original workbook unchanged and record its SHA-256 checksum."
+  - "Record retrieval date and CC BY 4.0 attribution metadata before extracting."
+  - "The GDR page describes Data as the full dataset, temperature-named sheets as subsets, and Theoretical as steady-state experimental values plus calculated values; inspect provenance column by column and exclude model-calculated columns."
+  - "Every extracted value must have a worksheet and cell/row locator."
+  - "Preserve raw values and units; put converted values in separate fields."
+  - "If a measurement uncertainty is not reported, record unknown rather than zero."
+  - "Do not infer missing boundary conditions from another membrane/configuration."
+  - "Freeze development and held-out configurations before parameter fitting."
+  - "The GDR submission links CC BY 4.0; attribute the dataset, link the licence, identify modifications, and retain the source-file checksum."

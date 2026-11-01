@@ -53,7 +53,8 @@ class AuxiliaryLoads(BaseModel):
 
 class WaterFactors(BaseModel):
     grid_water_l_per_kwh: float = Field(ge=0, default=0.0)
-    avoided_freshwater_consumption_l: float = Field(ge=0, default=0.0)
+    freshwater_displacement_fraction: float = Field(ge=0, le=1, default=0.0)
+    avoided_freshwater_consumption_l: float | None = Field(default=None, ge=0)
 
 
 class Scenario(BaseModel):

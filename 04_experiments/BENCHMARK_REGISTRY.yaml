@@ -1,0 +1,112 @@
+version: "1.0"
+
+purpose: "Immutable registry of literature cases considered for quantitative membrane-distillation validation."
+
+status_definitions:
+  candidate: "Source identified; quantitative reconstruction not yet completed."
+  eligible: "Required boundary conditions are available for reconstruction."
+  parameterized: "Machine-readable case extracted; no model comparison completed."
+  validated_development: "Compared during model development or fitting; not held-out evidence."
+  validated_held_out: "Compared without fitting parameters to that case."
+  excluded: "Insufficient information or incompatible system boundary."
+  qualitative_only: "Useful scientific evidence but not reproducible quantitatively."
+
+cases:
+  - source_id: MD-DCMD-CHANNEL-2020
+    citation: "Keshavarzzadeh (2020), Scientific Reports"
+    doi_or_stable_identifier: "10.1038/s41598-020-73964-7"
+    upstream_experimental_source: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273, DOI 10.1016/S0376-7388(98)00349-4"
+    configuration: "flat-sheet DCMD"
+    extraction_status: source_formulation_reconciled_execution_matrix_ready
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-CHANNEL-2020.yaml"
+    execution_matrix: "04_experiments/literature_benchmarks/MD-DCMD-CHANNEL-2020_execution_matrix.yaml"
+    claim_status: "Source equations and counter-current runner implemented; no predictive accuracy claim until primary observations and exact boundary conditions are crosswalked and compared unfitted."
+
+  - source_id: MD-DCMD-SUMMERS-2012
+    citation: "Summers, Arafat & Lienhard V (2012), Desalination 290, 54-66"
+    doi_or_stable_identifier: "10.1016/j.desal.2012.01.004"
+    configuration: "flat-sheet DCMD"
+    extraction_status: parameterized_secondary_report
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-SUMMERS-2012.yaml"
+    provenance_chain: "Secondary reproduction table of Martínez-Díez experiments; original experimental source must remain the primary provenance target."
+    claim_status: "Useful numerical cross-check; not independent of the Martínez-Díez experimental lineage."
+
+  - source_id: MD-PILOT-VALIDATION-2026
+    citation: "Bindels et al. (2026), Desalination 620, 119674"
+    doi_or_stable_identifier: "10.1016/j.desal.2025.119674"
+    configuration: "pilot-scale AGMD and V-AGMD"
+    extraction_status: candidate
+    validation_status: qualitative_only
+    benchmark_file: null
+    exclusion_reason_if_any: "Authors state that the aggregated experimental data cannot be shared."
+    claim_status: "Methodological evidence only until independent datapoints are legally and reproducibly available."
+
+  - source_id: MD-DCMD-VALIDATION-2026
+    citation: "Sulaiman et al. (2026), Discover Water"
+    doi_or_stable_identifier: "10.1007/s43832-026-00418-y"
+    configuration: "hollow-fiber DCMD"
+    extraction_status: candidate
+    validation_status: candidate
+    benchmark_file: null
+    claim_status: "Potential independent validation source; exact experimental conditions must be extracted before quantitative use."
+
+
+  - source_id: MD-DCMD-MARTINEZ-1999
+    citation: "Martínez-Díez & Vázquez-González (1999), J. Membrane Science 156, 265-273"
+    doi_or_stable_identifier: "10.1016/S0376-7388(98)00349-4"
+    configuration: "flat-sheet DCMD"
+    extraction_status: primary_provenance_established_quantitative_extraction_pending
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999.yaml"
+    observation_ledger: "04_experiments/literature_benchmarks/MD-DCMD-MARTINEZ-1999_observations.yaml"
+    claim_status: "Primary experimental provenance established; no validation accuracy claim until source-matched unfitted comparison is completed."
+
+
+  - source_id: MD-OEDI-VILLA-2018
+    citation: "Villa et al. (2018), Membrane Specifications for Multi-Configuration Membrane Distillation Model, Geothermal Data Repository / NREL"
+    doi_or_stable_identifier: "10.15121/1452747"
+    configuration: "multiple experimental DCMD and AGMD configurations"
+    extraction_status: 12_condition_flux_summary_extracted_raw_time_series_available_via_source
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018.yaml"
+    observation_ledger: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_observations.yaml"
+    derived_summary: "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
+    source_audit: "docs/GDR_3M_WORKBOOK_AUDIT_2026-10-11.md"
+    claim_status: "12 condition-level fluxes were derived from cumulative distillate-volume time series; this is not model validation. Workbook has conflicting Theoretical-sheet membrane label and invalid flux columns; use raw volume/time and measured temperatures, and resolve flow-channel provenance before fitting. GDR links CC BY 4.0; preserve attribution and transformation notes."
+
+
+  - source_id: MD-DCMD-DYNAMIC-ALI-2020
+    citation: "Ali, Orfi & Najib (2020), PLOS ONE 15(3), e0230207"
+    doi_or_stable_identifier: "10.1371/journal.pone.0230207"
+    configuration: "pilot-scale spiral-wound counter-current DCMD transient step tests"
+    extraction_status: open_transient_dataset_registered_extraction_pending
+    validation_status: candidate
+    benchmark_file: "04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020.yaml"
+    observation_ledger: "04_experiments/literature_benchmarks/MD-DCMD-DYNAMIC-ALI-2020_observations.yaml"
+    source_audit: "docs/ALI_2020_TRANSIENT_SOURCE_AUDIT.md"
+    license_status: "CC BY 4.0"
+    claim_status: "Candidate transient validation dataset; the current model is not yet dynamic and no transient validation claim is made."
+
+  - source_id: MD-HOLLOWFIBER-HEATRECOVERY-2026
+    citation: "Sulaiman et al. (2026), Journal of Water Process Engineering"
+    doi_or_stable_identifier: "10.1016/j.jwpe.2026.110673"
+    configuration: "hollow-fiber DCMD with integrated heat recovery"
+    extraction_status: candidate_26_experiments_reported_extraction_pending
+    validation_status: candidate
+    benchmark_file: null
+    license_status: "Institutional research portal reports CC BY 4.0; verify against final publisher record before reuse."
+    claim_status: "Adjacent benchmark for MD-level heat recovery and model-form comparison; not direct validation of data-center heat availability or net-water accounting. Extract exact conditions and observations before quantitative use."
+
+validation_split_policy:
+  development: "Cases used to select or fit model parameters."
+  held_out: "Cases locked before final model selection and never used for fitting."
+  rule: "A case cannot be both fitted and reported as independent validation."
+
+reproduction_rule:
+  - "Preserve source operating conditions and system configuration."
+  - "Do not replace missing values with undocumented defaults."
+  - "Record every transformation and unit conversion."
+  - "If a critical boundary condition is unavailable, downgrade to qualitative_only or excluded."
+  - "Report failures and incompatible cases."

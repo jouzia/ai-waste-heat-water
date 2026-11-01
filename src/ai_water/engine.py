@@ -126,8 +126,12 @@ def simulate(s: Scenario) -> Result:
         * (s.auxiliary.pretreatment_kwh_per_m3 + s.auxiliary.other_kwh_per_m3)
         + md_cooling_electricity
     )
+    # The baseline data-center cooling burden belongs to the counterfactual.
+    # Count only incremental facility electricity attributable to the
+    # intervention here; MD-specific cooling water is always incremental.
     cooling_l = (
-        facility_energy * s.cooling.cooling_water_consumption_l_per_kwh_facility
+        s.cooling.incremental_facility_electricity_kwh
+        * s.cooling.cooling_water_consumption_l_per_kwh_facility
         + md_cooling_water
     )
 
@@ -137,7 +141,24 @@ def simulate(s: Scenario) -> Result:
         s.cooling.incremental_facility_electricity_kwh + auxiliary_kwh
     )
     indirect_l = incremental_electricity_kwh * s.water.grid_water_l_per_kwh
+    indirect_l = (
+        s.cooling.incremental_facility_electricity_kwh + auxiliary_kwh
+    ) * s.water.grid_water_l_per_kwh
     additional_l = cooling_l + indirect_l
+    if s.water.avoided_freshwater_consumption_l is not None:
+        if s.water.freshwater_displacement_fraction > 0:
+            raise ValueError(
+                "specify either an explicit avoided-water volume or a displacement "
+                "fraction, not both"
+            )
+        avoided_l = s.water.avoided_freshwater_consumption_l
+        if avoided_l > freshwater_l + 1e-9:
+            raise ValueError(
+                "avoided freshwater consumption cannot exceed distillate produced; "
+                "declare only the volume demonstrably displaced by this intervention"
+            )
+    else:
+        avoided_l = freshwater_l * s.water.freshwater_displacement_fraction
 
     # Produced distillate becomes avoided consumption only when the declared
     # counterfactual demonstrates that it displaces freshwater consumption.
@@ -166,5 +187,7 @@ def simulate(s: Scenario) -> Result:
         avoided_freshwater_consumption_l=avoided_l,
         net_consumption_change_l=net_consumption_change,
         net_freshwater_benefit_l=-net_consumption_change,
+        net_consumption_change_l=additional_l - avoided_l,
+        net_freshwater_benefit_l=-(additional_l - avoided_l),
         heat_limited=heat_limited,
     )
