@@ -51,6 +51,21 @@ The root-domain policy has been revised after code review. The generic solver no
 4. Add tests for input units, function domains, non-finite values, and the two distinct source interpretations of the inlet temperature difference (0.5 °C printed constraint vs 5 °C prose/main text).
 5. Keep all anchor comparisons unfitted and labeled as figure-read targets with rounding uncertainty.
 
+
+## Public-mirror provenance inspection (2026-11-01)
+
+The public GitHub repository `djessop/sw_properties` was inspected as a lead for the MIT archive. Its README describes a Python rewrite based on MATLAB files from the MIT seawater site; the checked-in Python modules document older 2016/2024 edits and expose density/viscosity routines. The repository tree also contains a file named `SEAWATER_v3.1.5_07Aug24.zip`, but the filename and presence alone do not establish that its bytes are identical to the official MIT download.
+
+This inspection therefore does **not** close the archive-provenance gate. No cryptographic checksum comparison against a separately obtained official MIT archive, signed release, or official checksum was established. The mirror's README and Python modules are not a substitute for inspecting the v3.1.5 MATLAB source, and the inspected Python API does not provide the required specific-heat and latent-heat functions as a verified matched pair. Do not build or label a source-matched AGMD property adapter from this mirror inspection.
+
+Evidence inspected:
+- Mirror repository: https://github.com/djessop/sw_properties
+- Mirror README: https://github.com/djessop/sw_properties/blob/main/README.md
+- Mirror Python implementation: https://github.com/djessop/sw_properties/blob/main/sw_properties.py
+- MIT official library landing page and archive link: https://web.mit.edu/seawater/
+
+**Disposition:** archive identity and v3.1.5 source-level function comparison remain unresolved. The next acceptable evidence is the official archive bytes plus a recorded SHA-256, or an official MIT-published checksum/signature, followed by direct inspection of the specific-heat and latent-heat implementations and their units/domains.
+
 ## Gate
 
 **Not a reproduction yet.** The official source's existence, version, property ranges, and specific-heat correction are confirmed. Exact implementation provenance, property-call states, the printed constraint discrepancy, and the solver's general root admissibility remain open.
