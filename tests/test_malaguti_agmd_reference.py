@@ -51,7 +51,10 @@ def test_rejects_inlet_difference_not_below_overall_difference():
         )
 
 
-def test_outlet_difference_above_inlet_is_admissible_only_in_algebraic_mode():
+def test_outlet_difference_above_inlet_is_not_filtered_by_default():
+    # The article states that the only imposed physical constraint is
+    # delta_T_h_out >= 0.5 C. This synthetic root tests the solver's explicit
+    # algebraic filter only; it is not a physical validation case.
     result = solve_agmd_reference(
         vaporization_efficiency=0.7480277753658483,
         delta_t_c=44.1125971862735,
@@ -61,15 +64,13 @@ def test_outlet_difference_above_inlet_is_admissible_only_in_algebraic_mode():
         cp_cold_j_kg_k=3575.9758914073695,
         cp_distillate_j_kg_k=4180.0,
         latent_heat_j_kg=2467075.614008491,
-        enforce_config3_terminal_order=False,
     )
     assert result.delta_t_h_out_c > 4.4198898005722835
     assert result.recovery_fraction > 0.0
 
 
-def test_paper_config3_domain_rejects_outlet_difference_above_inlet():
-    # Same synthetic root as the algebraic-mode test; paper-domain terminal
-    # ordering excludes it. This is not a seawater-property validation case.
+def test_optional_config3_terminal_order_filter_rejects_above_inlet_root():
+    # Same synthetic root; the stricter interpretation remains opt-in only.
     with pytest.raises(ValueError, match="found 0"):
         solve_agmd_reference(
             vaporization_efficiency=0.7480277753658483,
@@ -80,8 +81,8 @@ def test_paper_config3_domain_rejects_outlet_difference_above_inlet():
             cp_cold_j_kg_k=3575.9758914073695,
             cp_distillate_j_kg_k=4180.0,
             latent_heat_j_kg=2467075.614008491,
+            enforce_config3_terminal_order=True,
         )
-
 
 def test_optional_outlet_upper_bound_is_enforced_when_supplied():
     with pytest.raises(ValueError, match="exactly one"):
