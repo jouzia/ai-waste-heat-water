@@ -75,6 +75,7 @@ def solve_agmd_reference(
     latent_heat_j_kg: float,
     minimum_delta_t_h_out_c: float = 0.5,
     maximum_delta_t_h_out_c: float | None = None,
+    enforce_config3_terminal_order: bool = True,
 ) -> AGMDReferenceResult:
     """Solve S2/S8 using caller-supplied properties and algebraic constraints.
 
@@ -88,9 +89,14 @@ def solve_agmd_reference(
     delta_T_h,out >= 0.5 °C. This function does not hard-code delta_T_h,in;
     callers must choose and document the case being evaluated.
 
-    Root admissibility here is limited to the supplied algebraic bounds and
-    0 < recovery <= 1. Passing this filter is not physical validation of the
-    assumed properties, operating state, or the paper's experimental regime.
+    By default, configuration-3 paper-domain admissibility also requires
+    delta_t_h_out_c < delta_t_h_in_c. Malaguti et al. explicitly describe
+    delta_T_h,out as smaller than delta_T_h,in for this configuration and
+    bound recovery using the 5 °C inlet and 0.5 °C minimum outlet differences.
+    Set enforce_config3_terminal_order=False only for algebraic root diagnostics;
+    such roots are not thereby physically admissible paper-domain solutions.
+    Passing the model filter is still not full physical validation of the
+    assumed properties or source-matched operating state.
     """
     values = {
         "vaporization_efficiency": vaporization_efficiency,
@@ -153,6 +159,7 @@ def solve_agmd_reference(
         if (
             minimum_delta_t_h_out_c - 1e-9 <= delta_t_h_out
             and (maximum_delta_t_h_out_c is None or delta_t_h_out <= maximum_delta_t_h_out_c + 1e-9)
+            and (not enforce_config3_terminal_order or delta_t_h_out < delta_t_h_in_c)
             and 0.0 < recovery_value <= 1.0
         ):
             candidates.append((delta_t_h_out, recovery_value))
