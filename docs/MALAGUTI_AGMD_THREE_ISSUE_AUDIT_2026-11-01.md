@@ -12,20 +12,20 @@ PR #21 restored the counterfactual freshwater-displacement calculation in the pr
 
 ### Finding
 
-No source evidence currently establishes this as a universal constraint for the supplementary-equation solver. The available supplementary text specifies the lower outlet terminal difference, ΔT_h,out ≥ 0.5 °C. It does not clearly state that ΔT_h,out must also be no greater than ΔT_h,in for every admissible configuration-3 solution.
+The earlier supplementary-equation-only review did not identify a clear upper bound. A subsequent full-text review of the main article adds important configuration-specific evidence: for configuration 3, the authors state that STEC is systematically higher, consistent with ΔT_h,in > ΔT_h,out, and describe single-pass recovery as bounded by the imposed ΔT_h,in = 5 °C and the minimum achievable ΔT_h,out = 0.5 °C. The article defines ΔT_h,in = T_h,in − T_c,out and ΔT_h,out = T_h,out − T_c,in. This supports ΔT_h,out < ΔT_h,in as a paper-domain condition for the analyzed configuration-3 regime, even though it is not a universal inequality for arbitrary heat exchangers.
 
 The implementation therefore:
 - enforces the supplied minimum outlet difference (default 0.5 °C);
-- does not impose an upper bound by default;
+- enforces the configuration-3 paper-domain ordering ΔT_h,out < ΔT_h,in by default;
 - permits a caller to supply `maximum_delta_t_h_out_c` when testing an explicitly declared operating policy;
 - checks the algebraic recovery interval 0 < R ≤ 1; and
 - rejects zero or multiple roots that survive the selected model-admissibility filter.
 
-A regression case demonstrates that the equations and current algebraic filters can admit a root above ΔT_h,in. This is a software/domain counterexample to the claim that the upper bound follows automatically from the current algebraic constraints. It is **not** evidence that the case is physically realized in Malaguti et al.'s experimental or plotted operating regime.
+A synthetic regression case demonstrates that the equations alone can admit a root above ΔT_h,in when the paper-domain terminal-order filter is disabled. This is an algebraic counterexample only. The case uses independently selected heat capacities and has no source-backed mapping to the same saline loop in the hot and cold channels; it is **not** evidence of a physically admissible point in the paper's configuration-3 operating domain.
 
 ### Disposition
 
-The previous implicit upper bound remains removed. Do not reinstate it without a source citation or a separately named physical/model-policy argument. The optional cap must not be described as a paper-mandated constraint.
+Retain the configuration-3 terminal-order filter in paper-domain mode, with ΔT_h,out < ΔT_h,in. Keep an explicit algebraic-diagnostic mode for examining roots outside that domain; do not report those roots as paper-domain or physically admissible solutions. This is configuration-specific, not a universal heat-exchanger law.
 
 ## Issue 2 — Are the seawater property inputs source-matched?
 
@@ -103,7 +103,7 @@ This source-backed domain scan is currently blocked by Issue 2. No claim of glob
 
 | Issue | Current result | Remaining gate |
 |---|---|---|
-| Upper outlet-difference bound | Removed as an unsupported universal constraint; optional policy cap retained | Source evidence needed before adding a universal upper bound |
+| Configuration-3 terminal ordering | Enforced as ΔT_h,out < ΔT_h,in in paper-domain mode; disabled only for algebraic diagnostics | Source-matched stream properties and full supplementary-equation audit remain open |
 | MIT/Sharqawy property provenance | Official API/version context confirmed; archive identity and stream-state inputs unresolved | Authenticated v3.1.5 source plus explicit property-state mapping |
 | Root-domain/uniqueness | Necessary algebraic interval derived; zero/one/two-root behavior handled in code | Source-backed operating/property domain and full root enumeration |
 
