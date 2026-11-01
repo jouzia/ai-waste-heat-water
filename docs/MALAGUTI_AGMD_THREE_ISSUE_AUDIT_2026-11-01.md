@@ -12,20 +12,15 @@ PR #21 restored the counterfactual freshwater-displacement calculation in the pr
 
 ### Finding
 
-The earlier supplementary-equation-only review did not identify a clear upper bound. A subsequent full-text review of the main article adds important configuration-specific evidence: for configuration 3, the authors state that STEC is systematically higher, consistent with ΔT_h,in > ΔT_h,out, and describe single-pass recovery as bounded by the imposed ΔT_h,in = 5 °C and the minimum achievable ΔT_h,out = 0.5 °C. The article defines ΔT_h,in = T_h,in − T_c,out and ΔT_h,out = T_h,out − T_c,in. This supports ΔT_h,out < ΔT_h,in as a paper-domain condition for the analyzed configuration-3 regime, even though it is not a universal inequality for arbitrary heat exchangers.
+The accessible main article contains evidence that must be reconciled before imposing a strict upper bound. In its configuration-3 discussion, it says STEC is systematically higher, consistent with ΔT_h,in > ΔT_h,out, and describes the plotted/reported recovery behavior as bounded by ΔT_h,in = 5 °C and the minimum ΔT_h,out = 0.5 °C. However, later in the same discussion it states: “The only imposed physical constraint is that ΔT_h,out ≥ 0.5 °C to ensure a finite driving force for heat transfer.” The article also describes the recovery bound in terms of the inlet difference and minimum outlet difference, but does not explicitly state in the accessible main text that ΔT_h,out < ΔT_h,in is a universal admissibility rule.
 
-The implementation therefore:
-- enforces the supplied minimum outlet difference (default 0.5 °C);
-- enforces the configuration-3 paper-domain ordering ΔT_h,out < ΔT_h,in by default;
-- permits a caller to supply `maximum_delta_t_h_out_c` when testing an explicitly declared operating policy;
-- checks the algebraic recovery interval 0 < R ≤ 1; and
-- rejects zero or multiple roots that survive the selected model-admissibility filter.
+These statements are not equivalent. The reported inequality in the plotted regime is an observation about the article's evaluated results; the “only imposed physical constraint” sentence describes the stated model constraint. A result trend does not by itself justify turning that trend into a hard solver filter. The supplementary information is still required to establish the exact S2/S8 derivation, variable definitions, and any additional constraints.
 
-A synthetic regression case demonstrates that the equations alone can admit a root above ΔT_h,in when the paper-domain terminal-order filter is disabled. This is an algebraic counterexample only. The case uses independently selected heat capacities and has no source-backed mapping to the same saline loop in the hot and cold channels; it is **not** evidence of a physically admissible point in the paper's configuration-3 operating domain.
+The current implementation, introduced in PR #26, enforces ΔT_h,out < ΔT_h,in by default and disables that filter only in algebraic-diagnostic mode. This behavior is now **under review**. It must not yet be described as definitively source-validated paper-domain admissibility. The synthetic regression case above ΔT_h,in demonstrates only that the implemented algebraic equations can admit such a root under independently selected heat capacities; it is neither proof of physical feasibility nor proof that the paper excludes the root.
 
 ### Disposition
 
-Retain the configuration-3 terminal-order filter in paper-domain mode, with ΔT_h,out < ΔT_h,in. Keep an explicit algebraic-diagnostic mode for examining roots outside that domain; do not report those roots as paper-domain or physically admissible solutions. This is configuration-specific, not a universal heat-exchanger law.
+Do not expand the solver's physical claims or run a source-backed domain scan until the supplementary PDF is obtained. Reassess the PR #26 default filter against the actual SI. In the meantime, report results with the strict-order filter explicitly identified as a provisional interpretation, and separately report algebraic roots without implying physical admissibility. The 0.5 °C lower bound is explicitly stated in the main article; a strict upper bound requires stronger source support.
 
 ## Issue 2 — Are the seawater property inputs source-matched?
 
@@ -111,7 +106,7 @@ This source-backed domain scan is currently blocked by Issue 2. No claim of glob
 
 | Issue | Current result | Remaining gate |
 |---|---|---|
-| Configuration-3 terminal ordering | Enforced as ΔT_h,out < ΔT_h,in in paper-domain mode; disabled only for algebraic diagnostics | Source-matched stream properties and full supplementary-equation audit remain open |
+| Configuration-3 terminal ordering | PR #26 enforces ΔT_h,out < ΔT_h,in by default; source justification is now under review because the article also calls ΔT_h,out ≥ 0.5 °C the only imposed physical constraint | Obtain SI and reconcile the reported trend with the stated constraint before retaining or changing the default |
 | MIT/Sharqawy property provenance | Official API/version context confirmed; archive identity and stream-state inputs unresolved | Authenticated v3.1.5 source plus explicit property-state mapping |
 | Root-domain/uniqueness | Necessary algebraic interval derived; zero/one/two-root behavior handled in code | Source-backed operating/property domain and full root enumeration |
 
@@ -148,3 +143,14 @@ A targeted search surfaced the SSRN "Download This Paper" delivery endpoint for 
 The endpoint is a concrete publisher-hosted PDF delivery URL, not a guessed Elsevier supplementary-file path. However, a direct retrieval attempt returned HTTP 403 Forbidden, and the browser's PDF open was also denied. Therefore the PDF bytes, filename as delivered, byte size, SHA-256, and contents remain unverified. The SSRN record independently confirms a 27-page preprint posted 9 January 2026 and identifies two versions; this metadata does not establish which file/version the delivery endpoint would return or that it contains the final article's supplementary derivation.
 
 **Disposition:** preserve the exact delivery URL as a retrieval lead; do not mark the preprint as downloaded, do not cite it as inspected equation evidence, and do not close the supplementary-information gate. The publisher's 618 KB SI PDF remains a separate unresolved retrieval target.
+
+
+## Terminal-order interpretation reconciliation (2026-11-01)
+
+A further close reading of the publisher-indexed full text identifies a material qualification to the Issue 1 disposition above. The article says that configuration-3 STEC is systematically higher, consistent with ΔT_h,in > ΔT_h,out, and discusses the evaluated recovery behavior as bounded by ΔT_h,in = 5 °C and ΔT_h,out = 0.5 °C. In the same configuration-3 discussion, however, it explicitly says that “the only imposed physical constraint” is ΔT_h,out ≥ 0.5 °C. The first statement describes the reported trend/results; the second describes the stated physical constraint. They do not establish the same thing.
+
+Consequently, PR #26's default strict-order filter (ΔT_h,out < ΔT_h,in) is no longer treated as conclusively source-validated. It remains the current code behavior pending review, but must be labeled a provisional interpretation rather than a proven paper-domain rule. Do not silently change the solver or claim that roots above ΔT_h,in are physically admissible. The synthetic above-inlet root remains an algebraic diagnostic only. The actual supplementary PDF is needed to inspect S2/S8, definitions, and whether an additional upper bound is imposed elsewhere.
+
+**Required follow-up:** once the publisher's 618 KB SI is obtained, check every stated constraint and the derivation of the recovery bound against the implementation. Then decide whether the default should enforce only the explicit lower bound plus the S2 recovery interval, or retain a separate source-supported upper bound. Until then, preserve both filtered and unfiltered diagnostic results as distinct categories and keep the reproduction status **NOT YET REPRODUCED**.
+
+Source: Malaguti et al. (2026), DOI https://doi.org/10.1016/j.desal.2026.120039, configuration-3 discussion and Section 3.3; publisher-indexed full text consulted 2026-11-01.
