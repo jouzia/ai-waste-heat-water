@@ -1,6 +1,11 @@
 """Deterministic reduced-order coupled system model."""
 from .hydraulics import pumping_from_pressure_drop
-from .md import flux_kg_m2_h, interface_temperatures, mean_single_pass_salinity_g_kg, seawater_water_activity
+from .md import (
+    flux_kg_m2_h,
+    interface_temperatures,
+    mean_single_pass_salinity_g_kg,
+    seawater_water_activity,
+)
 from .md_thermal import account_for_membrane_heat
 from .models import Result, Scenario
 
@@ -162,7 +167,6 @@ def simulate(s: Scenario) -> Result:
 
     # Produced distillate becomes avoided consumption only when the declared
     # counterfactual demonstrates that it displaces freshwater consumption.
-    avoided_l = s.water.avoided_freshwater_consumption_l
     net_consumption_change = additional_l - avoided_l
 
     concentrate_salinity = (
