@@ -308,3 +308,25 @@ The article identifies Alberto Tiraferri as corresponding author and gives `albe
 No email has been sent. These questions are recorded as the next source-retrieval action.
 
 **Implementation decision:** proceed with a transparent sensitivity framework over explicitly labelled salinity/property-state scenarios if useful, but do not label any scenario as an exact reproduction. Exact reproduction remains blocked pending author clarification or an independently verifiable numerical input source.
+
+
+## Main-article benchmark values transcribed from the full text (2026-11-01)
+
+The full version-of-record text was supplied for this audit. The following reported values are recorded as **comparison targets**, not as fitted inputs or validation evidence:
+
+| Vaporization efficiency η | Inlet temperature difference ΔT | Reported single-pass recovery R |
+|---:|---:|---:|
+| 0.5 | 30 °C | 2.2% |
+| 0.5 | 50 °C | 3.9% |
+| 0.7 | 30 °C | 3.0% |
+| 0.7 | 50 °C | 5.6% |
+
+For the separate illustrative operating point in Section 3.4, the article reports η = 0.7 and ΔT = 40 °C, with STEC = 129 kWh/m³ and SCR = 98 kWh/m³ (SCR/STEC ≈ 0.76). This is a system-level reported point and should not be conflated with the four recovery anchors above.
+
+The article describes Figure 4B recovery trends over ΔT values from 10 to 70 °C, with the 5 °C hot-inlet terminal difference and the 0.5 °C minimum hot-outlet terminal difference. The paper also cautions that changing ΔT at fixed terminal differences corresponds to comparing different module designs/lengths, not varying a single unchanged device.
+
+The main text's property contract is now recorded precisely: seawater feed, complete salt rejection, pure distillate, Sharqawy et al. (2010) correlations, T_c,in = 20 °C, ΔT_h,in = 5 °C, and ΔT_HX = 5 °C. Configuration 3 uses the same circulating saline stream in hot/feed and cold/cooling channels, with makeup water compensating for vapor loss. These conditions still do not specify numerical salinity or all property evaluation states.
+
+**Comparison protocol:** evaluate the four recovery targets only after property inputs are independently source-matched; retain the article's one-decimal-percent reporting precision as an uncertainty band rather than requiring exact equality. Do not tune salinity, heat capacity, or latent heat to force agreement. Report each residual and property scenario transparently. The Section 3.4 STEC/SCR point is a separate cross-check and must be derived from the corresponding published equations, not inferred from the recovery anchors.
+
+**Status remains: NOT YET REPRODUCED.**
