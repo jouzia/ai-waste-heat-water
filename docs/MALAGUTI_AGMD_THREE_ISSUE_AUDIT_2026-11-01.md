@@ -126,3 +126,12 @@ This source-backed domain scan is currently blocked by Issue 2. No claim of glob
 - Sharqawy et al. (2010), DOI: https://doi.org/10.5004/dwt.2010.1079
 - Nayar et al. (2016), DOI: https://doi.org/10.1016/j.desal.2016.02.024
 - Exploratory public mirror (not authenticated as byte-identical to MIT): https://github.com/djessop/sw_properties
+
+
+## Supplementary-information retrieval checkpoint (2026-11-01)
+
+The publisher's ScienceDirect record for DOI 10.1016/j.desal.2026.120039 explicitly states that all data generated are included in the article and its supplementary-information file. The main article's Appendix A identifies a separate 618 KB supplementary PDF. However, the Politecnico di Torino IRIS repository record for handle 11583/3009010 lists only the 4.8 MB main article PDF as a deposited file; it does not expose the supplementary PDF as a second repository attachment. The publisher record displays a supplementary-data download control, but the accessible page extraction does not expose a stable direct file URL, and attempts to retrieve the likely Elsevier mmc1.pdf asset did not yield a verified file.
+
+This narrows the retrieval problem: the supplement is acknowledged by the publisher and is stated to contain the complete derivation, variable definitions, and data, but it is not presently available through the accessible IRIS deposit. The absence of a supplementary attachment from the IRIS record must not be interpreted as proof that the publisher's supplement is unavailable. The exact SI equations and property-state definitions remain unverified until the 618 KB file itself is obtained and inspected.
+
+**Actionable gate:** obtain the publisher's 618 KB supplementary PDF through the ScienceDirect supplementary-data control or directly from the authors/repository; record the exact file URL, filename, byte size, and SHA-256 before transcribing equations. Do not use guessed mmc1 paths or a reconstructed derivation as source evidence.
