@@ -187,7 +187,5 @@ def simulate(s: Scenario) -> Result:
         avoided_freshwater_consumption_l=avoided_l,
         net_consumption_change_l=net_consumption_change,
         net_freshwater_benefit_l=-net_consumption_change,
-        net_consumption_change_l=additional_l - avoided_l,
-        net_freshwater_benefit_l=-(additional_l - avoided_l),
         heat_limited=heat_limited,
     )
