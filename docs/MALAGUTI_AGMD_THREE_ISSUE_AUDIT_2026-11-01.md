@@ -163,3 +163,89 @@ Following the terminal-order reconciliation, the solver's `enforce_config3_termi
 A synthetic regression case now confirms that a root above ΔT_h,in is not rejected by the default algebraic filters, while the optional strict-order filter rejects the same root. This is a test of filter semantics only; the synthetic heat-capacity inputs are not source-matched and do not establish physical feasibility. The provisional smoke tests remain non-reproduction fixtures. No production thermodynamics or water-ledger behavior is changed.
 
 The supplementary-information gate remains open: S2/S8 transcription, property-state mapping, and full physical admissibility are not yet verified. Reproduction status remains **NOT YET REPRODUCED**.
+
+
+## Publisher supplementary-information equation audit (2026-11-01)
+
+### Source identity
+
+The publisher supplementary PDF was obtained in this conversation as
+`1-s2.0-S0011916426001955-mmc1(1).pdf`. It is a 9-page PDF, 632,587 bytes.
+SHA-256:
+
+`48f57c20bfe220b336e195b1dd356c09cfc8acec289b72d335a6754c0fd4d191`
+
+This is the actual publisher supplementary material, not the separate SSRN
+working-paper manuscript. The file's title page identifies it as the Supporting
+Information and Supplementary Material for Malaguti et al. (2026).
+
+### Equation transcription
+
+The AGMD derivation is now directly inspectable:
+
+- S1 defines vaporization efficiency as vapor mass enthalpy flow divided by
+  total heat transferred across the membrane.
+- S2 gives
+  `eta = R * h_vap / (c_h * (DeltaT - DeltaT_h_out))`.
+  The supplement assumes approximately constant hot-channel specific heat
+  along the feed channel and uses its inlet value.
+- S6 is the full AGMD module heat balance, including the distillate enthalpy
+  term and the saline cold-channel stream.
+- S7 is the reduced AGMD heat balance after the stated constant-specific-heat
+  and make-up-water assumptions.
+- S8 combines S2 and S7 with
+  `T_d = (T_h,in + (T_c,in + DeltaT_h,out)) / 2`.
+  The solver's polynomial residual is the S8 equation rearranged to zero; its
+  signs and stream heat-capacity terms match the printed equation.
+
+The current implementation therefore has a source-backed S2/S8 algebraic
+transcription. The four smoke-test property fixtures remain provisional and
+are not source-matched Sharqawy evaluations. Equation transcription does not
+by itself reproduce the paper's numerical maps.
+
+### Explicit source inconsistency: inlet terminal difference
+
+The SI prints the constraint brace alongside both the no-gap system S5 and
+the AGMD system S8 as
+`DeltaT_h,out >= 0.5, DeltaT_h,in = 0.5`.
+However, the immediately following prose says the analysis fixes
+`DeltaT_h,in = 5 °C` and considers values `DeltaT_h,in >= 0.5 °C`.
+The main article independently defines `DeltaT_h,in` as the hot-inlet
+difference and states it is set to 5 °C; its AGMD discussion identifies
+`DeltaT_h,out >= 0.5 °C` as the only imposed physical constraint.
+
+The defensible interpretation for the paper's reported configuration-3
+analysis is therefore `DeltaT_h,in = 5 °C`, with
+`DeltaT_h,out >= 0.5 °C`. The printed `DeltaT_h,in = 0.5` in the constraint
+brace is internally inconsistent with the adjacent prose and main article and
+is treated as an apparent typographical error, not silently adopted as the
+analysis setting. This does not establish a universal upper bound
+`DeltaT_h,out < DeltaT_h,in`; the main article explicitly describes the
+0.5 °C outlet lower bound as the only imposed physical constraint.
+
+### What is now closed, and what remains open
+
+- **Closed:** actual publisher SI located; file identity, byte size, and
+  SHA-256 recorded; S2, S6, S7, and S8 inspected; current solver S2/S8
+  algebraic transcription checked against the SI.
+- **Resolved by cross-document evidence:** use 5 °C for the article's
+  configuration-3 inlet terminal difference; flag the SI's printed 0.5 °C
+  inlet constraint as an apparent typo.
+- **Still open:** source-matched Sharqawy property calculations for the hot
+  saline stream, cold saline stream, pure distillate stream, and latent heat;
+  precise property evaluation states; numerical reproduction of the article's
+  recovery/temperature maps; and a full root-count/uniqueness study over the
+  paper's operating domain.
+
+The SI states that seawater flows in the feed channel and distillate water in
+the distillate channel, and refers to Sharqawy et al. correlations for density,
+latent heat, and specific heat. The main article describes configuration 3 as
+the same saltwater stream circulating through hot and cold channels, with
+complete salt rejection and pure distillate production. The current provisional
+heat capacities and latent heat must therefore remain explicitly provisional
+until the corresponding Sharqawy evaluations and stream states are
+reconstructed and checked.
+
+**Reproduction status: NOT YET REPRODUCED.** The equation transcription gate
+is closed; the property-state, numerical reproduction, and domain-uniqueness
+gates remain open.
