@@ -16,7 +16,7 @@ The accessible main article contains evidence that must be reconciled before imp
 
 These statements are not equivalent. The reported inequality in the plotted regime is an observation about the article's evaluated results; the “only imposed physical constraint” sentence describes the stated model constraint. A result trend does not by itself justify turning that trend into a hard solver filter. The supplementary information is still required to establish the exact S2/S8 derivation, variable definitions, and any additional constraints.
 
-The current implementation, introduced in PR #26, enforces ΔT_h,out < ΔT_h,in by default and disables that filter only in algebraic-diagnostic mode. This behavior is now **under review**. It must not yet be described as definitively source-validated paper-domain admissibility. The synthetic regression case above ΔT_h,in demonstrates only that the implemented algebraic equations can admit such a root under independently selected heat capacities; it is neither proof of physical feasibility nor proof that the paper excludes the root.
+The implementation introduced in PR #26 initially enforced ΔT_h,out < ΔT_h,in by default. Following this source reconciliation, that default is being changed: the strict-order filter is opt-in only, because the article explicitly calls ΔT_h,out ≥ 0.5 °C the only imposed physical constraint. The synthetic regression case above ΔT_h,in demonstrates only that the implemented algebraic equations can admit such a root under independently selected heat capacities; it is neither proof of physical feasibility nor proof that the paper's full supplementary derivation admits it.
 
 ### Disposition
 
@@ -106,7 +106,7 @@ This source-backed domain scan is currently blocked by Issue 2. No claim of glob
 
 | Issue | Current result | Remaining gate |
 |---|---|---|
-| Configuration-3 terminal ordering | PR #26 enforces ΔT_h,out < ΔT_h,in by default; source justification is now under review because the article also calls ΔT_h,out ≥ 0.5 °C the only imposed physical constraint | Obtain SI and reconcile the reported trend with the stated constraint before retaining or changing the default |
+| Configuration-3 terminal ordering | Strict ΔT_h,out < ΔT_h,in filter is opt-in only; default applies the article's stated lower bound and S2 recovery interval | Obtain SI to complete the equation/constraint audit; passing algebraic filters is not physical validation |
 | MIT/Sharqawy property provenance | Official API/version context confirmed; archive identity and stream-state inputs unresolved | Authenticated v3.1.5 source plus explicit property-state mapping |
 | Root-domain/uniqueness | Necessary algebraic interval derived; zero/one/two-root behavior handled in code | Source-backed operating/property domain and full root enumeration |
 
@@ -149,8 +149,17 @@ The endpoint is a concrete publisher-hosted PDF delivery URL, not a guessed Else
 
 A further close reading of the publisher-indexed full text identifies a material qualification to the Issue 1 disposition above. The article says that configuration-3 STEC is systematically higher, consistent with ΔT_h,in > ΔT_h,out, and discusses the evaluated recovery behavior as bounded by ΔT_h,in = 5 °C and ΔT_h,out = 0.5 °C. In the same configuration-3 discussion, however, it explicitly says that “the only imposed physical constraint” is ΔT_h,out ≥ 0.5 °C. The first statement describes the reported trend/results; the second describes the stated physical constraint. They do not establish the same thing.
 
-Consequently, PR #26's default strict-order filter (ΔT_h,out < ΔT_h,in) is no longer treated as conclusively source-validated. It remains the current code behavior pending review, but must be labeled a provisional interpretation rather than a proven paper-domain rule. Do not silently change the solver or claim that roots above ΔT_h,in are physically admissible. The synthetic above-inlet root remains an algebraic diagnostic only. The actual supplementary PDF is needed to inspect S2/S8, definitions, and whether an additional upper bound is imposed elsewhere.
+Consequently, PR #26's default strict-order filter (ΔT_h,out < ΔT_h,in) is not source-validated and is being changed to opt-in only. The default solver will apply the explicit lower bound and S2 recovery interval without imposing the additional strict ordering. Do not silently change the solver or claim that roots above ΔT_h,in are physically admissible. The synthetic above-inlet root remains an algebraic diagnostic only. The actual supplementary PDF is needed to inspect S2/S8, definitions, and whether an additional upper bound is imposed elsewhere.
 
 **Required follow-up:** once the publisher's 618 KB SI is obtained, check every stated constraint and the derivation of the recovery bound against the implementation. Then decide whether the default should enforce only the explicit lower bound plus the S2 recovery interval, or retain a separate source-supported upper bound. Until then, preserve both filtered and unfiltered diagnostic results as distinct categories and keep the reproduction status **NOT YET REPRODUCED**.
 
 Source: Malaguti et al. (2026), DOI https://doi.org/10.1016/j.desal.2026.120039, configuration-3 discussion and Section 3.3; publisher-indexed full text consulted 2026-11-01.
+
+
+## Solver default aligned with explicit main-article constraint (2026-11-01)
+
+Following the terminal-order reconciliation, the solver's `enforce_config3_terminal_order` default is changed to `False`. The main article explicitly says that the only imposed physical constraint for configuration 3 is ΔT_h,out ≥ 0.5 °C. The fact that the evaluated results exhibit ΔT_h,out < ΔT_h,in does not, by itself, justify enforcing that inequality as a universal root filter. The stricter ordering remains available as an opt-in sensitivity filter, clearly labeled provisional until the supplementary PDF is inspected.
+
+A synthetic regression case now confirms that a root above ΔT_h,in is not rejected by the default algebraic filters, while the optional strict-order filter rejects the same root. This is a test of filter semantics only; the synthetic heat-capacity inputs are not source-matched and do not establish physical feasibility. The provisional smoke tests remain non-reproduction fixtures. No production thermodynamics or water-ledger behavior is changed.
+
+The supplementary-information gate remains open: S2/S8 transcription, property-state mapping, and full physical admissibility are not yet verified. Reproduction status remains **NOT YET REPRODUCED**.
