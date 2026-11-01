@@ -249,3 +249,27 @@ reconstructed and checked.
 **Reproduction status: NOT YET REPRODUCED.** The equation transcription gate
 is closed; the property-state, numerical reproduction, and domain-uniqueness
 gates remain open.
+
+
+## Property-state audit after direct SI inspection (2026-11-01)
+
+The publisher SI adds one important state-selection detail that was not available in the earlier main-article-only review:
+
+- In the derivation immediately before Eq. S2, the authors state that the hot-channel specific heat is treated as approximately constant along the feed channel (`c_h,in ≃ c_h,out ≃ c_h`) and that **the selected value refers to the hot-channel inlet conditions**. Therefore, the solver's `c_h` should be an inlet-state property, not an arbitrary channel-average value.
+- For the AGMD module balance, S6 distinguishes `c_h`, `c_c`, and `c_d`; S7 then uses the constant-specific-heat approximation for the hot and cold channels and includes make-up water to compensate for distillate loss. The main article identifies the hot and cold channels as the same circulating saltwater stream and the distillate as pure water.
+- The SI sets `T_c,in = 20 °C`, `DeltaT_h,in = 5 °C`, and defines `T_h,in = T_c,in + DeltaT`. It estimates `T_d = (T_h,in + T_c,in + DeltaT_h,out)/2`.
+
+The SI does **not** state a numerical seawater salinity for the configuration-3 calculations in its text, nor does it unambiguously state the exact evaluation temperature for `c_c`, `c_d`, or `h_vap`. In particular, it does not explicitly say whether `c_c` is evaluated at the cold-channel inlet or another representative state, whether `c_d` is evaluated at the estimated `T_d`, or how the latent-heat correlation's mass basis is mapped to the pure distillate mass flow in S1. These must remain unresolved rather than being filled with a conventional 35 g/kg seawater assumption or a guessed property temperature.
+
+### Consequence for implementation
+
+No source-matched property adapter or numerical map reproduction is justified yet. The next defensible work is to:
+
+1. extract the complete Sharqawy citation and the exact correlation versions used by the article;
+2. identify the salinity and property evaluation states from author-supplied code/data, if available;
+3. distinguish latent heat per kg of pure vapor/distillate from latent heat per kg of saline solution, and verify the mass basis against S1's `md * h_vap` term;
+4. only then implement a versioned property adapter and calculate the four article anchors without fitting to them.
+
+The article's generic reference to Sharqawy correlations is not enough to uniquely reconstruct these missing numerical inputs. A plausible seawater salinity, a modern library implementation, or a match to rounded figure anchors would not independently establish the authors' exact property-state choices.
+
+**Updated disposition:** S2/S8 equation transcription is source-checked. The hot-channel specific-heat evaluation point is now identified as the hot inlet. Numerical salinity and the remaining property-state/mass-basis details are still undocumented in the inspected SI/main text. **Reproduction remains NOT YET REPRODUCED.**
