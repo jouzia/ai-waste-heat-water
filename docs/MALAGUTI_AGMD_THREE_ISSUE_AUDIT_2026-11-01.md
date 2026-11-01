@@ -273,3 +273,38 @@ No source-matched property adapter or numerical map reproduction is justified ye
 The article's generic reference to Sharqawy correlations is not enough to uniquely reconstruct these missing numerical inputs. A plausible seawater salinity, a modern library implementation, or a match to rounded figure anchors would not independently establish the authors' exact property-state choices.
 
 **Updated disposition:** S2/S8 equation transcription is source-checked. The hot-channel specific-heat evaluation point is now identified as the hot inlet. Numerical salinity and the remaining property-state/mass-basis details are still undocumented in the inspected SI/main text. **Reproduction remains NOT YET REPRODUCED.**
+
+
+## External source links and author-query plan (2026-11-01)
+
+### Primary sources to use
+
+1. **Malaguti et al. (2026), version of record** — [DOI: 10.1016/j.desal.2026.120039](https://doi.org/10.1016/j.desal.2026.120039); [Politecnico di Torino repository record and open article PDF](https://iris.polito.it/handle/11583/3009010). The article states that seawater is the feed, salt rejection is complete, distillate is pure water, and properties are based on temperature- and salinity-dependent correlations reported by Sharqawy et al. (2010). It does not report a numerical salinity in the inspected main text/SI. The data-availability statement says the data generated are included in the article and SI.
+2. **Publisher supplementary information** — linked from the DOI landing page under Supplementary data; local inspected copy: `1-s2.0-S0011916426001955-mmc1(1).pdf`. It contains S1–S8, but does not resolve the missing numerical salinity or all property evaluation states.
+3. **The exact cited property reference, Sharqawy, Lienhard & Zubair (2010)** — [DOI: 10.5004/dwt.2010.1079](https://doi.org/10.5004/dwt.2010.1079); [MIT DSpace author-final manuscript (corrected version)](https://dspace.mit.edu/entities/publication/0c55d19d-eb62-4e5f-8a12-a71c2b53f36a); [MIT-hosted PDF](https://dspace.mit.edu/bitstream/handle/1721.1/69157/DWT_7208_Corrected_Version_5.pdf?sequence=1). The DSpace record identifies the 2010 paper and its corrected author-final manuscript.
+4. **MIT seawater property library** — [official library page](https://web.mit.edu/seawater/); [property tables PDF, updated 9 Dec 2023](https://web.mit.edu/seawater/2017_MIT_Seawater_Property_Tables_r2b_2023c.pdf); [version history](https://web.mit.edu/seawater/Version_History_07Aug24-pdf-3a.pdf); [code archive v3.1.5 (7 Aug 2024)](https://web.mit.edu/seawater/SEAWATER_v3.1.5_07Aug24.zip). This is a useful implementation/reference cross-check, **not proof that the 2026 article used this exact code archive**. The MIT page identifies the specific-heat routine as the Jamieson correlation at 1 atm and documents its corrected coefficient. The library's function contracts also distinguish pressure-dependent specific heat from latent heat evaluated at its stated reference pressure convention.
+5. **Pressure-dependent follow-up correlation paper** — [Nayar et al. (2016), DOI: 10.1016/j.desal.2016.02.024](https://doi.org/10.1016/j.desal.2016.02.024). This is cited by the current MIT library, but is **not** the reference [22] cited by Malaguti et al. (2026). Do not silently replace the article's cited 2010 correlations with the later 2016 set.
+6. **Mass-basis cross-check** — Sharqawy et al. (2010), latent-heat section, especially Eq. 37 and its stated basis. The correlation distinguishes latent heat per mass of saline solution from pure-water latent heat. Before using it in S1, the implementation must show which basis is returned and how that basis is consistent with the distillate mass flow `m_dot_d`. Avoid applying a seawater correction twice.
+
+### What can be resolved now, and what cannot
+
+- The article explicitly says **seawater** is the feed and pure water is the distillate. This is source-backed, but does not supply a numeric salinity.
+- The article explicitly cites **Sharqawy et al. (2010)** for the temperature- and salinity-dependent property correlations. The 2010 paper and corrected manuscript are therefore the first property-correlation source to implement, not a later library selected merely because it is convenient.
+- MIT's current library is valuable for checking equation coefficients, validity ranges, units, and code behavior. Its version and API contracts must be recorded separately from the article's stated citation.
+- The article/SI still do not uniquely specify the numerical salinity or all property evaluation temperatures. A reference-seawater convention such as 35 g/kg must not be promoted to an author-confirmed input without an explicit statement or data/code evidence.
+- The SI's estimate for `T_d` provides a possible evaluation state for pure-water `c_d`, but unless the authors explicitly say they evaluate `c_d` there, this remains an implementation hypothesis to test, not a source fact.
+
+### Author clarification request
+
+The article identifies Alberto Tiraferri as corresponding author and gives `alberto.tiraferri@polito.it`. A concise clarification request should ask:
+
+1. What exact feed salinity (g/kg) was used for the seawater property calculations in configuration 3 / Figures 3C, 3F and 4?
+2. At what temperatures were `c_h`, `c_c`, and `c_d` evaluated? We have the SI statement that `c_h` is evaluated at hot-channel inlet conditions; please confirm the cold-channel and pure-distillate states.
+3. Which exact Sharqawy 2010 equations or code implementation/version were used?
+4. Is `h_{vap}` in S1 the latent heat per kg of pure distillate water or per kg of saline feed solution? If seawater-basis, how was it reconciled with `m_dot_d` (pure distillate mass flow)?
+5. What pressure convention was assumed for the properties?
+6. Are the underlying calculation scripts, numerical arrays, or a table of property inputs available, beyond the article/SI?
+
+No email has been sent. These questions are recorded as the next source-retrieval action.
+
+**Implementation decision:** proceed with a transparent sensitivity framework over explicitly labelled salinity/property-state scenarios if useful, but do not label any scenario as an exact reproduction. Exact reproduction remains blocked pending author clarification or an independently verifiable numerical input source.
