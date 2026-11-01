@@ -34,10 +34,12 @@ The previous implicit upper bound remains removed. Do not reinstate it without a
 The official MIT Seawater Library page identifies code version 3.1.5 (7 August 2024), while the separately published property tables are identified as library version 3.1.3 with table updates through 9 December 2023.
 
 The relevant function contracts differ:
-- specific heat: `SW_SpcHeat(T, S, P)`, with temperature, salinity, and pressure inputs;
-- latent heat: `SW_LatentHeat(T, S)`, using the library's reference-pressure convention.
+- specific heat: `SW_SpcHeat(T, S, P)`, with documented validity range T = 0–180 °C, S = 0–180 g/kg, and P = 0–12 MPa;
+- latent heat: `SW_LatentHeat(T, S)`, with documented validity range T = 0–200 °C and S = 0–240 g/kg, evaluated at the library's `P₀` convention rather than an arbitrary caller-supplied pressure.
 
-The official documentation also records the corrected Jamieson specific-heat coefficient b₃ = −3.15 × 10⁻⁶. These facts establish the documented API/version context; they do not verify that an independently obtained archive is identical to the official v3.1.5 download.
+MIT defines `P₀` as 0.101325 MPa for T ≤ 100 °C and as the vapor pressure of seawater for T > 100 °C. Therefore the latent-heat input state must record temperature and salinity, and the implied pressure convention; it must not be treated as a freely pressure-adjustable function. By contrast, the specific-heat function explicitly accepts pressure. These are different state contracts, not interchangeable calls.
+
+The official documentation states that its atmospheric-pressure seawater specific-heat correlation is based on Jamieson et al. (1969), with the coefficient correction b₃ = −3.15 × 10⁻⁶ (not positive); the pressure-dependent library correlation is exposed through `SW_SpcHeat(T,S,P)`. The MIT note says the typo was corrected in Sharqawy et al. (2010) and in all MIT codes. These facts establish the documented API, ranges, and correlation lineage; they do not verify that an independently obtained archive is identical to the official v3.1.5 download.
 
 ### Unresolved provenance and state
 
