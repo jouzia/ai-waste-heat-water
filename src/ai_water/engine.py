@@ -162,7 +162,6 @@ def simulate(s: Scenario) -> Result:
 
     # Produced distillate becomes avoided consumption only when the declared
     # counterfactual demonstrates that it displaces freshwater consumption.
-    avoided_l = s.water.avoided_freshwater_consumption_l
     net_consumption_change = additional_l - avoided_l
 
     concentrate_salinity = (
