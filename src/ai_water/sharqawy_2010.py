@@ -58,11 +58,11 @@ def jamieson_seawater_cp_j_kg_k(
 
 
 def pure_water_cp_j_kg_k(
-    temperature_its90_c: float, pressure_mpa: float = 0.1
+    temperature_its90_c: float, pressure_mpa: float = 0.101325
 ) -> float:
     """Return pure-water cp from Sharqawy Table 11 Eq. (51), in J/(kg K).
 
-    The pressure argument is in MPa. The default is 0.1 MPa, the atmospheric
+    The pressure argument is in MPa. The default is 0.101325 MPa, the atmospheric
     pressure convention used for the paper's pure-water property table.
     """
     _finite("temperature_its90_c", temperature_its90_c)
