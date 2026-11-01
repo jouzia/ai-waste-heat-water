@@ -75,7 +75,7 @@ def solve_agmd_reference(
     latent_heat_j_kg: float,
     minimum_delta_t_h_out_c: float = 0.5,
     maximum_delta_t_h_out_c: float | None = None,
-    enforce_config3_terminal_order: bool = True,
+    enforce_config3_terminal_order: bool = False,
 ) -> AGMDReferenceResult:
     """Solve S2/S8 using caller-supplied properties and algebraic constraints.
 
@@ -89,14 +89,16 @@ def solve_agmd_reference(
     delta_T_h,out >= 0.5 °C. This function does not hard-code delta_T_h,in;
     callers must choose and document the case being evaluated.
 
-    By default, configuration-3 paper-domain admissibility also requires
-    delta_t_h_out_c < delta_t_h_in_c. Malaguti et al. explicitly describe
-    delta_T_h,out as smaller than delta_T_h,in for this configuration and
-    bound recovery using the 5 °C inlet and 0.5 °C minimum outlet differences.
-    Set enforce_config3_terminal_order=False only for algebraic root diagnostics;
-    such roots are not thereby physically admissible paper-domain solutions.
-    Passing the model filter is still not full physical validation of the
-    assumed properties or source-matched operating state.
+    The main article states that the only imposed physical constraint for
+    configuration 3 is delta_T_h,out >= 0.5 °C. Accordingly, no additional
+    delta_T_h,out < delta_T_h,in filter is applied by default. The article
+    reports delta_T_h,out < delta_T_h,in in its evaluated regime, but a
+    reported trend is not itself a general admissibility constraint.
+    Set enforce_config3_terminal_order=True to apply that stricter, provisional
+    interpretation for sensitivity comparisons. Passing the algebraic/model
+    filters is not full physical validation of the assumed properties or
+    source-matched operating state; the supplementary information remains
+    necessary to complete the equation and constraint audit.
     """
     values = {
         "vaporization_efficiency": vaporization_efficiency,
