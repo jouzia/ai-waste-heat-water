@@ -137,3 +137,14 @@ An earlier 27-page working-paper version is independently catalogued by Aalborg 
 The publisher states that the SI contains the full theoretical derivation, mathematical definitions, and comprehensive variable descriptions. The exact SI equations and property-state definitions therefore remain unverified until the 618 KB file itself is obtained and inspected. The absence of a supplementary attachment from the IRIS record is not proof that the publisher's supplement is unavailable.
 
 **Actionable gate:** retrieve the publisher's SI through its ScienceDirect supplementary-data control or directly from the authors/repository; record exact URL, filename, byte size, and SHA-256 before transcription. Separately, if the SSRN preprint PDF becomes accessible, archive it as an earlier-version comparison with its own provenance and version label. Do not substitute guessed URLs or a reconstructed derivation for source evidence.
+
+
+## SSRN preprint delivery-link audit (2026-11-01)
+
+A targeted search surfaced the SSRN "Download This Paper" delivery endpoint for the separately catalogued 27-page preprint (DOI 10.2139/ssrn.6048961):
+
+`https://papers.ssrn.com/sol3/Delivery.cfm/9bc95f3e-5eef-44ee-8df7-96c56129f90c-MECA.pdf?abstractid=6048961&mirid=1`
+
+The endpoint is a concrete publisher-hosted PDF delivery URL, not a guessed Elsevier supplementary-file path. However, a direct retrieval attempt returned HTTP 403 Forbidden, and the browser's PDF open was also denied. Therefore the PDF bytes, filename as delivered, byte size, SHA-256, and contents remain unverified. The SSRN record independently confirms a 27-page preprint posted 9 January 2026 and identifies two versions; this metadata does not establish which file/version the delivery endpoint would return or that it contains the final article's supplementary derivation.
+
+**Disposition:** preserve the exact delivery URL as a retrieval lead; do not mark the preprint as downloaded, do not cite it as inspected equation evidence, and do not close the supplementary-information gate. The publisher's 618 KB SI PDF remains a separate unresolved retrieval target.
