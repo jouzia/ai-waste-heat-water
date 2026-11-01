@@ -1,6 +1,11 @@
 """Deterministic reduced-order coupled system model."""
 from .hydraulics import pumping_from_pressure_drop
-from .md import flux_kg_m2_h, interface_temperatures, mean_single_pass_salinity_g_kg, seawater_water_activity
+from .md import (
+    flux_kg_m2_h,
+    interface_temperatures,
+    mean_single_pass_salinity_g_kg,
+    seawater_water_activity,
+)
 from .md_thermal import account_for_membrane_heat
 from .models import Result, Scenario
 
