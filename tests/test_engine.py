@@ -47,7 +47,9 @@ def test_heat_limiting_reduces_production():
 
 
 def test_distillate_is_not_automatically_avoided_consumption():
-    result = simulate(scenario())
+    s = scenario()
+    s.water.avoided_freshwater_consumption_l = None
+    result = simulate(s)
     assert result.freshwater_produced_l == 1.0
     assert result.avoided_freshwater_consumption_l == 0.0
     assert result.net_consumption_change_l == 0.0
