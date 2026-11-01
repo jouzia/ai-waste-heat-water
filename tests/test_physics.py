@@ -1,9 +1,23 @@
 import numpy as np
 import pytest
 
+from ai_water.channel_transport import (
+    ChannelProperties,
+    concentration_polarization_coefficient,
+    dimensionless_numbers,
+    graetz_leveque_nusselt,
+    graetz_leveque_sherwood,
+    heat_transfer_coefficient,
+    interface_salinity_g_kg,
+    keshavarzzadeh_dimensionless_position,
+    keshavarzzadeh_f_re_sqrt_area,
+    keshavarzzadeh_nusselt,
+    mass_transfer_coefficient,
+    tpc_from_interfaces,
+    watertap_nusselt,
+)
 from ai_water.engine import simulate
 from ai_water.hydraulics import pumping_from_pressure_drop
-from ai_water.thermal import exergy_efficiency, heat_exergy_kwh
 from ai_water.md import (
     flux_kg_m2_h,
     interface_temperatures,
@@ -21,6 +35,13 @@ from ai_water.models import (
     WaterFactors,
     Workload,
 )
+from ai_water.source_keshavarzzadeh import (
+    source_membrane_conductivity_w_m_k,
+    source_membrane_flux_coefficient,
+    source_saturation_pressure_pa,
+    source_water_activity_from_molar_nacl,
+)
+from ai_water.thermal import exergy_efficiency, heat_exergy_kwh
 from ai_water.uncertainty import (
     DistributionSpec,
     probability_negative,
@@ -139,7 +160,6 @@ def test_heat_limit_keeps_fixed_membrane_conduction():
     assert r.concentrate_salinity_g_kg == 0.0
 
 
-
 def test_one_dimensional_dcmd_channel_resolves_interface_temperatures_and_axial_cooling():
     result = simulate_dcmd_channel(
         config=ChannelConfig(
@@ -189,18 +209,6 @@ def test_one_dimensional_channel_concentrates_saline_feed():
     )
     assert result.freshwater_produced_kg > 0
     assert result.concentrate_salinity_g_kg > 35
-from ai_water.channel_transport import (
-    ChannelProperties,
-    concentration_polarization_coefficient,
-    dimensionless_numbers,
-    graetz_leveque_nusselt,
-    graetz_leveque_sherwood,
-    heat_transfer_coefficient,
-    interface_salinity_g_kg,
-    mass_transfer_coefficient,
-    tpc_from_interfaces,
-    watertap_nusselt,
-)
 
 
 def test_channel_correlations_and_polarization_are_physical():
@@ -267,7 +275,6 @@ def test_one_dimensional_channel_can_apply_concentration_polarization():
     assert all(c.interface_salinity_g_kg >= c.feed_salinity_g_kg for c in result.cells)
 
 
-
 def test_uncertainty_sampling_is_reproducible_and_preserves_sign_probability():
     a = sample_distribution(
         DistributionSpec("uniform", (0.0, 1.0)),
@@ -311,7 +318,9 @@ def test_counter_current_channel_uses_opposite_stream_boundary_direction():
     assert result.feed_out_temperature_c < 60
     assert result.permeate_out_temperature_c > 25
     assert result.permeate_out_mass_kg_h > 1000
-    assert result.cells[-1].permeate_bulk_temperature_c > result.cells[0].permeate_bulk_temperature_c
+    # In counter-current flow, the permeate enters at the feed outlet side,
+    # so its bulk temperature decreases when indexed in the feed-flow direction.
+    assert result.cells[0].permeate_bulk_temperature_c > result.cells[-1].permeate_bulk_temperature_c
 
 
 def test_heat_exergy_reflects_source_temperature_quality():
@@ -329,3 +338,46 @@ def test_exergy_efficiency_is_bounded():
         ambient_temperature_c=25,
     )
     assert 0 < value <= 1
+
+
+def test_keshavarzzadeh_source_correlation_is_finite_and_positive():
+    area_m2 = 0.007 * 0.00045
+    re_sqrt_a = 120.0
+    pr = 5.0
+    z_star = keshavarzzadeh_dimensionless_position(
+        axial_position_m=0.0275,
+        cross_section_area_m2=area_m2,
+        reynolds_sqrt_area=re_sqrt_a,
+        prandtl=pr,
+    )
+    aspect_ratio = 0.00045 / 0.007
+    f_re = keshavarzzadeh_f_re_sqrt_area(aspect_ratio)
+    nu = keshavarzzadeh_nusselt(
+        reynolds_sqrt_area=re_sqrt_a,
+        prandtl=pr,
+        z_star=z_star,
+        aspect_ratio=aspect_ratio,
+    )
+    assert z_star > 0
+    assert f_re > 0
+    assert nu > 0
+
+
+def test_keshavarzzadeh_source_equations_are_finite_and_physical():
+    activity = source_water_activity_from_molar_nacl(0.05)
+    pressure = source_saturation_pressure_pa(60.0)
+    coefficient = source_membrane_flux_coefficient(
+        temperature_k=333.15,
+        pore_radius_m=0.1e-6,
+        thickness_m=60e-6,
+        porosity=0.8,
+        tortuosity=1.25,
+    )
+    conductivity = source_membrane_conductivity_w_m_k(
+        temperature_k=333.15,
+        porosity=0.8,
+    )
+    assert 0 < activity < 1
+    assert pressure > 0
+    assert coefficient > 0
+    assert conductivity > 0

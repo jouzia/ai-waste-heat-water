@@ -111,3 +111,6 @@ A successful validation result is not required for publication. Systematic model
 ## CI confirmation gate
 
 This branch is used to confirm that the current repository state passes the repository's automated software checks before a demonstration-facing mode is enabled. A green CI result is a software-quality gate only; it is not physical validation.
+## Current execution gate
+
+As of 2026-10-02, the repository has source-identified benchmark cases and solver/test infrastructure, but no primary observation ledger has been promoted to quantitative validation. This status must remain explicit until measured observations are extracted, independently checked, and compared without fitting on the reported validation set.

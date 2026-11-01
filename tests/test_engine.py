@@ -40,6 +40,7 @@ def test_energy_to_heat_is_explicit_and_recoverable():
 def test_heat_limiting_reduces_production():
     s = scenario()
     s.recovery.recovery_efficiency = 0.005
+    s.water.avoided_freshwater_consumption_l = 0.5
     result = simulate(s)
     assert result.heat_limited is True
     # 0.5 kWh_th is available and the configured effective duty is
@@ -51,3 +52,58 @@ def test_net_consumption_sign_is_explicit():
     result = simulate(scenario())
     assert result.net_consumption_change_l == -1.0
     assert result.net_freshwater_benefit_l == 1.0
+
+
+
+def test_incremental_cooling_water_excludes_baseline_facility_load():
+    s = scenario()
+    s.cooling = Cooling(
+        facility_overhead_fraction=0.3,
+        incremental_facility_electricity_kwh=3.0,
+        cooling_water_consumption_l_per_kwh_facility=2.0,
+    )
+    result = simulate(s)
+    assert result.facility_energy_kwh == 130.0
+    # Only 3 kWh of incremental facility electricity is attributable to
+    # the intervention; baseline facility cooling is in the counterfactual.
+    assert result.direct_cooling_consumption_l == 6.0
+    assert result.additional_water_consumption_l == 6.0
+
+
+
+def test_avoided_consumption_cannot_exceed_produced_distillate():
+    import pytest
+
+    s = scenario()
+    s.water.avoided_freshwater_consumption_l = 1.01
+    with pytest.raises(ValueError, match="cannot exceed distillate produced"):
+        simulate(s)
+
+
+
+def test_fractional_displacement_is_applied_to_produced_distillate():
+    s = scenario()
+    s.water.avoided_freshwater_consumption_l = None
+    s.water.freshwater_displacement_fraction = 0.25
+    result = simulate(s)
+    assert result.freshwater_produced_l == 1.0
+    assert result.avoided_freshwater_consumption_l == 0.25
+
+
+def test_absolute_volume_and_displacement_fraction_cannot_both_be_set():
+    import pytest
+
+    s = scenario()
+    s.water.freshwater_displacement_fraction = 0.5
+    with pytest.raises(ValueError, match="not both"):
+        simulate(s)
+
+
+
+def test_displacement_fraction_is_bounded_between_zero_and_one():
+    import pytest
+
+    with pytest.raises(ValueError):
+        WaterFactors(freshwater_displacement_fraction=-0.01)
+    with pytest.raises(ValueError):
+        WaterFactors(freshwater_displacement_fraction=1.01)

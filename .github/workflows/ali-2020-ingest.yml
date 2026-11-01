@@ -1,0 +1,184 @@
+name: Ali et al. 2020 dynamic DCMD source-data ingestion
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/download_ali_2020_data.py"
+      - "scripts/extract_ali_2020_observations.py"
+      - "scripts/extract_ali_2020_observation_ledger.py"
+      - "scripts/audit_ali_mass_series.py"
+      - "scripts/evaluate_ali_steady_state_flux_holdout.py"
+      - ".github/workflows/ali-2020-ingest.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  retrieve-and-inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install research package and XLSX inspector
+        run: python -m pip install -e . "openpyxl>=3.1.2"
+
+      - name: Retrieve five CC BY 4.0 supporting workbooks
+        run: |
+          python scripts/download_ali_2020_data.py \
+            --output-dir data/raw/ali_2020 \
+            --manifest artifacts/provenance/ali_2020_supporting_data_manifest.json
+
+      - name: Verify five source objects and workbook structure
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("artifacts/provenance/ali_2020_supporting_data_manifest.json").read_text())
+          assert len(manifest["files"]) == 5, manifest
+          assert all(item["status"] == "downloaded_and_inspected" for item in manifest["files"]), manifest
+          assert all(item["size_bytes"] > 1000 for item in manifest["files"]), manifest
+          assert all(item["sheets"] for item in manifest["files"]), manifest
+          print("Verified five supporting XLSX files:")
+          for item in manifest["files"]:
+              print(item["filename"], item["size_bytes"], item["sha256"])
+          PY
+
+      - name: Export lossless raw worksheet-row ledger
+        run: |
+          python scripts/extract_ali_2020_observation_ledger.py \
+            --input-dir data/raw/ali_2020 \
+            --output-dir artifacts/ali_2020_exports
+
+      - name: Verify raw ledger coverage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("artifacts/ali_2020_exports/ali_2020_raw_observation_ledger_manifest.json").read_text())
+          assert len(manifest["workbooks"]) == 5, manifest
+          assert manifest["total_nonempty_rows_exported"] > 10000, manifest
+          assert all(item["sha256"] for item in manifest["workbooks"]), manifest
+          print("Verified raw worksheet ledger:", manifest["total_nonempty_rows_exported"], "nonempty source rows")
+          PY
+
+      - name: Extract source-linked transient and steady-state ledgers
+        run: |
+          python scripts/extract_ali_2020_observations.py \
+            --input-dir data/raw/ali_2020 \
+            --output-dir artifacts/ali_2020_exports
+
+      - name: Audit raw mw series without semantic reinterpretation
+        run: |
+          python scripts/audit_ali_mass_series.py \
+            --input-dir data/raw/ali_2020 \
+            --output-dir artifacts/ali_2020_exports
+
+      - name: Verify mass-series quality audit
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("artifacts/ali_2020_exports/ali_2020_mw_series_quality_audit_manifest.json")
+          report = json.loads(p.read_text())
+          assert report["timed_mw_worksheet_count"] == 19, report
+          assert report["nonmonotonic_worksheet_count"] == 14, report
+          assert report["monotonic_worksheet_count"] == 5, report
+          assert report["output_sha256"]
+          print("Verified raw mw quality audit: 14/19 nonmonotonic; no values repaired or reinterpreted.")
+          PY
+
+      - name: Verify observation ledger row counts and data-quality flags
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("artifacts/ali_2020_exports/ali_2020_observation_ledger_manifest.json").read_text())
+          outputs = manifest["outputs"]
+          assert outputs["transient_rows"] == 17385, outputs
+          assert outputs["complete_time_series_rows"] == 16837, outputs
+          assert outputs["temperature_only_no_timestamp_rows"] == 548, outputs
+          assert outputs["other_incomplete_rows"] == 0, outputs
+          assert outputs["steady_state_rows"] == 16, outputs
+          assert outputs["tail_flux_check_rows"] == 0, outputs
+          assert outputs["mw_semantics_audit_rows"] == 19, outputs
+          assert len(manifest["files"]) == 5, manifest
+          print("Verified observation ledger:", json.dumps(outputs, indent=2))
+          PY
+
+      - name: Run train/held-out-flow flux-law diagnostic
+        run: |
+          python scripts/evaluate_ali_steady_state_flux_holdout.py \
+            --input artifacts/ali_2020_exports/ali_2020_steady_state_observation_ledger.csv \
+            --output-dir artifacts/ali_2020_flux_holdout
+
+      - name: Verify held-out diagnostic outputs
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+          root = Path("artifacts/ali_2020_flux_holdout")
+          summary = json.loads((root / "ali_2020_flux_law_holdout_summary.json").read_text())
+          with (root / "ali_2020_flux_law_holdout_predictions.csv").open(encoding="utf-8", newline="") as stream:
+              rows = list(csv.DictReader(stream))
+          assert len(rows) == 32, len(rows)
+          with (root / "ali_2020_flow_dependent_tpc_predictions.csv").open(encoding="utf-8", newline="") as stream:
+              flow_rows = list(csv.DictReader(stream))
+          assert len(flow_rows) == 32, len(flow_rows)
+          assert set(summary["cases"]) == {
+              "reported_0p5_percent_feed_salinity", "measured_TDS_E_proxy"
+          }
+          for case in summary["cases"].values():
+              assert case["training_metrics"]["n"] == 12
+              assert case["held_out_metrics"]["n"] == 4
+              assert case["fitted_permeance_kg_m2_h_bar"] > 0
+              assert case["flow_dependent_tpc_model"]["held_out_metrics"]["n"] == 4
+          print("Verified 32 fixed-TPC and 32 flow-dependent-TPC predictions across two salinity interpretations; 300 L/h held out.")
+          PY
+
+      - name: Verify grouped leave-one-flow-out model-form comparison
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+          root = Path("artifacts/ali_2020_flux_holdout")
+          summary = json.loads((root / "ali_2020_flux_law_leave_one_flow_out_summary.json").read_text())
+          with (root / "ali_2020_flux_law_leave_one_flow_out_predictions.csv").open(encoding="utf-8", newline="") as stream:
+              rows = list(csv.DictReader(stream))
+          assert len(rows) == 64, len(rows)
+          assert set(summary["cases"]) == {
+              "reported_0p5_percent_feed_salinity", "measured_TDS_E_proxy"
+          }
+          for case in summary["cases"].values():
+              assert len(case["folds"]) == 4
+              assert set(case["out_of_fold_metrics"]) == {
+                  "fixed_tpc_single_permeance", "flow_dependent_logistic_tpc"
+              }
+              for fold in case["folds"]:
+                  assert len(fold["training_flows_l_h"]) == 3
+                  assert fold["held_out_flow_l_h"] not in fold["training_flows_l_h"]
+                  assert fold["fixed_tpc_single_permeance"]["n"] == 4
+                  assert fold["flow_dependent_tpc"]["n"] == 4
+          print("Verified 64 out-of-fold predictions: four complete flow-level holdouts, two model forms, two salinity interpretations.")
+          PY
+
+      - name: Upload raw supporting files, observation ledgers, and provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: ali-2020-dynamic-dcmd-source-data
+          path: |
+            data/raw/ali_2020/*.xlsx
+            artifacts/provenance/ali_2020_supporting_data_manifest.json
+            artifacts/ali_2020_exports/*
+            artifacts/ali_2020_flux_holdout/*
+          if-no-files-found: error
+          retention-days: 90

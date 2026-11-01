@@ -1,0 +1,74 @@
+name: GDR DCMD model validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/validate_gdr_3m.py"
+      - "src/ai_water/md_channel.py"
+      - "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
+      - "tests/test_md_channel_grid_convergence.py"
+      - "docs/GDR_3M_MODEL_FORM_COMPARISON_2026-10-11.md"
+      - ".github/workflows/gdr-model-validation.yml"
+  pull_request:
+    paths:
+      - "scripts/validate_gdr_3m.py"
+      - "src/ai_water/md_channel.py"
+      - "04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv"
+      - "tests/test_md_channel_grid_convergence.py"
+      - "docs/GDR_3M_MODEL_FORM_COMPARISON_2026-10-11.md"
+      - ".github/workflows/gdr-model-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install model dependencies
+        run: python -m pip install -e .
+
+      - name: Compare transfer-correlation model forms on held-out conditions
+        run: |
+          python scripts/validate_gdr_3m.py \
+            --summary 04_experiments/literature_benchmarks/MD-OEDI-VILLA-2018_3M_flux_summary.csv \
+            --output-dir artifacts/gdr_model_validation \
+            --cells 16
+
+      - name: Check output completeness
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          from pathlib import Path
+
+          output = Path("artifacts/gdr_model_validation")
+          detail = list(csv.DictReader((output / "model_form_comparison.csv").open(encoding="utf-8")))
+          summary = json.loads((output / "model_form_metrics.json").read_text(encoding="utf-8"))
+          expected = summary["n_model_forms"] * summary["n_conditions"]
+          if len(detail) != expected:
+              raise SystemExit(f"expected {expected} model-condition rows, got {len(detail)}")
+          if not summary["model_forms"]:
+              raise SystemExit("no model forms were evaluated")
+          print(f"Recorded {len(detail)} model-condition rows across {summary['n_model_forms']} model forms.")
+          print("Solver failures are preserved as results and are not silently discarded.")
+          PY
+
+      - name: Upload model-validation outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: gdr-model-validation
+          path: artifacts/gdr_model_validation/*
+          if-no-files-found: error
+          retention-days: 14

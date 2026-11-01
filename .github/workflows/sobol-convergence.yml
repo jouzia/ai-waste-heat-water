@@ -1,0 +1,68 @@
+name: Higher-resolution scenario Sobol convergence audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/audit_sobol_convergence.py"
+      - "scripts/run_scenario_uncertainty_study.py"
+      - "src/ai_water/global_sensitivity.py"
+      - "src/ai_water/engine.py"
+      - ".github/workflows/sobol-convergence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sobol-convergence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install research package and sensitivity dependencies
+        run: python -m pip install -e . "scipy>=1.13"
+
+      - name: Run 4,096 and 8,192 sample Sobol convergence comparison
+        run: python scripts/audit_sobol_convergence.py --output-dir artifacts/sobol_convergence
+
+      - name: Verify sensitivity output coverage and checksums
+        run: |
+          python - <<'PY'
+          import csv
+          import hashlib
+          import json
+          from pathlib import Path
+          root = Path("artifacts/sobol_convergence")
+          summary = json.loads((root / "sobol_convergence_4096_8192_summary.json").read_text())
+          manifest = json.loads((root / "manifest.json").read_text())
+          with (root / "sobol_convergence_4096_8192.csv").open(encoding="utf-8", newline="") as stream:
+              rows = list(csv.DictReader(stream))
+          assert len(rows) == 60, len(rows)
+          assert {row["output"] for row in rows} == {"net_consumption_change_l", "freshwater_produced_l"}
+          assert {int(row["sample_size_per_matrix"]) for row in rows} == {4096, 8192}
+          assert len({row["parameter"] for row in rows}) == 15
+          assert all(row["first_order"] != "" and row["total_effect"] != "" for row in rows)
+          for name, expected in manifest["sha256"].items():
+              actual = hashlib.sha256((root / name).read_bytes()).hexdigest()
+              assert actual == expected, (name, expected, actual)
+          assert summary["claim_limits"]
+          print("Verified 60 Sobol indices across two outputs, 15 parameters, and 4,096/8,192 sample sizes.")
+          print(json.dumps({k: {"max_total_effect_abs_delta": v["max_total_effect_abs_delta"], "max_absolute_rank_shift": v["max_absolute_rank_shift"]} for k,v in summary["outputs"].items()}, indent=2))
+          print("Scenario-only sensitivity diagnostic; not empirical validation.")
+          PY
+
+      - name: Upload reproducible Sobol convergence outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: sobol-scenario-convergence-4096-8192
+          path: artifacts/sobol_convergence/*
+          if-no-files-found: error
+          retention-days: 90

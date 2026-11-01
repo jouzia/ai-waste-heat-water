@@ -1,13 +1,31 @@
-# Literature reproduction benchmark: Keshavarzzadeh et al. (2020)
+# Literature reproduction benchmark: Keshavarzzadeh (2020)
 source_id: MD-DCMD-CHANNEL-2020
-status: eligible_source_case_incomplete
-claim_status: "No numerical reproduction claim until source operating conditions and observed flux data are independently reconstructed."
+status: provenance_reconciled_pending_primary_figure_crosswalk
+claim_status: "No numerical reproduction claim until Figure 3 observations, source operating conditions, and the experimental-source crosswalk are independently reconstructed."
 
 source:
   citation: "Keshavarzzadeh, A. H. (2020), Scientific Reports 10, 16790"
   doi: "10.1038/s41598-020-73964-7"
   access: "open_access_cc_by_4"
   validation_basis: "Experimental data reported by Martinez-Diez and Vazquez-Gonzalez"
+  primary_experimental_source:
+    citation: "Martínez-Díez, L. & Vázquez-González, M. I. (1999), J. Membrane Science 156, 265-273"
+    doi: "10.1016/S0376-7388(98)00349-4"
+    membrane: "Gelman Instrument TF200 PTFE"
+    void_fraction: 0.80
+    thickness_um: 60.0
+    nominal_pore_size_um: 0.2
+    channels: 9
+    channel_length_mm: 55.0
+    channel_width_mm: 7.0
+    channel_height_mm: 0.45
+    effective_membrane_area_m2: 0.00337
+    measurement_condition:
+      temperature_stability_c: 0.1
+      flow_and_concentration_oscillation_percent: 1.0
+      replicate_statement: "Flux values are averages of at least three experiments."
+    provenance_note: "Primary-source module geometry, membrane specification, and measurement-quality information verified from the 1999 experimental paper."
+  figure_3_image_url: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41598-020-73964-7/MediaObjects/41598_2020_73964_Fig3_HTML.png"
   source_sections:
     - "Modeling"
     - "Validation"
@@ -31,15 +49,40 @@ confirmed_validation_inputs:
     material: PTFE
     void_fraction: 0.80
     thickness_um: 60.0
-    nominal_pore_size: "0.2 mm as printed in the source text; verify against original experimental reference before treating as micrometre-scale pore size"
+    nominal_pore_size_um_primary_source: 0.2
+    pore_size_reconciliation:
+      keshavarzzadeh_2020_printed_value: "0.2 mm"
+      martinez_diez_1999_primary_value: "0.2 um"
+      validation_rule: "Use 0.2 um for primary experimental provenance; preserve the 2020 printed '0.2 mm' as a source-text discrepancy rather than silently rewriting it."
+  module_geometry_primary_source:
+    channels_each_side: 9
+    channel_length_mm: 55.0
+    channel_width_mm: 7.0
+    channel_height_mm: 0.45
+    effective_membrane_area_m2: 0.00337
+  plotted_x_definition: "Average of inlet and outlet feed bulk temperature, T_b1"
+  plotted_series: "Experimental markers only; model curves are excluded from observed-data extraction"
+
+paper_model_case_table_1:
+  purpose: "Reproduce the paper's separate model input case; not the Figure 3 experimental validation dataset."
+  length_m: 5.0
+  width_m: 0.5
+  channel_depth_mm: 5.0
+  membrane_thickness_um: 200.0
+  porosity: 0.7
+  pore_size_um: 0.45
+  feed_inlet_temperature_c: 70.0
+  permeate_inlet_temperature_c: 25.0
+  feed_inlet_flow_l_min: 10.0
+  permeate_inlet_flow_l_min: 10.0
+  feed_inlet_salinity_ppm: 35000
 
 unresolved_source_inputs:
-  - "Exact channel length/width/depth for the validation module"
   - "Exact inlet feed and permeate temperatures for every plotted validation point"
-  - "Exact membrane transport parameters required by the source equations"
+  - "Exact source membrane transport parameters beyond the primary TF200 specification"
   - "Experimental flux values from Figure 3"
-  - "Exact source thermophysical-property correlations"
-  - "Original Martinez-Diez and Vazquez-Gonzalez experimental metadata"
+  - "Exact source thermophysical-property correlations and implementation conventions"
+  - "Any source-specific treatment of density, enthalpy, latent heat, and concentration units"
 
 provisional_values_do_not_use_for_validation:
   note: "These values may be used for software smoke tests only and must never be labelled as source conditions."
@@ -60,3 +103,10 @@ acceptance_rule:
   - "Any fitted parameter is development-only."
   - "Independent source cases remain held out for validation."
   - "Observed-vs-predicted values and exact source locations must be archived."
+
+
+provenance_audit_2026_09_30:
+  finding: "Keshavarzzadeh (2020) states that Figure 3 experimental symbols come from reference 25, but reference 25 in the article bibliography is a Geothermics ground-source heat-exchanger paper, not the Martínez-Díez and Vázquez-González (1999) MD experiment."
+  implication: "Treat the Figure 3 markers as data reproduced in the 2020 paper, not yet as independently verified primary-source observations."
+  required_action: "Crosswalk the plotted marker set against the actual primary experimental paper before quantitative validation."
+  rule: "Do not use the 2020 author's 'excellent agreement' statement as evidence that this repository implementation is validated."

@@ -1,0 +1,11 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+data/raw/gdr_villa_2018/
+data/raw/ali_2020/
+artifacts/provenance/

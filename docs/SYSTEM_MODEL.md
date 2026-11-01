@@ -14,6 +14,8 @@ Q_recoverable = E_IT * f_recoverable * eta_recovery * epsilon_HX * f_usable
 
 This is not a claim that all generated heat is usable. Temperature, duration, exchanger effectiveness, cooling architecture, and heat-sink availability remain explicit constraints.
 
+A separate time-resolved workload-profile module now integrates piecewise-constant IT-power intervals and applies recovery factors interval by interval. It reports total IT energy, candidate recoverable heat, thermally eligible duration, and heat-weighted source temperature. A minimum source-temperature threshold can exclude intervals from usable recovery while preserving their IT energy. This module is currently a tested accounting primitive; it is not yet coupled to a measured workload trace or the full MD/cooling scenario engine. Its temperature threshold and interval values remain scenario inputs, not empirical defaults.
+
 ## Membrane distillation
 
 The reduced-order transport primitive uses J = C_m [p_sat(T_fi, a_w) - p_sat(T_pi)]. The 1-D DCMD layer solves the interface temperatures from q_f = q_m = q_p rather than prescribing a symmetric TPC. Pure-water saturation pressure is based on NIST SRD 69. The primary saline pathway uses IAPWS-08 standard seawater thermodynamics. For single-pass recovery R, ideal salt retention gives S_out = S_in / (1-R), while the engine uses a water-removal-weighted bulk salinity for the lumped activity calculation. This does not resolve concentration polarization.
@@ -28,9 +30,11 @@ Cooling is a first-class variable. Recent system-level MD analysis reports cooli
 
 Withdrawal, consumption, and recovered freshwater are separate quantities. The primary operational screening metric is net consumption change:
 
-Delta W_net = W_additional_consumption - W_recovered
+Delta W_net = W_additional_consumption - W_avoided
 
-where W_additional_consumption includes direct cooling consumption, auxiliary burdens, and electricity-related water consumption. Negative Delta W_net indicates an offsetting net-consumption effect; zero is break-even; positive is additional consumption.
+where W_additional_consumption includes only intervention-incremental direct cooling consumption, MD-specific cooling, pumping, pretreatment, other auxiliary burdens, and electricity-related water from incremental electricity. Baseline data-center operation is part of the counterfactual, not an intervention burden.
+
+W_avoided is the freshwater consumption demonstrably displaced by the product water under a declared counterfactual. Recovered distillate is not automatically equal to avoided consumption; if displacement is not demonstrated, set W_avoided = 0 for the conservative case. The implementation accepts either an explicit avoided volume (which must not exceed produced distillate) or a displacement fraction bounded between 0 and 1; it rejects simultaneous specification to avoid double counting. Negative Delta W_net indicates lower modeled operational consumption than the counterfactual; zero is break-even; positive is additional consumption.
 
 Withdrawal is reported separately and is never substituted for consumption.
 
