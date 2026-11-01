@@ -51,7 +51,7 @@ def test_rejects_inlet_difference_not_below_overall_difference():
         )
 
 
-def test_outlet_difference_can_exceed_inlet_without_optional_policy_cap():
+def test_outlet_difference_above_inlet_is_admissible_only_in_algebraic_mode():
     result = solve_agmd_reference(
         vaporization_efficiency=0.7480277753658483,
         delta_t_c=44.1125971862735,
@@ -61,9 +61,26 @@ def test_outlet_difference_can_exceed_inlet_without_optional_policy_cap():
         cp_cold_j_kg_k=3575.9758914073695,
         cp_distillate_j_kg_k=4180.0,
         latent_heat_j_kg=2467075.614008491,
+        enforce_config3_terminal_order=False,
     )
     assert result.delta_t_h_out_c > 4.4198898005722835
     assert result.recovery_fraction > 0.0
+
+
+def test_paper_config3_domain_rejects_outlet_difference_above_inlet():
+    # Same synthetic root as the algebraic-mode test; paper-domain terminal
+    # ordering excludes it. This is not a seawater-property validation case.
+    with pytest.raises(ValueError, match="found 0"):
+        solve_agmd_reference(
+            vaporization_efficiency=0.7480277753658483,
+            delta_t_c=44.1125971862735,
+            delta_t_h_in_c=4.4198898005722835,
+            cold_inlet_c=20.0,
+            cp_hot_j_kg_k=4023.7871741005165,
+            cp_cold_j_kg_k=3575.9758914073695,
+            cp_distillate_j_kg_k=4180.0,
+            latent_heat_j_kg=2467075.614008491,
+        )
 
 
 def test_optional_outlet_upper_bound_is_enforced_when_supplied():
@@ -78,6 +95,7 @@ def test_optional_outlet_upper_bound_is_enforced_when_supplied():
             cp_distillate_j_kg_k=4180.0,
             latent_heat_j_kg=2467075.614008491,
             maximum_delta_t_h_out_c=4.4198898005722835,
+            enforce_config3_terminal_order=False,
         )
 
 
@@ -93,6 +111,7 @@ def test_solver_reports_zero_admissible_roots():
             cp_cold_j_kg_k=4486.426816194942,
             cp_distillate_j_kg_k=4180.0,
             latent_heat_j_kg=2128002.144351397,
+            enforce_config3_terminal_order=False,
         )
 
 
@@ -109,6 +128,7 @@ def test_solver_rejects_multiple_admissible_roots():
             cp_cold_j_kg_k=4668.8795856819725,
             cp_distillate_j_kg_k=6357.43391115901,
             latent_heat_j_kg=275894.7824005884,
+            enforce_config3_terminal_order=False,
         )
 
 
