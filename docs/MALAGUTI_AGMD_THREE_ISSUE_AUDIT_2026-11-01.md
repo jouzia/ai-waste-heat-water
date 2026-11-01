@@ -126,3 +126,14 @@ This source-backed domain scan is currently blocked by Issue 2. No claim of glob
 - Sharqawy et al. (2010), DOI: https://doi.org/10.5004/dwt.2010.1079
 - Nayar et al. (2016), DOI: https://doi.org/10.1016/j.desal.2016.02.024
 - Exploratory public mirror (not authenticated as byte-identical to MIT): https://github.com/djessop/sw_properties
+
+
+## Supplementary-information retrieval checkpoint (2026-11-01)
+
+The publisher's ScienceDirect record for DOI 10.1016/j.desal.2026.120039 explicitly states that all data generated are included in the article and its supplementary-information file. Appendix A of the main article identifies a separate 618 KB supplementary PDF. The accessible IRIS repository record for handle 11583/3009010 lists only the 4.8 MB main article PDF as a deposited file; it does not expose the supplementary PDF as a second repository attachment. The publisher's extracted record confirms a supplementary-data download control but does not expose a stable direct file URL. The likely Elsevier mmc1.pdf asset path was not verified and must not be treated as the file.
+
+An earlier 27-page working-paper version is independently catalogued by Aalborg University's research portal as an SSRN preprint dated 9 January 2026, DOI 10.2139/ssrn.6048961. It is a distinct earlier manuscript, not the publisher's 618 KB supplementary file. Its record establishes a potential secondary source for version comparison, but until the actual preprint PDF is retrieved and compared, it cannot close the SI gate or be assumed to contain the final supplementary derivation and definitions.
+
+The publisher states that the SI contains the full theoretical derivation, mathematical definitions, and comprehensive variable descriptions. The exact SI equations and property-state definitions therefore remain unverified until the 618 KB file itself is obtained and inspected. The absence of a supplementary attachment from the IRIS record is not proof that the publisher's supplement is unavailable.
+
+**Actionable gate:** retrieve the publisher's SI through its ScienceDirect supplementary-data control or directly from the authors/repository; record exact URL, filename, byte size, and SHA-256 before transcription. Separately, if the SSRN preprint PDF becomes accessible, archive it as an earlier-version comparison with its own provenance and version label. Do not substitute guessed URLs or a reconstructed derivation for source evidence.
