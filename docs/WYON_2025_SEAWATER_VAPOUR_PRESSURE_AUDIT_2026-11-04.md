@@ -29,20 +29,20 @@ Sharqawy et al. (2010), Table 7, Eq. (36):
 Stated validity: `0 ≤ t ≤ 200 °C`, `0 ≤ S ≤ 0.12 kg/kg`; reported accuracy ±0.018 K. Here the source's salinity convention and temperature scale must be respected; Wyon's practical-salinity-to-mass-fraction conversion should be checked before direct substitution.
 
 For an illustrative screening calculation at `S = 0.038 kg/kg` (38 g/kg, before any reference-composition conversion), Eq. (36) gives:
-- 40 °C: BPE ≈ 1.096 K
-- 45 °C: BPE ≈ 1.143 K
-- 50 °C: BPE ≈ 1.189 K
-- 55 °C: BPE ≈ 1.234 K
-- 60 °C: BPE ≈ 1.278 K
-- 65 °C: BPE ≈ 1.321 K
+- 40 °C: BPE ≈ 0.380 K
+- 45 °C: BPE ≈ 0.394 K
+- 50 °C: BPE ≈ 0.409 K
+- 55 °C: BPE ≈ 0.423 K
+- 60 °C: BPE ≈ 0.438 K
+- 65 °C: BPE ≈ 0.454 K
 
-Using Wyon's Eq. A9 pure-water saturation-pressure expression at `T` and at `T - BPE` gives an illustrative seawater saturation-pressure depression of approximately 5.7–5.8% relative to pure water across 40–65 °C (about 0.44–1.53 kPa in absolute pressure over these paired points). This is a diagnostic of the vapour-pressure boundary condition, not a measured result and not a direct estimate of the resulting permeate-flux error.
+Using Wyon's Eq. A9 pure-water saturation-pressure expression at `T` and at `T - BPE` gives an illustrative seawater saturation-pressure depression of approximately 2.01–2.02% relative to pure water across 40–65 °C (about 0.156–0.534 kPa in absolute pressure over these paired points). This is a diagnostic of the vapour-pressure boundary condition, not a measured result and not a direct estimate of the resulting permeate-flux error.
 
 ## Why this matters to Wyon's DCMD calculation
 
 Wyon's Eq. (14) calculates membrane vapour flux from the difference between feed-side and permeate-side membrane-surface vapour pressures. Appendix Eq. A9 is used for the vapour pressures. Applying pure-water saturation pressure to the saline feed side therefore overstates the feed-side vapour-pressure boundary condition relative to a salinity-aware calculation.
 
-The exact change in predicted flux cannot be inferred from the 5.7–5.8% saturation-pressure comparison alone. It depends on the solved membrane-surface temperatures, permeate-side pressure, membrane mass-transfer coefficient, and the coupled heat/mass-transfer iteration. The model must be rerun with the salinity-aware boundary condition before quantifying a production or validation impact.
+The exact change in predicted flux cannot be inferred from the 2.01–2.02% saturation-pressure comparison alone. It depends on the solved membrane-surface temperatures, permeate-side pressure, membrane mass-transfer coefficient, and the coupled heat/mass-transfer iteration. The model must be rerun with the salinity-aware boundary condition before quantifying a production or validation impact.
 
 ## Reproduction actions
 
