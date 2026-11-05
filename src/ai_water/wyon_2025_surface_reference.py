@@ -9,6 +9,7 @@ Source: Annie Wyon (2025), Lund University thesis, Section 3.2.2,
 Eqs. (7)-(17), Appendix A Eq. (9)-(10), report
 LUTFD2/TFEM--25/5229--SE.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
