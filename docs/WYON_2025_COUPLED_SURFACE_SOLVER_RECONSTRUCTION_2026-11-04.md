@@ -7,7 +7,7 @@
 
 The new module `src/ai_water/wyon_2025_surface_reference.py` transcribes Wyon (2025):
 
-- Eq. (9): `Nu = 0.023 (1 + 6 d_h/L) Re^0.8 Pr^(1/3)`.
+- Eq. (10): `Nu = 0.023 (1 + 6 d_h/L) Re^0.8 Pr^(1/3)`.
 - Eq. (9) in the thesis numbering for film transfer: `alpha = Nu k / d_h` (the Nusselt and film-coefficient equations appear as Eq. 10 and Eq. 9, respectively, in the thesis text).
 - Eq. (14): combined Knudsen/molecular mass-transfer coefficient, with the two transport resistances combined in series.
 - Eq. (16): `tau = (2 - epsilon)^2 / epsilon`.
