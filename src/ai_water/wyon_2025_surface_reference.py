@@ -226,7 +226,41 @@ def solve_wyon_membrane_surfaces(
         q_membrane = latent + conductive
         return q_w_m2 - q_membrane, tfm, tpm, tm_k, c, flux, pvf, pvp, latent, conductive
 
-    f_low = evaluate(q_low)[0]
+    # The mass-transfer correlation requires the mean-pore water-vapour
+    # pressure to remain below total pore pressure. For some unequal film
+    # coefficients, q=0 violates this domain even though the physical root
+    # lies inside it. Find the first admissible heat flux before evaluating.
+    def mean_pore_pressure_is_admissible(q_w_m2: float) -> bool:
+        tfm = feed_bulk_temperature_c - q_w_m2 / feed_heat_transfer_coefficient_w_m2_k
+        tpm = permeate_bulk_temperature_c + q_w_m2 / permeate_heat_transfer_coefficient_w_m2_k
+        mean_c = 0.5 * (tfm + tpm)
+        if not 0.0 <= mean_c <= 100.0:
+            return False
+        return (
+            wyon_pure_water_vapour_pressure_pa(mean_c) < total_pore_pressure_pa
+        )
+
+    if not mean_pore_pressure_is_admissible(q_high):
+        raise ValueError(
+            "Wyon mean membrane temperature remains outside the vapour-pressure "
+            "domain over the physical heat-flux interval"
+        )
+    if mean_pore_pressure_is_admissible(q_low):
+        f_low = evaluate(q_low)[0]
+    else:
+        inadmissible_q = q_low
+        admissible_q = q_high
+        for _ in range(80):
+            candidate_q = 0.5 * (inadmissible_q + admissible_q)
+            if mean_pore_pressure_is_admissible(candidate_q):
+                admissible_q = candidate_q
+            else:
+                inadmissible_q = candidate_q
+        q_low = admissible_q + max(1e-10, (q_high - admissible_q) * 1e-10)
+        if q_low >= q_high:
+            raise ValueError("No interior heat-flux interval remains inside the Wyon vapour-pressure domain")
+        f_low = evaluate(q_low)[0]
+
     f_high = evaluate(q_high)[0]
     if not f_low < 0 < f_high:
         raise ValueError("Wyon interface energy balance is not bracketed by physical heat-flux limits")
