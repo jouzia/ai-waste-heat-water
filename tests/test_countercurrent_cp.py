@@ -1,5 +1,6 @@
 import pytest
 
+import ai_water.md_channel_countercurrent as countercurrent
 from ai_water.channel_transport import concentration_polarization_coefficient
 from ai_water.md_channel import ChannelConfig
 from ai_water.md_channel_countercurrent import simulate_countercurrent_dcmd_channel
@@ -80,4 +81,26 @@ def test_countercurrent_solver_requires_positive_iteration_controls():
             feed_in_temperature_c=60.0,
             permeate_in_temperature_c=25.0,
             tolerance_c=0.0,
+        )
+
+
+def test_countercurrent_cpc_raises_if_inner_closure_does_not_converge(monkeypatch):
+    calls = 0
+
+    def oscillating_interfaces(**kwargs):
+        nonlocal calls
+        calls += 1
+        flux = 1.0 if calls % 2 else 2.0
+        return 50.0, 30.0, flux
+
+    monkeypatch.setattr(countercurrent, "_cell_interfaces", oscillating_interfaces)
+
+    with pytest.raises(
+        RuntimeError,
+        match="CPC/membrane-flux closure did not converge",
+    ):
+        simulate_countercurrent_dcmd_channel(
+            config=_config(cells=1),
+            feed_in_temperature_c=60.0,
+            permeate_in_temperature_c=25.0,
         )
