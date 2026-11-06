@@ -128,24 +128,24 @@ def test_initial_pvdf_setup_pore_radius_interpretation_sensitivity(
 @pytest.mark.parametrize(
     (
         "feed_temperature_c",
-        "expected_heat_flux_5g_kg",
-        "expected_heat_flux_35g_kg",
-        "expected_mass_flux_5g_kg_h",
-        "expected_mass_flux_35g_kg_h",
+        "expected_heat_flux_115g_kg",
+        "expected_heat_flux_315g_kg",
+        "expected_mass_flux_115g_kg_h",
+        "expected_mass_flux_315g_kg_h",
     ),
     [
-        (40.0, 10316.1236, 10301.2477, 6.0549232, 6.0438003),
-        (50.0, 17582.5819, 17551.6324, 12.0960301, 12.0680616),
-        (60.0, 27122.0099, 27062.1381, 21.3809727, 21.3192275),
-        (70.0, 39833.3078, 39721.5670, 35.1734856, 35.0473682),
+        (40.0, 10311.3304, 10301.2477, 6.0513386, 6.0438003),
+        (50.0, 17572.5629, 17551.6324, 12.0869743, 12.0680616),
+        (60.0, 27102.5556, 27062.1381, 21.3609056, 21.3192275),
+        (70.0, 39796.8952, 39721.5670, 35.1323803, 35.0473682),
     ],
 )
 def test_wyon_pure_water_vapour_baseline_has_weak_salinity_sensitivity(
     feed_temperature_c,
-    expected_heat_flux_5g_kg,
-    expected_heat_flux_35g_kg,
-    expected_mass_flux_5g_kg_h,
-    expected_mass_flux_35g_kg_h,
+    expected_heat_flux_115g_kg,
+    expected_heat_flux_315g_kg,
+    expected_mass_flux_115g_kg_h,
+    expected_mass_flux_315g_kg_h,
 ):
     common = {
         "feed_bulk_temperature_c": feed_temperature_c,
@@ -159,32 +159,32 @@ def test_wyon_pure_water_vapour_baseline_has_weak_salinity_sensitivity(
         "pore_radius_m": 0.11e-6,
         "porosity": 0.75,
     }
-    low_salinity = solve_wyon_coupled_channel_surface(
-        **common, feed_salinity_sr_g_kg=5.0
+    lower_salinity = solve_wyon_coupled_channel_surface(
+        **common, feed_salinity_sr_g_kg=15.0
     )
     high_salinity = solve_wyon_coupled_channel_surface(
         **common, feed_salinity_sr_g_kg=35.0
     )
-    assert low_salinity.surface.heat_flux_w_m2 == pytest.approx(
-        expected_heat_flux_5g_kg, rel=1e-5
+    assert lower_salinity.surface.heat_flux_w_m2 == pytest.approx(
+        expected_heat_flux_115g_kg, rel=1e-5
     )
     assert high_salinity.surface.heat_flux_w_m2 == pytest.approx(
-        expected_heat_flux_35g_kg, rel=1e-5
+        expected_heat_flux_315g_kg, rel=1e-5
     )
-    assert low_salinity.surface.mass_flux_kg_m2_h == pytest.approx(
-        expected_mass_flux_5g_kg_h, rel=1e-5
+    assert lower_salinity.surface.mass_flux_kg_m2_h == pytest.approx(
+        expected_mass_flux_115g_kg_h, rel=1e-5
     )
     assert high_salinity.surface.mass_flux_kg_m2_h == pytest.approx(
-        expected_mass_flux_35g_kg_h, rel=1e-5
+        expected_mass_flux_315g_kg_h, rel=1e-5
     )
     heat_flux_change = abs(
         high_salinity.surface.heat_flux_w_m2
-        / low_salinity.surface.heat_flux_w_m2
+        / lower_salinity.surface.heat_flux_w_m2
         - 1.0
     )
     mass_flux_change = abs(
         high_salinity.surface.mass_flux_kg_m2_h
-        / low_salinity.surface.mass_flux_kg_m2_h
+        / lower_salinity.surface.mass_flux_kg_m2_h
         - 1.0
     )
     assert heat_flux_change < 0.005
