@@ -46,6 +46,12 @@ Their turbulent module also reports effective area 3.0 × 10⁻⁴ m² and hydra
 
 The match strongly supports the conventional interpretation (0.22\ \mu m) pore size → (0.11\ \mu m) radius for this membrane family. However, Srisurichan et al. (2006) is a corroborating related experiment, not one of Wyon's cited validation references [55] or [56]. Wyon cites Termpiyakul et al. (2005) and Phattaranawik et al. (2003).
 
+## What the cited Termpiyakul study establishes
+
+The accessible ScienceDirect abstract for Wyon reference [55] confirms a flat-sheet PVDF membrane with nominal pore size 0.22 µm, feed NaCl concentrations of 5,000–35,000 mg/L plus brackish/seawater cases, feed temperatures of 40–70°C, feed crossflow velocities of 1.85–3.7 m/s, and permeate at 20°C and 2.92 m/s. It does not identify which feed concentration was used for the particular Figure 9 comparison.
+
+A secondary accessible abstract/conclusion transcription reports an empirical membrane-distillation coefficient of 0.0024 kg/(m² h Pa) from pure-water flux data and 0.0021 kg/(m² h Pa) from the 35,000 mg/L data, a difference of about 12%. This coefficient is not dimensionally or conceptually interchangeable with Wyon's mechanistic Eq. (14) coefficient in kg/(m² s Pa); it is evidence that the effective mass-transfer response can depend on feed concentration, not a parameter to substitute into the current solver.
+
 ## Interpretation and limits
 
 1. The Figure 9 dashed model curve is numerically more consistent with the 0.22 µm-radius case. A plausible explanation is that the model used nominal pore size as radius in Eq. (14).
@@ -70,4 +76,6 @@ Official PDF: https://lup.lub.lu.se/student-papers/record/9198095/file/9198100.p
 S. Srisurichan, R. Jiraratananon & A.G. Fane (2006), “Mass transfer mechanisms and transport resistances in direct contact membrane distillation process,” *Journal of Membrane Science* 277, 186–194, DOI 10.1016/j.memsci.2005.10.028.  
 Accessible full text: https://digital.library.tu.ac.th/tu_dc/digital/api/DownloadDigitalFile/dowload/76312
 
-P. Termpiyakul, R. Jiraratananon & S. Srisurichan (2005), “Heat and mass transfer characteristics of a direct contact membrane distillation process for desalination,” *Desalination* 177, 133–141, DOI 10.1016/j.desal.2004.11.019.
+P. Termpiyakul, R. Jiraratananon & S. Srisurichan (2005), “Heat and mass transfer characteristics of a direct contact membrane distillation process for desalination,” *Desalination* 177, 133–141, DOI 10.1016/j.desal.2004.11.019. Abstract: https://www.sciencedirect.com/science/article/abs/pii/S0011916405001864
+
+Secondary accessible abstract/conclusion transcription of the reported pure-water and 35,000 mg/L empirical membrane-distillation coefficients: https://www.lenntech.com/abstracts/1434/heat-and-mass-transfer-characteristics-of-a-direct-contact-membrane-distillation-process.html.
