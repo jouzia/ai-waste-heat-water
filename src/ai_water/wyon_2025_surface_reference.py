@@ -14,7 +14,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import isfinite, log, pi, sqrt
 
-
 R_UNIVERSAL_J_MOL_K = 8.314462618
 M_WATER_KG_MOL = 0.01801528
 
