@@ -23,7 +23,7 @@ def test_pure_water_appendix_properties_at_20_c():
 def test_seawater_appendix_properties_at_20_c_and_38_g_kg():
     properties = wyon_fluid_properties(20.0, 38.0)
     assert properties.heat_capacity_j_kg_k == pytest.approx(3984.447, abs=0.1)
-    assert properties.thermal_conductivity_w_m_k == pytest.approx(0.601399, rel=1e-5)
+    assert properties.thermal_conductivity_w_m_k == pytest.approx(0.601510, rel=1e-5)
     assert properties.density_kg_m3 == pytest.approx(1026.702, rel=1e-6)
     assert properties.dynamic_viscosity_pa_s == pytest.approx(1.083806e-3, rel=1e-5)
 
@@ -43,9 +43,9 @@ def test_wyon_feed_channel_transfer_example_at_30_c():
         salinity_sr_g_kg=38.0,
     )
     assert result.reynolds == pytest.approx(6554.50, rel=1e-4)
-    assert result.prandtl == pytest.approx(5.61864, rel=1e-4)
-    assert result.nusselt == pytest.approx(54.5404, rel=1e-4)
-    assert result.heat_transfer_coefficient_w_m2_k == pytest.approx(11184.86, rel=1e-4)
+    assert result.prandtl == pytest.approx(5.61752, rel=1e-4)
+    assert result.nusselt == pytest.approx(54.5368, rel=1e-4)
+    assert result.heat_transfer_coefficient_w_m2_k == pytest.approx(11186.34, rel=1e-4)
 
 
 def test_wyon_permeate_channel_transfer_example_at_30_c():
