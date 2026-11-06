@@ -93,6 +93,8 @@ def seawater_thermal_conductivity_w_m_k(
     t68_c, sp = _validate_temperature_salinity(
         temperature_its90_c, salinity_sr_g_kg
     )
+    if not 0.0 < t68_c < 180.0 or not 0.0 < sp < 160.0:
+        raise ValueError("seawater conductivity Eq. (A3) requires 0 < t68 < 180 C and 0 < S_P < 160 g/kg")
     t68_k = t68_c + 273.15
     log10_k_mw = (
         log10(240.0 + 0.0002 * sp)
@@ -126,6 +128,8 @@ def seawater_density_kg_m3(
     t68_c, sp = _validate_temperature_salinity(
         temperature_its90_c, salinity_sr_g_kg
     )
+    if not 20.0 < t68_c < 180.0 or not 10.0 < sp < 160.0:
+        raise ValueError("seawater density Eq. (A5) requires 20 < t68 < 180 C and 10 < S_P < 160 g/kg")
     b = (2.0 * sp - 150.0) / 150.0
     g1, g2, g3 = 0.5, b, 2.0 * b**2 - 1.0
     a1 = 4.032 * g1 + 0.115 * g2 + 3.26e-4 * g3
@@ -157,6 +161,8 @@ def seawater_dynamic_viscosity_pa_s(
     """Wyon Appendix A Eq. (A7), seawater dynamic viscosity in Pa s."""
     _validate_temperature_salinity(temperature_its90_c, salinity_sr_g_kg)
     salinity_mass_fraction = salinity_sr_g_kg / 1000.0
+    if not 0.0 < temperature_its90_c < 180.0 or not 0.0 < salinity_mass_fraction < 0.15:
+        raise ValueError("seawater viscosity Eq. (A7) requires 0 < t < 180 C and 0 < S < 0.15 kg/kg")
     t = temperature_its90_c
     a = 1.541 + 1.998e-2 * t - 9.52e-5 * t**2
     b = 7.974 - 7.561e-2 * t + 4.724e-4 * t**2
