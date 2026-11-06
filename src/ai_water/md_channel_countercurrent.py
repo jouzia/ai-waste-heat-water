@@ -107,6 +107,11 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
                     tfm, tpm, flux = updated_tfm, updated_tpm, updated_flux
                     if flux_change < 1e-8:
                         break
+                else:
+                    raise RuntimeError(
+                        "counter-current CPC/membrane-flux closure did not converge "
+                        "within 30 iterations"
+                    )
                 cpc = concentration_polarization_coefficient(
                     flux_kg_m2_s=flux / 3600.0,
                     mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
