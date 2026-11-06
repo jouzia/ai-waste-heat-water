@@ -19,23 +19,23 @@ The coupled surface solver was evaluated at feed temperatures 40, 50, 60, and 70
 - feed/permeate velocities 1.85/2.92 m/s;
 - total pore pressure 100 kPa.
 
-Only feed reference salinity was changed, from 15 to 315 g/kg. These are approximate mass-based equivalents for the 5,000–35,000 mg/L NaCl range in Termpiyakul et al.; they are not an exact density conversion of the paper's mg/L values.
+Only feed reference salinity was changed, from 15 to 35 g/kg. These are approximate mass-based equivalents for the upper part of Termpiyakul et al.'s 5,000–35,000 mg/L NaCl range, not exact density conversions. The lower 5,000 mg/L experimental endpoint is below the implemented Wyon seawater-density correlation's practical-salinity validity threshold (S_P > 10 g/kg), so it is intentionally excluded from this numerical comparison.
 
 ## Results
 
-| Feed bulk (°C) | Heat flux at 15 g/kg (kW/m²) | Heat flux at 35 g/kg (kW/m²) | Heat-flux change | Mass flux at 5 g/kg (kg/m² h) | Mass flux at 35 g/kg (kg/m² h) | Mass-flux change |
+| Feed bulk (°C) | Heat flux at 15 g/kg (kW/m²) | Heat flux at 35 g/kg (kW/m²) | Heat-flux change | Mass flux at 15 g/kg (kg/m² h) | Mass flux at 35 g/kg (kg/m² h) | Mass-flux change |
 |---:|---:|---:|---:|---:|---:|---:|
 | 40 | 10.311 | 10.301 | −0.10% | 6.051 | 6.044 | −0.12% |
 | 50 | 17.573 | 17.552 | −0.12% | 12.087 | 12.068 | −0.16% |
 | 60 | 27.103 | 27.062 | −0.15% | 21.361 | 21.319 | −0.20% |
 | 70 | 39.797 | 39.722 | −0.19% | 35.132 | 35.047 | −0.24% |
 
-Across the tested range, changing feed salinity from 5 to 35 g/kg changes local heat flux by only 0.10–0.19% and mass flux by 0.12–0.24%.
+Across the tested range, changing feed salinity from 15 to 35 g/kg changes local heat flux by only 0.10–0.19% and mass flux by 0.12–0.24%.
 
 ## Interpretation
 
 1. The implemented Wyon baseline has very weak salinity sensitivity because salinity affects the channel properties, but the vapour-pressure driving force is still calculated from pure-water saturation pressure on both interfaces.
-2. Termpiyakul et al. report a roughly 12% difference between empirical coefficients obtained from pure-water and 35,000 mg/L data. This is not directly comparable to the current model's 0.2–0.4% sensitivity: the empirical coefficient is a different quantity and the paper attributes high-concentration deviations to concentration polarization and reduced water-vapour pressure.
+2. Termpiyakul et al. report a roughly 12% difference between empirical coefficients obtained from pure-water and 35,000 mg/L data. This is not directly comparable to the current model's 0.1–0.2% sensitivity: the empirical coefficient is a different quantity and the paper attributes high-concentration deviations to concentration polarization and reduced water-vapour pressure.
 3. The result identifies a **model-form limitation in the Wyon source baseline**, not a code defect in the source-faithful transcription. Adding water-activity or concentration-polarization corrections would be a separate model variant and must not be silently mixed into the baseline.
 4. The 38 g/kg Barcelona case-study salinity is therefore not a decisive input for reproducing Figure 9 within this pure-water vapour-pressure baseline. The exact validation salinity still matters for a physically salinity-aware model and for interpreting the Termpiyakul data.
 
