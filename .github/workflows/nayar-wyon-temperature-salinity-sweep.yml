@@ -33,17 +33,19 @@ jobs:
           assert manifest['row_count'] == 12, manifest
           assert manifest['feed_temperatures_c'] == [40.0, 50.0, 60.0, 70.0]
           assert manifest['feed_reference_salinity_g_kg'] == [15.0, 35.0, 38.0]
+          assert 'first_contrast' in manifest['three_model_decomposition']
+          assert 'second_contrast' in manifest['three_model_decomposition']
           for name, expected in manifest['files'].items():
               assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected
           with (root / 'nayar_wyon_temperature_salinity_sweep.csv').open(newline='') as stream:
               rows = list(csv.DictReader(stream))
           assert len(rows) == 12
           for row in rows:
-              assert float(row['nayar_mass_flux_kg_m2_h']) < float(row['wyon_mass_flux_kg_m2_h'])
-              assert float(row['nayar_heat_flux_w_m2']) < float(row['wyon_heat_flux_w_m2'])
-              assert abs(float(row['nayar_energy_balance_residual_w_m2'])) <= 1e-7
-              assert abs(float(row['wyon_energy_balance_residual_w_m2'])) <= 1e-7
-          print('Verified 12 Nayar/Wyon temperature-salinity combinations.')
+              assert float(row['nayar_seawater_mass_flux_kg_m2_h']) < float(row['nayar_pure_water_mass_flux_kg_m2_h'])
+              assert float(row['nayar_seawater_heat_flux_w_m2']) < float(row['nayar_pure_water_heat_flux_w_m2'])
+              for model in ('wyon', 'nayar_pure_water', 'nayar_seawater'):
+                  assert abs(float(row[f'{model}_energy_balance_residual_w_m2'])) <= 1e-7
+          print('Verified 12 three-model Nayar/Wyon temperature-salinity combinations.')
           PY
       - uses: actions/upload-artifact@v4
         with:
