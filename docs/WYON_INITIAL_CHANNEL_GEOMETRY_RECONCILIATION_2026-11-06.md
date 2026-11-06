@@ -73,3 +73,15 @@ This reconciliation changes no code, no model input, and no reported Nayar/Wyon 
 1. Wyon, A. (2025). *Desalination utilizing data centre waste heat: A techno-economic study*, Section 3.2.2.1, Table 6, Eqs. (9)–(11), and references [55]–[56]. https://lup.lub.lu.se/student-papers/record/9198095/file/9198100.pdf
 2. Termpiyakul, P., Jiraratananon, R., & Srisurichan, S. (2005). *Heat and mass transfer characteristics of a direct contact membrane distillation process for desalination*. Desalination 177, 133–141. DOI: 10.1016/j.desal.2004.11.019.
 3. Phattaranawik, J., Jiraratananon, R., & Fane, A. G. (2003). *Heat transport and membrane distillation coefficients in direct contact membrane distillation*. Journal of Membrane Science 212, 177–193. DOI: 10.1016/S0376-7388(02)00498-2.
+
+
+## Additional distinction from the two cited apparatus studies
+
+The two references behind Wyon Table 6 should not be collapsed into one flow-regime claim:
+
+- Termpiyakul et al. (2005), Wyon reference [55], reports feed crossflow velocities of 1.85–3.7 m/s and explicitly describes the investigated range as turbulent. The 1.85 m/s Wyon feed velocity is consistent with the lower end of that range.
+- Phattaranawik et al. (2003), Wyon reference [56], studies both laminar and turbulent modules and reports that the flow pattern in its **spacer-filled channel** was probably transitional rather than turbulent.
+
+This is a material apparatus distinction. It does not prove that Wyon's Table 6 configuration is spacer-filled, nor that the 2003 spacer-filled channel is geometrically identical to the 2005 apparatus. It does show why the shared velocity value alone cannot identify the flow regime or spacer state. The original apparatus details and the hydraulic-diameter discrepancy still need to be reconciled before a Sherwood closure is selected.
+
+The 2023 spacer-channel review independently defines the hydraulic diameter for an empty non-circular channel as (4A/P), while a net-type spacer requires a different effective hydraulic-diameter expression based on spacer voidage, thickness, and filament diameter. This reinforces the need to establish whether the quoted 3 mm value is an empty-duct or spacer-adjusted diameter.
