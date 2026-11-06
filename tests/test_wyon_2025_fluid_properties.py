@@ -69,3 +69,15 @@ def test_wyon_permeate_channel_transfer_example_at_30_c():
 def test_wyon_fluid_properties_reject_out_of_scope_inputs(temperature_c, salinity_g_kg):
     with pytest.raises(ValueError):
         wyon_fluid_properties(temperature_c, salinity_g_kg)
+
+
+
+@pytest.mark.parametrize(
+    ("temperature_c", "salinity_g_kg"),
+    [(15.0, 38.0), (30.0, 5.0), (30.0, 151.0)],
+)
+def test_wyon_seawater_properties_enforce_source_correlation_ranges(
+    temperature_c, salinity_g_kg
+):
+    with pytest.raises(ValueError):
+        wyon_fluid_properties(temperature_c, salinity_g_kg)
