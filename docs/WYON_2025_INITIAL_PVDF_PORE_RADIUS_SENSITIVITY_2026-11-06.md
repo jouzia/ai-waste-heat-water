@@ -12,7 +12,9 @@ This matters because the Knudsen contribution to the membrane mass-transfer coef
 - **Diameter interpretation:** (r = 0.11 µm)
 - **Radius interpretation:** (r = 0.22 µm)
 
-The underlying experimental membrane convention must be confirmed from Wyon's reference [55] before either value is used for a benchmark claim.
+A closely matching independent PVDF/GVHP setup now provides strong corroborating evidence for the **diameter interpretation**. Srisurichan et al. (2006) report a 0.22 µm pore size and state that the supplier's average pore radius was 0.11 µm, with porosity 0.75, thickness 125 µm, and membrane conductivity 0.041 W/(m K). Their turbulent module also reports an effective area of 3.0 × 10⁻⁴ m² and hydraulic diameter 0.003 m. These values closely match Wyon Table 6.
+
+This is a near-exact analogue, not direct confirmation of Wyon's cited reference [55]: Wyon's references [55] and [56] are Termpiyakul et al. (2005) and Phattaranawik et al. (2003), respectively, whereas the corroborating source is Srisurichan et al. (2006). The **best-supported provisional interpretation is therefore r = 0.11 µm**, but the Termpiyakul source should still be checked before declaring the Figure 9 input fully source-matched.
 
 ## Configuration and assumptions
 
@@ -61,14 +63,14 @@ All eight cases converged in 27–29 fixed-point iterations. The maximum reporte
 ## Interpretation
 
 1. The pore-size/radius convention is a first-order uncertainty for the local mass-flux prediction. It cannot be treated as a cosmetic unit conversion.
-2. The two cases are **alternative interpretations**, not lower/upper confidence bounds and not evidence that either convention is correct.
+2. The two cases are **alternative interpretations**, not lower/upper confidence bounds. Independent literature now strongly supports 0.11 µm as the radius for this matching PVDF/GVHP membrane family, but the exact Termpiyakul reference used by Wyon remains to be checked.
 3. The 38 g/kg salinity is a case-study input. It must not be represented as the measured Figure 9 feed salinity until reference [55] is checked.
 4. These are local surface-model heat fluxes. Wyon Figure 9 compares total heat flux for the DCMD system; reproducing it also requires the module stream enthalpy balances and outlet-state calculations (Eqs. 18–20). No Figure 9 match is claimed here.
 5. The calculations retain Wyon's source-faithful pure-water vapour-pressure assumption for both seawater and pure-water interfaces. No seawater activity correction is added.
 
 ## Next evidence required
 
-- Obtain the full Termpiyakul et al. (2005) reference [55] and confirm whether 0.22 µm denotes a pore diameter, radius, or another nominal pore-size measure.
+- Obtain the full Termpiyakul et al. (2005) reference [55] and verify that its PVDF membrane specification matches the 125 µm / 75% porosity / 0.11 µm radius GVHP configuration reported by Srisurichan et al. (2006).
 - Recover the exact salinity and operating conditions associated with the Figure 9 validation data.
 - Only then select a source-matched pore radius and feed salinity for a parameter-matched Figure 9 reconstruction.
 
@@ -89,3 +91,5 @@ Official thesis record: https://lup.lub.lu.se/student-papers/record/9198095
 PDF: https://lup.lub.lu.se/student-papers/record/9198095/file/9198100.pdf
 
 Reference [55]: Termpiyakul, Jiraratananon & Srisurichan (2005), “Heat and mass transfer characteristics of a direct contact membrane distillation process for desalination,” *Desalination* 177, 133–141, DOI: 10.1016/j.desal.2004.11.019.
+
+Corroborating membrane specification: Srisurichan, Jiraratananon & Fane (2006), “Mass transfer mechanisms and transport resistances in direct contact membrane distillation process,” *Journal of Membrane Science* 277, 186–194, DOI: 10.1016/j.memsci.2005.10.028. The accessible university-hosted full text explicitly reports the PVDF GVHP membrane's average pore radius as 0.11 µm and lists the matching thickness, porosity, and conductivity: https://digital.library.tu.ac.th/tu_dc/digital/api/DownloadDigitalFile/dowload/76312.
