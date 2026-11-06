@@ -128,10 +128,10 @@ def test_initial_pvdf_setup_pore_radius_interpretation_sensitivity(
 @pytest.mark.parametrize(
     (
         "feed_temperature_c",
-        "expected_heat_flux_115g_kg",
-        "expected_heat_flux_315g_kg",
-        "expected_mass_flux_115g_kg_h",
-        "expected_mass_flux_315g_kg_h",
+        "expected_heat_flux_15g_kg",
+        "expected_heat_flux_35g_kg",
+        "expected_mass_flux_15g_kg_h",
+        "expected_mass_flux_35g_kg_h",
     ),
     [
         (40.0, 10311.3304, 10301.2477, 6.0513386, 6.0438003),
@@ -142,10 +142,10 @@ def test_initial_pvdf_setup_pore_radius_interpretation_sensitivity(
 )
 def test_wyon_pure_water_vapour_baseline_has_weak_salinity_sensitivity(
     feed_temperature_c,
-    expected_heat_flux_115g_kg,
-    expected_heat_flux_315g_kg,
-    expected_mass_flux_115g_kg_h,
-    expected_mass_flux_315g_kg_h,
+    expected_heat_flux_15g_kg,
+    expected_heat_flux_35g_kg,
+    expected_mass_flux_15g_kg_h,
+    expected_mass_flux_35g_kg_h,
 ):
     common = {
         "feed_bulk_temperature_c": feed_temperature_c,
@@ -166,16 +166,16 @@ def test_wyon_pure_water_vapour_baseline_has_weak_salinity_sensitivity(
         **common, feed_salinity_sr_g_kg=35.0
     )
     assert lower_salinity.surface.heat_flux_w_m2 == pytest.approx(
-        expected_heat_flux_115g_kg, rel=1e-5
+        expected_heat_flux_15g_kg, rel=1e-5
     )
     assert high_salinity.surface.heat_flux_w_m2 == pytest.approx(
-        expected_heat_flux_315g_kg, rel=1e-5
+        expected_heat_flux_35g_kg, rel=1e-5
     )
     assert lower_salinity.surface.mass_flux_kg_m2_h == pytest.approx(
-        expected_mass_flux_115g_kg_h, rel=1e-5
+        expected_mass_flux_15g_kg_h, rel=1e-5
     )
     assert high_salinity.surface.mass_flux_kg_m2_h == pytest.approx(
-        expected_mass_flux_315g_kg_h, rel=1e-5
+        expected_mass_flux_35g_kg_h, rel=1e-5
     )
     heat_flux_change = abs(
         high_salinity.surface.heat_flux_w_m2
