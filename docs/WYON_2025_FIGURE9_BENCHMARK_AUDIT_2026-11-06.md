@@ -34,6 +34,11 @@ These percentages are transcribed from the figure labels, not recalculated from 
 
 The figure's four labels are therefore a **published system-level comparison target**, not evidence that the isolated solver has reproduced Wyon's Figure 9.
 
+The benchmark setup is also materially different from the parameter set used in the repository's representative local-solver test. Wyon's initial validation setup (printed p. 14, Table 6) uses a PVDF membrane with 126 µm thickness, 75% porosity, 0.22 µm pore size, 0.041 W/(m·K) thermal conductivity, and 0.0003 m² area. The later case-study setup (printed p. 17, Table 7) uses PTFE, 77 µm, 89%, 0.45 µm, 0.031 W/(m·K), and 0.1 m². The current isolated solver's regression example uses the latter parameter set. It is therefore not even parameter-matched to the Figure 9 validation configuration. The benchmark reconstruction must first use the initial validation geometry and operating conditions before comparing outputs.
+
+Wyon identifies Termpiyakul, Jiraratananon and Srisurichan (2005), *Desalination* 177, 133–141, DOI 10.1016/j.desal.2004.11.019, as reference [55]. That study reports a flat-sheet PVDF membrane with 0.22 µm pores, feed temperatures 40–70 °C, feed velocities 1.85–3.7 m/s, and a receiving distillate at 20 °C and 2.92 m/s. It also describes calibrating the membrane distillation coefficient from pure-water flux data; the accessible abstract and secondary reproduction report a coefficient of 0.0024 kg/(m²·h·Pa) from pure-water data. This coefficient should not be silently substituted for Wyon's Eq. (14) mechanistic coefficient: the definitions, units, and modelling route must be reconciled first.
+
+
 ## Equation-level implementation status
 
 The current isolated module transcribes the following source-defined elements:
