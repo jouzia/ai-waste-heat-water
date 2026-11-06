@@ -91,3 +91,14 @@ Wyon explicitly says that the final setup and membrane characteristics are based
 ## Decision
 
 This audit resolves configuration provenance and identifies a Table 6 hydraulic-diameter inconsistency. It does not establish a corrected Table 6 hydraulic diameter, prove spacer presence in Table 6, or justify a Sherwood correlation. No source-faithful default, numerical result, or existing experiment is changed.
+
+
+## Further distinction: Table 7 is a hybridized configuration, not a verbatim reproduction of reference [58]
+
+The cited Ettouney et al. (2025) paper [58] gives the same Table 7 membrane/channel dimensions (PTFE, 77 µm, 89% porosity, 0.45 µm pore size, 0.5 m length, 0.2 m width, 0.002 m height). However, its own DCMD model specifies feed and permeate flow rates of 10 L/min per element and explicitly assumes laminar one-dimensional channel flow because its Reynolds numbers are below 2300.
+
+Wyon states that the Table 7 geometry and membrane characteristics are based on [58], but the velocities 1.85 m/s and 2.92 m/s are retained from [55] to maintain turbulent flow. Therefore Table 7 is a **hybridized design point**: [58] supplies the channel/membrane geometry and [55] supplies the higher velocities. It is not a reproduction of the complete operating condition or flow regime in [58].
+
+This distinction matters for transfer-correlation selection. The fact that the Table 7 rectangular geometry yields a consistent (D_happrox4) mm does not mean the [58] laminar-flow correlations or the [55] turbulent-flow correlations can be transferred without qualification to Wyon's hybrid point. The actual Reynolds number must be calculated from the chosen geometry, velocity, temperature, and salinity, and the Sherwood closure must be justified separately.
+
+For the current repository, this reinforces the decision to retain Table 6 and Table 7 as distinct named configurations if both are ever represented. It does not justify changing the current Table 6 local-solver benchmark.
