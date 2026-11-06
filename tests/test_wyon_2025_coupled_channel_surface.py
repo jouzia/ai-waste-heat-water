@@ -123,3 +123,69 @@ def test_initial_pvdf_setup_pore_radius_interpretation_sensitivity(
     assert result.surface.heat_flux_w_m2 == pytest.approx(
         expected_heat_flux_w_m2, rel=1e-5
     )
+
+
+@pytest.mark.parametrize(
+    (
+        "feed_temperature_c",
+        "expected_heat_flux_15g_kg",
+        "expected_heat_flux_35g_kg",
+        "expected_mass_flux_15g_kg_h",
+        "expected_mass_flux_35g_kg_h",
+    ),
+    [
+        (40.0, 10311.3304, 10301.2477, 6.0513386, 6.0438003),
+        (50.0, 17572.5629, 17551.6324, 12.0869743, 12.0680616),
+        (60.0, 27102.5556, 27062.1381, 21.3609056, 21.3192275),
+        (70.0, 39796.8952, 39721.5670, 35.1323803, 35.0473682),
+    ],
+)
+def test_wyon_pure_water_vapour_baseline_has_weak_salinity_sensitivity(
+    feed_temperature_c,
+    expected_heat_flux_15g_kg,
+    expected_heat_flux_35g_kg,
+    expected_mass_flux_15g_kg_h,
+    expected_mass_flux_35g_kg_h,
+):
+    common = {
+        "feed_bulk_temperature_c": feed_temperature_c,
+        "permeate_bulk_temperature_c": 20.0,
+        "feed_velocity_m_s": 1.85,
+        "permeate_velocity_m_s": 2.92,
+        "hydraulic_diameter_m": 0.003,
+        "channel_length_m": 0.1,
+        "membrane_thermal_conductivity_w_m_k": 0.041,
+        "membrane_thickness_m": 126e-6,
+        "pore_radius_m": 0.11e-6,
+        "porosity": 0.75,
+    }
+    lower_salinity = solve_wyon_coupled_channel_surface(
+        **common, feed_salinity_sr_g_kg=15.0
+    )
+    high_salinity = solve_wyon_coupled_channel_surface(
+        **common, feed_salinity_sr_g_kg=35.0
+    )
+    assert lower_salinity.surface.heat_flux_w_m2 == pytest.approx(
+        expected_heat_flux_15g_kg, rel=1e-5
+    )
+    assert high_salinity.surface.heat_flux_w_m2 == pytest.approx(
+        expected_heat_flux_35g_kg, rel=1e-5
+    )
+    assert lower_salinity.surface.mass_flux_kg_m2_h == pytest.approx(
+        expected_mass_flux_15g_kg_h, rel=1e-5
+    )
+    assert high_salinity.surface.mass_flux_kg_m2_h == pytest.approx(
+        expected_mass_flux_35g_kg_h, rel=1e-5
+    )
+    heat_flux_change = abs(
+        high_salinity.surface.heat_flux_w_m2
+        / lower_salinity.surface.heat_flux_w_m2
+        - 1.0
+    )
+    mass_flux_change = abs(
+        high_salinity.surface.mass_flux_kg_m2_h
+        / lower_salinity.surface.mass_flux_kg_m2_h
+        - 1.0
+    )
+    assert heat_flux_change < 0.005
+    assert mass_flux_change < 0.005
