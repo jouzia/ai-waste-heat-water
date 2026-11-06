@@ -13,6 +13,36 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from math import isfinite, log, pi, sqrt
+from typing import Literal
+
+from .nayar_2016_vapour_pressure import (
+    nayar_natural_seawater_vapour_pressure_pa,
+    nayar_pure_water_vapour_pressure_pa,
+)
+
+VapourPressureModel = Literal["wyon_2025", "nayar_2016"]
+
+
+def _selected_vapour_pressure_pa(
+    temperature_c: float,
+    *,
+    model: VapourPressureModel,
+    feed_salinity_sr_g_kg: float | None,
+    seawater: bool,
+) -> float:
+    if model == "wyon_2025":
+        return wyon_pure_water_vapour_pressure_pa(temperature_c)
+    if model == "nayar_2016":
+        if feed_salinity_sr_g_kg is None:
+            raise ValueError(
+                "feed_salinity_sr_g_kg is required when vapour_pressure_model='nayar_2016'"
+            )
+        if seawater:
+            return nayar_natural_seawater_vapour_pressure_pa(
+                temperature_c, feed_salinity_sr_g_kg
+            )
+        return nayar_pure_water_vapour_pressure_pa(temperature_c)
+    raise ValueError("vapour_pressure_model must be 'wyon_2025' or 'nayar_2016'")
 
 R_UNIVERSAL_J_MOL_K = 8.314462618
 M_WATER_KG_MOL = 0.01801528
@@ -60,6 +90,8 @@ def wyon_mass_transfer_coefficient_kg_m2_s_pa(
     membrane_thickness_m: float,
     porosity: float,
     total_pore_pressure_pa: float = 100000.0,
+    vapour_pressure_model: VapourPressureModel = "wyon_2025",
+    feed_salinity_sr_g_kg: float | None = None,
 ) -> float:
     """Wyon Eq. (14) combined Knudsen/molecular diffusion coefficient.
 
@@ -77,7 +109,12 @@ def wyon_mass_transfer_coefficient_kg_m2_s_pa(
 
     temperature_k = mean_membrane_temperature_k
     tau = wyon_tortuosity(porosity)
-    vapour_pressure = wyon_pure_water_vapour_pressure_pa(temperature_k - 273.15)
+    vapour_pressure = _selected_vapour_pressure_pa(
+        temperature_k - 273.15,
+        model=vapour_pressure_model,
+        feed_salinity_sr_g_kg=feed_salinity_sr_g_kg,
+        seawater=(vapour_pressure_model == "nayar_2016"),
+    )
     air_partial_pressure = total_pore_pressure_pa - vapour_pressure
     if air_partial_pressure <= 0:
         raise ValueError("water vapour pressure must remain below total pore pressure")
@@ -163,6 +200,8 @@ def solve_wyon_membrane_surfaces(
     total_pore_pressure_pa: float = 100000.0,
     tolerance_w_m2: float = 1e-7,
     max_iterations: int = 200,
+    vapour_pressure_model: VapourPressureModel = "wyon_2025",
+    feed_salinity_sr_g_kg: float | None = None,
 ) -> WyonSurfaceResult:
     """Solve Wyon Eqs. (7)-(17) for the two membrane-interface temperatures.
 
@@ -198,6 +237,12 @@ def solve_wyon_membrane_surfaces(
         raise ValueError("porosity must be in (0, 1]")
     if max_iterations <= 0:
         raise ValueError("max_iterations must be positive")
+    if vapour_pressure_model not in ("wyon_2025", "nayar_2016"):
+        raise ValueError("vapour_pressure_model must be 'wyon_2025' or 'nayar_2016'")
+    if vapour_pressure_model == "nayar_2016" and feed_salinity_sr_g_kg is None:
+        raise ValueError(
+            "feed_salinity_sr_g_kg is required when vapour_pressure_model='nayar_2016'"
+        )
 
     delta_bulk = feed_bulk_temperature_c - permeate_bulk_temperature_c
     q_low = 0.0
@@ -217,9 +262,21 @@ def solve_wyon_membrane_surfaces(
             membrane_thickness_m=membrane_thickness_m,
             porosity=porosity,
             total_pore_pressure_pa=total_pore_pressure_pa,
+            vapour_pressure_model=vapour_pressure_model,
+            feed_salinity_sr_g_kg=feed_salinity_sr_g_kg,
         )
-        pvf = wyon_pure_water_vapour_pressure_pa(tfm)
-        pvp = wyon_pure_water_vapour_pressure_pa(tpm)
+        pvf = _selected_vapour_pressure_pa(
+            tfm,
+            model=vapour_pressure_model,
+            feed_salinity_sr_g_kg=feed_salinity_sr_g_kg,
+            seawater=(vapour_pressure_model == "nayar_2016"),
+        )
+        pvp = _selected_vapour_pressure_pa(
+            tpm,
+            model=vapour_pressure_model,
+            feed_salinity_sr_g_kg=feed_salinity_sr_g_kg,
+            seawater=False,
+        )
         flux = c * (pvf - pvp)
         # Wyon Eq. (17): H_v = 1.7535*T + 2024.3 kJ/kg, T in K.
         vapour_enthalpy_kj_kg = 1.7535 * tm_k + 2024.3
@@ -238,9 +295,13 @@ def solve_wyon_membrane_surfaces(
         mean_c = 0.5 * (tfm + tpm)
         if not 0.0 <= mean_c <= 100.0:
             return False
-        return (
-            wyon_pure_water_vapour_pressure_pa(mean_c) < total_pore_pressure_pa
+        mean_pore_vapour_pressure = _selected_vapour_pressure_pa(
+            mean_c,
+            model=vapour_pressure_model,
+            feed_salinity_sr_g_kg=feed_salinity_sr_g_kg,
+            seawater=(vapour_pressure_model == "nayar_2016"),
         )
+        return mean_pore_vapour_pressure < total_pore_pressure_pa
 
     if not mean_pore_pressure_is_admissible(q_high):
         raise ValueError(

@@ -189,3 +189,55 @@ def test_wyon_pure_water_vapour_baseline_has_weak_salinity_sensitivity(
     )
     assert heat_flux_change < 0.005
     assert mass_flux_change < 0.005
+
+
+
+def test_nayar_mode_reduces_flux_with_increasing_feed_salinity():
+    common = {
+        "feed_bulk_temperature_c": 60.0,
+        "permeate_bulk_temperature_c": 20.0,
+        "feed_velocity_m_s": 1.85,
+        "permeate_velocity_m_s": 2.92,
+        "hydraulic_diameter_m": 0.003,
+        "channel_length_m": 0.1,
+        "membrane_thermal_conductivity_w_m_k": 0.041,
+        "membrane_thickness_m": 126e-6,
+        "pore_radius_m": 0.11e-6,
+        "porosity": 0.75,
+        "vapour_pressure_model": "nayar_2016",
+    }
+    lower_salinity = solve_wyon_coupled_channel_surface(
+        **common, feed_salinity_sr_g_kg=15.0
+    )
+    seawater_salinity = solve_wyon_coupled_channel_surface(
+        **common, feed_salinity_sr_g_kg=38.0
+    )
+    assert lower_salinity.surface.mass_flux_kg_m2_h > (
+        seawater_salinity.surface.mass_flux_kg_m2_h
+    )
+    assert lower_salinity.surface.heat_flux_w_m2 > (
+        seawater_salinity.surface.heat_flux_w_m2
+    )
+    assert seawater_salinity.surface.vapour_pressure_feed_pa < (
+        lower_salinity.surface.vapour_pressure_feed_pa
+    )
+    assert seawater_salinity.surface.energy_balance_residual_w_m2 == pytest.approx(
+        0.0, abs=1e-7
+    )
+
+
+def test_nayar_mode_requires_explicit_feed_salinity_in_surface_solver():
+    from ai_water.wyon_2025_surface_reference import solve_wyon_membrane_surfaces
+
+    with pytest.raises(ValueError, match="feed_salinity_sr_g_kg is required"):
+        solve_wyon_membrane_surfaces(
+            feed_bulk_temperature_c=60.0,
+            permeate_bulk_temperature_c=20.0,
+            feed_heat_transfer_coefficient_w_m2_k=5000.0,
+            permeate_heat_transfer_coefficient_w_m2_k=5000.0,
+            membrane_thermal_conductivity_w_m_k=0.041,
+            membrane_thickness_m=126e-6,
+            pore_radius_m=0.11e-6,
+            porosity=0.75,
+            vapour_pressure_model="nayar_2016",
+        )
