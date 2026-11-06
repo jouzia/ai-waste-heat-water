@@ -11,6 +11,7 @@ LUTFD2/TFEM--25/5229--SE.
 """
 from __future__ import annotations
 
+
 from dataclasses import dataclass
 from math import isfinite, log, pi, sqrt
 
