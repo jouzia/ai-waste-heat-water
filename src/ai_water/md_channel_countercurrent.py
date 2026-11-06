@@ -30,6 +30,13 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
         raise ValueError("heat-transfer coefficients must be positive")
     if config.feed_mass_flow_kg_h <= 0 or config.permeate_mass_flow_kg_h <= 0:
         raise ValueError("channel mass-flow rates must be positive")
+    if max_iterations <= 0 or tolerance_c <= 0:
+        raise ValueError("iteration limit and tolerance must be positive")
+    if config.salt_mass_transfer_coefficient_m_s is not None:
+        if config.salt_mass_transfer_coefficient_m_s <= 0:
+            raise ValueError("salt mass-transfer coefficient must be positive")
+        if config.solvent_density_kg_m3 is None or config.solvent_density_kg_m3 <= 0:
+            raise ValueError("solvent density is required when CP is enabled")
     if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_k <= 0:
         raise ValueError("heat capacities must be positive")
     if not 0 <= config.feed_salinity_g_kg <= 120:
@@ -69,27 +76,43 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
                 water_activity=activity,
             )
             if config.salt_mass_transfer_coefficient_m_s is not None and salinity > 0:
+                # Close the salt-film and membrane-flux equations together.
+                # The first interface estimate changes water activity, which
+                # changes flux and therefore the CPC; iterate to a consistent
+                # final flux/interface-salinity pair rather than retaining a
+                # CPC evaluated from the pre-correction flux.
+                for _ in range(30):
+                    cpc = concentration_polarization_coefficient(
+                        flux_kg_m2_s=flux / 3600.0,
+                        mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
+                        solvent_density_kg_m3=config.solvent_density_kg_m3,
+                    )
+                    interface_salinity = interface_salinity_g_kg(salinity, cpc)
+                    activity = (
+                        config.water_activity_override
+                        if config.water_activity_override is not None
+                        else seawater_water_activity(tfm, interface_salinity)
+                    )
+                    updated_tfm, updated_tpm, updated_flux = _cell_interfaces(
+                        feed_bulk_c=tf, permeate_bulk_c=tp,
+                        feed_h=config.feed_heat_transfer_coefficient_w_m2_k,
+                        permeate_h=config.permeate_heat_transfer_coefficient_w_m2_k,
+                        membrane_k=config.membrane_thermal_conductivity_w_m_k,
+                        membrane_thickness_m=config.membrane_thickness_m,
+                        latent_heat_kwh_per_kg=config.latent_heat_kwh_th_per_kg,
+                        permeance=config.membrane_permeance_kg_m2_h_bar,
+                        water_activity=activity,
+                    )
+                    flux_change = abs(updated_flux - flux)
+                    tfm, tpm, flux = updated_tfm, updated_tpm, updated_flux
+                    if flux_change < 1e-8:
+                        break
                 cpc = concentration_polarization_coefficient(
                     flux_kg_m2_s=flux / 3600.0,
                     mass_transfer_coefficient_m_s=config.salt_mass_transfer_coefficient_m_s,
                     solvent_density_kg_m3=config.solvent_density_kg_m3,
                 )
                 interface_salinity = interface_salinity_g_kg(salinity, cpc)
-                activity = (
-                    config.water_activity_override
-                    if config.water_activity_override is not None
-                    else seawater_water_activity(tfm, interface_salinity)
-                )
-                tfm, tpm, flux = _cell_interfaces(
-                    feed_bulk_c=tf, permeate_bulk_c=tp,
-                    feed_h=config.feed_heat_transfer_coefficient_w_m2_k,
-                    permeate_h=config.permeate_heat_transfer_coefficient_w_m2_k,
-                    membrane_k=config.membrane_thermal_conductivity_w_m_k,
-                    membrane_thickness_m=config.membrane_thickness_m,
-                    latent_heat_kwh_per_kg=config.latent_heat_kwh_th_per_kg,
-                    permeance=config.membrane_permeance_kg_m2_h_bar,
-                    water_activity=activity,
-                )
             else:
                 cpc = 1.0
                 interface_salinity = salinity
