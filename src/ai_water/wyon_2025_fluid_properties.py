@@ -20,10 +20,10 @@ from dataclasses import dataclass
 from math import isfinite, log10
 
 from .sharqawy_2010 import (
+    its90_to_ipts68_kelvin,
     jamieson_seawater_cp_j_kg_k,
     pure_water_cp_j_kg_k,
     reference_to_practical_salinity_g_kg,
-    its90_to_ipts68_kelvin,
 )
 from .wyon_2025_surface_reference import (
     wyon_convective_heat_transfer_coefficient_w_m2_k,
