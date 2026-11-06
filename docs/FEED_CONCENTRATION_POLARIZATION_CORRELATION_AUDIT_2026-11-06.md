@@ -12,7 +12,7 @@ Can the bulk Reference Salinity used by the Nayar (2016) vapour-pressure branch 
 
 The standard DCMD film-theory expression provides a useful *candidate framework*, but the available project inputs do not justify selecting a unique salt mass-transfer correlation or a validated seawater mutual-diffusion coefficient. The correct next step is therefore not to couple a guessed Sherwood correlation into the production solver.
 
-The current Wyon configuration has a feed Reynolds number well above the laminar range. The frequently reproduced Graetz–Leveque Sherwood expression is explicitly a laminar-flow correlation and must not be applied to this case. A turbulent Sherwood expression is a candidate, but its transferability depends on channel cross-section, wall condition, spacer geometry, and the definition of the characteristic length. Those details are not fully specified by the current Wyon local configuration.
+The Wyon initial validation configuration explicitly specifies a rectangular channel (height 0.005 m, width 0.05 m, length 0.1 m), reports a hydraulic diameter of 0.003 m, and labels the flow turbulent (Table 6). However, the standard rectangular-duct relation 4A/P gives 0.00909 m from the stated height and width. This unresolved factor-of-3.03 hydraulic-diameter discrepancy affects Reynolds number and must be reconciled against the cited apparatus sources before any new transfer closure is selected. The thesis does not specify a spacer in Table 6; spacer presence in the underlying experimental apparatus remains unverified. The laminar Graetz–Leveque Sherwood expression is not appropriate for the reported nominal flow. A turbulent Sherwood expression remains only a candidate, not a validated Wyon-specific salt-transfer closure.
 
 The audit therefore recommends a separately labelled, bounded *model-form sensitivity* only after the missing transport-property and geometry choices are documented. Wyon's default branch and the existing three-model Nayar decomposition remain unchanged.
 
@@ -79,9 +79,9 @@ Reynolds numbers were recalculated from the project's existing Wyon Appendix A d
 | 60 °C | 11,405 | 10,949 |
 | 70 °C | 13,083 | 12,543 |
 
-These values are comfortably above the conventional internal-flow transition threshold of approximately 2,300. The nominal feed-side flow is therefore not laminar under the hydraulic-diameter Reynolds definition used by the existing model.
+These are the **reported-input Reynolds numbers**, calculated using Wyon's tabulated hydraulic diameter of 0.003 m. Wyon explicitly labels the Table 6 flow turbulent and applies a turbulent Nusselt relation. However, the tabulated rectangular dimensions (0.005 m × 0.05 m) imply D_h = 0.00909 m under D_h = 4A/P, yielding Reynolds numbers 3.03 times larger if that geometric value is used. Both interpretations are high-Reynolds-number cases, but the discrepancy must remain visible rather than silently choosing one value.
 
-Important qualification: this does not prove that a smooth-pipe turbulent Sherwood correlation accurately represents the actual membrane channel. The Wyon model's Nusselt expression is labelled as a turbulent rectangular-channel correlation, but the exact aspect ratio, spacer state, and detailed wetted perimeter needed to transfer a salt Sherwood closure are not available in the current local input set.
+The exact rectangular dimensions and module length are therefore known from Wyon Table 6; the hydraulic-diameter inconsistency is unresolved. Table 6 does not state whether a spacer is present. The Nusselt closure used for heat transfer does not automatically validate a Sherwood closure for salt transfer. A smooth-duct turbulent Sherwood equation remains a candidate only after the effective hydraulic diameter, wall condition, spacer state, and salt diffusivity are established.
 
 ## 4. Salt diffusivity is a separate unresolved input
 
@@ -121,8 +121,8 @@ No numerical CPC, interface salinity, or revised Nayar flux is reported here bec
 
 | Required item | Current status | Why it matters |
 |---|---|---|
-| Feed channel cross-section / aspect ratio | Not resolved in current local configuration | Determines geometry-specific hydrodynamics and characteristic lengths |
-| Spacer presence, geometry, and porosity | Not specified | Can alter mixing and local transfer substantially |
+| Feed channel cross-section / aspect ratio | Wyon Table 6: rectangular, 5 mm × 50 mm, length 100 mm | Known dimensions; reconcile reported D_h = 3 mm against 4A/P = 9.09 mm |
+| Spacer presence, geometry, and porosity | Not specified in Wyon Table 6; apparatus state unverified | Can alter mixing and local transfer substantially |
 | Natural-seawater mutual/effective salt diffusivity over T/S range | Not selected | Required for Schmidt and Sherwood numbers |
 | Applicable turbulent Sherwood correlation and validity range | Candidate only | Must match flow regime and channel geometry |
 | Concentration variable and conversion to Reference Salinity | Needs explicit derivation | Avoids mixing mass concentration and mass-fraction bases |
@@ -130,7 +130,7 @@ No numerical CPC, interface salinity, or revised Nayar flux is reported here bec
 
 ## 8. Recommended next experiment
 
-Once the missing inputs are resolved, implement an opt-in research-only interface-salinity calculation with:
+After reconciling the Table 6 hydraulic diameter and checking the cited apparatus for spacer details, and once the missing diffusivity/closure inputs are resolved, implement an opt-in research-only interface-salinity calculation with:
 
 1. a clearly named diffusivity model and source domain;
 2. at least one geometry-appropriate turbulent Sherwood closure;
