@@ -116,3 +116,20 @@ This is stronger than a generic discrepancy between a rectangular duct formula a
 - Phattaranawik, J., Jiraratananon, R. & Fane, A.G. (2003). “Heat transport and membrane distillation coefficients in direct contact membrane distillation.” *Journal of Membrane Science*, 212, 177–193. DOI: 10.1016/S0376-7388(02)00498-2. The accessible full-text source contains Table 1 module dimensions and the experimental discussion of the spacer-filled channel flow classification: https://elibrary.tsri.or.th/fullP/BGJ4380027/BGJ4380027_s02.pdf
 - Wyon (2025), thesis cited above, Table 6 and Section 3.2.2.1: https://lup.lub.lu.se/student-papers/record/9198095/file/9198100.pdf
 - Termpiyakul et al. (2005), DOI 10.1016/j.desal.2004.11.019. The accessible abstract confirms the PVDF membrane and operating velocity/temperature range, but does not resolve the Table 6 channel-dimension tuple or spacer state: https://www.lenntech.com/abstracts/1434/heat-and-mass-transfer-characteristics-of-a-direct-contact-membrane-distillation-process.html
+
+
+## Direct check against Wyon's Table 6 wording and source attribution
+
+The accessible thesis text confirms that Wyon labels Table 6 “Dimensions of theoretical DCMD setup of initial model based on [55, 56]” and explicitly states that the initial DCMD setup is based on one module described in those two references. It lists the mixed tuple reproduced above and then uses the turbulent Nusselt relation attributed to reference [55] (Termpiyakul et al., 2005). This confirms that the mixed tuple is not an error introduced only by a later transcription in this repository.
+
+The cited Phattaranawik et al. (2003) paper is reference [56]. Its Table 1 separately reports the laminar and turbulent modules as shown above. Therefore, relative to reference [56], Wyon's Table 6 combines the laminar module's 50 mm width and 5 mm height with the turbulent module's 3 mm hydraulic diameter and 0.0003 m² effective membrane area. The thesis does not explain this cross-module combination.
+
+This establishes an internal geometry/provenance inconsistency in the Wyon initial-model table **with respect to reference [56]**. It does not establish whether Termpiyakul et al. [55] independently used the same mixed geometry or whether Wyon intended a hybrid theoretical configuration. The 2005 paper's accessible abstract confirms the membrane, velocity, and temperature ranges but not the detailed channel dimensions; that specific apparatus question remains unresolved.
+
+The appropriate audit status is consequently:
+- **Confirmed:** Wyon Table 6 lists a mixed geometry tuple.
+- **Confirmed:** Phattaranawik et al. (2003) Table 1 assigns the 50 × 100 × 5 mm / 9.09 mm / 0.005 m² values to its laminar module and the 3 × 100 × 3 mm / 3 mm / 0.0003 m² values to its turbulent module.
+- **Confirmed:** Wyon's listed width/height and hydraulic diameter/area do not describe the same module in reference [56].
+- **Unresolved:** whether Termpiyakul et al. (2005) independently supplies the dimensions or explains a different intended geometry.
+
+The audit therefore retains the term **probable cross-module conflation in Wyon Table 6**, rather than asserting an error in the thesis author's calculations or changing the research model. The Wyon source-faithful calculation and its historical comparison remain as originally implemented until a deliberate model revision is justified.
