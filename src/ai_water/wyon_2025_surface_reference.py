@@ -180,6 +180,10 @@ def solve_wyon_membrane_surfaces(
     ):
         if not isfinite(value):
             raise ValueError(f"{name} must be finite")
+        if not 0.0 <= value <= 100.0:
+            raise ValueError(
+                f"{name} must be within the implemented Wyon Eq. A9 range of 0-100 C"
+            )
     if feed_bulk_temperature_c <= permeate_bulk_temperature_c:
         raise ValueError("feed bulk temperature must exceed permeate bulk temperature")
     _finite_positive("feed_heat_transfer_coefficient_w_m2_k", feed_heat_transfer_coefficient_w_m2_k)

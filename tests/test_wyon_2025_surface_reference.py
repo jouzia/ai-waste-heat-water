@@ -137,3 +137,28 @@ def test_surface_solver_rejects_nonpositive_temperature_driving_force():
             pore_radius_m=0.225e-6,
             porosity=0.89,
         )
+
+
+
+@pytest.mark.parametrize(
+    ("feed_temperature_c", "permeate_temperature_c", "invalid_name"),
+    [
+        (-1.0, -5.0, "feed_bulk_temperature_c"),
+        (101.0, 25.0, "feed_bulk_temperature_c"),
+        (60.0, -0.1, "permeate_bulk_temperature_c"),
+    ],
+)
+def test_surface_solver_rejects_bulk_temperatures_outside_vapour_pressure_domain(
+    feed_temperature_c, permeate_temperature_c, invalid_name
+):
+    with pytest.raises(ValueError, match=invalid_name):
+        solve_wyon_membrane_surfaces(
+            feed_bulk_temperature_c=feed_temperature_c,
+            permeate_bulk_temperature_c=permeate_temperature_c,
+            feed_heat_transfer_coefficient_w_m2_k=5000,
+            permeate_heat_transfer_coefficient_w_m2_k=5000,
+            membrane_thermal_conductivity_w_m_k=0.031,
+            membrane_thickness_m=77e-6,
+            pore_radius_m=0.225e-6,
+            porosity=0.89,
+        )
