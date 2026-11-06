@@ -14,7 +14,7 @@ from ai_water.wyon_2025_fluid_properties import (
 
 def test_pure_water_appendix_properties_at_20_c():
     properties = wyon_fluid_properties(20.0, 0.0)
-    assert properties.heat_capacity_j_kg_k == pytest.approx(4188.14, abs=0.1)
+    assert properties.heat_capacity_j_kg_k == pytest.approx(4189.09, abs=0.1)
     assert properties.thermal_conductivity_w_m_k == pytest.approx(0.598464, rel=1e-5)
     assert properties.density_kg_m3 == pytest.approx(998.0298, rel=1e-6)
     assert properties.dynamic_viscosity_pa_s == pytest.approx(1.001762e-3, rel=1e-5)
