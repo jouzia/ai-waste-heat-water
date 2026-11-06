@@ -9,12 +9,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import isfinite
 
+from .wyon_2025_coupled_channel_surface import WyonCoupledChannelSurfaceResult
 from .wyon_2025_enthalpy import (
     wyon_specific_enthalpy_j_kg,
     wyon_temperature_from_specific_enthalpy_c,
 )
 from .wyon_2025_fluid_properties import wyon_fluid_properties
-from .wyon_2025_coupled_channel_surface import WyonCoupledChannelSurfaceResult
 
 
 @dataclass(frozen=True)
