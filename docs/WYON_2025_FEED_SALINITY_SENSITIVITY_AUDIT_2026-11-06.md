@@ -19,18 +19,18 @@ The coupled surface solver was evaluated at feed temperatures 40, 50, 60, and 70
 - feed/permeate velocities 1.85/2.92 m/s;
 - total pore pressure 100 kPa.
 
-Only feed reference salinity was changed, from 5 to 35 g/kg. These are approximate mass-based equivalents for the 5,000–35,000 mg/L NaCl range in Termpiyakul et al.; they are not an exact density conversion of the paper's mg/L values.
+Only feed reference salinity was changed, from 15 to 315 g/kg. These are approximate mass-based equivalents for the 5,000–35,000 mg/L NaCl range in Termpiyakul et al.; they are not an exact density conversion of the paper's mg/L values.
 
 ## Results
 
-| Feed bulk (°C) | Heat flux at 5 g/kg (kW/m²) | Heat flux at 35 g/kg (kW/m²) | Heat-flux change | Mass flux at 5 g/kg (kg/m² h) | Mass flux at 35 g/kg (kg/m² h) | Mass-flux change |
+| Feed bulk (°C) | Heat flux at 15 g/kg (kW/m²) | Heat flux at 35 g/kg (kW/m²) | Heat-flux change | Mass flux at 5 g/kg (kg/m² h) | Mass flux at 35 g/kg (kg/m² h) | Mass-flux change |
 |---:|---:|---:|---:|---:|---:|---:|
-| 40 | 10.316 | 10.301 | −0.14% | 6.055 | 6.044 | −0.18% |
-| 50 | 17.583 | 17.552 | −0.18% | 12.096 | 12.068 | −0.23% |
-| 60 | 27.122 | 27.062 | −0.22% | 21.381 | 21.319 | −0.29% |
-| 70 | 39.833 | 39.722 | −0.28% | 35.173 | 35.047 | −0.36% |
+| 40 | 10.311 | 10.301 | −0.10% | 6.051 | 6.044 | −0.12% |
+| 50 | 17.573 | 17.552 | −0.12% | 12.087 | 12.068 | −0.16% |
+| 60 | 27.103 | 27.062 | −0.15% | 21.361 | 21.319 | −0.20% |
+| 70 | 39.797 | 39.722 | −0.19% | 35.132 | 35.047 | −0.24% |
 
-Across the tested range, changing feed salinity from 5 to 35 g/kg changes local heat flux by only 0.14–0.28% and mass flux by 0.18–0.36%.
+Across the tested range, changing feed salinity from 5 to 35 g/kg changes local heat flux by only 0.10–0.19% and mass flux by 0.12–0.24%.
 
 ## Interpretation
 
