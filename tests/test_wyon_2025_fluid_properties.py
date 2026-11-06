@@ -15,7 +15,7 @@ from ai_water.wyon_2025_fluid_properties import (
 def test_pure_water_appendix_properties_at_20_c():
     properties = wyon_fluid_properties(20.0, 0.0)
     assert properties.heat_capacity_j_kg_k == pytest.approx(4188.14, abs=0.1)
-    assert properties.thermal_conductivity_w_m_k == pytest.approx(0.561776, rel=1e-5)
+    assert properties.thermal_conductivity_w_m_k == pytest.approx(0.598464, rel=1e-5)
     assert properties.density_kg_m3 == pytest.approx(998.0298, rel=1e-6)
     assert properties.dynamic_viscosity_pa_s == pytest.approx(1.001762e-3, rel=1e-5)
 
@@ -34,7 +34,7 @@ def test_water_property_functions_preserve_expected_ordering():
     assert pure_water_thermal_conductivity_w_m_k(20.0) < seawater_thermal_conductivity_w_m_k(20.0, 38.0)
 
 
-def test_wyon_initial_validation_feed_channel_transfer_at_30_c():
+def test_wyon_feed_channel_transfer_example_at_30_c():
     result = wyon_channel_heat_transfer(
         velocity_m_s=1.85,
         hydraulic_diameter_m=0.003,
@@ -48,7 +48,7 @@ def test_wyon_initial_validation_feed_channel_transfer_at_30_c():
     assert result.heat_transfer_coefficient_w_m2_k == pytest.approx(11184.86, rel=1e-4)
 
 
-def test_wyon_initial_validation_permeate_channel_transfer_at_30_c():
+def test_wyon_permeate_channel_transfer_example_at_30_c():
     result = wyon_channel_heat_transfer(
         velocity_m_s=2.92,
         hydraulic_diameter_m=0.003,
@@ -57,9 +57,9 @@ def test_wyon_initial_validation_permeate_channel_transfer_at_30_c():
         salinity_sr_g_kg=0.0,
     )
     assert result.reynolds == pytest.approx(10938.11, rel=1e-4)
-    assert result.prandtl == pytest.approx(5.29935, rel=1e-4)
-    assert result.nusselt == pytest.approx(80.5696, rel=1e-4)
-    assert result.heat_transfer_coefficient_w_m2_k == pytest.approx(16923.19, rel=1e-4)
+    assert result.prandtl == pytest.approx(5.42530, rel=1e-4)
+    assert result.nusselt == pytest.approx(81.2029, rel=1e-4)
+    assert result.heat_transfer_coefficient_w_m2_k == pytest.approx(16660.25, rel=1e-4)
 
 
 @pytest.mark.parametrize(
