@@ -1,5 +1,3 @@
-import math
-
 import pytest
 
 from ai_water.channel_transport import concentration_polarization_coefficient
