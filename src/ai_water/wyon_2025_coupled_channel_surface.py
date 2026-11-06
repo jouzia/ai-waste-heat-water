@@ -15,6 +15,7 @@ from .wyon_2025_fluid_properties import (
     wyon_channel_heat_transfer,
 )
 from .wyon_2025_surface_reference import (
+    VapourPressureModel,
     WyonSurfaceResult,
     solve_wyon_membrane_surfaces,
 )
@@ -50,6 +51,7 @@ def solve_wyon_coupled_channel_surface(
     temperature_tolerance_c: float = 1e-8,
     relaxation: float = 0.5,
     max_iterations: int = 100,
+    vapour_pressure_model: VapourPressureModel = "wyon_2025",
 ) -> WyonCoupledChannelSurfaceResult:
     """Solve Wyon surface temperatures and channel-film properties together.
 
@@ -59,9 +61,12 @@ def solve_wyon_coupled_channel_surface(
     alpha determines the membrane-surface temperatures. A relaxed fixed-point
     iteration closes this dependency.
 
-    Feed salinity and pore radius are explicit inputs. In particular, the
-    0.22/0.45 um pore-size entries in Wyon's tables are not silently converted
-    into a radius because that geometric interpretation must be source-checked.
+    Feed salinity and pore radius are explicit inputs. The default
+    ``wyon_2025`` vapour-pressure mode preserves Wyon's pure-water convention.
+    The opt-in ``nayar_2016`` mode uses Nayar's paired pure-water and natural-
+    seawater correlations; it approximates feed-side membrane-interface and
+    mean-pore salinity with the supplied bulk Reference Salinity. This is an
+    explicit sensitivity assumption, not a concentration-polarization model.
     """
     if temperature_tolerance_c <= 0:
         raise ValueError("temperature_tolerance_c must be positive")
@@ -103,6 +108,10 @@ def solve_wyon_coupled_channel_surface(
             pore_radius_m=pore_radius_m,
             porosity=porosity,
             total_pore_pressure_pa=total_pore_pressure_pa,
+            vapour_pressure_model=vapour_pressure_model,
+            feed_salinity_sr_g_kg=(
+                feed_salinity_sr_g_kg if vapour_pressure_model == "nayar_2016" else None
+            ),
         )
 
         target_feed_mean_c = 0.5 * (
