@@ -76,3 +76,50 @@ def test_coupled_wyon_surface_solver_validates_iteration_controls(
             temperature_tolerance_c=temperature_tolerance_c,
             max_iterations=max_iterations,
         )
+
+
+
+@pytest.mark.parametrize(
+    (
+        "feed_temperature_c",
+        "pore_radius_m",
+        "expected_mass_flux_kg_m2_h",
+        "expected_heat_flux_w_m2",
+    ),
+    [
+        (40.0, 0.11e-6, 6.0426300, 10299.6821),
+        (40.0, 0.22e-6, 7.4243725, 11235.3444),
+        (50.0, 0.11e-6, 12.0651391, 17548.3973),
+        (50.0, 0.22e-6, 14.8692193, 19457.9955),
+        (60.0, 0.11e-6, 21.3128114, 27055.9146),
+        (60.0, 0.22e-6, 26.3387134, 30496.8995),
+        (70.0, 0.11e-6, 35.0343195, 39710.0022),
+        (70.0, 0.22e-6, 43.4031388, 45469.1116),
+    ],
+)
+def test_initial_pvdf_setup_pore_radius_interpretation_sensitivity(
+    feed_temperature_c,
+    pore_radius_m,
+    expected_mass_flux_kg_m2_h,
+    expected_heat_flux_w_m2,
+):
+    result = _solve_coupled_case(
+        feed_bulk_temperature_c=feed_temperature_c,
+        permeate_bulk_temperature_c=20.0,
+        feed_velocity_m_s=1.85,
+        permeate_velocity_m_s=2.92,
+        hydraulic_diameter_m=0.003,
+        channel_length_m=0.1,
+        feed_salinity_sr_g_kg=38.0,
+        membrane_thermal_conductivity_w_m_k=0.041,
+        membrane_thickness_m=126e-6,
+        pore_radius_m=pore_radius_m,
+        porosity=0.75,
+    )
+    assert result.fixed_point_residual_c <= 1e-8
+    assert result.surface.mass_flux_kg_m2_h == pytest.approx(
+        expected_mass_flux_kg_m2_h, rel=1e-5
+    )
+    assert result.surface.heat_flux_w_m2 == pytest.approx(
+        expected_heat_flux_w_m2, rel=1e-5
+    )
