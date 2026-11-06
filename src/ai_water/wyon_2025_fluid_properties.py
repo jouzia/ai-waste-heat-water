@@ -17,7 +17,7 @@ Sources:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import isfinite
+from math import isfinite, log10
 
 from .sharqawy_2010 import (
     jamieson_seawater_cp_j_kg_k,
@@ -80,7 +80,7 @@ def pure_water_thermal_conductivity_w_m_k(temperature_its90_c: float) -> float:
     temperature_k = temperature_its90_c + 273.15
     a = (0.80201, -0.25992, 0.10024, -0.032005)
     b = (-0.32, -5.7, -12.0, -15.0)
-    return sum(ai * (temperature_k / 300.0) ** (4.0 * bi) for ai, bi in zip(a, b))
+    return sum(ai * (temperature_k / 300.0) ** bi for ai, bi in zip(a, b))
 
 
 def seawater_thermal_conductivity_w_m_k(
@@ -95,7 +95,7 @@ def seawater_thermal_conductivity_w_m_k(
     )
     t68_k = t68_c + 273.15
     log10_k_mw = (
-        __import__("math").log10(240.0 + 0.0002 * sp)
+        log10(240.0 + 0.0002 * sp)
         + 0.434
         * (2.3 - (343.5 + 0.037 * sp) / t68_k)
         * (1.0 - t68_k / (647.0 + 0.03 * sp)) ** (1.0 / 3.0)
