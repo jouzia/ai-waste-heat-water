@@ -20,7 +20,7 @@ from .nayar_2016_vapour_pressure import (
     nayar_pure_water_vapour_pressure_pa,
 )
 
-VapourPressureModel = Literal["wyon_2025", "nayar_2016"]
+VapourPressureModel = Literal["wyon_2025", "nayar_2016", "nayar_2016_pure_water"]
 
 
 def _selected_vapour_pressure_pa(
@@ -32,17 +32,20 @@ def _selected_vapour_pressure_pa(
 ) -> float:
     if model == "wyon_2025":
         return wyon_pure_water_vapour_pressure_pa(temperature_c)
-    if model == "nayar_2016":
-        if feed_salinity_sr_g_kg is None:
-            raise ValueError(
-                "feed_salinity_sr_g_kg is required when vapour_pressure_model='nayar_2016'"
-            )
-        if seawater:
+    if model in ("nayar_2016", "nayar_2016_pure_water"):
+        if model == "nayar_2016" and seawater:
+            if feed_salinity_sr_g_kg is None:
+                raise ValueError(
+                    "feed_salinity_sr_g_kg is required when vapour_pressure_model='nayar_2016'"
+                )
             return nayar_natural_seawater_vapour_pressure_pa(
                 temperature_c, feed_salinity_sr_g_kg
             )
         return nayar_pure_water_vapour_pressure_pa(temperature_c)
-    raise ValueError("vapour_pressure_model must be 'wyon_2025' or 'nayar_2016'")
+    raise ValueError(
+        "vapour_pressure_model must be 'wyon_2025', 'nayar_2016', "
+        "or 'nayar_2016_pure_water'"
+    )
 
 R_UNIVERSAL_J_MOL_K = 8.314462618
 M_WATER_KG_MOL = 0.01801528
@@ -237,8 +240,13 @@ def solve_wyon_membrane_surfaces(
         raise ValueError("porosity must be in (0, 1]")
     if max_iterations <= 0:
         raise ValueError("max_iterations must be positive")
-    if vapour_pressure_model not in ("wyon_2025", "nayar_2016"):
-        raise ValueError("vapour_pressure_model must be 'wyon_2025' or 'nayar_2016'")
+    if vapour_pressure_model not in (
+        "wyon_2025", "nayar_2016", "nayar_2016_pure_water"
+    ):
+        raise ValueError(
+            "vapour_pressure_model must be 'wyon_2025', 'nayar_2016', "
+            "or 'nayar_2016_pure_water'"
+        )
     if vapour_pressure_model == "nayar_2016" and feed_salinity_sr_g_kg is None:
         raise ValueError(
             "feed_salinity_sr_g_kg is required when vapour_pressure_model='nayar_2016'"
