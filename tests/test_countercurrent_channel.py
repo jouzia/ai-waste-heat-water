@@ -54,3 +54,27 @@ def test_countercurrent_result_is_not_claimed_as_literature_validation():
         permeate_in_temperature_c=25,
     )
     assert result.freshwater_produced_kg > 0
+
+
+def test_countercurrent_bulk_temperatures_are_invariant_to_reporting_duration():
+    short = simulate_countercurrent_dcmd_channel(
+        config=_config(),
+        feed_in_temperature_c=60,
+        permeate_in_temperature_c=25,
+    )
+    long = simulate_countercurrent_dcmd_channel(
+        config=__import__("dataclasses").replace(_config(), duration_h=3.0),
+        feed_in_temperature_c=60,
+        permeate_in_temperature_c=25,
+    )
+
+    assert long.feed_out_temperature_c == pytest.approx(short.feed_out_temperature_c)
+    assert long.permeate_out_temperature_c == pytest.approx(short.permeate_out_temperature_c)
+    assert long.feed_out_mass_kg_h == pytest.approx(short.feed_out_mass_kg_h)
+    assert long.permeate_out_mass_kg_h == pytest.approx(short.permeate_out_mass_kg_h)
+    assert long.freshwater_produced_kg == pytest.approx(
+        3.0 * short.freshwater_produced_kg
+    )
+    assert long.hot_side_thermal_demand_kwh_th == pytest.approx(
+        3.0 * short.hot_side_thermal_demand_kwh_th
+    )
