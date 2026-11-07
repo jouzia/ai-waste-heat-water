@@ -61,6 +61,10 @@ class ChannelCellResult:
     feed_heat_kw: float
     membrane_latent_heat_kw: float
     membrane_conductive_heat_kw: float
+    # Counter-current interface closure uses the mean of the two permeate-side
+    # cell boundary temperatures; the boundary value above is retained for
+    # boundary-condition reporting.
+    permeate_cell_mean_temperature_c: float | None = None
 
 
 @dataclass(frozen=True)

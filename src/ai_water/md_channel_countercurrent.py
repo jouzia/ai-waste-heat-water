@@ -185,6 +185,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             feed_heat_kw=q_w / 1000.0,
             membrane_latent_heat_kw=q_latent_w / 1000.0,
             membrane_conductive_heat_kw=q_cond_w / 1000.0,
+            permeate_cell_mean_temperature_c=0.5 * (permeate_profile[i] + permeate_profile[i + 1]),
         ))
 
     feed_out_mass = feed_results[-1][-1]
