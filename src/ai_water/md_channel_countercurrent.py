@@ -231,7 +231,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             ),
         ))
 
-    feed_out_mass = feed_results[-1][-1]
+    feed_out_mass = feed_results[-1][8]
     permeate_out_mass = config.permeate_mass_flow_kg_h + previous_product / config.duration_h
     salt_mass_flow = config.feed_mass_flow_kg_h * config.feed_salinity_g_kg / 1000.0
     return ChannelResult(
