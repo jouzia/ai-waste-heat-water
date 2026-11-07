@@ -104,3 +104,29 @@ def test_countercurrent_cpc_raises_if_inner_closure_does_not_converge(monkeypatc
             feed_in_temperature_c=60.0,
             permeate_in_temperature_c=25.0,
         )
+
+
+
+def test_countercurrent_boundary_solver_does_not_accept_stable_product_with_changing_profiles(
+    monkeypatch,
+):
+    def temperature_sensitive_interfaces(**kwargs):
+        feed_bulk = kwargs["feed_bulk_c"]
+        permeate_bulk = kwargs["permeate_bulk_c"]
+        return feed_bulk - 0.1 * (permeate_bulk - 20.0), permeate_bulk + 0.05, 1.0
+
+    monkeypatch.setattr(
+        countercurrent, "_cell_interfaces", temperature_sensitive_interfaces
+    )
+
+    with pytest.raises(
+        RuntimeError,
+        match="counter-current DCMD boundary iteration did not converge",
+    ):
+        simulate_countercurrent_dcmd_channel(
+            config=_config(cells=5),
+            feed_in_temperature_c=60.0,
+            permeate_in_temperature_c=25.0,
+            max_iterations=2,
+            tolerance_c=1e-7,
+        )
