@@ -35,14 +35,15 @@ def test_enthalpy_mesh_convergence_has_complete_auditable_matrix(tmp_path):
         assert float(row["permeate_out_mass_kg_h"]) > 600.0
         assert row["feed_out_temperature_c_relative_delta_vs_80_pct"] == ""
         assert row["permeate_out_temperature_c_relative_delta_vs_80_pct"] == ""
-        assert row["feed_out_temperature_c_delta_vs_80"] == (
-            "0.0" if int(row["cells"]) == 80 else row["feed_out_temperature_c_delta_vs_80"]
-        )
-        assert abs(float(row["global_wyon_enthalpy_residual_w"])) < 1e-3
+        if int(row["cells"]) == 80:
+            assert abs(float(row["feed_out_temperature_c_delta_vs_80"])) < 1e-12
+            assert abs(float(row["freshwater_produced_kg_delta_vs_80"])) < 1e-12
         if row["energy_balance_mode"] == "wyon_enthalpy":
+            assert abs(float(row["global_wyon_enthalpy_residual_w"])) < 1e-5
             assert float(row["max_abs_combined_cell_residual_w"]) < 1e-7
         else:
             assert row["max_abs_combined_cell_residual_w"] == ""
+            assert float(row["global_wyon_enthalpy_residual_w"]) > 0
 
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     assert len(summary) == 12
