@@ -152,7 +152,8 @@ def run(output_dir: Path) -> dict[str, object]:
                 enthalpy = getattr(results["wyon_enthalpy"], metric)
                 row[f"wyon_minus_sensible_{metric}_delta"] = enthalpy - sensible
                 row[f"wyon_vs_sensible_{metric}_change_pct"] = (
-                    _relative_change_pct(enthalpy, sensible)
+                    "" if metric in {"feed_out_temperature_c", "permeate_out_temperature_c"}
+                    else _relative_change_pct(enthalpy, sensible)
                 )
             rows.append(row)
 
