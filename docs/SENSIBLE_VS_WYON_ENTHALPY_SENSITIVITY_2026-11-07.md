@@ -22,13 +22,13 @@ All deltas below are Wyon enthalpy mode minus sensible-cp mode.
 | Output | Absolute delta range across 12 cases | Relative change range |
 |---|---:|---:|
 | Feed outlet temperature | −0.0341 to +0.0905 °C | Not reported (Celsius percentage is not meaningful) |
-| Permeate outlet temperature | −0.0447 to −0.0108 °C | −0.194% to −0.051% |
+| Permeate outlet temperature | −0.0447 to −0.0108 °C | Not reported (Celsius percentage is not meaningful) |
 | Freshwater produced (1 h) | −0.000352 to +0.002184 kg | −0.103% to +0.178% |
 | Hot-side thermal demand (1 h) | −0.000466 to +0.003007 kWh | −0.059% to +0.144% |
 | Latent duty (1 h) | −0.000236 to +0.001463 kWh | −0.103% to +0.178% |
 | Conductive heat leak (1 h) | −0.000281 to +0.001544 kWh | −0.046% to +0.122% |
 
-The permeate outlet is lower in Wyon mode in all 12 cases. Feed outlet temperature changes sign across the matrix, so the comparison does not support a single direction-of-change claim for the feed outlet. Product-water and duty differences are small in this selected scenario and also change sign.
+The permeate outlet is lower in Wyon mode in all 12 cases. Feed outlet temperature changes sign across the matrix, so the comparison does not support a single direction-of-change claim for the feed outlet. Temperature changes are reported only in degrees Celsius, never as percentages of Celsius values. Product-water and duty differences are small in this selected scenario and also change sign.
 
 ## Enthalpy residual diagnostics
 
