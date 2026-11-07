@@ -133,3 +133,35 @@ The appropriate audit status is consequently:
 - **Unresolved:** whether Termpiyakul et al. (2005) independently supplies the dimensions or explains a different intended geometry.
 
 The audit therefore retains the term **probable cross-module conflation in Wyon Table 6**, rather than asserting an error in the thesis author's calculations or changing the research model. The Wyon source-faithful calculation and its historical comparison remain as originally implemented until a deliberate model revision is justified.
+
+
+
+## Independent secondary cross-check of Termpiyakul et al. (2005) operating conditions
+
+An independent later CFD paper by Alwatban et al. (2019), *Effect of membrane properties and operational parameters on systems for seawater desalination using computational fluid dynamics simulations* (Desalination and Water Treatment 161, 92–107; DOI 10.5004/dwt.2019.24275), explicitly identifies Termpiyakul et al. (2005) as its experimental validation source.
+
+For the Termpiyakul comparison, Alwatban et al. report:
+- feed concentration: 35 g/kg;
+- inlet feed/permeate temperatures: 60°C / 20°C;
+- permeate-channel Reynolds number: 8,808;
+- feed-channel Reynolds range: 9,900–19,800;
+- PVDF membrane thickness: 126 μm;
+- PVDF membrane thermal conductivity: 0.041 W m⁻¹ K⁻¹;
+- measured fluxes of 30.80, 37.80 and 39.00 kg m⁻² h⁻¹ at feed Reynolds numbers 9,900, 14,861 and 19,780, respectively.
+
+The later study reports that these Reynolds numbers correspond to turbulent channel flows and uses a k–ω SST model for its validation. This is consistent with the Termpiyakul abstract's description of 1.85–3.7 m/s feed crossflow and 2.92 m/s permeate crossflow as turbulent, and independently corroborates the 126 μm PVDF membrane / 0.041 W m⁻¹ K⁻¹ thermal-conductivity values used in Wyon's initial configuration.
+
+**What this does not establish:** Alwatban et al. describe their own CFD geometries, including an empty rectangular module with channel dimensions expressed as 50h by 5h, where h is the channel height. The accessible paper does not identify an absolute h for the Termpiyakul experimental apparatus, nor does it demonstrate that its own CFD channel dimensions are identical to Termpiyakul's. Its reported Reynolds numbers are therefore a useful independent cross-check of the operating regime and membrane properties, not proof of the original channel cross-section, hydraulic diameter, membrane area, or spacer state.
+
+### Updated source-reconciliation status
+
+- **Corroborated:** Termpiyakul's reported feed/permeate velocities and turbulent-flow description are consistent with a later published validation at Re = 9,900–19,800 (feed) and Re = 8,808 (permeate) for the 60°C / 20°C, 35 g/kg case.
+- **Corroborated:** The 126 μm PVDF membrane thickness and 0.041 W m⁻¹ K⁻¹ thermal conductivity appear in the later Termpiyakul validation crosswalk.
+- **Still unresolved:** The exact absolute channel width, height, length, cross-sectional area, hydraulic-diameter definition, membrane area and spacer state of the original Termpiyakul apparatus.
+- **Still unresolved:** Whether any of those apparatus details explain Wyon Table 6's cross-module combination relative to Phattaranawik et al. (2003).
+
+No numerical geometry correction is justified by this secondary cross-check. The original Table 6 tuple remains flagged and no solver inputs or correlation choices are changed.
+
+### Additional source
+
+Alwatban, A.M., Alshwairekh, A.M., Alqsair, U.F., Alghafis, A.A. & Oztekin, A. (2019). “Effect of membrane properties and operational parameters on systems for seawater desalination using computational fluid dynamics simulations.” *Desalination and Water Treatment*, 161, 92–107. DOI: 10.5004/dwt.2019.24275. https://www.deswater.com/DWT_articles/vol_161_papers/161_2019_92.pdf
