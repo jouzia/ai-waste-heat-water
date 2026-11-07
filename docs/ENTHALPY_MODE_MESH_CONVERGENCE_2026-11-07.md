@@ -47,3 +47,43 @@ pytest -q tests/test_enthalpy_mesh_convergence.py
 ```
 
 The workflow archives `enthalpy_mesh_convergence.csv`, `mesh_convergence_summary.json`, and a hash-bearing `manifest.json` for 90 days. The CSV and manifest are the audit trail; the report should be updated with the artifact's actual numerical results after the workflow completes.
+
+
+## Results — completed run (2026-11-07)
+
+The dedicated workflow completed successfully for all 16 combinations (2 operating points × 2 energy modes × 4 meshes). For each of the four case/mode combinations, the absolute deviation from the 80-cell result decreased monotonically from 10→20→40 cells for every reported output metric.
+
+### Maximum deviation from the 80-cell reference across both cases and both modes
+
+| Mesh | Outlet-temperature deviation (max absolute °C) | Freshwater production (max absolute relative %) | Hot-side duty (max absolute relative %) | Latent duty (max absolute relative %) | Conductive duty (max absolute relative %) |
+|---:|---:|---:|---:|---:|---:|
+| 10 cells | 0.008824 | 0.4743% | 0.2878% | 0.4743% | 0.1950% |
+| 20 cells | 0.003775 | 0.2028% | 0.1231% | 0.2028% | 0.0835% |
+| 40 cells | 0.001257 | 0.0675% | 0.0410% | 0.0675% | 0.0278% |
+
+At 40 cells, the maximum observed outlet-temperature difference from the 80-cell reference is approximately 0.00126 °C. The maximum freshwater-production difference is 0.0675%, and the maximum hot-side-duty difference is 0.0411% across the selected cases and modes. These are numerical mesh differences only.
+
+### Enthalpy residual diagnostics at 80 cells
+
+- Wyon-enthalpy mode: absolute post-hoc global Wyon enthalpy residuals were 4.55×10⁻⁸ W (T60_S35) and 1.63×10⁻⁷ W (T70_S38). Maximum combined per-cell algebraic residuals were 6.21×10⁻¹² W and 1.45×10⁻¹¹ W, respectively.
+- Sensible-cp mode: absolute post-hoc global Wyon enthalpy residuals were 29.01 W (T60_S35) and 21.17 W (T70_S38). This is expected as a diagnostic difference between the sensible-cp update and the Wyon enthalpy convention; it is not experimental error.
+
+### Difference between energy-balance modes at the 80-cell mesh
+
+| Case | Feed outlet ΔT (Wyon − sensible) | Permeate outlet ΔT | Freshwater change | Hot-side duty change |
+|---|---:|---:|---:|---:|
+| T60_S35 | −0.01121 °C | −0.03080 °C | −0.00536% | +0.02373% |
+| T70_S38 | +0.01487 °C | −0.04446 °C | +0.04740% | +0.06243% |
+
+The small mode-to-mode differences remain after mesh refinement and are not artifacts of using the original 20-cell mesh. The sign of the feed outlet temperature difference changes between cases; no single directional claim is warranted.
+
+### Reproducibility record
+
+- Pull request: [#102](https://github.com/jouzia/ai-waste-heat-water/pull/102)
+- Dedicated successful PR workflow run: [42380566446](https://github.com/jouzia/ai-waste-heat-water/actions/runs/42380566446)
+- Artifact ID: `13576738906` (90-day retention)
+- Artifact SHA-256: `1e072d3ccb107985d1ce46babd294d9ef249174ad087401c706295990687be07`
+- CSV SHA-256: `422da5eefd66250e0fb6cdb6f39ef1a6cba751f0f93bba136ba0cfc530ce2f36`
+- Summary JSON SHA-256: `efa1fc071165f6ea2484d065969373141ec227b0e36dd5eb352de052ba3b8768`
+
+**Conclusion:** For these two fixed operating points and this reduced-order model, 40 cells are already close to the 80-cell reference for the reported integral outputs and outlet temperatures. This supports a mesh-stability statement for these cases; it does not establish a universal minimum cell count or physical validation.
