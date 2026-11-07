@@ -46,3 +46,26 @@ pytest -q tests/test_extended_enthalpy_mesh_convergence.py
 ```
 
 The dedicated workflow archives the CSV, summary JSON, and hash-bearing manifest for 90 days. Numerical findings will be appended after the artifact is generated and independently inspected.
+
+
+## Numerical findings (96-run artifact)
+
+The dedicated workflow completed all 96 simulations and passed its matrix, finite-output, residual, and SHA-256 manifest checks. The archived artifact is `extended-enthalpy-mesh-grid` (90-day retention). The artifact manifest records 12 operating points, 96 rows, and the fixed configuration above.
+
+Across all 24 operating-point/mode pairs, the absolute deviations from the 80-cell reference decreased monotonically at each refinement step (10 → 20 → 40 → 80 cells) for every reported comparison output: feed and permeate outlet temperatures, freshwater production, hot-side demand, latent duty, and conductive heat leak.
+
+### Worst-case deviations from the 80-cell reference
+
+| Mesh | Feed outlet temperature | Permeate outlet temperature | Freshwater production | Hot-side demand | Latent duty | Conductive heat leak |
+|---:|---:|---:|---:|---:|---:|---:|
+| 10 cells | 0.008381 °C | 0.008872 °C | 0.4743% | 0.2885% | 0.4743% | 0.2309% |
+| 20 cells | 0.003586 °C | 0.003795 °C | 0.2028% | 0.1234% | 0.2028% | 0.09884% |
+| 40 cells | 0.001194 °C | 0.001264 °C | 0.06752% | 0.04111% | 0.06752% | 0.03292% |
+
+Temperature entries are absolute differences in °C, not percentages. Percentage entries are relative deviations in the corresponding non-temperature quantity. Values are maxima across the 12 operating points and both energy modes; maxima need not occur in the same case.
+
+The largest Wyon-mode absolute global enthalpy residual across the 48 Wyon simulations was approximately 4.41 × 10⁻⁷ W. The largest reported combined per-cell algebraic residual was approximately 1.45 × 10⁻¹¹ W. These are numerical implementation diagnostics under the selected enthalpy convention. They do not establish physical or experimental validity. The sensible-cp cases have nonzero post-hoc Wyon residuals by construction because the two modes use different energy conventions.
+
+### Interpretation
+
+Within this tested reduced-order configuration, 40 cells differed from the 80-cell reference by no more than 0.001264 °C in outlet temperature, 0.06752% in freshwater/latent-duty quantities, 0.04111% in hot-side demand, and 0.03292% in conductive heat leak. This supports mesh stability at 40 cells relative to the 80-cell reference for this grid. It does **not** establish that 40 cells are universally sufficient, that the 80-cell result is exact, or that either mode is experimentally accurate. No formal convergence order is inferred.
