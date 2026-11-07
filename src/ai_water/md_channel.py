@@ -16,9 +16,9 @@ outside this layer.
 from dataclasses import dataclass
 from typing import Literal
 
+from .channel_enthalpy import advance_wyon_stream_enthalpy
 from .channel_transport import concentration_polarization_coefficient, interface_salinity_g_kg
 from .md import seawater_water_activity, vapor_pressure_driving_force_bar
-from .channel_enthalpy import advance_wyon_stream_enthalpy
 
 
 @dataclass(frozen=True)
