@@ -9,6 +9,7 @@ existing co-current implementation remains backward compatible.
 from .channel_transport import concentration_polarization_coefficient, interface_salinity_g_kg
 from .md import seawater_water_activity
 from .md_channel import ChannelCellResult, ChannelConfig, ChannelResult, _cell_interfaces
+from .channel_enthalpy import advance_wyon_stream_enthalpy
 
 
 def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_temperature_c: float, permeate_in_temperature_c: float, max_iterations: int = 500, tolerance_c: float = 1e-7) -> ChannelResult:
@@ -39,6 +40,8 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             raise ValueError("solvent density is required when CP is enabled")
     if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_k <= 0:
         raise ValueError("heat capacities must be positive")
+    if config.energy_balance_mode not in {"sensible_cp", "wyon_enthalpy"}:
+        raise ValueError("energy_balance_mode must be sensible_cp or wyon_enthalpy")
     if not 0 <= config.feed_salinity_g_kg <= 120:
         raise ValueError("feed salinity must remain within the IAPWS-08 range")
 
@@ -127,22 +130,56 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             product_rate = flux * area
             q_w = config.feed_heat_transfer_coefficient_w_m2_k * (tf - tfm) * area
             product_kg = product_rate * config.duration_h
-            feed_profile[i + 1] = tf - (q_w * 3.6) / (feed_mass * config.feed_cp_kj_kg_k)
-            # Steady-state flow energy balance; reporting duration does not affect bulk temperature.
-            feed_mass -= product_rate
-            if feed_mass <= 0:
+            feed_mass_in = feed_mass
+            feed_mass_out = feed_mass_in - product_rate
+            if feed_mass_out <= 0:
                 raise ValueError("feed flow was exhausted inside the module")
-            feed_results.append((tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, feed_mass))
+            feed_enthalpy_residual_w = None
+            if config.energy_balance_mode == "wyon_enthalpy":
+                salinity_out = salt_mass / feed_mass_out * 1000.0
+                feed_step = advance_wyon_stream_enthalpy(
+                    inlet_temperature_c=tf,
+                    inlet_mass_flow_kg_h=feed_mass_in,
+                    outlet_mass_flow_kg_h=feed_mass_out,
+                    heat_transfer_w=q_w,
+                    salinity_in_g_kg=salinity,
+                    salinity_out_g_kg=salinity_out,
+                    direction="feed",
+                )
+                feed_profile[i + 1] = feed_step.outlet_temperature_c
+                feed_enthalpy_residual_w = feed_step.residual_w
+            else:
+                # Backward-compatible reduced sensible-cp update.
+                feed_profile[i + 1] = tf - (q_w * 3.6) / (feed_mass_in * config.feed_cp_kj_kg_k)
+            # Steady-state flow energy balance; reporting duration does not affect bulk temperature.
+            feed_mass = feed_mass_out
+            feed_results.append((tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, feed_mass, feed_enthalpy_residual_w))
 
         # Permeate sweep: known permeate inlet at x=L, travelling backward.
         permeate_profile[n] = permeate_in_temperature_c
         permeate_mass = config.permeate_mass_flow_kg_h
+        permeate_enthalpy_residuals = [None] * n
         for i in range(n - 1, -1, -1):
             tf = feed_profile[i]
             tp = permeate_profile[i + 1]
-            tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, _ = feed_results[i]
-            permeate_profile[i] = tp + (q_w * 3.6) / (permeate_mass * config.permeate_cp_kj_kg_k)
-            permeate_mass += flux * area
+            tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, _, _ = feed_results[i]
+            permeate_mass_in = permeate_mass
+            permeate_mass_out = permeate_mass_in + flux * area
+            if config.energy_balance_mode == "wyon_enthalpy":
+                permeate_step = advance_wyon_stream_enthalpy(
+                    inlet_temperature_c=tp,
+                    inlet_mass_flow_kg_h=permeate_mass_in,
+                    outlet_mass_flow_kg_h=permeate_mass_out,
+                    heat_transfer_w=q_w,
+                    salinity_in_g_kg=0.0,
+                    salinity_out_g_kg=0.0,
+                    direction="permeate",
+                )
+                permeate_profile[i] = permeate_step.outlet_temperature_c
+                permeate_enthalpy_residuals[i] = permeate_step.residual_w
+            else:
+                permeate_profile[i] = tp + (q_w * 3.6) / (permeate_mass_in * config.permeate_cp_kj_kg_k)
+            permeate_mass = permeate_mass_out
 
         product = sum(x[3] for x in feed_results)
         previous_product = product
@@ -166,7 +203,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
     cells = []
     latent_total = 0.0
     conductive_total = 0.0
-    for i, (tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, _) in enumerate(feed_results):
+    for i, (tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, _, feed_enthalpy_residual_w) in enumerate(feed_results):
         q_latent_w = flux * area * config.latent_heat_kwh_th_per_kg * 1000.0
         q_cond_w = config.membrane_thermal_conductivity_w_m_k / config.membrane_thickness_m * (tfm - tpm) * area
         latent_total += q_latent_w / 1000.0 * config.duration_h
@@ -186,6 +223,12 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             membrane_latent_heat_kw=q_latent_w / 1000.0,
             membrane_conductive_heat_kw=q_cond_w / 1000.0,
             permeate_cell_mean_temperature_c=0.5 * (permeate_profile[i] + permeate_profile[i + 1]),
+            feed_enthalpy_balance_residual_w=feed_enthalpy_residual_w,
+            permeate_enthalpy_balance_residual_w=permeate_enthalpy_residuals[i],
+            combined_enthalpy_balance_residual_w=(
+                None if feed_enthalpy_residual_w is None or permeate_enthalpy_residuals[i] is None
+                else feed_enthalpy_residual_w + permeate_enthalpy_residuals[i]
+            ),
         ))
 
     feed_out_mass = feed_results[-1][-1]
