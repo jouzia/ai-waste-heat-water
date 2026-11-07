@@ -51,6 +51,9 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
     previous_product = None
 
     for _ in range(max_iterations):
+        previous_feed_profile = feed_profile.copy()
+        previous_permeate_profile = permeate_profile.copy()
+
         # Feed sweep: known feed inlet at x=0.
         feed_profile[0] = feed_in_temperature_c
         feed_mass = config.feed_mass_flow_kg_h
@@ -142,9 +145,20 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             permeate_mass += flux * area
 
         product = sum(x[3] for x in feed_results)
-        change = abs(product - previous_product) if previous_product is not None else float('inf')
         previous_product = product
-        if change < tolerance_c * max(1.0, product):
+        max_feed_profile_change = max(
+            abs(current - previous)
+            for current, previous in zip(feed_profile, previous_feed_profile)
+        )
+        max_permeate_profile_change = max(
+            abs(current - previous)
+            for current, previous in zip(permeate_profile, previous_permeate_profile)
+        )
+        max_profile_change = max(
+            max_feed_profile_change,
+            max_permeate_profile_change,
+        )
+        if max_profile_change <= tolerance_c:
             break
     else:
         raise RuntimeError("counter-current DCMD boundary iteration did not converge")
