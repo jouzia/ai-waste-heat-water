@@ -1,11 +1,10 @@
 import csv
 import json
 
-import pytest
+from scripts.run_sensible_vs_wyon_enthalpy_sweep import run
 
 from ai_water.md_channel import ChannelConfig
 from ai_water.md_channel_countercurrent import simulate_countercurrent_dcmd_channel
-from scripts.run_sensible_vs_wyon_enthalpy_sweep import run
 
 
 def test_sensible_vs_wyon_sweep_has_complete_matrix_and_auditable_manifest(tmp_path):
