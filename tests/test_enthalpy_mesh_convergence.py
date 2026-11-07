@@ -43,7 +43,7 @@ def test_enthalpy_mesh_convergence_has_complete_auditable_matrix(tmp_path):
             assert float(row["max_abs_combined_cell_residual_w"]) < 1e-7
         else:
             assert row["max_abs_combined_cell_residual_w"] == ""
-            assert float(row["global_wyon_enthalpy_residual_w"]) > 0
+            assert abs(float(row["global_wyon_enthalpy_residual_w"])) > 1.0
 
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     assert len(summary) == 12
