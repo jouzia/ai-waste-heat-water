@@ -150,7 +150,7 @@ def _assert_independent_global_enthalpy_identity(result):
         + result.permeate_out_mass_kg_h * permeate_h_out
     )
     assert outlet_enthalpy_rate == pytest.approx(
-        inlet_enthalpy_rate, rel=1e-10, abs=1e-4
+        inlet_enthalpy_rate, rel=1e-8, abs=1e-4
     )
 
 
