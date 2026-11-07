@@ -16,6 +16,7 @@ outside this layer.
 from dataclasses import dataclass
 from typing import Literal
 
+from .channel_enthalpy import advance_wyon_stream_enthalpy
 from .channel_transport import concentration_polarization_coefficient, interface_salinity_g_kg
 from .md import seawater_water_activity, vapor_pressure_driving_force_bar
 
@@ -44,6 +45,7 @@ class ChannelConfig:
     counter_current_relaxation: float = 0.5
     counter_current_temperature_tolerance_c: float = 1e-6
     counter_current_mass_tolerance_relative: float = 1e-6
+    energy_balance_mode: Literal["sensible_cp", "wyon_enthalpy"] = "sensible_cp"
 
 
 @dataclass(frozen=True)
@@ -65,6 +67,9 @@ class ChannelCellResult:
     # cell boundary temperatures; the boundary value above is retained for
     # boundary-condition reporting.
     permeate_cell_mean_temperature_c: float | None = None
+    feed_enthalpy_balance_residual_w: float | None = None
+    permeate_enthalpy_balance_residual_w: float | None = None
+    combined_enthalpy_balance_residual_w: float | None = None
 
 
 @dataclass(frozen=True)
@@ -159,6 +164,8 @@ def simulate_dcmd_channel(
             raise ValueError("solvent density is required when CP is enabled")
     if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_k <= 0:
         raise ValueError("heat capacities must be positive")
+    if config.energy_balance_mode not in {"sensible_cp", "wyon_enthalpy"}:
+        raise ValueError("energy_balance_mode must be sensible_cp or wyon_enthalpy")
     if config.counter_current_max_iterations <= 0:
         raise ValueError("counter-current iteration limit must be positive")
     if not 0 < config.counter_current_relaxation <= 1:
@@ -252,21 +259,56 @@ def simulate_dcmd_channel(
                 config.membrane_thermal_conductivity_w_m_k / config.membrane_thickness_m
                 * (tfm - tpm) * cell_area
             )
-            # Channel temperatures are steady-state bulk states. Their changes
-            # depend on heat-transfer rate (kJ/h) divided by mass-flow rate
-            # (kg/h), not on the arbitrary integration/reporting duration.
-            feed_temperature -= (
-                q_feed_w / 1000.0 * 3600.0
-                / (feed_mass_flow * config.feed_cp_kj_kg_k)
-            )
-            permeate_temperature += (
-                q_feed_w / 1000.0 * 3600.0
-                / (permeate_mass_flow * config.permeate_cp_kj_kg_k)
-            )
-            feed_mass_flow -= product_rate
-            permeate_mass_flow += product_rate
-            if feed_mass_flow <= 0:
+            feed_mass_in = feed_mass_flow
+            permeate_mass_in = permeate_mass_flow
+            feed_mass_out = feed_mass_in - product_rate
+            permeate_mass_out = permeate_mass_in + product_rate
+            feed_enthalpy_residual_w = None
+            permeate_enthalpy_residual_w = None
+            combined_enthalpy_residual_w = None
+            if feed_mass_out <= 0:
                 raise ValueError("feed flow was exhausted inside the module")
+
+            if config.energy_balance_mode == "wyon_enthalpy":
+                feed_salinity_out = salt_mass_flow / feed_mass_out * 1000.0
+                feed_step = advance_wyon_stream_enthalpy(
+                    inlet_temperature_c=feed_temperature,
+                    inlet_mass_flow_kg_h=feed_mass_in,
+                    outlet_mass_flow_kg_h=feed_mass_out,
+                    heat_transfer_w=q_feed_w,
+                    salinity_in_g_kg=feed_salinity,
+                    salinity_out_g_kg=feed_salinity_out,
+                    direction="feed",
+                )
+                permeate_step = advance_wyon_stream_enthalpy(
+                    inlet_temperature_c=permeate_temperature,
+                    inlet_mass_flow_kg_h=permeate_mass_in,
+                    outlet_mass_flow_kg_h=permeate_mass_out,
+                    heat_transfer_w=q_feed_w,
+                    salinity_in_g_kg=0.0,
+                    salinity_out_g_kg=0.0,
+                    direction="permeate",
+                )
+                feed_temperature = feed_step.outlet_temperature_c
+                permeate_temperature = permeate_step.outlet_temperature_c
+                feed_enthalpy_residual_w = feed_step.residual_w
+                permeate_enthalpy_residual_w = permeate_step.residual_w
+                combined_enthalpy_residual_w = (
+                    feed_step.residual_w + permeate_step.residual_w
+                )
+            else:
+                # Backward-compatible reduced sensible-cp update.
+                feed_temperature -= (
+                    q_feed_w / 1000.0 * 3600.0
+                    / (feed_mass_in * config.feed_cp_kj_kg_k)
+                )
+                permeate_temperature += (
+                    q_feed_w / 1000.0 * 3600.0
+                    / (permeate_mass_in * config.permeate_cp_kj_kg_k)
+                )
+
+            feed_mass_flow = feed_mass_out
+            permeate_mass_flow = permeate_mass_out
 
             cells.append(
                 ChannelCellResult(
@@ -283,6 +325,9 @@ def simulate_dcmd_channel(
                     feed_heat_kw=q_feed_w / 1000.0,
                     membrane_latent_heat_kw=q_latent_w / 1000.0,
                     membrane_conductive_heat_kw=q_conductive_w / 1000.0,
+                    feed_enthalpy_balance_residual_w=feed_enthalpy_residual_w,
+                    permeate_enthalpy_balance_residual_w=permeate_enthalpy_residual_w,
+                    combined_enthalpy_balance_residual_w=combined_enthalpy_residual_w,
                 )
             )
         return feed_temperature, permeate_temperature, feed_mass_flow, permeate_mass_flow, cells, salt_mass_flow
