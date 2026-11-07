@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 import pytest
 
 from ai_water.md_channel import ChannelConfig
@@ -63,7 +65,7 @@ def test_countercurrent_bulk_temperatures_are_invariant_to_reporting_duration():
         permeate_in_temperature_c=25,
     )
     long = simulate_countercurrent_dcmd_channel(
-        config=__import__("dataclasses").replace(_config(), duration_h=3.0),
+        config=replace(_config(), duration_h=3.0),
         feed_in_temperature_c=60,
         permeate_in_temperature_c=25,
     )
