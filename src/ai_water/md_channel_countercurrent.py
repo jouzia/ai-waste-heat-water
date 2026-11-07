@@ -37,7 +37,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             raise ValueError("salt mass-transfer coefficient must be positive")
         if config.solvent_density_kg_m3 is None or config.solvent_density_kg_m3 <= 0:
             raise ValueError("solvent density is required when CP is enabled")
-    if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_k <= 0:
+    if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_kg_k <= 0:
         raise ValueError("heat capacities must be positive")
     if not 0 <= config.feed_salinity_g_kg <= 120:
         raise ValueError("feed salinity must remain within the IAPWS-08 range")
@@ -141,7 +141,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             tf = feed_profile[i]
             tp = permeate_profile[i + 1]
             tfm, tpm, flux, product_kg, q_w, salinity, interface_salinity, cpc, _ = feed_results[i]
-            permeate_profile[i] = tp + (q_w * 3.6) / (permeate_mass * config.permeate_cp_kj_k)
+            permeate_profile[i] = tp + (q_w * 3.6) / (permeate_mass * config.permeate_cp_kj_kg_k)
             permeate_mass += flux * area
 
         product = sum(x[3] for x in feed_results)
