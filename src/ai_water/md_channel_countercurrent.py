@@ -37,7 +37,7 @@ def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_tempe
             raise ValueError("salt mass-transfer coefficient must be positive")
         if config.solvent_density_kg_m3 is None or config.solvent_density_kg_m3 <= 0:
             raise ValueError("solvent density is required when CP is enabled")
-    if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_k <= 0:
+    if config.feed_cp_kj_kg_k <= 0 or config.permeate_cp_kj_kg_kg_k <= 0:
         raise ValueError("heat capacities must be positive")
     if not 0 <= config.feed_salinity_g_kg <= 120:
         raise ValueError("feed salinity must remain within the IAPWS-08 range")
