@@ -22,13 +22,13 @@ All deltas below are Wyon enthalpy mode minus sensible-cp mode.
 | Output | Absolute delta range across 12 cases | Relative change range |
 |---|---:|---:|
 | Feed outlet temperature | −0.0341 to +0.0905 °C | Not reported (Celsius percentage is not meaningful) |
-| Permeate outlet temperature | −0.0447 to −0.0108 °C | −0.194% to −0.051% |
+| Permeate outlet temperature | −0.0447 to −0.0108 °C | Not reported (Celsius percentage is not meaningful) |
 | Freshwater produced (1 h) | −0.000352 to +0.002184 kg | −0.103% to +0.178% |
 | Hot-side thermal demand (1 h) | −0.000466 to +0.003007 kWh | −0.059% to +0.144% |
 | Latent duty (1 h) | −0.000236 to +0.001463 kWh | −0.103% to +0.178% |
 | Conductive heat leak (1 h) | −0.000281 to +0.001544 kWh | −0.046% to +0.122% |
 
-The permeate outlet is lower in Wyon mode in all 12 cases. Feed outlet temperature changes sign across the matrix, so the comparison does not support a single direction-of-change claim for the feed outlet. Product-water and duty differences are small in this selected scenario and also change sign.
+The permeate outlet is lower in Wyon mode in all 12 cases. Feed outlet temperature changes sign across the matrix, so the comparison does not support a single direction-of-change claim for the feed outlet. Temperature changes are reported only in degrees Celsius, never as percentages of Celsius values. Product-water and duty differences are small in this selected scenario and also change sign.
 
 ## Enthalpy residual diagnostics
 
@@ -65,10 +65,10 @@ pytest -q tests/test_sensible_vs_wyon_enthalpy_sweep.py
 ```
 
 - Workflow: `Sensible versus Wyon enthalpy sensitivity`
-- Successful artifact run: `42379580540`
-- Artifact ID: `13577150783`
-- Artifact SHA-256: `b02342d2c2e55a854f604d18637dfd467bde1e053506a7d93b006d6321333f9f`
-- CSV SHA-256: `693466ab3f411f3b0bc1aa2efe21283d344d5e70b98be409cb17e22ac1a5927c`
+- Successful artifact run: `42379966000`
+- Artifact ID: `13577860092`
+- Artifact SHA-256: `6a54b59afea19cea251f5078b21897fc9b65dfb13ec9446743ad0a1107650c88`
+- CSV SHA-256: `09db3374368202ddcc48497fd4f98122afadedd00e4931df197f724776dc7e5b`
 - Artifact retention: 90 days from 2026-11-07.
 
 The CSV and manifest are archived as a GitHub Actions artifact; the manifest includes the complete fixed configuration and file hash.

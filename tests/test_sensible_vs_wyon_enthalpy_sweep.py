@@ -29,6 +29,8 @@ def test_sensible_vs_wyon_sweep_has_complete_matrix_and_auditable_manifest(tmp_p
         assert float(row["wyon_enthalpy_freshwater_produced_kg"]) > 0
         assert float(row["sensible_cp_hot_side_thermal_demand_kwh_th"]) > 0
         assert float(row["wyon_enthalpy_hot_side_thermal_demand_kwh_th"]) > 0
+        assert row["wyon_vs_sensible_feed_out_temperature_c_change_pct"] == ""
+        assert row["wyon_vs_sensible_permeate_out_temperature_c_change_pct"] == ""
         assert abs(float(row["wyon_enthalpy_global_wyon_enthalpy_residual_w"])) < 1e-5
         assert float(row["wyon_enthalpy_max_abs_combined_cell_residual_w"]) < 1e-8
         assert row["sensible_cp_max_abs_combined_cell_residual_w"] == ""
