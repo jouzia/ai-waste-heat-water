@@ -65,10 +65,10 @@ pytest -q tests/test_sensible_vs_wyon_enthalpy_sweep.py
 ```
 
 - Workflow: `Sensible versus Wyon enthalpy sensitivity`
-- Successful artifact run: `42379580540`
-- Artifact ID: `13577150783`
-- Artifact SHA-256: `b02342d2c2e55a854f604d18637dfd467bde1e053506a7d93b006d6321333f9f`
-- CSV SHA-256: `693466ab3f411f3b0bc1aa2efe21283d344d5e70b98be409cb17e22ac1a5927c`
+- Successful artifact run: `42379966000`
+- Artifact ID: `13577860092`
+- Artifact SHA-256: `6a54b59afea19cea251f5078b21897fc9b65dfb13ec9446743ad0a1107650c88`
+- CSV SHA-256: `09db3374368202ddcc48497fd4f98122afadedd00e4931df197f724776dc7e5b`
 - Artifact retention: 90 days from 2026-11-07.
 
 The CSV and manifest are archived as a GitHub Actions artifact; the manifest includes the complete fixed configuration and file hash.
