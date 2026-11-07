@@ -6,10 +6,10 @@ permeate-backward energy sweeps. It is intentionally separate so the
 existing co-current implementation remains backward compatible.
 """
 
+from .channel_enthalpy import advance_wyon_stream_enthalpy
 from .channel_transport import concentration_polarization_coefficient, interface_salinity_g_kg
 from .md import seawater_water_activity
 from .md_channel import ChannelCellResult, ChannelConfig, ChannelResult, _cell_interfaces
-from .channel_enthalpy import advance_wyon_stream_enthalpy
 
 
 def simulate_countercurrent_dcmd_channel(*, config: ChannelConfig, feed_in_temperature_c: float, permeate_in_temperature_c: float, max_iterations: int = 500, tolerance_c: float = 1e-7) -> ChannelResult:
