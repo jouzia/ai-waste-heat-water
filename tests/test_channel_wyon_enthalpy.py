@@ -5,6 +5,7 @@ import pytest
 from ai_water.channel_enthalpy import advance_wyon_stream_enthalpy
 from ai_water.md_channel import ChannelConfig, simulate_dcmd_channel
 from ai_water.md_channel_countercurrent import simulate_countercurrent_dcmd_channel
+from ai_water.wyon_2025_enthalpy import wyon_specific_enthalpy_j_kg
 
 
 def _config(**overrides):
@@ -131,3 +132,50 @@ def test_wyon_enthalpy_mode_is_invariant_to_reporting_duration():
     assert long.feed_out_mass_kg_h == pytest.approx(short.feed_out_mass_kg_h, rel=1e-8)
     assert long.permeate_out_mass_kg_h == pytest.approx(short.permeate_out_mass_kg_h, rel=1e-8)
     assert long.freshwater_produced_kg == pytest.approx(3.0 * short.freshwater_produced_kg, rel=1e-8)
+
+
+
+def _assert_independent_global_enthalpy_identity(result):
+    feed_h_in = wyon_specific_enthalpy_j_kg(60.0, 35.0)
+    permeate_h_in = wyon_specific_enthalpy_j_kg(25.0, 0.0)
+    feed_h_out = wyon_specific_enthalpy_j_kg(
+        result.feed_out_temperature_c, result.concentrate_salinity_g_kg
+    )
+    permeate_h_out = wyon_specific_enthalpy_j_kg(
+        result.permeate_out_temperature_c, 0.0
+    )
+    inlet_enthalpy_rate = 1000.0 * feed_h_in + 1000.0 * permeate_h_in
+    outlet_enthalpy_rate = (
+        result.feed_out_mass_kg_h * feed_h_out
+        + result.permeate_out_mass_kg_h * permeate_h_out
+    )
+    assert outlet_enthalpy_rate == pytest.approx(
+        inlet_enthalpy_rate, rel=1e-10, abs=1e-4
+    )
+
+
+def test_co_current_wyon_mode_satisfies_independent_module_enthalpy_identity():
+    result = simulate_dcmd_channel(
+        config=_config(flow_arrangement="co_current"),
+        feed_in_temperature_c=60.0,
+        permeate_in_temperature_c=25.0,
+    )
+    _assert_independent_global_enthalpy_identity(result)
+
+
+def test_countercurrent_wyon_mode_satisfies_independent_module_enthalpy_identity():
+    result = simulate_countercurrent_dcmd_channel(
+        config=_config(),
+        feed_in_temperature_c=60.0,
+        permeate_in_temperature_c=25.0,
+    )
+    _assert_independent_global_enthalpy_identity(result)
+
+
+def test_main_countercurrent_wyon_mode_satisfies_independent_module_enthalpy_identity():
+    result = simulate_dcmd_channel(
+        config=_config(flow_arrangement="counter_current"),
+        feed_in_temperature_c=60.0,
+        permeate_in_temperature_c=25.0,
+    )
+    _assert_independent_global_enthalpy_identity(result)
