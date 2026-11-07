@@ -137,9 +137,10 @@ def test_countercurrent_cell_interface_energy_balances_close():
         )
         q_permeate_kw = (
             config.permeate_heat_transfer_coefficient_w_m2_k
-            * (cell.permeate_interface_temperature_c - cell.permeate_bulk_temperature_c)
+            * (cell.permeate_interface_temperature_c - cell.permeate_cell_mean_temperature_c)
             * cell_area / 1000.0
         )
+        assert cell.permeate_cell_mean_temperature_c is not None
         q_membrane_kw = (
             cell.membrane_latent_heat_kw + cell.membrane_conductive_heat_kw
         )
