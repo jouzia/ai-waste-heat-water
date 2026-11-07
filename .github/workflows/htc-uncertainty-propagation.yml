@@ -1,0 +1,68 @@
+name: DCMD HTC uncertainty propagation
+
+on:
+  push:
+    branches: [main, research/htc-uncertainty-propagation]
+    paths:
+      - "scripts/run_htc_uncertainty_propagation.py"
+      - "tests/test_htc_uncertainty_propagation.py"
+      - "src/ai_water/**"
+      - ".github/workflows/htc-uncertainty-propagation.yml"
+  pull_request:
+    paths:
+      - "scripts/run_htc_uncertainty_propagation.py"
+      - "tests/test_htc_uncertainty_propagation.py"
+      - "src/ai_water/**"
+      - ".github/workflows/htc-uncertainty-propagation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  htc-uncertainty:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Test experiment design
+        run: python -m pytest tests/test_htc_uncertainty_propagation.py -q
+      - name: Run 600-scenario HTC grid
+        run: python scripts/run_htc_uncertainty_propagation.py --output-dir artifacts/htc_uncertainty
+      - name: Validate outputs and checksums
+        run: |
+          python - <<'PY'
+          import csv, hashlib, json, math
+          from pathlib import Path
+          root = Path("artifacts/htc_uncertainty")
+          m = json.loads((root / "manifest.json").read_text())
+          assert m["row_count"] == 600
+          assert m["operating_point_count"] == 12
+          assert m["htc_factors_each_side"] == [0.5, 0.75, 1.0, 1.25, 1.5]
+          for name, digest in m["files"].items():
+              assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest
+          with (root / "htc_uncertainty_propagation.csv").open(newline="") as f:
+              rows = list(csv.DictReader(f))
+          assert len(rows) == 600
+          keys = {(r["case_id"], r["energy_balance_mode"], r["feed_htc_factor"], r["permeate_htc_factor"]) for r in rows}
+          assert len(keys) == 600
+          for r in rows:
+              assert r["solver_status"] == "success"
+              for k in ("feed_out_temperature_c", "permeate_out_temperature_c",
+                        "freshwater_produced_kg", "hot_side_thermal_demand_kwh_th"):
+                  assert math.isfinite(float(r[k]))
+              assert r["feed_out_temperature_c_relative_delta_vs_nominal_pct"] == ""
+              assert r["permeate_out_temperature_c_relative_delta_vs_nominal_pct"] == ""
+          print("Verified all 600 HTC scenarios and manifest checksums.")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: htc-uncertainty-propagation
+          path: artifacts/htc_uncertainty/*
+          if-no-files-found: error
+          retention-days: 90
