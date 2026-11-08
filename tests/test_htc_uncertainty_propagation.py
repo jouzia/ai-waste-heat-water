@@ -1,4 +1,3 @@
-from ai_water.md_channel import _cell_interfaces
 from scripts.run_htc_uncertainty_propagation import (
     BASE_HTC_W_M2_K,
     CELLS,
@@ -7,6 +6,8 @@ from scripts.run_htc_uncertainty_propagation import (
     MODES,
     OUTPUTS,
 )
+
+from ai_water.md_channel import _cell_interfaces
 
 
 def test_design_is_complete_and_symmetric():
