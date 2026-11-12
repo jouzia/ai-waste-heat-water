@@ -115,7 +115,12 @@ def _cell_interfaces(
         q_membrane = q_latent + q_conductive
         return q_feed - q_membrane, permeate_interface_c, flux
 
-    low = permeate_bulk_c
+    # Restrict the bisection interval to physically ordered interfaces.
+    # At the lower bound, the permeate-side interface equals the feed-side
+    # interface; above it, both interfaces remain between the bulk streams.
+    low = (
+        permeate_h * permeate_bulk_c + feed_h * feed_bulk_c
+    ) / (feed_h + permeate_h)
     high = feed_bulk_c
     f_low, _, _ = residual(low)
     f_high, _, _ = residual(high)
