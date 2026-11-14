@@ -92,9 +92,23 @@ The repository records that a lumped transient reconstruction and a coarse three
 
 A reproducible Aqueduct 4.0 sampling workflow has been exercised on six approximate city-centre proxies. These are not actual facility coordinates. Aqueduct's indicators provide basin-level context and prioritization, not direct local measurements. The electricity-water factor join and defensible facility-site data remain incomplete; consequently, no site-specific geographic net-water result is available.
 
+### 4.5 Heat-transfer-coefficient stress-test sensitivity
+
+A deterministic factorial experiment propagated independent feed- and permeate-side heat-transfer-coefficient (HTC) factors through the 80-cell counter-current DCMD model. The design crossed 12 feed-temperature/Reference-Salinity operating points (40, 50, 60, and 70 °C; 15, 35, and 38 g/kg), two energy-balance modes, and five HTC multipliers per side (0.50, 0.75, 1.00, 1.25, and 1.50 relative to 500 W m⁻² K⁻¹), yielding 600 scenarios. Each scenario was compared with its corresponding 1.00/1.00 nominal-HTC case.
+
+Across the 300 scenarios in each mode, freshwater production ranged from −43.10% to +33.01% relative to nominal HTC, and hot-side thermal demand ranged from −41.97% to +31.90%. Feed outlet temperature changes spanned approximately −0.95 to +1.26 °C; permeate outlet changes spanned approximately −1.25 to +0.95 °C. The `sensible_cp` and `wyon_enthalpy` envelopes were similar for this fixed numerical configuration. These are extrema across the prescribed grid, not confidence or credible intervals, and the scenario fractions are not probabilities.
+
+All 600 archived rows have successful solver status, unique scenario keys, complete factorial coverage, finite numeric outputs, and matching artifact checksums. The experiment is a deterministic stress test using illustrative HTC multipliers; it does not estimate an empirical HTC distribution or validate the hydrodynamic correlation that supplies the HTC values. See `docs/HTC_UNCERTAINTY_PROPAGATION_2026-11-07.md` for the complete design, audit, ranges, and artifact provenance.
+
 ## 5. Uncertainty and sensitivity
 
 The study separates numerical uncertainty, measurement/digitization uncertainty, parameter uncertainty, model-form uncertainty, scenario uncertainty, and system-boundary/counterfactual uncertainty. These classes must not be collapsed into a single interval without justification. Monte Carlo convergence and Sobol convergence are computational diagnostics, not empirical calibration. Final reporting must include the distributions and provenance of every input, seeds, sample sizes, invalid-draw rates, sign convention, counterfactual displacement, code revision, and output checksums. Invalid draws must be investigated rather than silently dropped if their failure is concentrated in meaningful regions of the parameter space.
+
+### 5.1 Deterministic HTC stress-test design
+
+The HTC experiment is kept separate from probabilistic parameter uncertainty. Feed- and permeate-side coefficients are independently multiplied by values from 0.50 to 1.50 around 500 W m⁻² K⁻¹ in a full factorial grid. The range is an illustrative diagnostic envelope, not a literature-derived distribution; independent variation also omits possible physical correlation between the two sides. The resulting output extrema quantify sensitivity conditional on the selected model, geometry, mesh, operating grid, and disabled concentration-polarization setting. They must not be interpreted as probabilities, expected deployment variation, or empirical prediction intervals. The 80-cell discretization is the finest mesh in the completed mesh study, not an exact solution.
+
+The HTC stress test therefore addresses one component of parameter sensitivity only. It does not replace source-based uncertainty distributions, model-form comparison, experimental validation, or propagation through the full facility water-accounting boundary. In particular, no net-water-impact conclusion follows from the DCMD freshwater and thermal-duty responses alone.
 
 ## 6. Geographic analysis
 
@@ -102,7 +116,7 @@ WRI Aqueduct 4.0 supplies basin-level baseline indicators and future projections
 
 ## 7. Current limitations and decision
 
-The current evidence does not establish that waste-heat-assisted MD reduces net freshwater consumption in a real deployment. The primary 1999 observations and exact conditions remain unextracted; independent validation has not passed; transient mass semantics remain unresolved; input uncertainty ranges are illustrative; and geographic electricity-water integration is incomplete. Prior art also substantially narrows the novelty claim.
+The current evidence does not establish that waste-heat-assisted MD reduces net freshwater consumption in a real deployment. The primary 1999 observations and exact conditions remain unextracted; independent validation has not passed; transient mass semantics remain unresolved; input uncertainty ranges are illustrative; and geographic electricity-water integration is incomplete. The completed HTC factorial stress test demonstrates substantial conditional sensitivity in the reduced-order DCMD outputs, but it does not supply an empirical HTC distribution or independently validate the heat-transfer correlation. Prior art also substantially narrows the novelty claim.
 
 The paper should proceed to submission only if the source-matched and independent validation, geographic factor join, reproducibility package, and final audit pass. If a source or measurement cannot be recovered, the paper must be narrowed accordingly—potentially to a transparent accounting/methods framework with clearly bounded preliminary model diagnostics. No claim of validated net water benefit is permissible without a substantiated counterfactual, source-backed incremental burdens, validated physical behavior in the operating regime, and uncertainty analysis that supports the sign and magnitude of the net response.
 
