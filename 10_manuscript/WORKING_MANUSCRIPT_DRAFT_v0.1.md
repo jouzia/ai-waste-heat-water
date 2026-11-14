@@ -96,7 +96,17 @@ A reproducible Aqueduct 4.0 sampling workflow has been exercised on six approxim
 
 A deterministic factorial experiment propagated independent feed- and permeate-side heat-transfer-coefficient (HTC) factors through the 80-cell counter-current DCMD model. The design crossed 12 feed-temperature/Reference-Salinity operating points (40, 50, 60, and 70 °C; 15, 35, and 38 g/kg), two energy-balance modes, and five HTC multipliers per side (0.50, 0.75, 1.00, 1.25, and 1.50 relative to 500 W m⁻² K⁻¹), yielding 600 scenarios. Each scenario was compared with its corresponding 1.00/1.00 nominal-HTC case.
 
-Across the 300 scenarios in each mode, freshwater production ranged from −43.10% to +33.01% relative to nominal HTC, and hot-side thermal demand ranged from −41.97% to +31.90%. Feed outlet temperature changes spanned approximately −0.95 to +1.26 °C; permeate outlet changes spanned approximately −1.25 to +0.95 °C. The `sensible_cp` and `wyon_enthalpy` envelopes were similar for this fixed numerical configuration. These are extrema across the prescribed grid, not confidence or credible intervals, and the scenario fractions are not probabilities.
+The mode-specific extrema relative to each corresponding nominal-HTC baseline are:
+
+| Output | `sensible_cp` | `wyon_enthalpy` |
+|---|---:|---:|
+| Freshwater production and latent duty | −43.096% to +33.009% | −43.108% to +33.032% |
+| Hot-side thermal demand | −41.968% to +31.827% | −42.005% to +31.895% |
+| Conductive heat leak | −41.609% to +31.331% | −41.640% to +31.388% |
+| Feed outlet temperature change | −0.954 to +1.257 °C | −0.947 to +1.247 °C |
+| Permeate outlet temperature change | −1.253 to +0.950 °C | −1.235 to +0.936 °C |
+
+Across both modes, the combined freshwater-production envelope is −43.108% to +33.032%, and the combined hot-side thermal-demand envelope is −42.005% to +31.895%. The two modes have similar response envelopes for this fixed numerical configuration, but the mode-specific extrema are retained rather than mixing endpoints from different modes. These are extrema across the prescribed grid, not confidence or credible intervals, and scenario fractions are not probabilities.
 
 All 600 archived rows have successful solver status, unique scenario keys, complete factorial coverage, finite numeric outputs, and matching artifact checksums. The experiment is a deterministic stress test using illustrative HTC multipliers; it does not estimate an empirical HTC distribution or validate the hydrodynamic correlation that supplies the HTC values. See `docs/HTC_UNCERTAINTY_PROPAGATION_2026-11-07.md` for the complete design, audit, ranges, and artifact provenance.
 
@@ -131,8 +141,12 @@ The paper should proceed to submission only if the source-matched and independen
 7. Malaguti, M., Morciano, M., Viano, G., Achilli, A., Ali, A., Quist-Jensen, C. A., & Tiraferri, A. (2026). Waste heat won't make membrane distillation cool: Thermodynamic analysis of cooling and pumping burdens. *Desalination*, 628, 120039. https://doi.org/10.1016/j.desal.2026.120039
 8. Katakam, V. S. S., Arzumanyan, M., Lin, N., & Bahadur, V. (online 2026; issue 2027). System-scale design and analysis of desalination systems for meeting water needs of data centers. *Water Research*, 308, 126748. https://doi.org/10.1016/j.watres.2026.126748
 9. Wang, A., Zhang, C., Xu, T., Savic, D., Jiang, J., Xiao, P., He, C., Tao, Y., Daigger, G., & Ren, N. (2026). Global data–water symbiosis reduces AI infrastructure's carbon and water footprint. *Environmental Science and Ecotechnology*, 31, 100702. https://doi.org/10.1016/j.ese.2026.100702
+10. Wyon, A. (2025). *Desalination utilizing data centre waste heat: A techno-economic study*. Master's thesis, Environmental and Energy Systems Studies, Lund University, report LUTFD2/TFEM—25/5229--SE + (1–53). https://lup.lub.lu.se/student-papers/record/9198095
+11. Chen, L., Xie, H., Xie, M., Zhang, L., Ye, K., & Li, S. (2026). A dual-purpose seawater evaporation system for data center cooling and freshwater production: Design and performance analysis. *Applied Thermal Engineering*, 287, 129458. https://doi.org/10.1016/j.applthermaleng.2025.129458
+12. Yang, R., Konstantinou, C., & Hou, Y. (2026). Enabling grid-interactive data center-desalination coordination through thermo-electric coupling-based waste heat utilization. *Applied Energy*, 408, 127428. https://doi.org/10.1016/j.apenergy.2026.127428
+13. Bindels, M., Andrés-Mañas, J. A., Ding, W., Hitsov, I., Mutlu-Salmanli, O., Hardikar, M., Cath, T. Y., Vanneste, J., Vidic, R. D., Achilli, A., Pawar, R., Koyuncu, I., Hickenbottom, K. L., Nelemans, B., Zaragoza, G., & Childress, A. E. (2026). Pilot-scale membrane distillation modeling: Validation, comparison, and consensus. *Desalination*, 620, 119674. https://doi.org/10.1016/j.desal.2025.119674
 
-**Citation and completeness warning:** The references above are an initial, not systematic, bibliography. Verify full metadata, access/licence terms, exact methods, and direct prior-art overlap before submission. In particular, complete and verify the bibliographic entries and full-text comparisons for Wyon (2025), Chen et al. (2026), and Yang et al. (2026), which are discussed in the introduction but are not yet fully represented in this reference list. This draft is an internal research artifact, not a claim that the manuscript gate has passed.
+**Citation and completeness warning:** The references above are an initial, not systematic, bibliography. Verify full metadata, access/licence terms, exact methods, and direct prior-art overlap before submission. The entries for Wyon (2025), Chen et al. (2026), Yang et al. (2026), and Bindels et al. (2026) have been added from institutional or publisher records, but the corresponding full-text prior-art comparisons remain incomplete where noted in the repository audits. This draft is an internal research artifact, not a claim that the manuscript gate has passed.
 
 
 ### Villa et al. 12-condition benchmark: eligibility and freeze status
