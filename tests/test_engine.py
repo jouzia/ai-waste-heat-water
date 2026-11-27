@@ -66,8 +66,11 @@ def test_declared_counterfactual_drives_net_water_response():
 
 def test_baseline_facility_electricity_is_not_incremental_water_burden():
     s = scenario()
-    s.water.grid_water_l_per_kwh = 1.0
-    s.water.grid_water_metric = "consumption"
+    s.water = WaterFactors(
+        grid_water_l_per_kwh=1.0,
+        grid_water_metric="consumption",
+        avoided_freshwater_consumption_l=1.0,
+    )
     result = simulate(s)
     assert result.indirect_water_consumption_l == 0.0
     assert result.net_consumption_change_l == -1.0
@@ -147,3 +150,10 @@ def test_consumption_grid_water_factor_is_accepted():
     factors = WaterFactors(grid_water_l_per_kwh=1.0, grid_water_metric="consumption")
     assert factors.grid_water_l_per_kwh == 1.0
     assert factors.grid_water_metric == "consumption"
+
+def test_grid_water_factor_assignment_requires_metric():
+    import pytest
+
+    factors = WaterFactors()
+    with pytest.raises(ValueError, match="grid_water_metric='consumption'"):
+        factors.grid_water_l_per_kwh = 1.0
