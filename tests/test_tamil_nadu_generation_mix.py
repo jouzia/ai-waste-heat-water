@@ -54,7 +54,12 @@ def test_nonhydro_mix_excludes_small_and_large_hydro() -> None:
         item for item in report["periods"] if item["period"] == "2024-25"
     )
 
-    assert period["nonhydro_total_mu"] == 125265.60
+    assert math.isclose(
+        period["nonhydro_total_mu"],
+        125265.60,
+        rel_tol=0,
+        abs_tol=1e-9,
+    )
     assert math.isclose(
         period["thermal_share_nonhydro_pct"],
         59.25,
