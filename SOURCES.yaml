@@ -505,3 +505,48 @@ sources:
     url: "https://doi.org/10.1016/S0011-9164(99)00174-5"
     status: "publisher abstract and bibliographic record available; full text, figures, and experimental tables not verified; no extraction or validation claim"
     access_date: "2026-11-27"
+
+  - id: CEA-RATE-OF-SALE-2021-22
+    title: "CEA Rate of Sale of Power for the Year 2021-22"
+    year: "2021-22"
+    role: A
+    used_for:
+      - "NNTPS installed capacity (1,000 MW) and net generation denominator (5,758.70 MU) for FY2021-22; row 258"
+      - "generation denominator cross-check for the NNTPS environmental-statement water figures; this report contains no water-use data"
+    url: "https://www.cea.nic.in/api/dashboardReports/view-pdf/en/2e528aa8-4495-4866-bef8-7f4aafe5099c"
+    status: "official CEA rate-of-sale report; table header identifies Net Gen and row 258 identifies NEYVELI NEW TPS; used only for generation denominator"
+    access_date: "2026-11-27"
+
+  - id: CEA-RATE-OF-SALE-2020-21
+    title: "CEA Executive Summary on Power Sector (March 2023), Section H: Rate of Sale of Power for 2020-21"
+    year: "2020-21"
+    role: A
+    used_for:
+      - "NNTPS net generation denominator (3,176.32 MU) for FY2020-21; Southern Region row"
+      - "two-year denominator cross-check for the NNTPS environmental-statement process-water intensities; this report contains no water-use data"
+    url: "https://www.cea.nic.in/api/dashboardReports/download-pdf/en/784b0870-4441-4746-a117-923c27b1cdd0"
+    status: "official CEA report; Section H table header identifies Net Gen and the NEYVELI NEW TPS row reports 3,176.32 MU; used only for generation denominator"
+    access_date: "2026-11-27"
+
+  - id: RS-AU4143-ANNEXURE-I-2026
+    title: "Ministry of Power, Government of India, Rajya Sabha Unstarred Question No. 4143, answer dated 30 March 2026, Annexure I: State-wise source-wise generation"
+    year: 2026
+    role: A
+    used_for:
+      - "Tamil Nadu source-wise generation mix from FY2020-21 through FY2024-25 and FY2025-26 through February 2026"
+      - "generation-side thermal, nuclear, and renewable shares; non-hydropower denominator for future scenario analysis"
+    url: "https://sansad.in/getFile/annex/270/AU4143_rTvmQ0.pdf?source=pqars"
+    status: "official parliamentary answer; thermal, nuclear, and large-hydro generation reported for stations >=25 MW; renewable generation as separately reported; generation basis not explicitly labelled gross/net; not a water-use dataset or consumption mix"
+    access_date: "2026-11-27"
+
+  - id: RS-AU480-ANNEXURES-II-III-2024
+    title: "Ministry of Power, Government of India, Rajya Sabha Unstarred Question No. 480, answer dated 6 February 2024, Annexures II–III: Tamil Nadu station-wise generation and central-station firm allocations"
+    year: 2024
+    role: A
+    used_for:
+      - "station-wise Tamil Nadu generation from FY2021-22 through December 2023; NNTPS station-level generation cross-check (6,177.93 MU in FY2021-22), consistent with NLC-reported gross generation and distinct from CEA net generation"
+      - "firm allocations from NLC power plants, NTECL Vallur, and nuclear stations to Tamil Nadu and other states from April 2021 through December 2023"
+      - "evidence that geographic generation mix is not equivalent to Tamil Nadu electricity-consumption mix; allocations are not actual dispatch"
+    url: "https://sansad.in/getFile/annex/263/AU480.pdf?source=pqars"
+    status: "official parliamentary answer; Annexure II station-wise generation and Annexure III firm allocations; not a water-use dataset or full consumption balance"
+    access_date: "2026-11-27"
