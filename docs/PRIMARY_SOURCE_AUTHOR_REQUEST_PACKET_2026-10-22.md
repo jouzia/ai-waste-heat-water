@@ -14,13 +14,15 @@ The 2000 abstract reports experiments with water and aqueous NaCl feeds and meas
 
 ## Contact route and limitation
 
-A public ACS publisher page for the related 1998 paper “Effects of Polarization on Mass Transport through Hydrophobic Porous Membranes” lists M. I. Vázquez-González as corresponding author and displays the address `Mvazquez@uma.es`: https://pubs.acs.org/doi/10.1021/ie970911q
+**Preferred To address:** `lmartinez@uma.es`. The Taylor & Francis record for the 2000 experimental follow-up identifies L. Martínez-Díez as corresponding author, and the current University of Málaga teacher profile independently lists the same email and staff profile:
+- Publisher record: https://www.tandfonline.com/doi/abs/10.1081/SS-100100237
+- Current UMA staff profile: https://www.uma.es/departments/teachers/T0hlTjRHaHhTWVJDbVdqZU1sSVh0QT09/
 
-This is a historical address published for a related paper, **not confirmation that the mailbox is current or that the author can share the 1999 article**. Treat it as a possible contact route only. Do not scrape personal contact details or send repeated follow-ups.
+**Optional Cc address:** `mvazquez@uma.es`. A related 1998 ACS publisher page lists M. I. Vázquez-González as corresponding author: https://pubs.acs.org/doi/10.1021/ie970911q. A 2021 UMA faculty directory and 2019 CV also list this address, but the UMA research portal now labels her as an ex-investigator. Treat this as a historical route, not a verified current mailbox:
+- UMA 2021 directory: https://www.uma.es/media/files/11-06-21_CD_Ordinario.pdf
+- UMA research-portal record: https://portaldelainvestigacion.uma.es/investigadores/XXXXX (the portal lists her as an ex-investigator; verify the exact person record before using this link)
 
-A second historical publisher-listed contact route is available for the first author:
-- The Taylor & Francis publisher page for the related 2000 paper “Study of Polarization Phenomena in Membrane Distillation of Aqueous Salt Solutions” lists L. Martínez-Díez as the corresponding author and displays `lmartinez@uma.es`: https://www.tandfonline.com/doi/abs/10.1081/SS-100100237
-- This is also a historical publisher-listed address, not confirmation of current mailbox status. It may be used as an alternative or copied recipient if the user chooses to send the request; no message has been sent.
+No message has been sent. Use one concise request and do not send repeated follow-ups.
 
 The University of Málaga research portal has bibliographic records for both the 1999 target article and the 2000 follow-up, but the 1999 record provides no full text and says it cannot be exported because it belongs to another portal:
 - 1999 record: https://portaldelainvestigacion.uma.es/documentos/6624668fdc30f904d769ba54
