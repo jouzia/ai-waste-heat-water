@@ -1,11 +1,12 @@
 """Guard the scientific source registry against metadata regressions."""
 
-from pathlib import Path
+from __future__ import annotations
 
+import pathlib
 import yaml
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOURCE_PATH = ROOT / "SOURCES.yaml"
 
 
