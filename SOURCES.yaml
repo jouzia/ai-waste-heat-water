@@ -407,15 +407,17 @@ sources:
     access_date: "2026-11-27"
 
   - id: CEA-THERMAL-WATER-AUDIT-SOP-2026
-    title: "CEA Framework for Water Audit of Thermal Power Plants: Standard Operating Procedure"
+    title: "CEA Framework for Water Audit of Thermal Power Plants: Standard Operating Procedure (November 2026 release)"
     year: 2026
     role: A
     used_for:
-      - "definition and calculation boundary for thermal-plant specific water consumption"
-      - "separation of FW1/FW2 freshwater input from NFW non-fresh inputs and internal reuse"
-      - "classification of mine water as NFW3 and distinction between freshwater input and actual consumptive loss"
-    url: "https://www.cea.nic.in/api/dashboardReports/view-pdf/en/d88a8d91-e888-42f9-879f-6af6b5788f98"
-    status: "official accounting method and blank reporting template; actual plant/month observations not retrieved"
+      - "definition and calculation boundary for coal/lignite thermal-plant specific water consumption"
+      - "SWC formula: FW1+FW2 external freshwater input divided by net generation; outflows and losses are reconciled separately"
+      - "separation of FW1/FW2 freshwater input from NFW1/NFW2/NFW3 non-fresh inputs and internal reuse"
+      - "classification of mine water as NFW3; saline borewell water remains a groundwater/FW2 source subject to EC/CTO wording"
+      - "applicability boundary: coal/lignite plants; gas and combined-cycle plants are excluded from this SOP"
+    url: "https://www.cea.nic.in/api/dashboardReports/view-pdf/en/11d5a51e-44a5-4d66-817a-5a1dd76a786d"
+    status: "official November 2026 release; current PDF and definitions verified; method/template only; actual plant/month observations not retrieved"
     access_date: "2026-11-27"
 
   - id: CEA-ANNUAL-REPORT-2024-25
