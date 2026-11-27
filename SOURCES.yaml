@@ -33,6 +33,7 @@ sources:
 
   - id: MD-DCMD-PRIMARY-1999
     title: "Temperature and concentration polarization in membrane distillation of aqueous salt solutions"
+    authors: "Martínez-Díez, L.; Vázquez-González, M.I."
     year: 1999
     role: C
     used_for:
@@ -76,7 +77,7 @@ sources:
 
   - id: MD-DCMD-CHANNEL-2020
     title: "Design and bio-inspired optimization of direct contact membrane distillation for desalination based on constructal law"
-    authors: "Keshavarzzadeh, A.H."
+    authors: "Keshavarzzadeh, A.H.; Maleki, A.; Gharali, K.; Dusseault, M.B."
     year: 2020
     role: A
     used_for:
