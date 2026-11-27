@@ -57,3 +57,22 @@ If the full series cannot be shared, request the latest available monthly report
 - Do not equate CEA SWC with consumptive use without the water-balance components.
 - Keep the factor ledger empty until source files and matching generation denominators are obtained, checked, and checksummed.
 - The geographic validation gate remains false.
+
+
+## NNTPS FY 2021–22 reconciliation question for the CEA request
+
+The MoEFCC-hosted compliance PDF containing the NNTPS FY 2021–22 environmental statement (printed pages 35–36) labels process water consumption as **32,712.46 m³/day** and reports process-water intensity of **0.069 L/kWh**:
+- https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf
+
+NLC India's FY 2021–22 Annual Report gives NNTPS net generation of **5,758.70 MU** (and 3,176.32 MU in FY 2020–21):
+- https://nsearchives.nseindia.com/corporate/NLCINDIA_07092022181900_AnnualReport22.pdf
+
+Using the FY 2021–22 net-generation denominator, the table's literal m³/day interpretation implies about **2.073 L/kWh**. If 32,712.46 m³ is instead a 30-day total, it implies about **0.06911 L/kWh**, within 0.2% of the reported intensity. The reported 0.111 L/kWh for FY 2020–21 implies about 29,381 m³/month when combined with that year's net generation. This is a strong period-label clue, not confirmation: the statement explicitly labels m³/day, and a different source/metric boundary could also explain the difference.
+
+Add these exact questions to the request:
+- Is 32,712.46 m³ a daily rate, a monthly total, or another reporting-period aggregate? Please provide the original Format 60 or calculation sheet.
+- Does the 0.069 L/kWh numerator include all process-water inputs, or only freshwater (FW1+FW2)? Are mine-water/NFW3 inputs included in the 32,712.46 m³ figure?
+- Is net or gross generation used in the 0.069 L/kWh denominator, and is it the same FY/month period as the water volume?
+- Can CEA provide the matching FY 2020–21 and FY 2021–22 NNTPS monthly water-source split and net-generation observations?
+
+Do not silently reinterpret the m³/day label or enter either 2.073 or 0.069 L/kWh into the factor ledger before the period, source classes, and denominator are confirmed.
