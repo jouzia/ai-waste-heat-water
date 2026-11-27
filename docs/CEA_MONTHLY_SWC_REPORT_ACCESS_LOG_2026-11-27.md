@@ -90,7 +90,7 @@ The CEA *Rate of Sale of Power for the Year 2021–22* supplies an independent o
 - The table header defines the generation field as **Net Gen** (Mkw h / MU).
 - Row 258, **NEYVELI NEW TPS**, reports installed capacity **1,000 MW** and net generation **5,758.70 MU**.
 - Official PDF: https://www.cea.nic.in/api/dashboardReports/view-pdf/en/2e528aa8-4495-4866-bef8-7f4aafe5099c
-- The header appears in the introductory table at printed pages 32–33; the NNTPS row is in the Southern Region table on printed page 43. The same 5,758.70 MU value is also listed in NLC's FY2021–22 Annual Report.
+- The header appears at the start of Section H, “Rate of Sale of Power”; the NNTPS row is in the Southern Region table under the same section. The same 5,758.70 MU value is also listed in NLC's FY2021–22 Annual Report.
 
 Using 5,758.70 MU over 365 days gives average net generation of **15.777 GWh/day**. The NNTPS environmental statement's process-water volume then has two sharply different interpretations:
 
