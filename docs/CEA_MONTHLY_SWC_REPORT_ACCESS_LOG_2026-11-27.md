@@ -83,3 +83,26 @@ Add these exact questions to the request:
 - Can CEA provide the matching FY 2020–21 and FY 2021–22 NNTPS monthly water-source split and net-generation observations?
 
 Do not silently reinterpret the m³/day label or enter either 2.073 or 0.069 L/kWh into the factor ledger before the period, source classes, and denominator are confirmed.
+
+### Official CEA corroboration of the NNTPS FY2021–22 generation denominator
+
+The CEA *Rate of Sale of Power for the Year 2021–22* supplies an independent official denominator:
+- The table header defines the generation field as **Net Gen** (Mkw h / MU).
+- Row 258, **NEYVELI NEW TPS**, reports installed capacity **1,000 MW** and net generation **5,758.70 MU**.
+- Official PDF: https://www.cea.nic.in/api/dashboardReports/view-pdf/en/2e528aa8-4495-4866-bef8-7f4aafe5099c
+- The header appears in the introductory table at printed pages 32–33; the NNTPS row is in the Southern Region table on printed page 43. The same 5,758.70 MU value is also listed in NLC's FY2021–22 Annual Report.
+
+Using 5,758.70 MU over 365 days gives average net generation of **15.777 GWh/day**. The NNTPS environmental statement's process-water volume then has two sharply different interpretations:
+
+| Interpretation of 32,712.46 m³ | Implied process-water intensity |
+|---|---:|
+| Literal **m³/day**, as printed in the statement | **2.07339 L/kWh** |
+| **30-day total** mislabeled as m³/day | **0.069113 L/kWh**, which rounds to the reported **0.069 L/kWh** |
+
+The literal-daily interpretation is about **30.05 times** the reported intensity. The monthly-total interpretation reproduces the reported value to its stated three-decimal precision. This is strong evidence for a period/unit-label problem, but it is not proof: the statement explicitly labels the volume m³/day, and a different water-source/metric boundary could also explain the discrepancy.
+
+The current CEA SOP provides a second possible boundary explanation: mine water is NFW3 and excluded from CEA's FW1+FW2 SWC numerator. The NNTPS compliance report states that mine water from the mines is stored in a lake behind TPS-I Expansion and used for plant operation, and that no groundwater is extracted. However, the FY2021–22 environmental statement labels 0.069 as **“process water consumption per unit of product output”**, not as CEA SWC; it does not provide an FW1/FW2/NFW3 split. The November 2026 SOP must not be retroactively assumed to be the reporting method used in FY2021–22.
+
+For context only, adding the statement's process, cooling, and domestic volumes (32,712.46 + 1,165.15 + 5,597.12 = 39,474.73 m³/day) and treating all as daily gives **2.50200 L/kWh**. This is not a validated plant consumption factor because the source classes, reuse, outflows, and reporting-period alignment remain unresolved.
+
+**Disposition:** keep both interpretations provisional and keep the NNTPS factor ledger entry empty. Request the original monthly/annual calculation sheet, source-wise FW1/FW2/NFW1/NFW2/NFW3/RW volumes, the exact averaging period behind 32,712.46, and the net-generation denominator used for 0.069.
