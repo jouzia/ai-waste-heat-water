@@ -4,8 +4,6 @@ This is an evidence-consistency calculation only. It does not create or approve
 a water factor because the source period and water-source boundary are unresolved.
 """
 
-from __future__ import annotations
-
 import json
 
 
