@@ -32,7 +32,7 @@ The current `Result` model contains `feed_water_withdrawal_l` and `concentrate_d
 - `avoided_freshwater_consumption_l`;
 - `net_consumption_change_l`.
 
-The current `WaterFactors` schema has a single `grid_water_l_per_kwh` value. It does not separately represent electricity-related water withdrawal and consumption. Nor does the current result schema calculate net withdrawal change, basin depletion, return-flow quality, or freshwater-equivalent impacts from brine discharge. Therefore, the project's intended distinction between withdrawal and consumption is only partially represented in the executable ledger: feed withdrawal is reported, while net change is calculated for consumption. The README and research design must not imply that a complete withdrawal-and-consumption impact ledger is already implemented.
+The current `WaterFactors` schema has one scalar `grid_water_l_per_kwh` plus a metric label constrained to `consumption` for nonzero values; withdrawal factors are rejected by the net-consumption engine. It still does not separately represent electricity-related water withdrawal and consumption. Nor does the current result schema calculate net withdrawal change, basin depletion, return-flow quality, or freshwater-equivalent impacts from brine discharge. Therefore, the project's intended distinction between withdrawal and consumption is only partially represented in the executable ledger: feed withdrawal is reported, while net change is calculated for consumption. The README and research design must not imply that a complete withdrawal-and-consumption impact ledger is already implemented.
 
 ## 3. Comparison against direct antecedents
 
