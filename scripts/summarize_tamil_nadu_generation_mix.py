@@ -6,6 +6,7 @@ consumption mix or a water-intensity factor.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 from pathlib import Path
@@ -90,7 +91,15 @@ def build_report() -> dict[str, object]:
 
 
 def main() -> None:
-    print(json.dumps(build_report(), indent=2, sort_keys=True))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+
+    report = json.dumps(build_report(), indent=2, sort_keys=True)
+    if args.output is not None:
+        args.output.write_text(report + "\n", encoding="utf-8")
+    else:
+        print(report)
 
 
 if __name__ == "__main__":
