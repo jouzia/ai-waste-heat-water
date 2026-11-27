@@ -39,7 +39,7 @@ Every row in the factor join must have:
 - `source_title`, `source_url`, DOI/report/table/page locator
 - `source_type`: measured / reported / modeled / regulatory limit / scenario
 - `cooling_technology`, `fuel`, and system boundary when reported
-- `transformation`, generation-mix weights, conversion arithmetic, and uncertainty
+- `transformation`, generation-mix weights, and conversion arithmetic
 - `retrieval_date`, dataset version, license, and checksum for downloaded files
 - `applicability_note` and `exclusion_reason` where a row is not applicable to a target site
 
@@ -153,3 +153,49 @@ The CEA Clean Energy and Energy Transition division page was opened directly. It
 - The separate monthly report landing page indexed by search engines could not be opened reliably during this audit and did not provide a verifiable downloadable report set.
 
 **Disposition:** do not mark plant/month SWC data as publicly retrieved or accessible. The next step is to locate the actual CEA report archive or request the relevant monthly report dataset from CEA; until then, the CEA SOP and Annual Report establish the method and claimed publication history only. The factor ledger remains empty.
+
+### Historical Tamil Nadu plant-level SWC evidence and source-quality review (2026-11-27)
+
+A second route is available through the Centre for Science and Environment (CSE) 2021 report, **_Water-Inefficient Power: Implementing Water Norms and Zero Discharge in India’s Coal-Power Fleet_**:
+
+- Full report: https://www.cseindia.org/content/downloadreports/10856
+- CSE key findings: https://cdn.cseindia.org/userfiles/water-inefficient-power.pdf
+- CSE describes its SWC compilation as plant-reported values from 2017–18, 2018–19, and 2019–20, averaged where all three years were available; if only one year was available, that year's value was used.
+- CSE compiled the data from annual environmental statements, field surveys, plant questionnaires, and RTIs to State Pollution Control Boards. It explicitly warns that reporting formats were inconsistent, some values were under-reported or misrepresented, and third-party verification was absent.
+
+CSE Table 3.8 reports the following historical Tamil Nadu values (m³/MWh):
+
+| Plant | Region | Cooling / source | Reported average SWC | CSE status |
+|---|---|---|---:|---|
+| Neyveli TPS I (Extension), 420 MW | Cuddalore | Cooling tower / freshwater | <3.5 | Complying |
+| Neyveli TPS-II, 1,470 MW | Cuddalore | Cooling tower / freshwater | 4.39 | Non-complying |
+| Neyveli TPS-II (Extension), 500 MW | Cuddalore | Cooling tower / freshwater | 5.25 | Non-complying |
+| TAQA Neyveli, 250 MW | Cuddalore | Cooling tower / freshwater | 3.6 | Non-complying |
+| Mettur TPS, 840 MW | Salem | Cooling tower / freshwater | 5.9 | Non-complying |
+| Mettur TPS, 600 MW | Salem | Cooling tower / freshwater | 2.56 | Complying |
+
+CSE reports that about 12.16 GW of Tamil Nadu thermal capacity was surveyed, with 67% (about 8.08 GW) seawater-based or air-cooled and exempt from the freshwater SWC norms. The remaining freshwater-based capacity is not representative of the entire Tamil Nadu grid. CSE also notes that a significant share of the non-complying capacity was in the Cuddalore region.
+
+**Evidence classification:** these are historical, secondary-source compiled, self-reported SWC observations, not current audited plant factors, not grid-average factors, and not independently verified consumptive-use factors. Retain them only as historical plant-level freshwater-SWC screening evidence. Do not average them into a Tamil Nadu or Indian grid factor; do not assign them to Chennai/Hyderabad; do not treat CSE's regulatory norm values as measured data.
+
+### New Neyveli Thermal Power Station environmental-statement cross-check
+
+An official environmental-compliance PDF hosted by the Ministry of Environment, Forest and Climate Change includes the New Neyveli Thermal Power Station (NNTPS) environmental statement for FY 2021–22:
+
+- PDF: https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf
+- The report identifies the 1,000 MW NNTPS (2 × 500 MW), with units commissioned on 28 December 2019 and 10 February 2021.
+- The statement lists process water at 32,712.46 m³/day, cooling water at 1,165.15 m³/day, and domestic water at 5,597.12 m³/day. It reports 7,984 m³/day of effluent discharge.
+- It separately reports process water consumption per unit of electrical power as 0.069 L/kWh for FY 2021–22 (0.111 L/kWh for FY 2020–21).
+- The same compliance report states that groundwater is not extracted for plant operation and that water from mines is stored in a lake and used for plant operation.
+
+**Internal consistency check:** the process-water daily figure alone (32,712.46 m³/day) divided by the maximum possible nameplate generation for a 1,000 MW plant (24,000 MWh/day) gives at least 1.363 m³/MWh, equivalently 1.363 L/kWh. This is about 19.8 times the reported 0.069 L/kWh. The actual ratio would be higher if generation were below nameplate output. This is not a corrected factor: it is a discrepancy between reported volume and reported intensity that requires clarification of units, boundaries, and denominator.
+
+**Water-source boundary:** the report says mine water is used. Under the November 2026 CEA SOP, mine water received from another source is categorized as NFW3 (other external non-fresh input), which is recorded but excluded from CEA SWC. Therefore, this NNTPS statement cannot be mapped directly to CEA's FW1+FW2 freshwater-input metric without a source-specific water balance. The 0.069 L/kWh value is not accepted into the factor ledger.
+
+### Geographic-source disposition after historical evidence review
+
+- CSE 2021 supplies a useful historical Tamil Nadu plant-level SWC screening table, with material self-reporting and verification limitations.
+- The NNTPS FY 2021–22 statement provides official water-volume and intensity values but contains a large internal consistency discrepancy and identifies mine water as an input source.
+- Neither source yields a defensible, current, whole-grid electricity-water factor.
+- Do not populate the factor ledger, calculate a site-level net-water result, or change the geographic validation gate from these sources.
+- A future usable row requires a consistent period, a defined freshwater/withdrawal/consumption metric, plant-level generation denominator, cooling/source classification, and independent or audited water balance.
