@@ -103,6 +103,7 @@ def base_scenario() -> Scenario:
         ),
         water=WaterFactors(
             grid_water_l_per_kwh=0.5,
+            grid_water_metric="consumption",
             freshwater_displacement_fraction=0.5,
         ),
     )
