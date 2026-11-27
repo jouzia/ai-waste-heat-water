@@ -23,11 +23,10 @@ sources:
     used_for:
       - "primary experimental geometry and membrane specification"
       - "experimental measurement stability and replication information"
-      - "primary-source citation in Keshavarzzadeh (2020) validation paragraph for saline Figure 3; caption discrepancy remains unresolved"
+      - "primary provenance for Keshavarzzadeh Figure 3 validation data"
     doi: "10.1016/S0376-7388(98)00349-4"
     url: "https://doi.org/10.1016/S0376-7388(98)00349-4"
-    status: "primary-source-text-indexed; original figure and raw observations not retrieved; source reconstruction and validation remain blocked"
-    access_date: "2026-11-27"
+    status: "primary-validation-source"
 
 
 
@@ -61,19 +60,14 @@ sources:
 
   - id: MD-DCMD-CHANNEL-2020
     title: "Design and bio-inspired optimization of direct contact membrane distillation for desalination based on constructal law"
-    authors: "Keshavarzzadeh, A.H."
     year: 2020
     role: A
     used_for:
       - "finite-volume DCMD energy-balance structure"
       - "axial feed/permeate mass and energy balances"
       - "feed/permeate convective heat-transfer formulation"
-      - "secondary source for Figure 3 validation plot; validation paragraph points to 1999 primary source ref37 while caption cites unrelated ref25"
-    doi: "10.1038/s41598-020-73964-7"
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7545101/"
-    license: "CC BY 4.0"
-    status: "method-reference-and-secondary-figure-source; caption provenance discrepancy documented; no independent pointwise validation"
-    access_date: "2026-11-27"
+    status: "method-reference"
   - id: MD-POLARIZATION-REVIEW-2021
     title: "Temperature and concentration polarization in membrane distillation: a technical review"
     year: 2021
@@ -370,6 +364,10 @@ sources:
     license: "CC BY 4.0"
     status: "method-reference-not-validation-of-this-repository"
 
+  - id: CEEW-INDIA-THERMAL-WATER-FACTORS-2017
+    title: "Implications of Shared Socio-economic Pathways for India’s Long-term Electricity Generation and Associated Water Demands"
+    authors: "Chaturvedi, V.; Nagar Koti, P.; Sugam, R.; Neog, K.; Hejazi, M."
+    year: 2017
   - id: NLC-NNTPS-ENV-STATEMENT-2021-22
     title: "Environmental Statement for New Neyveli Thermal Power Station, FY 2021-22 (embedded in MoEFCC certified compliance report)"
     year: 2023
@@ -425,87 +423,73 @@ sources:
     year: 2025
     role: B
     used_for:
-      - "official statement that plant-wise Monthly Environmental Stack Emission Status Reports with specific water consumption have been published from June 2022"
-      - "evidence of reporting history, not a source of retrieved plant/month observations"
-    url: "https://www.cea.nic.in/api/dashboardReports/download-pdf/en/f60d07cd-b057-42b7-9da8-19d5d559dc2a"
-    status: "official publication-history statement; populated monthly reports not located in public CEA navigation"
+      - "India-specific coal and gas thermal-plant water withdrawal factors and cooling-technology sample sizes"
+      - "candidate historical thermal-fleet consumption factors; consumption values are derived from withdrawals using Macknick et al. ratios"
+      - "plant-level inventory and Appendix 1 freshwater/inland sample reconciliation"
+    url: "https://www.ceew.in/publications/implications-shared-socio-economic-pathways-india-long-term-electricity-generation"
+    pdf_url: "https://www.ceew.in/sites/default/files/CEEW-Implications-of-Shared-Socio-Economic-Pathways-for-India-Longterm.pdf"
+    status: "India-specific survey/compiled withdrawal evidence; coal/gas consumption estimates are ratio-derived, not directly metered; coal ash-handling is included; not a site-year Tamil Nadu or current grid factor"
     access_date: "2026-11-27"
-
-  - id: CSE-WATER-INEFFICIENT-POWER-2021
-    title: "Water-Inefficient Power: Implementing Water Norms and Zero Discharge in India's Coal-Power Fleet"
-    authors: "Centre for Science and Environment"
+  - id: MACKNICK-NREL-OPERATIONAL-WATER-FACTORS-2011
+    title: "A Review of Operational Water Consumption and Withdrawal Factors for Electricity Generating Technologies"
+    authors: "Macknick, J.; Newmark, R.; Heath, G.; Hallett, K.C."
+    year: 2011
+    role: B
+    used_for:
+      - "global technology-level consumption-to-withdrawal ratios applied by CEEW 2017 to Indian coal/gas withdrawal observations"
+      - "methodological lineage only; not direct Indian plant measurements"
+    report_number: "NREL/TP-6A20-50900"
+    doi: "10.2172/1009674"
+    url: "https://www.nrel.gov/docs/fy11osti/50900.pdf"
+    status: "global literature review; technology-level ranges; not an India-specific or site-specific factor"
+    access_date: "2026-11-27"
+  - id: CEEW-ENERGY-WATER-NEXUS-2018
+    title: "Energy-Water Nexus and Efficient Water-Cooling Technologies for Thermal Power Plants in India: An Analysis within an Integrated Assessment Modelling Framework"
+    authors: "Chaturvedi, V.; Sugam, R.K.; Nagar Koti, P.; Neog, K."
+    year: 2018
+    role: B
+    used_for:
+      - "follow-on India thermal-power water/cooling modelling context"
+      - "cross-report lineage check against CEEW 2017"
+    url: "https://www.niti.gov.in/node/698"
+    pdf_url: "https://www.niti.gov.in/sites/default/files/2023-03/Energy-Water%20Nexus%20and%20Efficient%20Water-Cooling%20Thermal%20Power%20Plants%20in%20IndiaTechnologies%20for%20An%20Analysis%20within%20an%20Integrated%20Assessment%20Modelling%20Framework.pdf"
+    status: "NITI Aayog-sponsored CEEW report; related modelling lineage, not an independent measurement dataset or confirmation of CEEW 2017 plant factors"
+    access_date: "2026-11-27"
+  - id: CSTEP-POWER-SECTOR-WATER-RESOURCES-2018
+    title: "Impact of Power Sector Growth on Water Resources"
+    authors: "Srinivasan, S.; Kanudia, A.; Roshna, N.; Dharmala, N."
+    year: 2018
+    role: B
+    used_for:
+      - "secondary cross-report comparison of coal CT/OTC withdrawal and consumption coefficients"
+      - "audit of the 30% coal ash-handling uplift and potential double-counting against CEEW 2017"
+    report_number: "CSTEP-Report-2018-02"
+    url: "https://www.niti.gov.in/sites/default/files/2019-06/Final%20Report%20of%20the%20Research%20Study%20on%20Impact%20of%20Power%20Sector%20Growth%20on%20Water%20Resources%20conducted%20by%20C-STEP_Bangalore.pdf"
+    status: "NITI Aayog-sponsored CSTEP system-modelling report; cites CEEW and literature; not independent plant measurement; do not apply an additional ash-handling uplift to CEEW factors without resolving lineage"
+    access_date: "2026-11-27"
+  - id: ZHANG-THERMOELECTRIC-WATER-STRESS-INDIA-2021
+    title: "Thermoelectric Power Generation and Water Stress in India: A Spatial and Temporal Analysis"
+    authors: "Zhang, C.; Yang, J.; Urpelainen, J.; Chitkara, P.; Zhang, J.; Wang, J."
     year: 2021
     role: B
     used_for:
-      - "historical plant-level Tamil Nadu thermal SWC screening values in Table 3.8"
-      - "source-quality evidence on inconsistent, under-reported, and unverified plant self-reporting"
-    url: "https://www.cseindia.org/content/downloadreports/10856"
-    status: "secondary compilation of plant-reported 2017-2020 data; historical screening only, not a current grid factor or independently audited consumption factor"
+      - "national historical thermal-fleet freshwater consumption aggregation for 2009-2018"
+      - "2027 national thermal-water projection and spatial water-stress context"
+      - "conditional national thermal factor used only for a Tamil Nadu delivered-kWh screening calculation"
+    doi: "10.1021/acs.est.0c08724"
+    url: "https://pubs.acs.org/doi/10.1021/acs.est.0c08724"
+    status: "peer-reviewed national bottom-up database/model; applies CEEW 2017 factors; not a Tamil Nadu grid factor or independent validation of underlying technology coefficients"
     access_date: "2026-11-27"
-
-  - id: NREL-OPENEI-OPERATIONAL-WATER-FACTORS
-    title: "Operational Water Consumption and Withdrawal Factors for Electricity Generating Technologies"
-    authors: "Macknick, J.; Newmark, R.; Heath, G.; Hallett, K.C."
-    year: 2012
+  - id: RBI-HANDBOOK-STATEWISE-TD-LOSSES-TABLE-141
+    title: "Handbook of Statistics on Indian States: Table 141, State-wise Electricity Transmission and Distribution Losses"
+    authors: "Reserve Bank of India (table source: Central Electricity Authority)"
+    year: 2022
     role: B
     used_for:
-      - "US technology-level operational water withdrawal and consumption scenario factors"
-      - "external sensitivity comparator only; not a site-specific factor for India, Spain, Singapore, or Germany"
-    doi: "10.1088/1748-9326/7/4/045802"
-    url: "https://data.openei.org/submissions/390"
-    license: "OpenEI dataset: CC BY 4.0; original report: CC BY-NC-SA 3.0"
-    dataset_first_published: "2014-11-25"
-    dataset_last_updated: "2025-10-07"
-    status: "US-only literature-derived technology factors; not used as a global or non-US grid-average factor"
-    access_date: "2026-11-27"
-
-  - id: CEA-CLEAN-ENERGY-DIVISION-PAGE
-    title: "CEA Clean Energy and Energy Transition Division — Environmental Data Formats"
-    year: 2026
-    role: B
-    used_for:
-      - "blank annual water-consumption and monthly Format 60 reporting templates"
-      - "verification that the public division page does not expose populated plant/month SWC reports"
-    url: "https://www.cea.nic.in/divisionPage/510?lang=en"
-    status: "official template and access-check page; report lists display No Reports Found"
-    access_date: "2026-11-27"
-
-  - id: CEA-PUBLIC-REPORT-ARCHIVE
-    title: "Central Electricity Authority public report archive"
-    year: 2026
-    role: B
-    used_for:
-      - "public archive access check for monthly environmental SWC reports"
-      - "evidence that the archive's monthly-report list does not currently list the Environmental Stack Emission Status Reports"
-    url: "https://cea.nic.in/archive?lang=en"
-    status: "official archive index; environmental SWC report series not listed in inspected monthly-report categories"
-    access_date: "2026-11-27"
-
-  - id: CAG-NLC-OPERATIONAL-PERFORMANCE-2025
-    title: "Report of the Comptroller and Auditor General of India on Operational Performance of NLC India Limited (Report No. 35 of 2025)"
-    authors: "Comptroller and Auditor General of India"
-    year: 2025
-    role: B
-    used_for:
-      - "annual regulatory specific-water-consumption series for TPS-IE, TPS-II, and TPS-IIE, FY 2017-18 to FY 2022-23"
-      - "independent audit context for SWC compliance and water-treatment-plant actions"
-      - "cross-check against CSE 2021 historical plant averages; discrepancies retained, not pooled"
-    url: "https://cag.gov.in/uploads/download_audit_report/2026/CAG---NLC-India-Limited-2025-English-FINAL-SIGNATORY-10-12-2025-0698c6a3b5d7e42.69686670.pdf"
-    status: "official performance-audit report using management-reported SWC data; source-water composition and consumptive fraction not supplied; NNTPS not in audit scope"
-    access_date: "2026-11-27"
-
-  - id: MD-DCMD-POLARIZATION-2000
-    title: "Study of Polarization Phenomena in Membrane Distillation of Aqueous Salt Solutions"
-    authors: "Martínez-Díez, L.; Florido-Díaz, F.J.; Vázquez-González, M.I."
-    year: 2000
-    role: C
-    used_for:
-      - "candidate primary experimental source for measured flux and polarization results with water and aqueous NaCl feeds"
-      - "potential corroborating or additional dataset across temperatures, recirculation rates, and feed concentrations"
-      - "author clarification needed to determine overlap with the 1999 benchmark"
-    doi: "10.1081/SS-100100237"
-    url: "https://www.tandfonline.com/doi/abs/10.1081/SS-100100237"
-    status: "publisher abstract and bibliographic record available; full text, figures, and experimental tables not verified; no extraction or validation claim"
+      - "historical Tamil Nadu T&D loss value of 19.12% for FY 2018-19"
+      - "conditional gross-up from generation-side to delivered-kWh screening factor"
+    url: "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=21531"
+    status: "historical state-level T&D loss statistic sourced from CEA; not current or marginal technical loss; screening adjustment only, not a state-grid electricity-water factor"
     access_date: "2026-11-27"
 
   - id: MD-DCMD-EVAPORATION-EFFICIENCY-1999
