@@ -377,7 +377,7 @@ sources:
     used_for:
       - "operator-reported NNTPS process, cooling, and domestic water volumes"
       - "reported process-water intensity cross-check; not accepted as a factor"
-      - "mine-water source classification and plant water-boundary context"
+      - "mine-water source context from the separate environmental-clearance compliance table in the same PDF; the FY 2021-22 statement has no source-wise volume split"
     url: "https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf"
     status: "official-compliance-report-with-operator-reported-environmental-statement; water-volume/intensity discrepancy unresolved; excluded from factor ledger"
     access_date: "2026-11-27"
