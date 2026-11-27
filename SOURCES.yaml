@@ -23,7 +23,7 @@ sources:
     used_for:
       - "primary experimental geometry and membrane specification"
       - "experimental measurement stability and replication information"
-      - "primary provenance for Keshavarzzadeh Figure 3 validation data"
+      - "primary-source citation in Keshavarzzadeh (2020) validation paragraph for saline Figure 3; caption discrepancy remains unresolved"
     doi: "10.1016/S0376-7388(98)00349-4"
     url: "https://doi.org/10.1016/S0376-7388(98)00349-4"
     status: "primary-source-text-indexed; original figure and raw observations not retrieved; source reconstruction and validation remain blocked"
