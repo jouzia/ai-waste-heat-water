@@ -52,10 +52,11 @@ Best regards,
 ## If no response or no shareable copy
 
 1. Do not treat silence as permission or evidence.
-2. Continue only with the explicitly labeled secondary-source-derived Figure 3 digitization, keeping it separate from the primary ledger.
-3. Keep the original 1999 primary-observation ledger empty.
-4. Complete the scenario/methods paper only if all remaining claims are reproducible and the manuscript clearly states that independent empirical validation was not achieved.
-5. Do not mark source reconstruction, unfitted validation, held-out validation, or final publication audit as passed merely because this contact route was documented.
+2. If the full text or experimental tables for the 2000 follow-up become available independently, assess that paper as a **separate primary experimental dataset**. Record its own membrane, feed, temperatures, flow rates, flux, and polarization conditions; do not assume it reproduces the 1999 series or merge its observations into the 1999 ledger.
+3. If no usable primary data from either paper can be obtained, continue only with the explicitly labeled secondary-source-derived Figure 3 digitization, keeping it separate from the primary ledger.
+4. Keep the original 1999 primary-observation ledger empty unless its own observations are recovered and independently extracted.
+5. Complete the scenario/methods paper only if all remaining claims are reproducible and the manuscript clearly states that independent empirical validation was not achieved.
+6. Do not mark source reconstruction, unfitted validation, held-out validation, or final publication audit as passed merely because this contact route was documented.
 
 ## Current decision
 
