@@ -26,7 +26,9 @@
 | md_cooling_electricity_kwh_per_kwh_th | kWh/kWh_th | electricity required per unit cooling duty | heat-sink-specific |
 | md_cooling_water_l_per_kwh_th | L/kWh_th | direct cooling-water consumption per unit MD cooling duty | heat-sink-specific |
 | grid_water_l_per_kwh | L/kWh | electricity-related consumption factor; nonzero values require grid_water_metric=consumption | site/grid-specific, consumption-only |
-| grid_water_metric | enum | must be consumption when grid_water_l_per_kwh is nonzero; withdrawal factors are rejected | required factor metadata |\n| freshwater_produced_l | L | modeled distillate production | model output |
+| grid_water_metric | enum | must be consumption when grid_water_l_per_kwh is nonzero; withdrawal factors are rejected | required factor metadata |
+| grid_water_metric | enum | must be consumption when grid_water_l_per_kwh is nonzero; withdrawal factors are rejected | required factor metadata |
+| freshwater_produced_l | L | modeled distillate production | model output |
 | feed_water_withdrawal_l | L | feed volume required by recovery fraction | model output |
 | concentrate_discharge_l | L | feed minus product, before any recycle | model output |
 | additional_water_consumption_l | L | modeled direct + electricity-related operational consumption | model output |
