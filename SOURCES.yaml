@@ -16,6 +16,19 @@ sources:
     url: "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Type=ANTOINE"
     status: "implemented"
 
+  - id: MD-DCMD-CHANNEL-SPACERS-1998
+    title: "Study of membrane distillation using channel spacers"
+    authors: "Martínez-Díez, L.; Vázquez-González, M.I.; Florido-Díaz, F.J."
+    year: 1998
+    role: C
+    used_for:
+      - "apparatus and channel-spacer configuration reference cited as reference 7 by the 1999 temperature/concentration-polarization study"
+      - "potential primary evidence on spacer configuration and its effects on DCMD flux and polarization"
+    doi: "10.1016/S0376-7388(98)00024-6"
+    url: "https://doi.org/10.1016/S0376-7388(98)00024-6"
+    status: "bibliographic metadata and citation relationship verified; full text and numerical observations not retrieved; no extraction or validation claim"
+    access_date: "2026-11-27"
+
   - id: MD-DCMD-POLARIZATION-1998
     title: "Effects of Polarization on Mass Transport through Hydrophobic Porous Membranes"
     authors: "Martínez-Díez, L.; Vázquez-González, M.I."
