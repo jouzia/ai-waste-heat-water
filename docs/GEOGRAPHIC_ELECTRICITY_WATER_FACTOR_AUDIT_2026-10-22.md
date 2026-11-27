@@ -178,19 +178,51 @@ CSE reports that about 12.16 GW of Tamil Nadu thermal capacity was surveyed, wit
 
 **Evidence classification:** these are historical, secondary-source compiled, self-reported SWC observations, not current audited plant factors, not grid-average factors, and not independently verified consumptive-use factors. Retain them only as historical plant-level freshwater-SWC screening evidence. Do not average them into a Tamil Nadu or Indian grid factor; do not assign them to Chennai/Hyderabad; do not treat CSE's regulatory norm values as measured data.
 
+### CAG performance-audit cross-check of existing Neyveli thermal stations (2025)
+
+The Comptroller and Auditor General of India (CAG) Report No. 35 of 2025, section 3.13 (printed page 45), provides annual SWC values for **TPS-IE, TPS-II, and TPS-IIE** over FY 2017–18 to FY 2022–23. The performance audit explicitly states that its thermal-station review covered TPS-IE, TPS-II, and TPS-II Expansion; **it did not cover NNTPS**.
+
+CAG's footnotes report the following values (m³/MWh, numerically equal to L/kWh):
+
+| Station | 2017–18 | 2018–19 | 2019–20 | 2020–21 | 2021–22 | 2022–23 |
+|---|---:|---:|---:|---:|---:|---:|
+| TPS-IE | 3.45 | 3.44 | 2.97 | 2.78 | 2.94 | 2.89 |
+| TPS-II | 5.17 | 5.51 | 5.15 | 5.05 | 4.90 | 4.97 |
+| TPS-IIE | 4.02 | 3.32 | 3.98 | 4.00 | 3.90 | 3.97 |
+| CEA/2015 norm cited by CAG | 3.50 | 3.50 | 3.50 | 3.50 | 3.50 | 3.50 |
+
+CAG reports that TPS-II and TPS-IIE were above the 3.5 m³/MWh norm, that TPS-II's water-treatment plant was commissioned in December 2022, and that TPS-II remained above the norm after installation. It also states that no corresponding treatment-plant contract had been awarded for TPS-IIE. **Internal source inconsistency:** footnote 57 gives TPS-IIE as 3.32 m³/MWh in 2018–19, below the 3.50 norm in footnote 58, despite the narrative's broad statement that TPS-IIE SWC was higher. Do not classify that individual year as non-compliant without clarification.
+
+For a like-for-like three-year comparison over FY 2017–18 to FY 2019–20 (the period CSE says it averages), the CAG values have arithmetic means of **5.28 m³/MWh for TPS-II** and **3.77 m³/MWh for TPS-IIE**. CSE Table 3.8 reports 4.39 and 5.25 m³/MWh respectively. The CAG-minus-CSE differences are therefore **+0.89 m³/MWh for TPS-II** and **−1.48 m³/MWh for TPS-IIE**. These are material and unresolved. The sources may use different station boundaries, data submissions, or calculation methods; **do not pool or average CSE and CAG values**.
+
+**Evidence classification:** CAG provides a stronger official historical regulatory-SWC record than the CSE secondary compilation, but the values are still management-reported observations reproduced in a performance audit. The report does not provide the water-source composition, withdrawal/return-flow balance, or consumptive fraction for each station. The 2015-rule SWC values therefore cannot be assumed to equal the CEA 2026 FW1+FW2 freshwater-input metric or a blue-water consumption factor. Retain them as historical station-level regulatory-SWC evidence only. They do not apply to NNTPS, which is a separate 1,000 MW station and was outside the CAG review scope.
+
+Source: https://cag.gov.in/uploads/download_audit_report/2026/CAG---NLC-India-Limited-2025-English-FINAL-SIGNATORY-10-12-2025-0698c6a3b5d7e42.69686670.pdf
+
 ### New Neyveli Thermal Power Station environmental-statement cross-check
 
 An official environmental-compliance PDF hosted by the Ministry of Environment, Forest and Climate Change includes the New Neyveli Thermal Power Station (NNTPS) environmental statement for FY 2021–22:
 
-- PDF: https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf
+- MoEFCC-certified compliance report and embedded FY 2021–22 environmental statement (printed pages 35–36): https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf
+- NLC India Integrated Annual Report FY 2021–22, physical performance table (printed page 17; NNTPS gross/net generation): https://nsearchives.nseindia.com/corporate/NLCINDIA_07092022181900_AnnualReport22.pdf
 - The report identifies the 1,000 MW NNTPS (2 × 500 MW), with units commissioned on 28 December 2019 and 10 February 2021.
 - The statement lists process water at 32,712.46 m³/day, cooling water at 1,165.15 m³/day, and domestic water at 5,597.12 m³/day. It reports 7,984 m³/day of effluent discharge.
 - It separately reports process water consumption per unit of electrical power as 0.069 L/kWh for FY 2021–22 (0.111 L/kWh for FY 2020–21).
-- The same compliance report states that groundwater is not extracted for plant operation and that water from mines is stored in a lake and used for plant operation.
+- A separate environmental-clearance compliance table earlier in the same PDF (not the FY 2021–22 statement table itself) says groundwater is not extracted and that mine water stored in a lake behind Thermal Station-I Expansion is used for NNTPS operations. The FY 2021–22 statement table does not break out its process-water volume by source category.
 
-**Internal consistency check:** the process-water daily figure alone (32,712.46 m³/day) divided by the maximum possible nameplate generation for a 1,000 MW plant (24,000 MWh/day) gives at least 1.363 m³/MWh, equivalently 1.363 L/kWh. This is about 19.8 times the reported 0.069 L/kWh. The actual ratio would be higher if generation were below nameplate output. This is not a corrected factor: it is a discrepancy between reported volume and reported intensity that requires clarification of units, boundaries, and denominator.
+**Annual-generation and period reconciliation:** NLC India's FY 2021–22 Integrated Annual Report reports NNTPS net generation of 5,758.70 MU for the same financial year, equivalent to an annual-average 15.777 million kWh/day. The reported process-water volume has two very different interpretations:
 
-**Water-source boundary:** the report says mine water is used. Under the November 2026 CEA SOP, mine water received from another source is categorized as NFW3 (other external non-fresh input), which is recorded but excluded from CEA SWC. Therefore, this NNTPS statement cannot be mapped directly to CEA's FW1+FW2 freshwater-input metric without a source-specific water balance. The 0.069 L/kWh value is not accepted into the factor ledger.
+| Interpretation of the reported 32,712.46 m³ | Implied process-water intensity | Comparison with reported 0.069 L/kWh |
+|---|---:|---:|
+| Literal table label: 32,712.46 m³/day | **2.073 L/kWh** | 30.05× |
+| Hypothesis: 32,712.46 m³ per 30-day month (1,090.42 m³/day) | **0.06911 L/kWh** | 1.0016× (0.16% higher) |
+| Annualize 12 monthly totals against annual net generation | **0.06817 L/kWh** | 1.2% lower |
+
+The reported intensities provide a second reverse-calculation check using NLC's net-generation series: 0.111 L/kWh × 3,176.32 MU in FY 2020–21 implies about **352,572 m³/year (29,381 m³/month)**; 0.069 L/kWh × 5,758.70 MU in FY 2021–22 implies about **397,350 m³/year (33,113 m³/month)**. The tabulated 32,712.46 m³ is only 1.2% below the latter monthly equivalent. This strengthens—but does not prove—the monthly-total hypothesis. The 30-day-total interpretation nearly reproduces the stated 0.069 L/kWh. This is a strong clue that the value may be a monthly total mislabeled as m³/day, or that the volume and intensity use different source/metric boundaries. It is **not confirmation**: the source table explicitly labels the values m³/day, and the document does not define the period basis or the source classes included in the 0.069 L/kWh numerator. The report's separate compliance section says mine water is used, while the FY 2021–22 statement table provides no source-wise volume split. The discrepancy could therefore be a period-label error, a freshwater/non-fresh source-boundary difference, or another accounting mismatch.
+
+The nameplate-only check gives a lower-bound ratio of 1.363 L/kWh if 32,712.46 m³ is truly an average daily volume and the 1,000 MW plant runs at full output. Do not silently relabel the source data or promote either interpretation to a factor. The operator must confirm whether 32,712.46 is a daily rate or monthly total, the period represented by the figure, the source categories included, and the denominator used for 0.069 L/kWh.
+
+**Water-source boundary:** the compliance section says mine water is used, but the FY 2021–22 statement does not give a source-wise volume split. Under the November 2026 CEA SOP, mine water received from another source is categorized as NFW3 (other external non-fresh input), which is recorded but excluded from CEA SWC. Therefore, the 32,712.46 m³/day process-water volume cannot be mapped directly to CEA's FW1+FW2 freshwater-input metric. The 0.069 L/kWh value is not accepted into the factor ledger.
 
 ### Geographic-source disposition after historical evidence review
 
