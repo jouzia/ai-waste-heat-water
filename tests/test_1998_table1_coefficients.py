@@ -46,7 +46,7 @@ def test_1998_table1_water_condition_coefficients_match_source() -> None:
 
     assert float(rows[0.000007]["h_overall_W_m2_K"]) == 1800.0
     assert float(rows[0.000007]["h_reported_plus_minus_W_m2_K"]) == 90.0
-    assert float(rows[0.000007]["C_scaled_by_1e7_kg_m2_s_Pa"]) == 14.9
+    assert float(rows[0.000007]["C_times_1e7_kg_m2_s_Pa"]) == 14.9
     assert float(rows[0.000011]["h_overall_W_m2_K"]) == 2050.0
     assert float(rows[0.000015]["h_overall_W_m2_K"]) == 2690.0
 
