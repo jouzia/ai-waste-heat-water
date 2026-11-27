@@ -376,10 +376,10 @@ sources:
     role: B
     used_for:
       - "operator-reported NNTPS process (32,712.46 m3/day as printed), cooling (1,165.15 m3/day), and domestic (5,597.12 m3/day) water volumes"
-      - "reported process-water intensity of 0.069 L/kWh; CEA net-generation cross-check shows a 30-fold daily-versus-30-day interpretation fork; not accepted as a factor"
+      - "reported process-water intensities of 0.111 L/kWh (FY2020-21) and 0.069 L/kWh (FY2021-22); two-year CEA net-generation cross-check supports a monthly-total/unit-label hypothesis but does not prove it; not accepted as a factor"
       - "mine-water source context from the separate environmental-clearance compliance table; FY 2021-22 statement has no source-wise volume split"
     url: "https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf"
-    status: "official-compliance-report-with-operator-reported-environmental-statement; CEA net generation denominator corroborated at 5,758.70 MU; volume-period and source-boundary ambiguity unresolved; excluded from factor ledger"
+    status: "official-compliance-report-with-operator-reported-environmental-statement; CEA net-generation denominators corroborated at 3,176.32 MU (FY2020-21) and 5,758.70 MU (FY2021-22); volume-period and FW/NFW source-boundary ambiguity unresolved; excluded from factor ledger"
     access_date: "2026-11-27"
 
   - id: NLC-ANNUAL-REPORT-2021-22
