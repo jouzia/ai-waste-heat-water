@@ -16,6 +16,15 @@ A public ACS publisher page for the related 1998 paper “Effects of Polarizatio
 
 This is a historical address published for a related paper, **not confirmation that the mailbox is current or that the author can share the 1999 article**. Treat it as a possible contact route only. Do not scrape personal contact details or send repeated follow-ups.
 
+A second historical publisher-listed contact route is available for the first author:
+- The Taylor & Francis publisher page for the related 2000 paper “Study of Polarization Phenomena in Membrane Distillation of Aqueous Salt Solutions” lists L. Martínez-Díez as the corresponding author and displays `lmartinez@uma.es`: https://www.tandfonline.com/doi/abs/10.1081/SS-100100237
+- This is also a historical publisher-listed address, not confirmation of current mailbox status. It may be used as an alternative or copied recipient if the user chooses to send the request; no message has been sent.
+
+The University of Málaga research portal has bibliographic records for both the 1999 target article and the 2000 follow-up, but the 1999 record provides no full text and says it cannot be exported because it belongs to another portal:
+- 1999 record: https://portaldelainvestigacion.uma.es/documentos/6624668fdc30f904d769ba54
+- 2000 follow-up record: https://portaldelainvestigacion.uma.es/documentos/662466a6dc30f904d769bd19
+These are metadata records, not primary-data access.
+
 ## Minimal request template
 
 Subject: Request for an accessible copy or data from your 1999 membrane-distillation paper
