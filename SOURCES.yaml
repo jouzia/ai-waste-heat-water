@@ -505,3 +505,17 @@ sources:
     url: "https://www.tandfonline.com/doi/abs/10.1081/SS-100100237"
     status: "publisher abstract and bibliographic record available; full text, figures, and experimental tables not verified; no extraction or validation claim"
     access_date: "2026-11-27"
+
+  - id: MD-DCMD-EVAPORATION-EFFICIENCY-1999
+    title: "Study of evaporation efficiency in membrane distillation"
+    authors: "Martínez-Díez, L.; Florido-Díaz, F.J.; Vázquez-González, M.I."
+    year: 1999
+    role: C
+    used_for:
+      - "candidate primary experimental data on PTFE membrane distillation with NaCl feed"
+      - "reported effects of feed temperature, salt concentration, and flow rate on permeate flux and heat loss"
+      - "additional experimental source to request alongside the 1999 Journal of Membrane Science and 2000 follow-up papers"
+    doi: "10.1016/S0011-9164(99)00174-5"
+    url: "https://doi.org/10.1016/S0011-9164(99)00174-5"
+    status: "publisher abstract and bibliographic record available; full text, figures, and experimental tables not verified; no extraction or validation claim"
+    access_date: "2026-11-27"
