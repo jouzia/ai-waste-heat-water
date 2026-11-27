@@ -508,24 +508,16 @@ sources:
     status: "publisher abstract and bibliographic record available; full text, figures, and experimental tables not verified; no extraction or validation claim"
     access_date: "2026-11-27"
 
-  - id: CEA-RATE-OF-SALE-2021-22
-    title: "CEA Rate of Sale of Power for the Year 2021-22"
-    year: "2021-22"
-    role: A
+  - id: MD-DCMD-EVAPORATION-EFFICIENCY-1999
+    title: "Study of evaporation efficiency in membrane distillation"
+    authors: "Martínez-Díez, L.; Florido-Díaz, F.J.; Vázquez-González, M.I."
+    year: 1999
+    role: C
     used_for:
-      - "NNTPS installed capacity (1,000 MW) and net generation denominator (5,758.70 MU) for FY2021-22; row 258"
-      - "generation denominator cross-check for the NNTPS environmental-statement water figures; this report contains no water-use data"
-    url: "https://www.cea.nic.in/api/dashboardReports/view-pdf/en/2e528aa8-4495-4866-bef8-7f4aafe5099c"
-    status: "official CEA rate-of-sale report; table header identifies Net Gen and row 258 identifies NEYVELI NEW TPS; used only for generation denominator"
-    access_date: "2026-11-27"
-
-  - id: CEA-RATE-OF-SALE-2020-21
-    title: "CEA Executive Summary on Power Sector (March 2023), Section H: Rate of Sale of Power for 2020-21"
-    year: "2020-21"
-    role: A
-    used_for:
-      - "NNTPS net generation denominator (3,176.32 MU) for FY2020-21; Southern Region row"
-      - "two-year denominator cross-check for the NNTPS environmental-statement process-water intensities; this report contains no water-use data"
-    url: "https://www.cea.nic.in/api/dashboardReports/download-pdf/en/784b0870-4441-4746-a117-923c27b1cdd0"
-    status: "official CEA report; Section H table header identifies Net Gen and the NEYVELI NEW TPS row reports 3,176.32 MU; used only for generation denominator"
+      - "candidate primary experimental data on PTFE membrane distillation with NaCl feed"
+      - "reported effects of feed temperature, salt concentration, and flow rate on permeate flux and heat loss"
+      - "additional experimental source to request alongside the 1999 Journal of Membrane Science and 2000 follow-up papers"
+    doi: "10.1016/S0011-9164(99)00174-5"
+    url: "https://doi.org/10.1016/S0011-9164(99)00174-5"
+    status: "publisher abstract and bibliographic record available; full text, figures, and experimental tables not verified; no extraction or validation claim"
     access_date: "2026-11-27"
