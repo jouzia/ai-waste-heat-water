@@ -25,6 +25,7 @@ This is a primary site-submitted environmental statement reproduced in an offici
 | Process-water intensity, FY2020-21 | 0.111 L/kWh | PDF p. 35, Part B |
 | Process-water intensity, FY2021-22 | 0.069 L/kWh | PDF p. 35, Part B |
 | Effluent | 7,984 m³/day | PDF p. 36, Part C |
+| NEYVELI NEW TPP generation, FY2021-22 | 6,177.93 MU | Rajya Sabha Unstarred Question 480 (6 Feb 2024), Annexure II |
 
 The monitoring report further records that the station uses mine water stored in a lake, does not extract groundwater for plant operation, adopts closed-cycle cooling with a cooling-cycle concentration (COC) of 5, and uses treated effluent for dust suppression and greenbelt development (PDF pp. 2–4 of the monitoring report's compliance section).
 
@@ -34,39 +35,34 @@ The reported process-water quantity and specific intensity are incompatible if t
 
 Nameplate upper-bound generation:
 
-[
-1000 mathrm{MW}	imes24 mathrm{h}
-=24{,}000 mathrm{MWh/day}
-=24{,}000{,}000 mathrm{kWh/day}
-]
+`1000 MW × 24 h = 24,000 MWh/day = 24,000,000 kWh/day`
 
 Minimum process-water intensity implied by the reported daily process flow, even at continuous 100% nameplate output:
 
-[
-rac{32{,}712.46 mathrm{m^3/day}	imes1000 mathrm{L/m^3}}
-{24{,}000{,}000 mathrm{kWh/day}}
-=1.3630 mathrm{L/kWh}
-]
+`32,712.46 m³/day × 1,000 L/m³ ÷ 24,000,000 kWh/day = 1.3630 L/kWh`
 
 The statement instead prints **0.069 L/kWh**. At the same maximum generation, that printed intensity would correspond to only 1,656 m³/day of process water, about 19.75 times lower than the reported 32,712.46 m³/day.
 
-Conversely, applying 0.069 L/kWh to the reported process volume implies:
+### Matched FY2021-22 generation cross-check
 
-[
-rac{32{,}712.46	imes1000}{0.069}
-=474{,}093{,}623 mathrm{kWh/day}
-approx474{,}094 mathrm{MWh/day}
-]
+Rajya Sabha Unstarred Question No. 480 (6 February 2024), Annexure II, reports **6,177.93 MU** for NEYVELI NEW TPP in FY2021-22. The same table reports 7,156.19 MU for FY2022-23 and 5,151.72 MU for FY2023-24 through December 2023. The annexure does not label the generation basis as gross or net.
 
-That corresponds to an average output of approximately 19,754 MW, or 19.75 times the station's 1,000 MW nameplate capacity.
+If—and only if—the environmental statement's 32,712.46 m³/day is an annual-average flow for the same station boundary, the FY2021-22 generation implies:
 
-The discrepancy is not resolved by the source. Potential explanations include a unit/decimal transcription error, different reporting boundaries, or a distinction between gross process circulation and the intensity denominator. None is assumed here.
+`32,712.46 m³/day × 365 days × 1,000 L/m³ ÷ (6,177.93 MU × 1,000,000 kWh/MU) = 1.933 L/kWh`
+
+This conditional value is about **28.0 times** the printed 0.069 L/kWh. It is not adopted as a corrected intensity because the environmental statement does not say whether its daily flow is an annual average or define the process-water numerator boundary, while the parliamentary annexure does not state gross/net generation.
+
+Conversely, applying 0.069 L/kWh to the reported process volume implies about 474,094 MWh/day, or 19.75 times the station's 1,000 MW nameplate capacity.
+
+The discrepancy is not resolved by the sources. Potential explanations include a unit/decimal transcription error, different reporting boundaries, or a distinction between gross process circulation and the intensity denominator. None is assumed here.
 
 ## Water-accounting limitations
 
 - The statement labels the daily figures as water consumption but does not supply a matched electricity-generation denominator.
 - It does not define whether process/cooling quantities represent fresh intake, gross circulation, make-up, or another accounting boundary.
 - Effluent of 7,984 m³/day and statements about reuse do not establish the net consumptive fraction.
+- Rajya Sabha Annexure II supplies station-wise FY2021-22 generation, but does not state whether it is gross or net; matched water-period and accounting-boundary definitions remain unresolved.
 - The report does not provide a complete source-wise site water balance, nor a verified split between freshwater and mine-water sources for each reported quantity.
 - The 0.069 L/kWh value must not be silently corrected to 0.69, 1.36, or another value.
 
