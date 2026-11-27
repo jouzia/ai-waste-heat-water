@@ -61,6 +61,7 @@ sources:
 
   - id: MD-DCMD-CHANNEL-2020
     title: "Design and bio-inspired optimization of direct contact membrane distillation for desalination based on constructal law"
+    authors: "Keshavarzzadeh, A.H."
     year: 2020
     role: A
     used_for:
@@ -68,9 +69,11 @@ sources:
       - "axial feed/permeate mass and energy balances"
       - "feed/permeate convective heat-transfer formulation"
       - "secondary source for Figure 3 validation plot; validation paragraph points to 1999 primary source ref37 while caption cites unrelated ref25"
+    doi: "10.1038/s41598-020-73964-7"
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7545101/"
     license: "CC BY 4.0"
     status: "method-reference-and-secondary-figure-source; caption provenance discrepancy documented; no independent pointwise validation"
+    access_date: "2026-11-27"
   - id: MD-POLARIZATION-REVIEW-2021
     title: "Temperature and concentration polarization in membrane distillation: a technical review"
     year: 2021
