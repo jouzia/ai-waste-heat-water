@@ -18,7 +18,7 @@
     "year_or_period": { "type": "string", "minLength": 1 },
     "generation_technology": { "type": ["string", "null"] },
     "grid_mix_scope": { "type": ["string", "null"] },
-    "water_metric": { "enum": ["consumption", "withdrawal"] },
+    "water_metric": { "type": "string", "enum": ["consumption", "withdrawal", "freshwater_input"], "description": "Use freshwater_input for source-defined external freshwater input intensity such as CEA SWC; do not relabel it as consumptive use without a water-balance mapping." },
     "value": { "type": "number", "minimum": 0 },
     "unit": { "type": "string", "minLength": 1 },
     "denominator": { "type": "string", "minLength": 1 },
