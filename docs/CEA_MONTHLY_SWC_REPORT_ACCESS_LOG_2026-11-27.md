@@ -106,3 +106,17 @@ The current CEA SOP provides a second possible boundary explanation: mine water 
 For context only, adding the statement's process, cooling, and domestic volumes (32,712.46 + 1,165.15 + 5,597.12 = 39,474.73 m³/day) and treating all as daily gives **2.50200 L/kWh**. This is not a validated plant consumption factor because the source classes, reuse, outflows, and reporting-period alignment remain unresolved.
 
 **Disposition:** keep both interpretations provisional and keep the NNTPS factor ledger entry empty. Request the original monthly/annual calculation sheet, source-wise FW1/FW2/NFW1/NFW2/NFW3/RW volumes, the exact averaging period behind 32,712.46, and the net-generation denominator used for 0.069.
+
+### Two-year check using the CEA FY2020–21 denominator
+
+The same CEA Section H table series provides an FY2020–21 NNTPS net-generation denominator:
+- CEA *Executive Summary on Power Sector* (March 2023), Section H, row **NEYVELI NEW TPS**: **3,176.32 MU net generation**, installed capacity 1,000 MW.
+- Official PDF: https://www.cea.nic.in/api/dashboardReports/download-pdf/en/784b0870-4441-4746-a117-923c27b1cdd0
+
+The environmental statement reports process-water intensities of 0.111 L/kWh for FY2020–21 and 0.069 L/kWh for FY2021–22. If those are annual intensities, they imply monthly process-water volumes of:
+- FY2020–21: **29,380.96 m³/month** (3,176.32 MU × 0.111 L/kWh ÷ 1,000 ÷ 12).
+- FY2021–22: **33,112.53 m³/month** (5,758.70 MU × 0.069 L/kWh ÷ 1,000 ÷ 12).
+
+The reported FY2021–22 volume **32,712.46 m³** is **1.22% below** the second implied monthly value. This cross-year consistency strengthens the hypothesis that the printed 32,712.46 is a monthly process-water total mislabeled as m³/day. It still does not prove that interpretation; the source's printed unit remains m³/day, and a freshwater-versus-mine-water boundary difference is also possible.
+
+The calculation is reproducible in `scripts/reconcile_nntps_water_intensity.py`; regression checks are in `tests/test_nntps_water_intensity_reconciliation.py`. The script intentionally emits no accepted factor and preserves the unresolved alternatives.
