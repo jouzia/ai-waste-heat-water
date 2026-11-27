@@ -87,3 +87,18 @@ def test_summary_does_not_claim_consumption_mix_or_water_factor() -> None:
     assert report["status"] == "GENERATION_MIX_ONLY_NOT_CONSUMPTION_MIX"
     assert "not the electricity-consumption mix" in report["scope_note"]
     assert "No water factor" in report["water_factor_disposition"]
+
+def test_summary_can_write_json_output(tmp_path) -> None:
+    repository_root = Path(__file__).resolve().parents[1]
+    script_path = repository_root / "scripts" / "summarize_tamil_nadu_generation_mix.py"
+    output_path = tmp_path / "generation_summary.json"
+
+    subprocess.run(
+        [sys.executable, str(script_path), "--output", str(output_path)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    report = json.loads(output_path.read_text(encoding="utf-8"))
+    assert report["status"] == "GENERATION_MIX_ONLY_NOT_CONSUMPTION_MIX"
