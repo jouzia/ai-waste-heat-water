@@ -1,7 +1,7 @@
 """Core research parameter and result models. SI units unless documented otherwise."""
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Workload(BaseModel):
@@ -54,6 +54,8 @@ class AuxiliaryLoads(BaseModel):
 
 
 class WaterFactors(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+
     grid_water_l_per_kwh: float = Field(ge=0, default=0.0)
     grid_water_metric: Literal["consumption"] | None = None
     freshwater_displacement_fraction: float = Field(ge=0, le=1, default=0.0)
