@@ -2,9 +2,9 @@
 
 import json
 import math
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 
 def run_generation_summary() -> dict[str, object]:
