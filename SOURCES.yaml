@@ -451,7 +451,9 @@ sources:
       - "external sensitivity comparator only; not a site-specific factor for India, Spain, Singapore, or Germany"
     doi: "10.1088/1748-9326/7/4/045802"
     url: "https://data.openei.org/submissions/390"
-    license: "CC BY 4.0"
+    license: "OpenEI dataset: CC BY 4.0; original report: CC BY-NC-SA 3.0"
+    dataset_first_published: "2014-11-25"
+    dataset_last_updated: "2025-10-07"
     status: "US-only literature-derived technology factors; not used as a global or non-US grid-average factor"
     access_date: "2026-11-27"
 
