@@ -53,6 +53,15 @@ def intensity_from_30_day_total_l_per_kwh(
     return volume_m3_per_30_days * 1_000 / period_kwh
 
 
+def daily_volume_implied_by_intensity_m3(
+    process_intensity_l_per_kwh: float,
+    net_generation_mu: float,
+) -> float:
+    """Return the average daily volume implied by an annual intensity."""
+    daily_kwh = net_generation_mu * 1_000_000 / DAYS_PER_YEAR
+    return process_intensity_l_per_kwh * daily_kwh / 1_000
+
+
 def build_reconciliation() -> dict[str, object]:
     """Build both competing interpretations without selecting either one."""
     net_generation = NET_GENERATION_MU["2021-22"]
@@ -64,9 +73,17 @@ def build_reconciliation() -> dict[str, object]:
         PROCESS_VOLUME_M3_AS_PRINTED_PER_DAY,
         net_generation,
     )
+    reported_intensity = REPORTED_PROCESS_INTENSITY_L_PER_KWH["2021-22"]
     implied_monthly = implied_monthly_volume_m3(
         net_generation,
-        REPORTED_PROCESS_INTENSITY_L_PER_KWH["2021-22"],
+        reported_intensity,
+    )
+    daily_volume_from_30_day_total = (
+        PROCESS_VOLUME_M3_AS_PRINTED_PER_DAY / DAYS_PER_MONTH_FOR_ALTERNATIVE
+    )
+    daily_volume_from_reported_intensity = daily_volume_implied_by_intensity_m3(
+        reported_intensity,
+        net_generation,
     )
     total_daily_volume = (
         PROCESS_VOLUME_M3_AS_PRINTED_PER_DAY
@@ -104,6 +121,13 @@ def build_reconciliation() -> dict[str, object]:
         ),
         "process_intensity_if_volume_is_30_day_total_l_per_kwh": (
             thirty_day_intensity
+        ),
+        "daily_process_volume_if_30_day_total_m3": daily_volume_from_30_day_total,
+        "daily_process_volume_implied_by_reported_0_069_m3": (
+            daily_volume_from_reported_intensity
+        ),
+        "daily_volume_ratio_30_day_total_to_reported_intensity": (
+            daily_volume_from_30_day_total / daily_volume_from_reported_intensity
         ),
         "process_to_reported_intensity_ratio_if_daily": (
             daily_process_intensity
