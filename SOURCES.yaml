@@ -491,3 +491,17 @@ sources:
     url: "https://cag.gov.in/uploads/download_audit_report/2026/CAG---NLC-India-Limited-2025-English-FINAL-SIGNATORY-10-12-2025-0698c6a3b5d7e42.69686670.pdf"
     status: "official performance-audit report using management-reported SWC data; source-water composition and consumptive fraction not supplied; NNTPS not in audit scope"
     access_date: "2026-11-27"
+
+  - id: MD-DCMD-POLARIZATION-2000
+    title: "Study of Polarization Phenomena in Membrane Distillation of Aqueous Salt Solutions"
+    authors: "Martínez-Díez, L.; Florido-Díaz, F.J.; Vázquez-González, M.I."
+    year: 2000
+    role: C
+    used_for:
+      - "candidate primary experimental source for measured flux and polarization results with water and aqueous NaCl feeds"
+      - "potential corroborating or additional dataset across temperatures, recirculation rates, and feed concentrations"
+      - "author clarification needed to determine overlap with the 1999 benchmark"
+    doi: "10.1081/SS-100100237"
+    url: "https://www.tandfonline.com/doi/abs/10.1081/SS-100100237"
+    status: "publisher abstract and bibliographic record available; full text, figures, and experimental tables not verified; no extraction or validation claim"
+    access_date: "2026-11-27"
