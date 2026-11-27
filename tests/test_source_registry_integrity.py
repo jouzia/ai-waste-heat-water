@@ -31,6 +31,7 @@ def test_critical_source_records_retain_provenance_metadata() -> None:
         "CEA-PUBLIC-REPORT-ARCHIVE",
         "CAG-NLC-OPERATIONAL-PERFORMANCE-2025",
         "MD-DCMD-POLARIZATION-2000",
+        "MD-DCMD-POLARIZATION-1998",
     }
 
     assert required_ids.issubset(sources)
