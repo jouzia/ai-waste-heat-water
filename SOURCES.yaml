@@ -16,17 +16,47 @@ sources:
     url: "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Type=ANTOINE"
     status: "implemented"
 
+  - id: MD-DCMD-CHANNEL-SPACERS-1998
+    title: "Study of membrane distillation using channel spacers"
+    authors: "Martínez-Díez, L.; Vázquez-González, M.I.; Florido-Díaz, F.J."
+    year: 1998
+    role: C
+    used_for:
+      - "apparatus and channel-spacer configuration reference cited as reference 7 by the 1999 temperature/concentration-polarization study"
+      - "potential primary evidence on spacer configuration and its effects on DCMD flux and polarization"
+    doi: "10.1016/S0376-7388(98)00024-6"
+    url: "https://doi.org/10.1016/S0376-7388(98)00024-6"
+    status: "bibliographic metadata and citation relationship verified; full text and numerical observations not retrieved; no extraction or validation claim"
+    access_date: "2026-11-27"
+
+  - id: MD-DCMD-POLARIZATION-1998
+    title: "Effects of Polarization on Mass Transport through Hydrophobic Porous Membranes"
+    authors: "Martínez-Díez, L.; Vázquez-González, M.I."
+    year: 1998
+    role: C
+    used_for:
+      - "primary experimental DCMD water and NaCl flux curves at three recirculation rates"
+      - "candidate experimental temperature-polarization and vapour-pressure-polarization results"
+      - "cross-check of the related 1999 Journal of Membrane Science study; dataset overlap is not established"
+    doi: "10.1021/ie970911q"
+    url: "https://doi.org/10.1021/ie970911q"
+    pdf_url: "https://citeseerx.ist.psu.edu/document?doi=a77be3eade26facb51c0ddcc6a7b3a792da6e582&repid=rep1&type=pdf"
+    status: "primary experimental source; full-text PDF accessible; Figures 4-6 contain flux curves for water and NaCl feeds at three recirculation rates, Figures 8-12 contain polarization results, and Table 1 reports inferred heat/membrane coefficients; numerical point extraction not yet performed; overlap with the 1999 benchmark remains unresolved"
+    access_date: "2026-11-27"
+
   - id: MD-DCMD-PRIMARY-1999
     title: "Temperature and concentration polarization in membrane distillation of aqueous salt solutions"
+    authors: "Martínez-Díez, L.; Vázquez-González, M.I."
     year: 1999
     role: C
     used_for:
       - "primary experimental geometry and membrane specification"
       - "experimental measurement stability and replication information"
-      - "primary provenance for Keshavarzzadeh Figure 3 validation data"
+      - "primary experimental source cited in Keshavarzzadeh (2020) validation paragraph; Figure 3 caption instead cites unrelated reference 25, so plotted-marker provenance remains unresolved"
     doi: "10.1016/S0376-7388(98)00349-4"
     url: "https://doi.org/10.1016/S0376-7388(98)00349-4"
-    status: "primary-validation-source"
+    status: "primary-source-text-indexed; original figure and raw observations not retrieved; source reconstruction and validation remain blocked"
+    access_date: "2026-11-27"
 
 
 
@@ -60,14 +90,19 @@ sources:
 
   - id: MD-DCMD-CHANNEL-2020
     title: "Design and bio-inspired optimization of direct contact membrane distillation for desalination based on constructal law"
+    authors: "Keshavarzzadeh, A.H.; Maleki, A.; Gharali, K.; Dusseault, M.B."
     year: 2020
     role: A
     used_for:
       - "finite-volume DCMD energy-balance structure"
       - "axial feed/permeate mass and energy balances"
       - "feed/permeate convective heat-transfer formulation"
+      - "secondary source for Figure 3 validation plot; validation paragraph points to 1999 primary source ref37 while caption cites unrelated ref25"
+    doi: "10.1038/s41598-020-73964-7"
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7545101/"
-    status: "method-reference"
+    license: "CC BY 4.0"
+    status: "method-reference-and-secondary-figure-source; caption provenance discrepancy documented; no independent pointwise validation"
+    access_date: "2026-11-27"
   - id: MD-POLARIZATION-REVIEW-2021
     title: "Temperature and concentration polarization in membrane distillation: a technical review"
     year: 2021
@@ -368,6 +403,15 @@ sources:
     title: "Implications of Shared Socio-economic Pathways for India’s Long-term Electricity Generation and Associated Water Demands"
     authors: "Chaturvedi, V.; Nagar Koti, P.; Sugam, R.; Neog, K.; Hejazi, M."
     year: 2017
+    role: B
+    used_for:
+      - "India-specific coal/gas thermal-plant withdrawal factors and cooling-technology sample sizes"
+      - "historical plant-level inventory and freshwater/inland sample reconciliation"
+      - "source coefficients underlying Zhang et al. (2021) national thermoelectric freshwater-consumption estimates"
+    url: "https://www.ceew.in/publications/implications-shared-socio-economic-pathways-india-long-term-electricity-generation"
+    pdf_url: "https://www.ceew.in/sites/default/files/CEEW-Implications-of-Shared-Socio-Economic-Pathways-for-India-Longterm.pdf"
+    status: "India-specific survey/compiled withdrawal evidence; coal/gas consumption estimates are ratio-derived using Macknick et al. factors, not directly metered; ash-handling included; not a site-year Tamil Nadu or current grid factor"
+    access_date: "2026-11-27"
   - id: NLC-NNTPS-ENV-STATEMENT-2021-22
     title: "Environmental Statement for New Neyveli Thermal Power Station, FY 2021-22 (embedded in MoEFCC certified compliance report)"
     year: 2023
@@ -423,12 +467,10 @@ sources:
     year: 2025
     role: B
     used_for:
-      - "India-specific coal and gas thermal-plant water withdrawal factors and cooling-technology sample sizes"
-      - "candidate historical thermal-fleet consumption factors; consumption values are derived from withdrawals using Macknick et al. ratios"
-      - "plant-level inventory and Appendix 1 freshwater/inland sample reconciliation"
-    url: "https://www.ceew.in/publications/implications-shared-socio-economic-pathways-india-long-term-electricity-generation"
-    pdf_url: "https://www.ceew.in/sites/default/files/CEEW-Implications-of-Shared-Socio-Economic-Pathways-for-India-Longterm.pdf"
-    status: "India-specific survey/compiled withdrawal evidence; coal/gas consumption estimates are ratio-derived, not directly metered; coal ash-handling is included; not a site-year Tamil Nadu or current grid factor"
+      - "official statement that plant-wise Monthly Environmental Stack Emission Status Reports with specific water consumption have been published from June 2022"
+      - "evidence of reporting history, not a source of retrieved plant/month observations"
+    url: "https://www.cea.nic.in/api/dashboardReports/download-pdf/en/f60d07cd-b057-42b7-9da8-19d5d559dc2a"
+    status: "official publication-history statement; populated monthly reports not located in public CEA navigation"
     access_date: "2026-11-27"
   - id: MACKNICK-NREL-OPERATIONAL-WATER-FACTORS-2011
     title: "A Review of Operational Water Consumption and Withdrawal Factors for Electricity Generating Technologies"
@@ -490,6 +532,95 @@ sources:
       - "conditional gross-up from generation-side to delivered-kWh screening factor"
     url: "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=21531"
     status: "historical state-level T&D loss statistic sourced from CEA; not current or marginal technical loss; screening adjustment only, not a state-grid electricity-water factor"
+    access_date: "2026-11-27"
+
+  - id: CSE-WATER-INEFFICIENT-POWER-2021
+    title: "Water-Inefficient Power: Implementing Water Norms and Zero Discharge in India's Coal-Power Fleet"
+    authors: "Centre for Science and Environment"
+    year: 2021
+    role: B
+    used_for:
+      - "historical plant-level Tamil Nadu thermal SWC screening values in Table 3.8"
+      - "source-quality evidence on inconsistent, under-reported, and unverified plant self-reporting"
+    url: "https://www.cseindia.org/content/downloadreports/10856"
+    status: "secondary compilation of plant-reported 2017-2020 data; historical screening only, not a current grid factor or independently audited consumption factor"
+    access_date: "2026-11-27"
+
+  - id: NREL-OPENEI-OPERATIONAL-WATER-FACTORS
+    title: "Operational Water Consumption and Withdrawal Factors for Electricity Generating Technologies"
+    authors: "Macknick, J.; Newmark, R.; Heath, G.; Hallett, K.C."
+    year: 2012
+    role: B
+    used_for:
+      - "US technology-level operational water withdrawal and consumption scenario factors"
+      - "external sensitivity comparator only; not a site-specific factor for India, Spain, Singapore, or Germany"
+    doi: "10.1088/1748-9326/7/4/045802"
+    url: "https://data.openei.org/submissions/390"
+    license: "OpenEI dataset: CC BY 4.0; original report: CC BY-NC-SA 3.0"
+    dataset_first_published: "2014-11-25"
+    dataset_last_updated: "2025-10-07"
+    status: "US-only literature-derived technology factors; not used as a global or non-US grid-average factor"
+    access_date: "2026-11-27"
+
+  - id: CEA-CLEAN-ENERGY-DIVISION-PAGE
+    title: "CEA Clean Energy and Energy Transition Division — Environmental Data Formats"
+    year: 2026
+    role: B
+    used_for:
+      - "blank annual water-consumption and monthly Format 60 reporting templates"
+      - "verification that the public division page does not expose populated plant/month SWC reports"
+    url: "https://www.cea.nic.in/divisionPage/510?lang=en"
+    status: "official template and access-check page; report lists display No Reports Found"
+    access_date: "2026-11-27"
+
+  - id: CEA-PUBLIC-REPORT-ARCHIVE
+    title: "Central Electricity Authority public report archive"
+    year: 2026
+    role: B
+    used_for:
+      - "public archive access check for monthly environmental SWC reports"
+      - "evidence that the archive's monthly-report list does not currently list the Environmental Stack Emission Status Reports"
+    url: "https://cea.nic.in/archive?lang=en"
+    status: "official archive index; environmental SWC report series not listed in inspected monthly-report categories"
+    access_date: "2026-11-27"
+
+  - id: RS-AU480-ANNEXURE-II-2024
+    title: "Rajya Sabha Unstarred Question No. 480 (6 February 2024), Annexure II — Fuel-wise, station-wise generation of plants in Tamil Nadu from FY2021-22 to FY2023-24 (up to December 2023)"
+    authors: "Ministry of Power, Government of India"
+    year: 2024
+    role: B
+    used_for:
+      - "official station-wise generation for Neyveli New TPP: FY2021-22 6177.93 MU, FY2022-23 7156.19 MU, and FY2023-24 through December 5151.72 MU"
+      - "matched FY2021-22 generation denominator candidate for the NNTPS environmental statement consistency audit"
+    url: "https://sansad.in/getFile/annex/263/AU480.pdf?source=pqars"
+    status: "official parliamentary station-wise generation table; generation basis is not labelled gross or net in the annexure; use only with period/boundary caveats"
+    access_date: "2026-11-27"
+
+  - id: CAG-NLC-OPERATIONAL-PERFORMANCE-2025
+    title: "Report of the Comptroller and Auditor General of India on Operational Performance of NLC India Limited (Report No. 35 of 2025)"
+    authors: "Comptroller and Auditor General of India"
+    year: 2025
+    role: B
+    used_for:
+      - "annual regulatory specific-water-consumption series for TPS-IE, TPS-II, and TPS-IIE, FY 2017-18 to FY 2022-23"
+      - "independent audit context for SWC compliance and water-treatment-plant actions"
+      - "cross-check against CSE 2021 historical plant averages; discrepancies retained, not pooled"
+    url: "https://cag.gov.in/uploads/download_audit_report/2026/CAG---NLC-India-Limited-2025-English-FINAL-SIGNATORY-10-12-2025-0698c6a3b5d7e42.69686670.pdf"
+    status: "official performance-audit report using management-reported SWC data; source-water composition and consumptive fraction not supplied; NNTPS not in audit scope"
+    access_date: "2026-11-27"
+
+  - id: MD-DCMD-POLARIZATION-2000
+    title: "Study of Polarization Phenomena in Membrane Distillation of Aqueous Salt Solutions"
+    authors: "Martínez-Díez, L.; Florido-Díaz, F.J.; Vázquez-González, M.I."
+    year: 2000
+    role: C
+    used_for:
+      - "candidate primary experimental source for measured flux and polarization results with water and aqueous NaCl feeds"
+      - "potential corroborating or additional dataset across temperatures, recirculation rates, and feed concentrations"
+      - "author clarification needed to determine overlap with the 1999 benchmark"
+    doi: "10.1081/SS-100100237"
+    url: "https://www.tandfonline.com/doi/abs/10.1081/SS-100100237"
+    status: "publisher abstract and bibliographic record available; full text, figures, and experimental tables not verified; no extraction or validation claim"
     access_date: "2026-11-27"
 
   - id: MD-DCMD-EVAPORATION-EFFICIENCY-1999
