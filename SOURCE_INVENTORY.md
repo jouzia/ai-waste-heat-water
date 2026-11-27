@@ -31,7 +31,7 @@ The strongest version of this project should therefore be a conditional feasibil
 
 ## Additional India thermal-water evidence registered — 2026-11-27
 
-9. **NLC India Limited, Integrated Annual Report FY 2021–22** (official company annual report). The 10-year physical-performance table (printed page 17) reports NNTPS gross generation of 6,178.74 MU and net generation of 5,758.70 MU for FY 2021–22. These are company-reported generation denominators, used only to cross-check the plant's environmental statement. [Annual report PDF](https://nsearchives.nseindia.com/corporate/NLCINDIA_07092022181900_AnnualReport22.pdf).
+9. **NLC India Limited, Integrated Annual Report FY 2021–22** (official company annual report). The 10-year physical-performance table (printed page 17) reports NNTPS net generation of 3,176.32 MU in FY 2020–21 and 5,758.70 MU in FY 2021–22 (gross generation 3,439.17 and 6,178.74 MU respectively). These are company-reported generation denominators, used only to cross-check the plant's environmental statement. [Annual report PDF](https://nsearchives.nseindia.com/corporate/NLCINDIA_07092022181900_AnnualReport22.pdf).
 
 10. **MoEFCC-certified compliance report containing NNTPS Environmental Statement FY 2021–22** (printed pages 35–36). The operator-reported statement lists process water at 32,712.46 m³/day and process-water intensity at 0.069 L/kWh. The separate environmental-clearance compliance table in the same PDF says mine water stored in a lake is used and groundwater is not extracted; the FY 2021–22 statement table itself does not provide a source-wise volume split. [Compliance report PDF](https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf).
 
