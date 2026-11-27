@@ -6,11 +6,11 @@ consumption mix or a water-intensity factor.
 
 import csv
 import json
-from pathlib import Path
+import pathlib
 
 
 DATA_PATH = (
-    Path(__file__).resolve().parents[1]
+    pathlib.Path(__file__).resolve().parents[1]
     / "data"
     / "geography"
     / "tamil_nadu_generation_mix_2020_21_to_2025_26.csv"
