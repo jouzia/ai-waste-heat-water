@@ -20,7 +20,7 @@ The 2000 abstract reports experiments with water and aqueous NaCl feeds and meas
 
 **Optional Cc address:** `mvazquez@uma.es`. A related 1998 ACS publisher page lists M. I. Vázquez-González as corresponding author: https://pubs.acs.org/doi/10.1021/ie970911q. A 2021 UMA faculty directory and 2019 CV also list this address, but the UMA research portal now labels her as an ex-investigator. Treat this as a historical route, not a verified current mailbox:
 - UMA 2021 directory: https://www.uma.es/media/files/11-06-21_CD_Ordinario.pdf
-- UMA research-portal record: https://portaldelainvestigacion.uma.es/investigadores/XXXXX (the portal lists her as an ex-investigator; verify the exact person record before using this link)
+- UMA research-portal record: https://portaldelainvestigacion.uma.es/areas/41/investigadores?lang=de (the portal's investigator list marks her as an ex-investigator)
 
 No message has been sent. Use one concise request and do not send repeated follow-ups.
 
