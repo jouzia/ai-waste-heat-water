@@ -26,7 +26,8 @@ sources:
       - "primary provenance for Keshavarzzadeh Figure 3 validation data"
     doi: "10.1016/S0376-7388(98)00349-4"
     url: "https://doi.org/10.1016/S0376-7388(98)00349-4"
-    status: "primary-validation-source"
+    status: "primary-source-text-indexed; original figure and raw observations not retrieved; source reconstruction and validation remain blocked"
+    access_date: "2026-11-27"
 
 
 
@@ -66,8 +67,10 @@ sources:
       - "finite-volume DCMD energy-balance structure"
       - "axial feed/permeate mass and energy balances"
       - "feed/permeate convective heat-transfer formulation"
+      - "secondary source for Figure 3 validation plot; validation paragraph points to 1999 primary source ref37 while caption cites unrelated ref25"
     url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC7545101/"
-    status: "method-reference"
+    license: "CC BY 4.0"
+    status: "method-reference-and-secondary-figure-source; caption provenance discrepancy documented; no independent pointwise validation"
   - id: MD-POLARIZATION-REVIEW-2021
     title: "Temperature and concentration polarization in membrane distillation: a technical review"
     year: 2021
@@ -385,4 +388,17 @@ sources:
       - "cross-check of NNTPS environmental-statement water intensity"
     url: "https://nsearchives.nseindia.com/corporate/NLCINDIA_07092022181900_AnnualReport22.pdf"
     status: "official company annual report; NNTPS generation denominator is company-reported; cross-check only, not a water factor"
+    access_date: "2026-11-27"
+
+  - id: MD-DCMD-ABDELRAHMAN-2008
+    title: "Modeling Temperature and Salt Concentration Distributions in Direct Contact Membrane Distillation"
+    authors: "Abdel-Rahman, A.K."
+    year: 2008
+    role: C
+    used_for:
+      - "secondary reproduction of Martínez-Díez and Vázquez-González (1999) pure-water flux and temperature-polarization validation data"
+      - "independent source-lineage cross-check for the 1999 DCMD benchmark"
+      - "not primary experimental observations; no digitization performed"
+    url: "https://jesaun.journals.ekb.eg/article_118726_da32ffe17fd391f214e6e2c75cb91678.pdf"
+    status: "secondary-validation-reproduction; pure-water subset only; no new points extracted"
     access_date: "2026-11-27"
