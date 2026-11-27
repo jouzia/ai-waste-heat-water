@@ -4,6 +4,7 @@ import pytest
 
 from scripts.reconcile_nntps_water_intensity import (
     build_reconciliation,
+    daily_volume_implied_by_intensity_m3,
     implied_monthly_volume_m3,
     intensity_from_30_day_total_l_per_kwh,
     intensity_from_daily_volume_l_per_kwh,
@@ -26,6 +27,17 @@ def test_two_year_reported_intensities_imply_similar_monthly_volumes() -> None:
 
     assert fy2020_21 == pytest.approx(29380.96)
     assert fy2021_22 == pytest.approx(33112.525)
+
+
+
+def test_thirty_day_volume_matches_reported_intensity_daily_volume() -> None:
+    volume_from_30_day_total = 32712.46 / 30
+    volume_from_intensity = daily_volume_implied_by_intensity_m3(0.069, 5758.70)
+
+    assert volume_from_intensity == pytest.approx(1088.63096, rel=1e-7)
+    assert volume_from_30_day_total / volume_from_intensity == pytest.approx(
+        1.001638, rel=1e-6
+    )
 
 
 def test_reconciliation_keeps_factor_excluded() -> None:
