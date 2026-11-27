@@ -143,3 +143,13 @@ The official definition and formula are on SOP page 3 and pages 18–20. The rep
 - Geographic validation gate: **remains false**.
 
 No numeric factor was inferred or fabricated from the regulatory limits or blank reporting templates. This addendum improves the India source pathway but does not complete geographic integration or support a site-level net-water result.
+
+### Publication-access cross-check (2026-11-27)
+
+The CEA Clean Energy and Energy Transition division page was opened directly. It lists the annual water-consumption spreadsheet and monthly Format 60 spreadsheet templates, but its report-list sections currently display **“No Reports Found”**; it does not expose the plant/month SWC report series from that page. This creates an access discrepancy with the CEA Annual Report's statement that monthly plant-wise SWC reports have been published since June 2022.
+
+- Direct page inspected: https://www.cea.nic.in/divisionPage/510?lang=en
+- The page exposes the blank annual water-consumption and monthly Format 60 templates, not populated plant observations.
+- The separate monthly report landing page indexed by search engines could not be opened reliably during this audit and did not provide a verifiable downloadable report set.
+
+**Disposition:** do not mark plant/month SWC data as publicly retrieved or accessible. The next step is to locate the actual CEA report archive or request the relevant monthly report dataset from CEA; until then, the CEA SOP and Annual Report establish the method and claimed publication history only. The factor ledger remains empty.
