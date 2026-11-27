@@ -23,5 +23,5 @@ target-version = "py311"
 src = ["src"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["ai_water", "scripts"]
+known-first-party = ["ai_water"]
 known-third-party = ["pytest"]
