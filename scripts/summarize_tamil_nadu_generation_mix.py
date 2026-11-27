@@ -8,11 +8,11 @@ from __future__ import annotations
 
 import csv
 import json
-import pathlib
+from pathlib import Path
 
 
 DATA_PATH = (
-    pathlib.Path(__file__).resolve().parents[1]
+    Path(__file__).resolve().parents[1]
     / "data"
     / "geography"
     / "tamil_nadu_generation_mix_2020_21_to_2025_26.csv"
