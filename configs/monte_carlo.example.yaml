@@ -9,4 +9,5 @@ distributions:
   recovery.recovery_efficiency: {name: uniform, parameters: [0.3, 0.8]}
   recovery.heat_exchanger_effectiveness: {name: uniform, parameters: [0.5, 0.95]}
   md.temperature_polarization_coefficient: {name: uniform, parameters: [0.6, 1.0]}
+  # Consumption factor only; constructed WaterFactors must set grid_water_metric: consumption.
   water.grid_water_l_per_kwh: {name: uniform, parameters: [0.0, 2.0]}
