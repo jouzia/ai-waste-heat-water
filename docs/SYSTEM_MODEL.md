@@ -36,7 +36,7 @@ where W_additional_consumption includes only intervention-incremental direct coo
 
 W_avoided is the freshwater consumption demonstrably displaced by the product water under a declared counterfactual. Recovered distillate is not automatically equal to avoided consumption; if displacement is not demonstrated, set W_avoided = 0 for the conservative case. The implementation accepts either an explicit avoided volume (which must not exceed produced distillate) or a displacement fraction bounded between 0 and 1; it rejects simultaneous specification to avoid double counting. Negative Delta W_net indicates lower modeled operational consumption than the counterfactual; zero is break-even; positive is additional consumption.
 
-Withdrawal is reported separately and is never substituted for consumption.
+Withdrawal is reported separately and is never substituted for consumption. The executable net-impact engine is consumption-only: any nonzero `grid_water_l_per_kwh` requires `grid_water_metric=consumption`, and withdrawal factors are rejected. No separate electricity-water withdrawal factor or net-withdrawal output is implemented. MD feed withdrawal and concentrate discharge are reported separately, but the feed source class is not encoded.
 
 ## Uncertainty
 
