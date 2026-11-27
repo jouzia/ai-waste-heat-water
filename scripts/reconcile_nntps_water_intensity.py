@@ -6,7 +6,6 @@ a water factor because the source period and water-source boundary are unresolve
 
 import json
 
-
 NET_GENERATION_MU = {
     "2020-21": 3176.32,
     "2021-22": 5758.70,
