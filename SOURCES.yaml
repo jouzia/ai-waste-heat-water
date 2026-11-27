@@ -478,3 +478,16 @@ sources:
     url: "https://cea.nic.in/archive?lang=en"
     status: "official archive index; environmental SWC report series not listed in inspected monthly-report categories"
     access_date: "2026-11-27"
+
+  - id: CAG-NLC-OPERATIONAL-PERFORMANCE-2025
+    title: "Report of the Comptroller and Auditor General of India on Operational Performance of NLC India Limited (Report No. 35 of 2025)"
+    authors: "Comptroller and Auditor General of India"
+    year: 2025
+    role: B
+    used_for:
+      - "annual regulatory specific-water-consumption series for TPS-IE, TPS-II, and TPS-IIE, FY 2017-18 to FY 2022-23"
+      - "independent audit context for SWC compliance and water-treatment-plant actions"
+      - "cross-check against CSE 2021 historical plant averages; discrepancies retained, not pooled"
+    url: "https://cag.gov.in/uploads/download_audit_report/2026/CAG---NLC-India-Limited-2025-English-FINAL-SIGNATORY-10-12-2025-0698c6a3b5d7e42.69686670.pdf"
+    status: "official performance-audit report using management-reported SWC data; source-water composition and consumptive fraction not supplied; NNTPS not in audit scope"
+    access_date: "2026-11-27"
