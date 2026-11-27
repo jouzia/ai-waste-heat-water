@@ -571,6 +571,20 @@ sources:
     status: "official archive index; environmental SWC report series not listed in inspected monthly-report categories"
     access_date: "2026-11-27"
 
+  - id: NNTPS-ENVIRONMENTAL-STATEMENT-FY2021-22
+    title: "Environmental Statement for New Neyveli Thermal Power Station (FY ending 31 March 2022), included in MoEFCC certified compliance monitoring report dated 28 April 2023"
+    authors: "NLC India Limited"
+    year: 2022
+    role: B
+    used_for:
+      - "site-reported daily process, cooling, and domestic water quantities for NNTPS"
+      - "site-reported process-water intensity per unit electrical output, retained as an unresolved source-quality candidate"
+      - "operating context: 1000 MW capacity, unit CODs, mine-water supply, closed-cycle cooling, and effluent reporting"
+    url: "https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf"
+    pdf_url: "https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf"
+    status: "primary site-submitted environmental statement embedded in official MoEFCC monitoring report; reported process water 32712.46 m3/day and specific intensity 0.069 L/kWh are physically inconsistent with 1000 MW maximum capacity if they share the same boundary and period; no plant-generation denominator or reconciled water balance located; not usable as a validated factor"
+    access_date: "2026-11-27"
+
   - id: CAG-NLC-OPERATIONAL-PERFORMANCE-2025
     title: "Report of the Comptroller and Auditor General of India on Operational Performance of NLC India Limited (Report No. 35 of 2025)"
     authors: "Comptroller and Auditor General of India"
