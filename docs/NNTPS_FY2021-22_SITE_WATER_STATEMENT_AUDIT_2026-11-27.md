@@ -1,79 +1,81 @@
-# NNTPS FY2021-22 Site Water Statement — Source-Consistency Audit (2026-11-27)
+# NNTPS FY2021-22 Site Water Statement — Reconciliation Audit (2026-11-27)
 
 ## Source and scope
 
-The Government of India's Ministry of Environment, Forest and Climate Change (MoEFCC) monitoring report for the Neyveli New Thermal Power Project is dated 28 April 2023 and embeds NLC India's Environmental Statement for New Neyveli Thermal Power Station (NNTPS) for the financial year ending 31 March 2022.
+The official MoEFCC monitoring report dated 28 April 2023 embeds NLC India's Environmental Statement for New Neyveli Thermal Power Station (NNTPS), FY ending 31 March 2022. The NLC letter is GM/CEC/E.S. 21-22/43/2022, dated 28 September 2022.
 
-- Official PDF: https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf
-- Monitoring report identifies NNTPS as a 1,000 MW (2 × 500 MW) lignite-based station in Cuddalore District, Tamil Nadu.
-- Unit I COD: 28 December 2019; Unit II COD: 10 February 2021.
-- NLC environmental statement letter: GM/CEC/E.S. 21-22/43/2022, dated 28 September 2022.
-- The embedded statement appears at PDF pages 35–37 (printed page labels 35–37).
+- Environmental statement / MoEFCC report: https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf
+- NLC India Integrated Annual Report FY2021-22: https://nsearchives.nseindia.com/corporate/NLCINDIA_07092022181900_AnnualReport22.pdf
+- Rajya Sabha Unstarred Question No. 480 (6 February 2024), Annexure II: https://sansad.in/getFile/annex/263/AU480.pdf?source=pqars
+- Existing reproducible calculation: `scripts/reconcile_nntps_water_intensity.py`
+- Regression tests: `tests/test_nntps_water_intensity_reconciliation.py`
 
-This is a primary site-submitted environmental statement reproduced in an official government monitoring report. It is not an independently audited plant water balance.
+The NNTPS station is reported as 1,000 MW (2 × 500 MW). Unit I COD was 28 December 2019; Unit II COD was 10 February 2021. The environmental statement is a site-submitted report embedded in a government monitoring document, not an independently audited water balance.
 
-## Transcribed values
+## Transcribed environmental-statement values
 
 | Item | Reported value | Source locator |
 |---|---:|---|
-| Installed capacity | 1,000 MW (2 × 500 MW) | PDF p. 35, Part A |
-| Unit I COD | 28 Dec 2019 | PDF p. 35, Part A |
-| Unit II COD | 10 Feb 2021 | PDF p. 35, Part A |
-| Process water | 32,712.46 m³/day | PDF p. 35, Part B |
-| Cooling water | 1,165.15 m³/day | PDF p. 35, Part B |
-| Domestic water | 5,597.12 m³/day | PDF p. 35, Part B |
+| Process water | 32,712.46 m³/day (unit as printed) | PDF p. 35, Part B |
+| Cooling water | 1,165.15 m³/day (unit as printed) | PDF p. 35, Part B |
+| Domestic water | 5,597.12 m³/day (unit as printed) | PDF p. 35, Part B |
 | Process-water intensity, FY2020-21 | 0.111 L/kWh | PDF p. 35, Part B |
 | Process-water intensity, FY2021-22 | 0.069 L/kWh | PDF p. 35, Part B |
 | Effluent | 7,984 m³/day | PDF p. 36, Part C |
-| NEYVELI NEW TPP generation, FY2021-22 | 6,177.93 MU | Rajya Sabha Unstarred Question 480 (6 Feb 2024), Annexure II |
 
-The monitoring report further records that the station uses mine water stored in a lake, does not extract groundwater for plant operation, adopts closed-cycle cooling with a cooling-cycle concentration (COC) of 5, and uses treated effluent for dust suppression and greenbelt development (PDF pp. 2–4 of the monitoring report's compliance section).
+The report's separate environmental-clearance compliance section says mine water stored in a lake is used and groundwater is not extracted for plant operation. The FY2021-22 statement table does not provide a source-wise split of the reported process, cooling, and domestic quantities.
 
-## Internal consistency check
+## Generation denominators
 
-The reported process-water quantity and specific intensity are incompatible if they describe the same NNTPS boundary and period.
+NLC India's FY2021-22 annual report gives NNTPS generation as:
 
-Nameplate upper-bound generation:
+| Financial year | Gross generation | Net generation |
+|---|---:|---:|
+| FY2020-21 | 3,439.17 MU | 3,176.32 MU |
+| FY2021-22 | 6,178.74 MU | 5,758.70 MU |
 
-`1000 MW × 24 h = 24,000 MWh/day = 24,000,000 kWh/day`
+Rajya Sabha Unstarred Question No. 480, Annexure II, independently reports station-wise generation for NEYVELI NEW TPP of 6,177.93 MU in FY2021-22, 7,156.19 MU in FY2022-23, and 5,151.72 MU for FY2023-24 through December 2023. The FY2021-22 parliamentary value is only 0.81 MU below NLC's annual-report gross figure, so it closely corroborates the gross-generation value. The parliamentary annexure does not label its generation as gross or net.
 
-Minimum process-water intensity implied by the reported daily process flow, even at continuous 100% nameplate output:
+The existing reconciliation script uses the NLC annual-report **net** generation values (3,176.32 and 5,758.70 MU) for the process-intensity comparison. Do not substitute the gross value without explicitly changing the denominator definition.
 
-`32,712.46 m³/day × 1,000 L/m³ ÷ 24,000,000 kWh/day = 1.3630 L/kWh`
+## Competing interpretations of the 32,712.46 m³ figure
 
-The statement instead prints **0.069 L/kWh**. At the same maximum generation, that printed intensity would correspond to only 1,656 m³/day of process water, about 19.75 times lower than the reported 32,712.46 m³/day.
+The environmental statement labels 32,712.46 as m³/day. The same report gives 0.069 L/kWh process-water intensity for FY2021-22. The two values are not reconciled in the source. The repository's existing script deliberately tests both interpretations rather than choosing one.
 
-### Matched FY2021-22 generation cross-check
+### Interpretation A — literal daily rate
 
-Rajya Sabha Unstarred Question No. 480 (6 February 2024), Annexure II, reports **6,177.93 MU** for NEYVELI NEW TPP in FY2021-22. The same table reports 7,156.19 MU for FY2022-23 and 5,151.72 MU for FY2023-24 through December 2023. The annexure does not label the generation basis as gross or net.
+Using FY2021-22 net generation of 5,758.70 MU:
 
-If—and only if—the environmental statement's 32,712.46 m³/day is an annual-average flow for the same station boundary, the FY2021-22 generation implies:
+`32,712.46 m³/day × 1,000 L/m³ ÷ (5,758.70 MU × 1,000,000 kWh/MU ÷ 365 days) = 2.07339 L/kWh`
 
-`32,712.46 m³/day × 365 days × 1,000 L/m³ ÷ (6,177.93 MU × 1,000,000 kWh/MU) = 1.933 L/kWh`
+This is about 30.05 times the reported 0.069 L/kWh.
 
-This conditional value is about **28.0 times** the printed 0.069 L/kWh. It is not adopted as a corrected intensity because the environmental statement does not say whether its daily flow is an annual average or define the process-water numerator boundary, while the parliamentary annexure does not state gross/net generation.
+### Interpretation B — 30-day total
 
-Conversely, applying 0.069 L/kWh to the reported process volume implies about 474,094 MWh/day, or 19.75 times the station's 1,000 MW nameplate capacity.
+If 32,712.46 m³ is instead a 30-day total:
 
-The discrepancy is not resolved by the sources. Potential explanations include a unit/decimal transcription error, different reporting boundaries, or a distinction between gross process circulation and the intensity denominator. None is assumed here.
+`32,712.46 m³ × 1,000 L/m³ ÷ (5,758.70 MU × 1,000,000 kWh/MU × 30/365) = 0.0691131 L/kWh`
 
-## Water-accounting limitations
+This reproduces the reported 0.069 L/kWh within approximately 0.2%. The reported intensity itself implies a 30-day process volume close to the printed 32,712.46 m³. The prior-year pair also supports this possibility: 0.111 L/kWh and FY2020-21 net generation of 3,176.32 MU imply a monthly process volume of approximately 29,380.96 m³.
 
-- The statement labels the daily figures as water consumption but does not supply a matched electricity-generation denominator.
-- It does not define whether process/cooling quantities represent fresh intake, gross circulation, make-up, or another accounting boundary.
-- Effluent of 7,984 m³/day and statements about reuse do not establish the net consumptive fraction.
-- Rajya Sabha Annexure II supplies station-wise FY2021-22 generation, but does not state whether it is gross or net; matched water-period and accounting-boundary definitions remain unresolved.
-- The report does not provide a complete source-wise site water balance, nor a verified split between freshwater and mine-water sources for each reported quantity.
-- The 0.069 L/kWh value must not be silently corrected to 0.69, 1.36, or another value.
+The 30-day-total interpretation is therefore a plausible reconciliation, not a verified correction. The report explicitly prints m³/day; no author clarification has been obtained. Do not silently relabel the value as m³/month or replace the source value.
+
+## Water-accounting boundary
+
+- The environmental statement reports mine-water use, but does not provide a source-wise volume split for the FY2021-22 quantities.
+- The CEA 2026 thermal-plant water-audit SOP classifies mine water as NFW3; it is not included in the FW1+FW2 external freshwater-input numerator used for CEA specific water consumption.
+- The source does not clarify whether the process/cooling/domestic quantities are fresh intake, mine-water intake, gross circulation, make-up, or another boundary.
+- Effluent volume and reuse statements do not establish the site's net consumptive fraction.
+- The reported process-water intensity is not automatically a freshwater-consumption factor.
 
 ## Required resolution before quantitative use
 
-1. Obtain the underlying NLC Form-V environmental statement or written clarification from NLC's Corporate Environment Cell / NNTPS.
-2. Confirm the unit printed in the intensity table and the exact numerator boundary (process only, freshwater only, or another measure).
-3. Obtain FY2021-22 gross/net generation and operating days for NNTPS Units I and II, with the same reporting boundary and period as the water data.
-4. Reconcile daily process, cooling, domestic, make-up, recycle, effluent, and source-water quantities.
-5. Only after reconciliation, calculate a plant-year withdrawal or consumption factor, with the numerator/denominator definitions and uncertainty documented.
+1. Obtain written NLC clarification of whether 32,712.46 m³ is a daily rate or a 30-day/monthly total, and whether the printed unit is correct.
+2. Obtain the source-wise split of FW1, FW2, and NFW3 inputs for the same reporting period.
+3. Confirm whether the 0.069 L/kWh denominator is net generation, gross generation, or another output measure.
+4. Reconcile process, cooling, domestic, make-up, recycle, effluent, and source-water quantities.
+5. Only after reconciliation, calculate a plant-year freshwater withdrawal or consumption factor with a clear numerator, denominator, boundary, and uncertainty.
 
 ## Scientific disposition
 
-Register this as a site-specific primary-source candidate, but quarantine both the reported 0.069 L/kWh intensity and the daily flow values from model calibration or grid-factor calculations. It does not establish a validated NNTPS water-intensity factor, net freshwater consumption, or a Tamil Nadu grid-average factor. No validation gate changes.
+The source pair is valuable site-specific evidence and the 30-day interpretation is strongly supported by numerical consistency, but the printed unit/period and water-source boundary remain unresolved. Both interpretations remain in the reconciliation script; the factor remains excluded pending operator clarification. No model default or validation gate changes.
