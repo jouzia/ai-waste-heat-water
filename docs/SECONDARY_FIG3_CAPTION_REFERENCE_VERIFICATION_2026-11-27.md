@@ -59,3 +59,35 @@ The 1999 source's publisher-indexed Experimental text also reports a 60 μm memb
 ## Reproducibility note
 
 This audit combines direct inspection of the 2020 publisher PDF/PMC full text and Figure 3 with publisher-indexed text for the 1999 article. It is a source-attribution and dimensional-consistency audit, not a new point extraction, reconstruction of the primary experiment, or independent validation result.
+
+
+## Independent secondary-source triangulation — Abdel-Rahman (2008)
+
+A second, independently published DCMD modelling paper provides additional source-lineage evidence:
+
+- Ali K. Abdel-Rahman (2008), “Modeling Temperature and Salt Concentration Distributions in Direct Contact Membrane Distillation,” *Journal of Engineering Sciences, Assiut University* 36(5), 1167–1188 (September 2008).
+- Full PDF: https://jesaun.journals.ekb.eg/article_118726_da32ffe17fd391f214e6e2c75cb91678.pdf
+
+The 2008 paper explicitly states in its Model Validation section that its numerical results are compared with the experimental results of Martínez-Díez and Vázquez-González [8]. It states that its Figure 2 plots the 1999 experimental permeate-flux data for **three recirculation rates**, expressed as feed/permeate average velocities of **25, 39 and 53 cm/s**, with distilled water as feed and a bulk temperature difference of **10 °C**. Its Figure 3 compares temperature-polarization coefficients against the same 1999 study. The 2008 reference list identifies [8] as Martínez-Díez and Vázquez-González, *Journal of Membrane Science* 156 (1999), 265–273; its shortened title omits the word “salt” but the authors, journal, volume, year and page range identify the same work.
+
+The 2008 validation section also reports a 0.2 μm nominal pore size, 0.8 porosity and 0.6 × 10⁻⁴ m membrane thickness for its validation configuration. The publisher-indexed Experimental section of the 1999 paper independently reports the 0.2 μm pore size and 60 μm thickness. This triangulates the 2020 article's likely 0.2 mm unit typo; it is not evidence that the 1999 membrane was 0.2 mm.
+
+### What this corroboration does and does not establish
+
+- **Additional support:** the 1999 experiment was reused as an explicit experimental benchmark by a separate 2008 DCMD modelling study, not only by the 2020 paper.
+- **Pure-water subset:** the 2008 paper's reproduced experimental series is for distilled-water feed at ΔT_b = 10 °C and three recirculation velocities. It is a secondary reproduction, not the primary 1999 figure or raw dataset.
+- **Not a pointwise cross-check of the 2020 saline Figure 3:** the 2008 Figure 2 pure-water conditions do not match the 2020 Figure 3 NaCl concentration series. The 2020 paper's own Validation text remains the evidence tying its saline Figure 3 comparison to reference 37.
+- **No new digitization:** no values were extracted from the 2008 Figure 2, and no values have been added to the repository observation ledger.
+- **No primary-source recovery:** the original 1999 article's publisher-indexed text is accessible, but its original figure image/raw measurements have still not been obtained and independently inspected.
+
+### Source locators
+
+- 2008 article identification and description of prior 1999 experiments: PDF pages 1–3 (journal pages 1167–1169).
+- 2008 validation against Martínez-Díez and Vázquez-González [8], three velocities, distilled-water feed, and ΔT_b = 10 °C: PDF page 11 (journal page 1177), lines 1394–1413 in the extracted text.
+- 2008 Figure 2 labels and conditions: PDF page 12 (journal page 1178), lines 1433–1469.
+- 2008 membrane properties (0.2 μm pore, 0.8 porosity, 60 μm thickness): PDF page 11 (journal page 1177), lines 1379–1385.
+- 2008 bibliography entry [8]: PDF page 21 (journal page 1187), lines 2031–2034.
+
+### Updated evidence classification
+
+The Figure 3 caption's reference 25 is now best classified as a **high-confidence probable miscitation of reference 37**, because (i) the 2020 paper's own Validation section directly names reference 37 for the saline Figure 3 comparison and (ii) the 2008 paper independently uses the same 1999 experiment as a DCMD validation benchmark. It remains a probable caption error rather than a formally corrected publisher erratum. The precise marker-by-marker provenance of the 2020 saline series is still not independently verified.
