@@ -178,6 +178,27 @@ CSE reports that about 12.16 GW of Tamil Nadu thermal capacity was surveyed, wit
 
 **Evidence classification:** these are historical, secondary-source compiled, self-reported SWC observations, not current audited plant factors, not grid-average factors, and not independently verified consumptive-use factors. Retain them only as historical plant-level freshwater-SWC screening evidence. Do not average them into a Tamil Nadu or Indian grid factor; do not assign them to Chennai/Hyderabad; do not treat CSE's regulatory norm values as measured data.
 
+### CAG performance-audit cross-check of existing Neyveli thermal stations (2025)
+
+The Comptroller and Auditor General of India (CAG) Report No. 35 of 2025, section 3.13 (printed page 45), provides annual SWC values for **TPS-IE, TPS-II, and TPS-IIE** over FY 2017–18 to FY 2022–23. The performance audit explicitly states that its thermal-station review covered TPS-IE, TPS-II, and TPS-II Expansion; **it did not cover NNTPS**.
+
+CAG's footnotes report the following values (m³/MWh, numerically equal to L/kWh):
+
+| Station | 2017–18 | 2018–19 | 2019–20 | 2020–21 | 2021–22 | 2022–23 |
+|---|---:|---:|---:|---:|---:|---:|
+| TPS-IE | 3.45 | 3.44 | 2.97 | 2.78 | 2.94 | 2.89 |
+| TPS-II | 5.17 | 5.51 | 5.15 | 5.05 | 4.90 | 4.97 |
+| TPS-IIE | 4.02 | 3.32 | 3.98 | 4.00 | 3.90 | 3.97 |
+| CEA/2015 norm cited by CAG | 3.50 | 3.50 | 3.50 | 3.50 | 3.50 | 3.50 |
+
+CAG reports that TPS-II and TPS-IIE were above the 3.5 m³/MWh norm, that TPS-II's water-treatment plant was commissioned in December 2022, and that TPS-II remained above the norm after installation. It also states that no corresponding treatment-plant contract had been awarded for TPS-IIE. **Internal source inconsistency:** footnote 57 gives TPS-IIE as 3.32 m³/MWh in 2018–19, below the 3.50 norm in footnote 58, despite the narrative's broad statement that TPS-IIE SWC was higher. Do not classify that individual year as non-compliant without clarification.
+
+The CAG 2017–20 arithmetic means are 5.22 m³/MWh for TPS-II and 3.83 m³/MWh for TPS-IIE. CSE Table 3.8 reports 4.39 and 5.25 m³/MWh respectively for the corresponding 2017–20 plant averages. These differences (−0.83 and +1.42 m³/MWh) are material and unresolved. The sources may use different station boundaries, data submissions, or calculation methods; **do not pool or average CSE and CAG values**.
+
+**Evidence classification:** CAG provides a stronger official historical regulatory-SWC record than the CSE secondary compilation, but the values are still management-reported observations reproduced in a performance audit. The report does not provide the water-source composition, withdrawal/return-flow balance, or consumptive fraction for each station. The 2015-rule SWC values therefore cannot be assumed to equal the CEA 2026 FW1+FW2 freshwater-input metric or a blue-water consumption factor. Retain them as historical station-level regulatory-SWC evidence only. They do not apply to NNTPS, which is a separate 1,000 MW station and was outside the CAG review scope.
+
+Source: https://cag.gov.in/uploads/download_audit_report/2026/CAG---NLC-India-Limited-2025-English-FINAL-SIGNATORY-10-12-2025-0698c6a3b5d7e42.69686670.pdf
+
 ### New Neyveli Thermal Power Station environmental-statement cross-check
 
 An official environmental-compliance PDF hosted by the Ministry of Environment, Forest and Climate Change includes the New Neyveli Thermal Power Station (NNTPS) environmental statement for FY 2021–22:
