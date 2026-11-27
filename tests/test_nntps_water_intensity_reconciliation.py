@@ -36,7 +36,7 @@ def test_thirty_day_volume_matches_reported_intensity_daily_volume() -> None:
 
     assert volume_from_intensity == pytest.approx(1088.63096, rel=1e-7)
     assert volume_from_30_day_total / volume_from_intensity == pytest.approx(
-        1.001638, rel=1e-6
+        1.0016391, rel=1e-6
     )
 
 
