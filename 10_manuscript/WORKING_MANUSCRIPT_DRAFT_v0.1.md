@@ -37,12 +37,11 @@ The primary estimand is the change in operational blue-water consumption between
 
 \[
 \Delta W_{\mathrm{net}} =
-W_{\mathrm{consumed, intervention}} -
-W_{\mathrm{consumed, baseline}} -
-W_{\mathrm{displaced, substantiated}}.
+W_{\mathrm{additional, intervention}} -
+W_{\mathrm{avoided, substantiated}}.
 \]
 
-A negative value indicates lower net consumption under this sign convention; a positive value indicates increased net consumption. The sign convention must be checked against the executable accounting implementation and frozen before final analysis.
+A negative value indicates lower net operational consumption under this sign convention; a positive value indicates increased net operational consumption. Here, `W_additional, intervention` is the intervention-incremental direct and electricity-related consumption returned by the executable engine; common baseline data-centre burdens cancel against the counterfactual and must not be subtracted a second time. `W_avoided, substantiated` is only the freshwater consumption demonstrably displaced by product water, not gross distillate by default. This is consistent with `src/ai_water/engine.py`, `docs/SYSTEM_MODEL.md`, and `ASSUMPTIONS.md`. The sign convention is implemented and unit-tested, but the full facility/site counterfactual remains unvalidated.
 
 The ledger must distinguish at least:
 
