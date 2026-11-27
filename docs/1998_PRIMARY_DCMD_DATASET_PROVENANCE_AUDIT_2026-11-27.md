@@ -45,6 +45,18 @@ Do not:
 - use the 1998 inferred Table 1 coefficients as independent validation of a model calibrated to the same flux data;
 - infer that the small membrane-area discrepancy is a typographical error without author or source clarification.
 
+## Table 1 coefficient transcription
+
+The twelve condition-level rows from Table 1 (printed p. 4133) have now been transcribed to `data/validation/MD_1998_TABLE1_INFERRED_COEFFICIENTS.csv`. The table reports:
+
+- the overall liquid-film heat-transfer coefficient (h), in W m⁻² K⁻¹;
+- the membrane-distillation coefficient (C), printed as (C × 10^7) in kg m⁻² s⁻¹ Pa⁻¹;
+- a reported ± value for each coefficient.
+
+The paper states that these (h) and (C) values are obtained from Eqs. 21 and 19 by fitting the experimental flux data. They are therefore **inferred coefficients**, not independent direct measurements or raw flux observations. The paper does not specify the statistical interpretation of the ± values in the table. Its reported comparison of estimated (h) with the Eq. 9 correlation (differences below 16%) is a potential correlation-consistency check, but reproducing it requires exact property evaluation and careful treatment of the overall two-film coefficient. No such comparison is claimed in this audit.
+
+A regression test verifies all twelve source rows and key values while guarding against relabelling the coefficients as independent validation data.
+
 ## Recommended extraction protocol
 
 1. Preserve the accessible PDF and record its SHA-256 hash, retrieval date, page count, and exact page numbers for Figures 4–6 and 8–12.
