@@ -571,6 +571,18 @@ sources:
     status: "official archive index; environmental SWC report series not listed in inspected monthly-report categories"
     access_date: "2026-11-27"
 
+  - id: RS-AU480-ANNEXURE-II-2024
+    title: "Rajya Sabha Unstarred Question No. 480 (6 February 2024), Annexure II — Fuel-wise, station-wise generation of plants in Tamil Nadu from FY2021-22 to FY2023-24 (up to December 2023)"
+    authors: "Ministry of Power, Government of India"
+    year: 2024
+    role: B
+    used_for:
+      - "official station-wise generation for Neyveli New TPP: FY2021-22 6177.93 MU, FY2022-23 7156.19 MU, and FY2023-24 through December 5151.72 MU"
+      - "matched FY2021-22 generation denominator candidate for the NNTPS environmental statement consistency audit"
+    url: "https://sansad.in/getFile/annex/263/AU480.pdf?source=pqars"
+    status: "official parliamentary station-wise generation table; generation basis is not labelled gross or net in the annexure; use only with period/boundary caveats"
+    access_date: "2026-11-27"
+
   - id: NNTPS-ENVIRONMENTAL-STATEMENT-FY2021-22
     title: "Environmental Statement for New Neyveli Thermal Power Station (FY ending 31 March 2022), included in MoEFCC certified compliance monitoring report dated 28 April 2023"
     authors: "NLC India Limited"
