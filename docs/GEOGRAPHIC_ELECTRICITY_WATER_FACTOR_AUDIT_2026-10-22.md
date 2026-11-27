@@ -88,7 +88,58 @@ with compatible kWh and L/kWh units and the water metric stated. Apply the same 
 - Srinivasan, S. et al. (2018), *Applied Energy*, 210, 673–684: https://doi.org/10.1016/j.apenergy.2017.04.079
 - Lei, N. et al. (2025), *Resources, Conservation and Recycling*, 219, 108310: https://doi.org/10.1016/j.resconrec.2025.108310
 
-
 ## Source-access checkpoint (2026-10-22)
 
 Follow-up verification is recorded in [GEOGRAPHIC_FACTOR_SOURCE_ACCESS_CHECKPOINT_2026-10-22.md](GEOGRAPHIC_FACTOR_SOURCE_ACCESS_CHECKPOINT_2026-10-22.md). The official CEA page indexes annual and monthly reporting formats, but one current official URL redirected to a login page during this review; no public observed plant-level dataset was extracted. The Open Government Data station-generation catalog is a possible denominator source, not a factor by itself. The India multi-model paper remains suitable only for source-cited scenario analysis after table-level extraction. The factor ledger therefore remains intentionally empty and the geographic gate remains false.
+
+## Addendum — CEA India thermal-plant water-accounting source audit (2026-11-27)
+
+### Newly verified official source
+
+The Central Electricity Authority's **CEA Framework for Water Audit of Thermal Power Plants: Standard Operating Procedure**, released November 2026, is now accessible as an official CEA PDF:
+
+- Official PDF: https://www.cea.nic.in/api/dashboardReports/view-pdf/en/d88a8d91-e888-42f9-879f-6af6b5788f98
+- Official division page listing annual and monthly thermal-plant environmental data formats: https://www.cea.nic.in/divisionPage/510?lang=en
+- CEA Annual Report 2024–25, section 2.11.3, states that CEA has published Monthly Environmental Stack Emission Status Reports from June 2022, including plant-wise specific-water-consumption information: https://www.cea.nic.in/api/dashboardReports/download-pdf/en/dd454e03-f937-44e3-ba6c-58ba510f12cf
+
+### What the CEA SOP actually measures
+
+The SOP defines Specific Water Consumption (SWC) in m³/MWh as freshwater input per unit of net electricity generation. Its accounting rules are unusually useful for separating freshwater-source categories:
+
+- Only raw surface water and groundwater (FW1 + FW2) count in SWC.
+- Externally supplied treated sewage/effluent, harvested rainwater, and other non-fresh inputs are separately recorded but excluded from SWC.
+- Internal recycled/reused water is recorded as an internal flow and is not added again to total external input.
+- The water audit separately records plant outflows, consumption/losses, storage changes, and unaccounted water.
+
+The official definition and formula are on SOP page 3 and pages 18–20. The reporting template asks for net generation and SWC both including and excluding township supply. The monthly SWC table (page 28) requests, by month, net generation (MWh), freshwater input (m³), township water, and SWC including/excluding township.
+
+**Critical metric limitation:** CEA's SWC is a freshwater-input intensity, not automatically a thermodynamic consumptive-use factor. The water balance records discharges and losses separately. It must therefore be stored as a distinct `freshwater_input` or `withdrawal/input` metric unless the plant's audited balance demonstrates which portion is consumed. Do not relabel SWC as `consumption` merely because the SOP uses the term “Specific Water Consumption.”
+
+### Scope limitations
+
+- The November 2026 SOP applies to coal/lignite thermal power plants and excludes plants located on the coast and using seawater for cooling.
+- It does not provide a national all-generation factor; it supplies a method and reporting structure.
+- The SWC norms of 3.0 or 3.5 m³/MWh are regulatory ceilings, not observed plant means and not a grid-average factor.
+- Plant-level reports may be self-reported; the SOP calls for water audits, metering checks, and verification. Provenance and audit status must be retained for each row.
+- CEA's Annual Report confirms that monthly plant-wise SWC reporting exists from June 2022, but this review has not yet retrieved a complete machine-readable plant/month series. The public SOP is a template/method source, not the missing observation dataset.
+
+### Implications for this project
+
+1. Add `freshwater_input` as a separate water metric in the evidence schema; do not force CEA SWC into the existing `consumption` or `withdrawal` categories without a documented boundary mapping.
+2. Use CEA monthly observations only after retrieving the actual plant/month report and matching the same plant/month net generation denominator.
+3. Prefer plant-specific, audited SWC rows for an India thermal-generation scenario; do not use regulatory ceilings as central estimates.
+4. Keep the generation-weighted factor separate from the grid-mix weighting step. To obtain a national/grid scenario, combine only compatible plant/technology values and same-period **generation** shares, not installed capacity.
+5. Treat the resulting thermal-only estimate as a partial grid component. Hydro, nuclear, solar, wind, imports, and other generation sources need separate compatible evidence before a whole-grid factor can be calculated.
+6. Keep Chennai/Hyderabad city-centroid proxies distinct from the national Indian grid scenario. A national factor is not a site-specific marginal factor.
+
+### Status after this source audit
+
+- Official method and definitions: verified.
+- CEA monthly plant-wise SWC publication history: verified from the CEA Annual Report.
+- Actual plant/month SWC observations extracted and checksummed: **not yet done**.
+- Matching plant/month net-generation denominators joined: **not yet done**.
+- National grid-mix weights and non-thermal technology factors joined: **not yet done**.
+- Site-specific electricity-related water factor: **not available**.
+- Geographic validation gate: **remains false**.
+
+No numeric factor was inferred or fabricated from the regulatory limits or blank reporting templates. This addendum improves the India source pathway but does not complete geographic integration or support a site-level net-water result.
