@@ -363,3 +363,26 @@ sources:
     url: "https://doi.org/10.1016/j.jwpe.2026.110673"
     license: "CC BY 4.0"
     status: "method-reference-not-validation-of-this-repository"
+
+  - id: NLC-NNTPS-ENV-STATEMENT-2021-22
+    title: "Environmental Statement for New Neyveli Thermal Power Station, FY 2021-22 (embedded in MoEFCC certified compliance report)"
+    year: 2023
+    role: B
+    used_for:
+      - "operator-reported NNTPS process, cooling, and domestic water volumes"
+      - "reported process-water intensity cross-check; not accepted as a factor"
+      - "mine-water source classification and plant water-boundary context"
+    url: "https://environmentclearance.nic.in/writereaddata/Monitoring/56803999_NLC%20Thermal%20Power%20plant%202023_compressed.pdf"
+    status: "official-compliance-report-with-operator-reported-environmental-statement; water-volume/intensity discrepancy unresolved; excluded from factor ledger"
+    access_date: "2026-11-27"
+
+  - id: NLC-ANNUAL-REPORT-2021-22
+    title: "NLC India Limited Integrated Annual Report 2021-22"
+    year: 2022
+    role: B
+    used_for:
+      - "NNTPS gross and net electricity generation denominator for FY 2021-22"
+      - "cross-check of NNTPS environmental-statement water intensity"
+    url: "https://nsearchives.nseindia.com/corporate/NLCINDIA_07092022181900_AnnualReport22.pdf"
+    status: "official company annual report; NNTPS generation denominator is company-reported; cross-check only, not a water factor"
+    access_date: "2026-11-27"
