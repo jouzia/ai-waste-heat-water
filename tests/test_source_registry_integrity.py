@@ -33,6 +33,7 @@ def test_critical_source_records_retain_provenance_metadata() -> None:
         "MD-DCMD-POLARIZATION-2000",
         "MD-DCMD-POLARIZATION-1998",
         "NNTPS-ENVIRONMENTAL-STATEMENT-FY2021-22",
+        "RS-AU480-ANNEXURE-II-2024",
     }
 
     assert required_ids.issubset(sources)
