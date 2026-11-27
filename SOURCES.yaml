@@ -405,3 +405,74 @@ sources:
     url: "https://jesaun.journals.ekb.eg/article_118726_da32ffe17fd391f214e6e2c75cb91678.pdf"
     status: "secondary-validation-reproduction; pure-water subset only; no new points extracted"
     access_date: "2026-11-27"
+
+  - id: CEA-THERMAL-WATER-AUDIT-SOP-2026
+    title: "CEA Framework for Water Audit of Thermal Power Plants: Standard Operating Procedure"
+    year: 2026
+    role: A
+    used_for:
+      - "definition and calculation boundary for thermal-plant specific water consumption"
+      - "separation of FW1/FW2 freshwater input from NFW non-fresh inputs and internal reuse"
+      - "classification of mine water as NFW3 and distinction between freshwater input and actual consumptive loss"
+    url: "https://www.cea.nic.in/api/dashboardReports/view-pdf/en/d88a8d91-e888-42f9-879f-6af6b5788f98"
+    status: "official accounting method and blank reporting template; actual plant/month observations not retrieved"
+    access_date: "2026-11-27"
+
+  - id: CEA-ANNUAL-REPORT-2024-25
+    title: "Central Electricity Authority Annual Report 2024-25"
+    year: 2025
+    role: B
+    used_for:
+      - "official statement that plant-wise Monthly Environmental Stack Emission Status Reports with specific water consumption have been published from June 2022"
+      - "evidence of reporting history, not a source of retrieved plant/month observations"
+    url: "https://www.cea.nic.in/api/dashboardReports/download-pdf/en/f60d07cd-b057-42b7-9da8-19d5d559dc2a"
+    status: "official publication-history statement; populated monthly reports not located in public CEA navigation"
+    access_date: "2026-11-27"
+
+  - id: CSE-WATER-INEFFICIENT-POWER-2021
+    title: "Water-Inefficient Power: Implementing Water Norms and Zero Discharge in India's Coal-Power Fleet"
+    authors: "Centre for Science and Environment"
+    year: 2021
+    role: B
+    used_for:
+      - "historical plant-level Tamil Nadu thermal SWC screening values in Table 3.8"
+      - "source-quality evidence on inconsistent, under-reported, and unverified plant self-reporting"
+    url: "https://www.cseindia.org/content/downloadreports/10856"
+    status: "secondary compilation of plant-reported 2017-2020 data; historical screening only, not a current grid factor or independently audited consumption factor"
+    access_date: "2026-11-27"
+
+  - id: NREL-OPENEI-OPERATIONAL-WATER-FACTORS
+    title: "Operational Water Consumption and Withdrawal Factors for Electricity Generating Technologies"
+    authors: "Macknick, J.; Newmark, R.; Heath, G.; Hallett, K.C."
+    year: 2012
+    role: B
+    used_for:
+      - "US technology-level operational water withdrawal and consumption scenario factors"
+      - "external sensitivity comparator only; not a site-specific factor for India, Spain, Singapore, or Germany"
+    doi: "10.1088/1748-9326/7/4/045802"
+    url: "https://data.openei.org/submissions/390"
+    license: "CC BY 4.0"
+    status: "US-only literature-derived technology factors; not used as a global or non-US grid-average factor"
+    access_date: "2026-11-27"
+
+  - id: CEA-CLEAN-ENERGY-DIVISION-PAGE
+    title: "CEA Clean Energy and Energy Transition Division — Environmental Data Formats"
+    year: 2026
+    role: B
+    used_for:
+      - "blank annual water-consumption and monthly Format 60 reporting templates"
+      - "verification that the public division page does not expose populated plant/month SWC reports"
+    url: "https://www.cea.nic.in/divisionPage/510?lang=en"
+    status: "official template and access-check page; report lists display No Reports Found"
+    access_date: "2026-11-27"
+
+  - id: CEA-PUBLIC-REPORT-ARCHIVE
+    title: "Central Electricity Authority public report archive"
+    year: 2026
+    role: B
+    used_for:
+      - "public archive access check for monthly environmental SWC reports"
+      - "evidence that the archive's monthly-report list does not currently list the Environmental Stack Emission Status Reports"
+    url: "https://cea.nic.in/archive?lang=en"
+    status: "official archive index; environmental SWC report series not listed in inspected monthly-report categories"
+    access_date: "2026-11-27"
