@@ -34,6 +34,7 @@ def test_critical_source_records_retain_provenance_metadata() -> None:
         "CAG-NLC-OPERATIONAL-PERFORMANCE-2025",
         "MD-DCMD-POLARIZATION-2000",
         "MD-DCMD-POLARIZATION-1998",
+        "MD-DCMD-CHANNEL-SPACERS-1998",
         "RS-AU480-ANNEXURE-II-2024",
         "NLC-NNTPS-ENV-STATEMENT-2021-22",
         "NLC-ANNUAL-REPORT-2021-22",
