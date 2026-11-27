@@ -4,6 +4,8 @@ The output is a generation-side dataset summary, not a Tamil Nadu electricity
 consumption mix or a water-intensity factor.
 """
 
+from __future__ import annotations
+
 import csv
 import json
 import pathlib
