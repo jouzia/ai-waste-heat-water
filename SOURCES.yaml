@@ -16,6 +16,21 @@ sources:
     url: "https://webbook.nist.gov/cgi/cbook.cgi?ID=C7732185&Type=ANTOINE"
     status: "implemented"
 
+  - id: MD-DCMD-POLARIZATION-1998
+    title: "Effects of Polarization on Mass Transport through Hydrophobic Porous Membranes"
+    authors: "Martínez-Díez, L.; Vázquez-González, M.I."
+    year: 1998
+    role: C
+    used_for:
+      - "primary experimental DCMD water and NaCl flux curves at three recirculation rates"
+      - "candidate experimental temperature-polarization and vapour-pressure-polarization results"
+      - "cross-check of the related 1999 Journal of Membrane Science study; dataset overlap is not established"
+    doi: "10.1021/ie970911q"
+    url: "https://doi.org/10.1021/ie970911q"
+    pdf_url: "https://citeseerx.ist.psu.edu/document?doi=a77be3eade26facb51c0ddcc6a7b3a792da6e582&repid=rep1&type=pdf"
+    status: "primary experimental source; full-text PDF accessible; Figures 4-6 contain flux curves for water and NaCl feeds at three recirculation rates, Figures 8-12 contain polarization results, and Table 1 reports inferred heat/membrane coefficients; numerical point extraction not yet performed; overlap with the 1999 benchmark remains unresolved"
+    access_date: "2026-11-27"
+
   - id: MD-DCMD-PRIMARY-1999
     title: "Temperature and concentration polarization in membrane distillation of aqueous salt solutions"
     year: 1999
