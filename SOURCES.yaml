@@ -546,7 +546,7 @@ sources:
     year: 2024
     role: A
     used_for:
-      - "station-wise Tamil Nadu generation from FY2021-22 through December 2023; NNTPS gross-generation cross-check (6,177.93 MU in FY2021-22)"
+      - "station-wise Tamil Nadu generation from FY2021-22 through December 2023; NNTPS station-level generation cross-check (6,177.93 MU in FY2021-22), consistent with NLC-reported gross generation and distinct from CEA net generation"
       - "firm allocations from NLC power plants, NTECL Vallur, and nuclear stations to Tamil Nadu and other states from April 2021 through December 2023"
       - "evidence that geographic generation mix is not equivalent to Tamil Nadu electricity-consumption mix; allocations are not actual dispatch"
     url: "https://sansad.in/getFile/annex/263/AU480.pdf?source=pqars"
