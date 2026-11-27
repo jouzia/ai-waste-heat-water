@@ -58,7 +58,7 @@ If the source gives generation-weighted factors, do not weight them again by cap
 The electricity-related water term for incremental auxiliary energy should be computed as:
 
 [
-W_{electricity} = E_{incremental}, C_{grid}
+W_{electricity} = E_{incremental} × C_{grid}
 ]
 
 with compatible kWh and L/kWh units and the water metric stated. Apply the same factor convention to baseline and intervention wherever the counterfactual requires it; do not count the entire facility's electricity water as incremental intervention burden.
@@ -100,7 +100,7 @@ The Central Electricity Authority's **CEA Framework for Water Audit of Thermal P
 
 - Official PDF: https://www.cea.nic.in/api/dashboardReports/view-pdf/en/d88a8d91-e888-42f9-879f-6af6b5788f98
 - Official division page listing annual and monthly thermal-plant environmental data formats: https://www.cea.nic.in/divisionPage/510?lang=en
-- CEA Annual Report 2024–25, section 2.11.3, states that CEA has published Monthly Environmental Stack Emission Status Reports from June 2022, including plant-wise specific-water-consumption information: https://www.cea.nic.in/api/dashboardReports/download-pdf/en/dd454e03-f937-44e3-ba6c-58ba510f12cf
+- CEA Annual Report 2024–25, section 2.11.3, states that CEA has published Monthly Environmental Stack Emission Status Reports from June 2022, including plant-wise specific-water-consumption information: https://www.cea.nic.in/api/dashboardReports/download-pdf/en/f60d07cd-b057-42b7-9da8-19d5d559dc2a
 
 ### What the CEA SOP actually measures
 
