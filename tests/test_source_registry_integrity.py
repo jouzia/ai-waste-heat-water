@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import pathlib
+from pathlib import Path
+
 import yaml
 
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATH = ROOT / "SOURCES.yaml"
 
 
