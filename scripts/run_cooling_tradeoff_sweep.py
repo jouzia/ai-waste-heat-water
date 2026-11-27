@@ -163,6 +163,7 @@ def make_base(
         ),
         water=WaterFactors(
             grid_water_l_per_kwh=grid_water_factor,
+            grid_water_metric="consumption",
             freshwater_displacement_fraction=displacement_fraction,
         ),
     )

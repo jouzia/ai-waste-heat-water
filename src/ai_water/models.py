@@ -1,5 +1,7 @@
 """Core research parameter and result models. SI units unless documented otherwise."""
-from pydantic import BaseModel, Field
+from typing import Literal
+
+from pydantic import BaseModel, Field, model_validator
 
 
 class Workload(BaseModel):
@@ -53,8 +55,18 @@ class AuxiliaryLoads(BaseModel):
 
 class WaterFactors(BaseModel):
     grid_water_l_per_kwh: float = Field(ge=0, default=0.0)
+    grid_water_metric: Literal["consumption"] | None = None
     freshwater_displacement_fraction: float = Field(ge=0, le=1, default=0.0)
     avoided_freshwater_consumption_l: float | None = Field(default=None, ge=0)
+
+    @model_validator(mode="after")
+    def require_consumption_metric_for_grid_factor(self):
+        if self.grid_water_l_per_kwh > 0 and self.grid_water_metric != "consumption":
+            raise ValueError(
+                "non-zero grid_water_l_per_kwh requires grid_water_metric='consumption'; "
+                "withdrawal factors are not supported by the net-consumption engine"
+            )
+        return self
 
 
 class Scenario(BaseModel):
